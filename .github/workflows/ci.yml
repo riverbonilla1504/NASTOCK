@@ -26,7 +26,7 @@ jobs:
       e2e_backend: ${{ steps.d.outputs.e2e_backend }}
       e2e_app: ${{ steps.d.outputs.e2e_app }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - id: d
         run: |
           existe() { if [ -e "$1" ]; then echo true; else echo false; fi; }
@@ -41,7 +41,7 @@ jobs:
     name: Documentación
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -51,7 +51,7 @@ jobs:
     name: Reglas de arquitectura
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: La IA no importa el broker
         run: |
           for f in agente contexto-ia opinion-ia; do
@@ -79,7 +79,7 @@ jobs:
     if: needs.detectar.outputs.app == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -95,7 +95,7 @@ jobs:
     if: needs.detectar.outputs.supabase == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: supabase/setup-cli@v1
         with:
           version: latest
@@ -119,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: supabase/setup-cli@v1
         with:
           version: latest
