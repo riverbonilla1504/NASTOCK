@@ -1,0 +1,55 @@
+name: Error
+description: Algo no funciona como dice docs/
+title: "[Error] "
+labels: ["error"]
+body:
+  - type: checkboxes
+    id: buscado
+    attributes:
+      label: Antes de reportar
+      options:
+        - label: Busqué en docs/errores-conocidos.md y no está (o su solución no funcionó)
+          required: true
+  - type: textarea
+    id: que-paso
+    attributes:
+      label: Qué pasó
+      description: Incluye el mensaje de error exacto.
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Qué debería pasar según docs/
+      description: Cita el archivo y la sección (y la regla RN/RR/PM o el caso CB si aplica).
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Cómo reproducirlo
+      value: |
+        1.
+        2.
+    validations:
+      required: true
+  - type: input
+    id: modulos
+    attributes:
+      label: Módulos (docs/17)
+      placeholder: "M-10"
+  - type: dropdown
+    id: entorno
+    attributes:
+      label: Entorno
+      options:
+        - Local
+        - CI
+        - MVP (nube)
+        - Demo
+  - type: textarea
+    id: registros
+    attributes:
+      label: Registros
+      description: Sin llaves, tokens ni datos personales.
+      render: text

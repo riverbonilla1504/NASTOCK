@@ -1,0 +1,47 @@
+# Publica docs/ (la fuente de verdad) en la wiki. La wiki nunca se edita a mano.
+# Requisito único: crear la primera página de la wiki a mano (docs/16 §3.1).
+name: Wiki
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "scripts/publicar_wiki.py"
+      - ".github/workflows/wiki.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: wiki
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    name: Publicar docs/ en la wiki
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Clonar la wiki
+        env:
+          TOKEN: ${{ github.token }}
+        run: git clone "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git" wiki
+      - name: Generar las páginas
+        run: python scripts/publicar_wiki.py docs wiki
+      - name: Publicar
+        working-directory: wiki
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "La wiki ya está al día."
+            exit 0
+          fi
+          git commit -m "Sincroniza la wiki con docs/ (${GITHUB_SHA::7})"
+          git push

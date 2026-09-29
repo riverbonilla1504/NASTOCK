@@ -1,0 +1,159 @@
+# Integración continua: el sistema siempre debe quedar funcionando de punta a
+# punta (docs/15). Los trabajos se activan solos cuando aparece cada parte del
+# proyecto, así que el flujo pasa desde el primer commit (solo documentación).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  detectar:
+    name: Detectar componentes
+    runs-on: ubuntu-latest
+    outputs:
+      app: ${{ steps.d.outputs.app }}
+      supabase: ${{ steps.d.outputs.supabase }}
+      e2e_backend: ${{ steps.d.outputs.e2e_backend }}
+      e2e_app: ${{ steps.d.outputs.e2e_app }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: d
+        run: |
+          existe() { if [ -e "$1" ]; then echo true; else echo false; fi; }
+          {
+            echo "app=$(existe pubspec.yaml)"
+            echo "supabase=$(existe supabase/config.toml)"
+            echo "e2e_backend=$(existe supabase/tests/e2e)"
+            echo "e2e_app=$(existe integration_test)"
+          } >> "$GITHUB_OUTPUT"
+
+  documentacion:
+    name: Documentación
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/verificar_docs.py docs
+
+  arquitectura:
+    name: Reglas de arquitectura
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: La IA no importa el broker
+        run: |
+          for f in agente contexto-ia opinion-ia; do
+            if [ -d "supabase/functions/$f" ] && grep -rqE "_shared/broker" "supabase/functions/$f"; then
+              echo "::error::supabase/functions/$f importa _shared/broker (la IA no ejecuta)"
+              exit 1
+            fi
+          done
+      - name: Sin llave secreta de Supabase en la app
+        run: |
+          if [ -d lib ] && grep -rqiE "service_role|sb_secret_" lib; then
+            echo "::error::La app menciona la llave secreta de Supabase"
+            exit 1
+          fi
+      - name: Sin archivos .env versionados
+        run: |
+          if git ls-files | grep -qE '(^|/)\.env$'; then
+            echo "::error::Hay un archivo .env en el repositorio"
+            exit 1
+          fi
+
+  app:
+    name: App Flutter
+    needs: detectar
+    if: needs.detectar.outputs.app == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test
+      - run: flutter analyze
+      - run: flutter test
+
+  backend:
+    name: Base de datos y funciones
+    needs: detectar
+    if: needs.detectar.outputs.supabase == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: supabase start
+      - run: supabase db lint --level warning --fail-on warning
+      - run: supabase test db
+      - name: Funciones (formato, lint y pruebas)
+        if: hashFiles('supabase/functions/**/*.ts') != ''
+        run: |
+          deno fmt --check supabase/functions
+          deno lint supabase/functions
+          deno test --allow-all supabase/functions
+
+  e2e:
+    name: E2E (proveedores simulados)
+    needs: [detectar, app, backend]
+    if: ${{ !cancelled() && !failure() && (needs.detectar.outputs.e2e_backend == 'true' || needs.detectar.outputs.e2e_app == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - uses: subosito/flutter-action@v2
+        if: needs.detectar.outputs.e2e_app == 'true'
+        with:
+          channel: stable
+          cache: true
+      - run: supabase start
+      - run: supabase db reset
+      - name: Servir funciones con proveedores simulados
+        run: |
+          supabase functions serve --env-file supabase/functions/.env.e2e > funciones.log 2>&1 &
+          sleep 15
+      - name: Variables del stack local
+        run: supabase status -o env | sed 's/"//g' >> "$GITHUB_ENV"
+      - name: E2E de backend
+        if: needs.detectar.outputs.e2e_backend == 'true'
+        run: deno test --allow-all supabase/tests/e2e
+      - name: E2E de la app (Chrome sin ventana)
+        if: needs.detectar.outputs.e2e_app == 'true'
+        run: |
+          "$CHROMEWEBDRIVER/chromedriver" --port=4444 &
+          flutter pub get
+          flutter drive \
+            --driver=test_driver/integration_test.dart \
+            --target=integration_test/app_test.dart \
+            -d web-server \
+            --dart-define=MODO_PRUEBAS=true \
+            --dart-define=SUPABASE_URL=http://127.0.0.1:54321 \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY="${ANON_KEY:-${PUBLISHABLE_KEY:-}}"
+      - name: Registros de las funciones
+        if: failure()
+        run: cat funciones.log || true

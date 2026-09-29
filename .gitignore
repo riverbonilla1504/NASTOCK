@@ -1,0 +1,62 @@
+# --- Secretos y configuración local (nunca al repositorio) ---
+.env
+.env.*
+!.env.example
+supabase/functions/.env
+!supabase/functions/.env.e2e
+*.jks
+*.keystore
+android/key.properties
+**/cuenta-servicio*.json
+**/service-account*.json
+respaldo-*.sql
+respaldo-*.gpg
+
+# --- Flutter / Dart ---
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+*.iml
+.idea/
+android/.gradle/
+android/local.properties
+android/app/debug/
+android/app/profile/
+android/app/release/
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+**/Generated.xcconfig
+web/.dart_tool/
+
+# --- Supabase ---
+supabase/.branches/
+supabase/.temp/
+
+# --- Deno / Node ---
+node_modules/
+.deno/
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+
+# --- Firebase ---
+.firebase/
+firebase-debug.log
+
+# --- Sistema y editores ---
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# --- Claude Code (configuración personal) ---
+.claude/settings.local.json

@@ -1,0 +1,126 @@
+name: Historia de usuario
+description: Historia del backlog, trazable a docs/ (la fuente de verdad)
+title: "[HU] "
+labels: ["historia"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        La regla que describe esta historia debe existir en `docs/`. Si no existe o la contradice, primero se actualiza `docs/` (ver `CLAUDE.md`, regla de oro 2).
+        Agrega también las etiquetas `E-xx` (épica) y `M-xx` (módulos).
+  - type: dropdown
+    id: epica
+    attributes:
+      label: Épica
+      options:
+        - E-01 · Cimientos y calidad continua
+        - E-02 · Identidad y acceso
+        - E-03 · Fondo y libro contable
+        - E-04 · Datos de mercado
+        - E-05 · Motor de políticas y configuración
+        - E-06 · IA: contexto y decisión
+        - E-07 · Sugerencias y decisiones
+        - E-08 · Ejecución y broker
+        - E-09 · Tiempo real y notificaciones
+        - E-10 · Cartera y reportes
+        - E-11 · Administración
+        - E-12 · Seguridad, auditoría y cumplimiento
+        - E-13 · Transición desde la v2
+    validations:
+      required: true
+  - type: dropdown
+    id: entrega
+    attributes:
+      label: Entrega
+      options:
+        - R1 · Ver el mercado en vivo
+        - R2 · El fondo existe
+        - R3 · La IA analiza
+        - R4 · Decidir y operar en paper
+        - R5 · Protegido y avisado
+        - R6 · Medir y mejorar
+    validations:
+      required: true
+  - type: input
+    id: modulos
+    attributes:
+      label: Módulos afectados (docs/17)
+      description: Lo que el agente investigará. No se analiza el resto del proyecto.
+      placeholder: "M-09, M-08"
+    validations:
+      required: true
+  - type: dropdown
+    id: rol
+    attributes:
+      label: Rol
+      options:
+        - Usuario
+        - Analista
+        - Administrador
+        - Sistema
+    validations:
+      required: true
+  - type: textarea
+    id: historia
+    attributes:
+      label: Historia
+      value: |
+        Como …
+        quiero …
+        para …
+    validations:
+      required: true
+  - type: input
+    id: reglas
+    attributes:
+      label: Reglas (RN / RR / PM)
+      placeholder: "RN-23, RR-12, PM-11"
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      value: |
+        CA-1  Dado … cuando … entonces …
+        CA-2  (caso borde) CB-xx: …
+        CA-3  (permiso) Un <rol sin permiso> recibe NO_AUTORIZADO.
+    validations:
+      required: true
+  - type: input
+    id: casos
+    attributes:
+      label: Casos borde (CB)
+      placeholder: "CB-21, CB-22"
+  - type: input
+    id: e2e
+    attributes:
+      label: Escenario E2E (nuevo o actualizado)
+      placeholder: "E2E-08 (actualizado)"
+    validations:
+      required: true
+  - type: textarea
+    id: tecnico
+    attributes:
+      label: Notas técnicas
+      description: RPC o Edge Function, tablas, RLS, evento en tiempo real, auditoría, códigos de error.
+  - type: textarea
+    id: docs
+    attributes:
+      label: Documentación a actualizar
+      description: Secciones de docs/ que cambian o se precisan con esta historia ("ninguna" si no aplica).
+    validations:
+      required: true
+  - type: checkboxes
+    id: terminado
+    attributes:
+      label: Definición de terminado (docs/14 §6)
+      options:
+        - label: Criterios de aceptación y casos borde cumplidos
+        - label: scripts/verificar.sh completo en verde (incluye E2E) y CI en verde
+        - label: Escenario E2E agregado o actualizado
+        - label: RLS y pruebas pgTAP si toca datos; escrituras solo por RPC
+        - label: docs/ actualizada (y historial 13 §4) si cambió una regla
+        - label: docs/17 actualizado si cambiaron rutas, tablas o funciones
+        - label: Error no trivial registrado en docs/errores-conocidos.md
+        - label: Desplegada en el proyecto MVP con la prueba de humo en verde

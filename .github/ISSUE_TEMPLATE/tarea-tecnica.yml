@@ -1,0 +1,39 @@
+name: Tarea técnica
+description: Trabajo necesario sin valor directo para el usuario (infraestructura, CI/CD, refactor)
+title: "[TT] "
+labels: ["tarea-tecnica"]
+body:
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Qué hay que hacer y por qué
+    validations:
+      required: true
+  - type: input
+    id: epica
+    attributes:
+      label: Épica
+      placeholder: "E-01"
+    validations:
+      required: true
+  - type: input
+    id: modulos
+    attributes:
+      label: Módulos afectados (docs/17)
+      placeholder: "M-20"
+    validations:
+      required: true
+  - type: input
+    id: fuente
+    attributes:
+      label: Documentación fuente
+      placeholder: "docs/15 §6"
+  - type: textarea
+    id: terminado
+    attributes:
+      label: Criterio de terminado
+      value: |
+        - [ ] …
+        - [ ] scripts/verificar.sh completo en verde y CI en verde
+    validations:
+      required: true

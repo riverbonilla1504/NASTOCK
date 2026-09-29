@@ -1,0 +1,106 @@
+# Mantenimiento del plan gratuito (docs/15 §5):
+#  - diario: ping() para que Supabase no pause el proyecto y respaldo cifrado
+#    (el plan gratuito no incluye respaldos);
+#  - semanal: prueba real mínima contra Alpaca paper, DeepSeek y JEV.
+name: Mantenimiento
+
+on:
+  schedule:
+    - cron: "0 12 * * *" # diario, 12:00 UTC (7:00 en Bogotá)
+    - cron: "0 13 * * 1" # lunes, 13:00 UTC: prueba real semanal
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mantener-activo:
+    name: Mantener activo el proyecto
+    if: vars.SUPABASE_URL != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: ping()
+        env:
+          URL: ${{ vars.SUPABASE_URL }}
+          LLAVE: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          codigo=$(curl -s -o respuesta.txt -w "%{http_code}" -X POST "$URL/rest/v1/rpc/ping" \
+            -H "apikey: $LLAVE" -H "Content-Type: application/json" -d '{}')
+          if [ "$codigo" = "404" ]; then
+            echo "::warning::ping() todavía no existe (llega con las migraciones de E-01)."
+            exit 0
+          fi
+          if [ "$codigo" != "200" ]; then
+            echo "::error::ping() respondió $codigo: el proyecto podría estar pausado."
+            cat respuesta.txt
+            exit 1
+          fi
+          echo "Proyecto activo."
+
+  respaldo:
+    name: Respaldo cifrado
+    if: vars.SUPABASE_URL != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Volcado y cifrado
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          CLAVE: ${{ secrets.RESPALDO_CLAVE_GPG }}
+        run: |
+          set -euo pipefail
+          if [ -z "$SUPABASE_DB_URL" ] || [ -z "$CLAVE" ]; then
+            echo "::warning::Faltan SUPABASE_DB_URL o RESPALDO_CLAVE_GPG: no se hizo respaldo."
+            exit 0
+          fi
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f esquema.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL" --data-only --schema public,auth -f datos.sql
+          tar czf respaldo.tar.gz esquema.sql datos.sql
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$CLAVE" \
+            --symmetric --cipher-algo AES256 \
+            -o "respaldo-$(date -u +%Y%m%d).tar.gz.gpg" respaldo.tar.gz
+          rm -f esquema.sql datos.sql respaldo.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: respaldo-${{ github.run_id }}
+          path: respaldo-*.gpg
+          retention-days: 7
+          if-no-files-found: ignore
+
+  prueba-real:
+    name: Prueba real semanal (solo lectura, costo mínimo)
+    if: github.event.schedule == '0 13 * * 1' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+    steps:
+      - name: Alpaca paper (cuenta)
+        if: env.ALPACA_KEY_ID != ''
+        run: |
+          curl -fsS -o /dev/null \
+            -H "APCA-API-KEY-ID: $ALPACA_KEY_ID" -H "APCA-API-SECRET-KEY: $ALPACA_SECRET_KEY" \
+            https://paper-api.alpaca.markets/v2/account
+      - name: Alpaca News (acceso)
+        if: env.ALPACA_KEY_ID != ''
+        run: |
+          codigo=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "APCA-API-KEY-ID: $ALPACA_KEY_ID" -H "APCA-API-SECRET-KEY: $ALPACA_SECRET_KEY" \
+            "https://data.alpaca.markets/v1beta1/news?symbols=AAPL&limit=1")
+          [ "$codigo" = "200" ] || { echo "::error::Alpaca News respondió $codigo (ver EC-004)"; exit 1; }
+      - name: DeepSeek
+        if: env.DEEPSEEK_API_KEY != ''
+        run: |
+          curl -fsS -o /dev/null https://api.deepseek.com/chat/completions \
+            -H "Authorization: Bearer $DEEPSEEK_API_KEY" -H "Content-Type: application/json" \
+            -d '{"model":"deepseek-flash","max_tokens":20,"messages":[{"role":"user","content":"Responde en json: {\"ok\": true}"}],"response_format":{"type":"json_object"}}'
+      - name: JEV (TypeSafe)
+        if: env.TYPESAFE_API_KEY != ''
+        run: |
+          curl -fsS -o /dev/null -X POST https://api.typesafe.ai/v1/systemone \
+            -H "Authorization: Bearer $TYPESAFE_API_KEY" -H "Content-Type: application/json" \
+            -d '{"state":"Weekly connectivity test.","model":"jev-1.13.0","questions":{"is_test":{"type":"noul","instructions":"Is this a test message?"}}}'

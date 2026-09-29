@@ -1,0 +1,44 @@
+name: Épica
+description: Agrupa historias de usuario (como sub-issues) según docs/14 §2
+title: "E-xx · "
+labels: ["epica"]
+body:
+  - type: markdown
+    attributes:
+      value: Agrega la etiqueta `E-xx` correspondiente. Las historias se enlazan como sub-issues de esta épica.
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: Qué valor aporta la épica, en una o dos frases.
+    validations:
+      required: true
+  - type: textarea
+    id: capacidades
+    attributes:
+      label: Capacidades
+      description: Lista de docs/14 §2; cada una dará una o más historias.
+    validations:
+      required: true
+  - type: input
+    id: fuente
+    attributes:
+      label: Documentación fuente
+      placeholder: "docs/07, docs/08 §1"
+    validations:
+      required: true
+  - type: input
+    id: modulos
+    attributes:
+      label: Módulos (docs/17)
+      placeholder: "M-07, M-09"
+  - type: input
+    id: dependencias
+    attributes:
+      label: Depende de
+      placeholder: "E-04, E-05"
+  - type: input
+    id: entregas
+    attributes:
+      label: Entregas en las que avanza
+      placeholder: "R3, R4"
