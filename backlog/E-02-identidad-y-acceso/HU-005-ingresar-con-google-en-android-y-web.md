@@ -27,14 +27,16 @@ PM-01 · D-12 · 04 §4 · 04 §11
 
 ## Criterios de aceptación
 
-- **CA-1** Dada una persona invitada, cuando toca "Entrar con Google" en Android, entonces el ingreso nativo entrega el `id_token` a Supabase y la persona queda en el inicio de su rol.
+- **CA-1** Dada una persona invitada, cuando toca "Entrar con Google" en Android, entonces el ingreso nativo entrega el `id_token` a Supabase y la persona queda con la sesión iniciada en la pantalla de inicio.
 - **CA-2** Dada una persona invitada, cuando entra desde la web, entonces la redirección OAuth con PKCE preselecciona la cuenta corporativa y vuelve a la app con la sesión iniciada.
 - **CA-3** Dada una cuenta suspendida o de baja, cuando intenta ingresar, entonces ve "Tu cuenta está suspendida. Comunícate con el administrador."
 - **CA-4** Dado un dispositivo sin conexión, cuando intenta ingresar, entonces ve "No hay conexión. Revisa tu internet e inténtalo de nuevo."; y si cierra la ventana de Google, vuelve a la pantalla de ingreso sin mensaje.
+- **CA-5** (caso borde) CB-01: Dado un correo del dominio sin una invitación vigente, cuando intenta ingresar, entonces ve "Tu correo no tiene una invitación vigente. Pídele una al administrador."
+- **CA-6** Dado un error inesperado al iniciar sesión, cuando ocurre, entonces ve "No pudimos iniciar tu sesión. Inténtalo de nuevo." y el detalle queda en el registro técnico, no en la pantalla.
 
 ## Casos borde
 
-—
+CB-01
 
 ## Escenario E2E
 
@@ -68,6 +70,8 @@ Sin escenario propio: el ingreso con Google no se puede automatizar (04 §1). E2
 ## Notas técnicas
 
 Sin tablas nuevas. La API de `google_sign_in` cambió en su versión 7: seguir la guía vigente de Supabase (04 §4.4).
+
+En R1, CA-3 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
 
 ## Documentación a actualizar
 
