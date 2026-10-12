@@ -30,6 +30,7 @@ PM-50 · PM-51 · PM-52 · 03 §3 · 03 §6
 - **CA-2** Dada una cuenta, cuando el Administrador elige suspender, reactivar o cambiar el rol, entonces la app pide confirmación, llama la función correspondiente y muestra el resultado o el mensaje del código de error (`ULTIMO_ADMIN`, `AUTO_ACCION` o `CUPO_CON_POSICIONES`).
 - **CA-3** Dado un cambio en una cuenta o en una invitación, cuando ocurre, entonces la lista se actualiza con los eventos `cuenta` e `invitacion` del canal `admin`.
 - **CA-4** (permiso) Dado un Analista, cuando consulta `invitaciones` por la API, entonces no recibe filas.
+- **CA-5** Dada la pantalla, cuando el Administrador invita a una persona o revoca una invitación, entonces la app llama la función correspondiente y muestra el resultado o el mensaje del código de error (`INVITACION_DUPLICADA` o `CORREO_YA_REGISTRADO`).
 
 ## Casos borde
 

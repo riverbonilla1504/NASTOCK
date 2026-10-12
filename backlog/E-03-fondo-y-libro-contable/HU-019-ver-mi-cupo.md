@@ -31,6 +31,7 @@ PM-10 · RN-11 · RN-20 · 02 §2 · 02 §13 · 06 §6
 - **CA-2** Dado que el Administrador le asigna o le reduce dinero, cuando ocurre, entonces Mi cupo se actualiza solo al recibir el evento `cupo`.
 - **CA-3** (aislamiento) Dados dos Usuarios, cuando cada uno llama `mi_cupo()`, entonces cada uno recibe solo su cupo y ninguno puede leer la subcuenta del otro por la API.
 - **CA-4** (caso borde) CB-80: Dado el fondo sin capital, cuando el Usuario abre la app, entonces ve "Fondo sin capital".
+- **CA-5** Dado un Usuario, cuando abre Mi cupo, entonces ve además el resultado realizado, el no realizado y el rendimiento de su cupo.
 
 ## Casos borde
 

@@ -24,6 +24,7 @@
 - [FR-088 · Reglas de horario, precio y salud](../requisitos-funcionales/FR-088-reglas-de-horario-precio-y-salud.md)
 - [FR-089 · Confianza mínima de las sugerencias de la IA](../requisitos-funcionales/FR-089-confianza-minima-de-las-sugerencias-de-la-ia.md)
 - [FR-090 · Registro de la regla violada](../requisitos-funcionales/FR-090-registro-de-la-regla-violada.md)
+- [FR-030 · Cupo congelado durante la suspensión](../requisitos-funcionales/FR-030-cupo-congelado-durante-la-suspension.md)
 
 ## Reglas
 

@@ -32,7 +32,7 @@ PM-53 · RN-40 · RN-50 · RN-51 · RN-57 · 02 §11 · D-31
 - **CA-2** Dado un cupo con posiciones u órdenes vivas, cuando se intenta la baja, entonces responde `CUPO_CON_POSICIONES`: primero se liquida.
 - **CA-3** (caso borde) CB-06: Dada una cuenta de baja, cuando el Administrador la reincorpora, entonces vuelve a activo, se desbloquea en Auth y recibe un cupo nuevo en 0; el cupo anterior sigue cerrado con su historial.
 - **CA-4** Dada una cuenta de baja, cuando un Analista o un Administrador consulta sus operaciones, entonces el historial sigue completo.
-- **CA-5** (permiso) Dado un Usuario o un Analista, cuando intenta la baja o la reincorporación, entonces recibe `NO_AUTORIZADO`; sobre el último Administrador responde `ULTIMO_ADMIN` (CB-09).
+- **CA-5** (permiso) Dado un Usuario o un Analista, cuando intenta la baja o la reincorporación, entonces recibe `NO_AUTORIZADO`; sobre el último Administrador responde `ULTIMO_ADMIN` y sobre uno mismo, `AUTO_ACCION` (CB-09).
 
 ## Casos borde
 

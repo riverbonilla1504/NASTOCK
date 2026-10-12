@@ -20,6 +20,7 @@
 
 - [FR-193 · Registro del dispositivo](../requisitos-funcionales/FR-193-registro-del-dispositivo.md)
 - [FR-023 · Cierre de sesión](../requisitos-funcionales/FR-023-cierre-de-sesion.md)
+- [FR-029 · Suspensión de una cuenta](../requisitos-funcionales/FR-029-suspension-de-una-cuenta.md)
 
 ## Reglas
 

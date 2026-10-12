@@ -21,6 +21,7 @@
 - [FR-172 · Protección nativa](../requisitos-funcionales/FR-172-proteccion-nativa.md)
 - [FR-173 · Venta de una posición con protección nativa](../requisitos-funcionales/FR-173-venta-de-una-posicion-con-proteccion-nativa.md)
 - [FR-175 · Protecciones sin aprobación ni freno](../requisitos-funcionales/FR-175-protecciones-sin-aprobacion-ni-freno.md)
+- [FR-030 · Cupo congelado durante la suspensión](../requisitos-funcionales/FR-030-cupo-congelado-durante-la-suspension.md)
 
 ## Reglas
 

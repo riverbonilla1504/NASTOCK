@@ -31,6 +31,7 @@ PM-41 · RN-12 · RN-13 · RN-14 · 02 §4 · 08 §4
 - **CA-3** Dado un retiro, cuando se indica un cupo como origen, entonces la función lo rechaza: primero se reduce el cupo.
 - **CA-4** Dado un retiro registrado, cuando ocurre, entonces quedan en la bitácora `capital.retiro_registrado` y `capital.retiro_confirmado`.
 - **CA-5** (permiso) Dado un Usuario o un Analista, cuando llama `registrar_retiro`, entonces recibe `NO_AUTORIZADO`.
+- **CA-6** Dado un Administrador, cuando registra un retiro eligiendo `arriesgadas` o `usuarios_comun` como origen, entonces sale de esa subcuenta.
 
 ## Casos borde
 

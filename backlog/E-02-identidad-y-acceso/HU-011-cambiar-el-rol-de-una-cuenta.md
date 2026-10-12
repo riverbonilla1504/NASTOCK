@@ -24,11 +24,11 @@
 
 ## Reglas
 
-PM-51 · RN-50 · RN-51 · RN-54 · RN-55 · D-01
+PM-51 · RN-50 · RN-51 · RN-54 · RN-55 · 04 §8 · D-01
 
 ## Criterios de aceptación
 
-- **CA-1** Dado un Analista, cuando el Administrador lo cambia a Usuario, entonces se le crea un cupo en 0, se registra `cuenta.rol_cambiado` y su app rearma la navegación al recibir `perfil_actualizado`.
+- **CA-1** Dado un Analista, cuando el Administrador lo cambia a Usuario, entonces se le crea un cupo en 0, se registra `cuenta.rol_cambiado` y su app renueva el token y rearma la navegación al recibir `perfil_actualizado`.
 - **CA-2** Dado un Usuario con el cupo sin posiciones ni órdenes vivas, cuando pasa a otro rol, entonces el efectivo de su cupo vuelve a `usuarios_comun` y el cupo se cierra.
 - **CA-3** (caso borde) CB-10: Dado un Usuario con posiciones u órdenes vivas, cuando se intenta cambiar su rol, entonces la función responde `CUPO_CON_POSICIONES`.
 - **CA-4** (caso borde) CB-09: Dado el último Administrador activo, cuando se intenta cambiar su rol, entonces responde `ULTIMO_ADMIN`; y sobre uno mismo, `AUTO_ACCION`.

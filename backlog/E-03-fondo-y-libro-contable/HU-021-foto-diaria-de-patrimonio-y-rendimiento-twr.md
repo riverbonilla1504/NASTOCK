@@ -31,6 +31,7 @@ RN-44 · RN-45 · 02 §13 · 06 §5.6
 - **CA-2** Dado un día con una asignación de 400 a un cupo, cuando se calcula el rendimiento de ese cupo, entonces la asignación cuenta como flujo y no como ganancia.
 - **CA-3** Dado que `cierre-diario` corre dos veces el mismo día, cuando termina, entonces no duplica la foto.
 - **CA-4** (aislamiento) Dado un Usuario, cuando consulta `patrimonio_diario`, entonces ve las filas de su cupo y los agregados; un Analista o un Administrador ven todo.
+- **CA-5** Dadas las fotos diarias de un periodo, cuando se calcula el rendimiento del fondo, de un bolsillo o de un cupo, entonces es el producto de (1 + rendimiento de cada día) menos 1.
 
 ## Casos borde
 
