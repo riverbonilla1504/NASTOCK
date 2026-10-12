@@ -52,6 +52,7 @@ Sin escenario propio en el catálogo de 15 §4.
 | Depende de | [HU-013 · Libro contable de doble partida](HU-013-libro-contable-de-doble-partida.md) | El ajuste es un movimiento del libro. |
 | Depende de | [HU-107 · Bitácora inmutable con cadena de hash](../E-12-seguridad-auditoria-y-cumplimiento/HU-107-bitacora-inmutable-con-cadena-de-hash.md) | Registra `ajuste.registrado`. |
 | Habilita | [HU-025 · Ajuste por split o agrupación de acciones](HU-025-ajuste-por-split-o-agrupacion-de-acciones.md) | HU-025: es un ajuste justificado del Administrador. |
+| Habilita | [HU-099 · Pantalla de capital](../E-11-administracion/HU-099-pantalla-de-capital.md) | HU-099: registra ajustes. |
 
 ## Notas técnicas
 
@@ -59,7 +60,7 @@ Es la única forma de corregir el libro (06 §4.1, L3).
 
 ## Documentación a actualizar
 
-03 §3 no dice en qué pantalla de Administración se registran los ajustes (PM-45). Precisarlo en `docs/` antes de construir la pantalla.
+Ninguna.
 
 ## Definición de terminado
 

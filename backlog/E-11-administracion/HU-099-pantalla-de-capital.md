@@ -22,7 +22,7 @@
 
 ## Reglas
 
-PM-40 · PM-41 · 02 §3 · 02 §4 · 04 §8
+PM-40 · PM-41 · PM-45 · 02 §3 · 02 §4 · 04 §8
 
 ## Criterios de aceptación
 
@@ -31,6 +31,7 @@ PM-40 · PM-41 · 02 §3 · 02 §4 · 04 §8
 - **CA-3** Dado un aporte registrado, cuando elige anularlo, entonces la app pide el motivo y lo anula; en un aporte confirmado esa opción no está.
 - **CA-4** Dado el formulario de retiro, cuando elige la subcuenta de origen, entonces solo puede elegir Reserva, Arriesgadas o la bolsa común, y ve el disponible de cada una.
 - **CA-5** (permiso) Dado un Analista, cuando consulta `movimientos_capital`, entonces los ve en solo lectura; un Usuario no recibe filas.
+- **CA-6** Dado el formulario de ajuste, cuando lo envía con sus asientos y su justificación tras la confirmación, entonces el ajuste queda registrado.
 
 ## Casos borde
 
@@ -56,6 +57,7 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-04.
 | Depende de | [HU-015 · Confirmar el aporte por conciliación y repartirlo 50/25/25](../E-03-fondo-y-libro-contable/HU-015-confirmar-el-aporte-por-conciliacion-y-repartirlo-50-25-25.md) | Muestra la confirmación del aporte. |
 | Depende de | [HU-016 · Registrar retiros de capital](../E-03-fondo-y-libro-contable/HU-016-registrar-retiros-de-capital.md) | Registra retiros. |
 | Depende de | [HU-009 · Sesión segura, bloqueo biométrico y confirmación de acciones sensibles](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Confirma los movimientos de dinero. |
+| Depende de | [HU-022 · Registrar ajustes contables](../E-03-fondo-y-libro-contable/HU-022-registrar-ajustes-contables.md) | Registra ajustes. |
 
 ## Notas técnicas
 

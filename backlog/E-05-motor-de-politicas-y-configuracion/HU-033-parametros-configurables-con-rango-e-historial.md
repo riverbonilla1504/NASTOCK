@@ -69,7 +69,7 @@ Cada sugerencia y cada orden congela los parámetros con los que se validó (RN-
 
 ## Documentación a actualizar
 
-06 §8 define `actualizar_parametro(clave, valor, motivo)` para una sola clave, y CB-78 exige cambiar los tres porcentajes de reparto en una sola operación. Precisar en `docs/` cómo se hace ese cambio conjunto.
+Ninguna.
 
 ## Definición de terminado
 

@@ -154,7 +154,7 @@ specify version · specify self check   # línea de comandos de spec-kit (versi�
 
 ## Estado del proyecto
 
-- Especificación v3.3 completa en `docs/`.
+- Especificación v3.4 completa en `docs/`.
 - Backlog completo en `backlog/` (227 requisitos, 13 épicas, 117 historias y
   9 tareas técnicas). **Pendiente**: publicarlo como issues en GitHub Projects
   y conectar los servicios (`docs/16-arranque-del-repositorio.md` §3–§7).

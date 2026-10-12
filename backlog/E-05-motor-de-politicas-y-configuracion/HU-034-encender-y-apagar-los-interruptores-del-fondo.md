@@ -29,7 +29,7 @@ PM-57 · RN-11 · RR-14 · 06 §4 · 08 §6 · 08 §7.6
 ## Criterios de aceptación
 
 - **CA-1** Dado el fondo recién creado, cuando se consulta, entonces `ia_activa` y `trading_activo` están apagados.
-- **CA-2** (caso borde) CB-80: Dado el fondo sin un aporte confirmado, cuando el Administrador intenta encender un interruptor, entonces la función lo rechaza y la app muestra "Fondo sin capital".
+- **CA-2** (caso borde) CB-80: Dado el fondo sin un aporte confirmado, cuando el Administrador intenta encender un interruptor, entonces responde `FONDO_SIN_CAPITAL` y la app muestra "Fondo sin capital".
 - **CA-3** Dado un aporte confirmado, cuando el Administrador enciende `ia_activa` o `trading_activo`, entonces el interruptor queda encendido, se registra `interruptor.encendido` y se publica `interruptor` en el canal `admin`.
 - **CA-4** Dado un Administrador, cuando apaga un interruptor con un motivo, entonces queda apagado con el motivo, el autor y la hora, y se registra `interruptor.apagado`.
 - **CA-5** (permiso) Dado un Usuario o un Analista, cuando llama `reanudar`, entonces recibe `NO_AUTORIZADO`.
@@ -68,7 +68,7 @@ El freno para Analistas con botón en la barra y sus efectos sobre sugerencias y
 
 ## Documentación a actualizar
 
-06 §9 no define el código de error al intentar encender un interruptor con el fondo sin capital (RN-11). Precisarlo en `docs/` antes de implementar.
+Ninguna.
 
 ## Definición de terminado
 

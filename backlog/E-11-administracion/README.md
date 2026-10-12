@@ -23,7 +23,7 @@ Cada historia tiene su narrativa, sus criterios de aceptación, sus tareas y sus
 |---|---|---|---|---|---|
 | [HU-097](HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md) | Sección de Administración y guía de primeros pasos | Administrador | R2 | Alta | [HU-006](../E-02-identidad-y-acceso/HU-006-navegacion-y-guardas-segun-el-rol.md) |
 | [HU-098](HU-098-pantalla-de-usuarios-e-invitaciones.md) | Pantalla de usuarios e invitaciones | Administrador | R2 | Alta | [HU-097](HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md), [HU-003](../E-02-identidad-y-acceso/HU-003-invitar-a-una-persona-y-revocar-invitaciones.md), [HU-010](../E-02-identidad-y-acceso/HU-010-suspender-y-reactivar-una-cuenta.md), [HU-011](../E-02-identidad-y-acceso/HU-011-cambiar-el-rol-de-una-cuenta.md) |
-| [HU-099](HU-099-pantalla-de-capital.md) | Pantalla de capital | Administrador | R2 | Alta | [HU-097](HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md), [HU-014](../E-03-fondo-y-libro-contable/HU-014-registrar-y-anular-aportes.md), [HU-015](../E-03-fondo-y-libro-contable/HU-015-confirmar-el-aporte-por-conciliacion-y-repartirlo-50-25-25.md), [HU-016](../E-03-fondo-y-libro-contable/HU-016-registrar-retiros-de-capital.md), [HU-009](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) |
+| [HU-099](HU-099-pantalla-de-capital.md) | Pantalla de capital | Administrador | R2 | Alta | [HU-097](HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md), [HU-014](../E-03-fondo-y-libro-contable/HU-014-registrar-y-anular-aportes.md), [HU-015](../E-03-fondo-y-libro-contable/HU-015-confirmar-el-aporte-por-conciliacion-y-repartirlo-50-25-25.md), [HU-016](../E-03-fondo-y-libro-contable/HU-016-registrar-retiros-de-capital.md), [HU-009](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md), [HU-022](../E-03-fondo-y-libro-contable/HU-022-registrar-ajustes-contables.md) |
 | [HU-100](HU-100-pantalla-de-cupos.md) | Pantalla de cupos | Administrador | R2 | Alta | [HU-097](HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md), [HU-018](../E-03-fondo-y-libro-contable/HU-018-asignar-y-reducir-cupos.md), [HU-009](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) |
 | [HU-101](HU-101-pantalla-de-parametros-e-interruptores.md) | Pantalla de parámetros e interruptores | Administrador | R2 | Media | [HU-097](HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md), [HU-033](../E-05-motor-de-politicas-y-configuracion/HU-033-parametros-configurables-con-rango-e-historial.md), [HU-034](../E-05-motor-de-politicas-y-configuracion/HU-034-encender-y-apagar-los-interruptores-del-fondo.md) |
 | [HU-102](HU-102-pantalla-de-lista-blanca.md) | Pantalla de lista blanca | Administrador | R3 | Media | [HU-097](HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md), [HU-036](../E-05-motor-de-politicas-y-configuracion/HU-036-editar-la-lista-blanca.md) |
@@ -76,6 +76,7 @@ flowchart LR
   HU015 --> HU099
   HU016 --> HU099
   HU009 --> HU099
+  HU022 --> HU099
   HU097 --> HU100
   HU018 --> HU100
   HU009 --> HU100

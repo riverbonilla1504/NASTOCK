@@ -30,7 +30,7 @@ PM-42 · RN-16 · RN-17 · RN-19 · 02 §5
 - **CA-1** Dado `usuarios_comun` con 2.500 disponibles, cuando el Administrador asigna 400 a un Usuario, entonces el libro registra usuarios_comun −400 y cupo +400 y se registra `cupo.asignado`.
 - **CA-2** (caso borde) CB-14: Dada una asignación mayor al disponible de `usuarios_comun`, cuando se intenta, entonces responde `FONDOS_INSUFICIENTES`.
 - **CA-3** (caso borde) CB-16: Dado un cupo con casi todo invertido, cuando el Administrador lo reduce, entonces solo puede hacerlo hasta su disponible; por encima responde `FONDOS_INSUFICIENTES`.
-- **CA-4** Dado `cupos.maximo_usd` configurado, cuando una asignación dejaría el cupo por encima de ese máximo, entonces la función la rechaza.
+- **CA-4** Dado `cupos.maximo_usd` configurado, cuando una asignación dejaría el cupo por encima de ese máximo, entonces responde `CUPO_SUPERA_MAXIMO`.
 - **CA-5** (permiso) Dado un Usuario o un Analista, cuando llama `asignar_cupo` o `reducir_cupo`, entonces recibe `NO_AUTORIZADO`.
 - **CA-6** Dado un cupo con disponible, cuando el Administrador lo reduce por un monto que no lo supera, entonces el dinero pasa del cupo a `usuarios_comun` y se registra `cupo.reducido`.
 
@@ -70,7 +70,7 @@ Reducir un cupo no vende posiciones: para eso está la liquidación ([HU-069](..
 
 ## Documentación a actualizar
 
-06 §9 no define el código de error cuando una asignación supera `cupos.maximo_usd` (RN-19). Precisarlo en `docs/` antes de implementar.
+Ninguna.
 
 ## Definición de terminado
 
