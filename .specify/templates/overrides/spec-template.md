@@ -10,7 +10,8 @@
   NO INVENTAR  Nada de supuestos razonables ni de estándares de la industria. Todo sale de la historia,
              del catálogo de FR o de docs/. Lo que docs/ no define, no se escribe.
   QUÉ, NO CÓMO  No se copia la sección "Tareas" ni se nombran funciones, tablas o archivos de código.
-             Excepción: los criterios de aceptación y la descripción de cada FR se copian tal cual.
+             Excepción: los criterios de aceptación, la descripción de cada FR, el texto de los casos
+             borde de docs/12 y los motivos de "Relaciones" se copian tal cual.
   MARCADORES   FR-xxx, SC-001, P1 y [NEEDS CLARIFICATION: …] quedan literales.
   [NEEDS CLARIFICATION: …]  Solo para lo que la historia trae en "Documentación a actualizar" cuando no
              dice "Ninguna". Si son más de tres, van los tres de mayor impacto y el resto a Supuestos.
@@ -37,7 +38,7 @@
 <!-- La narrativa de la sección "Historia", en una línea. -->
 **Como** [rol], **quiero** [acción], **para** [beneficio].
 
-**Por qué esta prioridad (Why this priority)**: [La prioridad y la entrega de la historia en el backlog, la regla o decisión que la hace necesaria y las historias que habilita, cada una con su motivo.]
+**Por qué esta prioridad (Why this priority)**: En el backlog tiene prioridad [prioridad] y pertenece a la entrega [entrega]. [La regla o decisión de docs/ que la hace necesaria.] Habilita [n] historias: [HU-xxx (motivo de "Relaciones")], […].
 
 **Prueba independiente (Independent Test)**: [Cómo se demuestra sola: su escenario E2E o, si no tiene uno propio, la prueba que nombra la historia; y qué entrega.]
 
@@ -56,7 +57,7 @@
 <!-- Los CB del campo "Casos borde" de la historia, con lo que hace el sistema según docs/12 y el
      criterio que lo comprueba. Si la historia no cita ninguno, se dice en una línea; no se inventan. -->
 
-- **CB-xx** · [Situación]: [lo que hace el sistema] (`docs/12` §[n]; fuente: [fuente]). Lo comprueba CA-[n].
+- **CB-xx** · [Situación]. [Lo que hace el sistema, con el texto de `docs/12`] (`docs/12` §[n]; fuente: [fuente]). Lo comprueba CA-[n].
 
 ## Requisitos (Requirements) *(obligatorio)*
 
@@ -65,14 +66,15 @@
 Son los del catálogo de `backlog/requisitos-funcionales/`, con su identificador y su descripción. Esta especificación no crea requisitos nuevos.
 
 <!-- Los FR que cita la historia, sin renumerar. La descripción, tal cual; entre paréntesis el
-     nombre, los actores y la fuente. -->
+     nombre, los actores y la fuente. Si la historia no cita ninguno, se dice en una línea. -->
 
 - **FR-xxx**: [Descripción del catálogo] *([Nombre] · actores: [rol o actor] · fuente: [fuente])*
 
 ### Entidades clave (Key Entities) *(incluir si la funcionalidad maneja datos)*
 
 <!-- Primero, si la historia agrega entidades o usa las que ya existen. Después, las entidades de
-     docs/06 que toca, en lenguaje del negocio: qué representa cada una y sus atributos clave. -->
+     docs/06 que toca, en lenguaje del negocio: qué representa cada una y sus atributos clave.
+     Si la historia no maneja datos, se dice en una línea. -->
 
 - **[Entidad]**: [Qué representa y sus atributos clave, según `docs/06`].
 

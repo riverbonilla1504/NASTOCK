@@ -33,7 +33,8 @@
 
 ## Notas (Notes)
 
-- **Excepción del proyecto.** CA-1, CA-2 y FR-012 nombran tecnología (`id_token`, Supabase, OAuth con PKCE) porque se copian tal cual de la historia y del catálogo. En "Supuestos", los títulos y motivos de las dependencias nombran Flutter y Supabase por la misma razón. No se reescriben: lo pide la plantilla del proyecto.
-- Los criterios de éxito no traen metas numéricas porque `docs/` no define ninguna para el ingreso. De `docs/01` §6 solo aplica el indicador de escenarios E2E en verde.
-- Q-08 (dominio de Google Workspace y correo del primer administrador) no tiene valor provisional en `docs/13` §2. Es configuración del despliegue y no bloquea el plan.
+- **Excepción del proyecto.** Los criterios de aceptación, la descripción de los requisitos, el texto de los casos borde y los motivos de las relaciones se copian tal cual de la historia, del catálogo y de `docs/`, y pueden nombrar tecnología. No se reescriben: lo pide la plantilla del proyecto.
+- No tiene escenario E2E propio: el ingreso con Google no se puede automatizar.
+- Los criterios de éxito no traen metas numéricas porque `docs/` no define ninguna para el ingreso.
+- Q-08 no tiene valor provisional: el dominio es configuración del despliegue.
 - Los puntos sin marcar exigen corregir la spec antes de `/speckit-clarify` o `/speckit-plan`.

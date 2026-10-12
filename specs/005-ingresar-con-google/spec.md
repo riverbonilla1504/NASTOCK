@@ -14,7 +14,7 @@
 
 **Como** Usuario, Analista o Administrador invitado, **quiero** entrar a la app con mi cuenta de Google de RiTech desde Android o desde el navegador, **para** usar la plataforma sin crear ni recordar otra contraseña.
 
-**Por qué esta prioridad (Why this priority)**: En el backlog tiene prioridad Alta y pertenece a la entrega R1 · Ver el mercado en vivo. El ingreso con Google es la única forma de entrar a la plataforma (D-12) y la primera acción que la matriz de permisos da a los tres roles (PM-01). Sin una sesión iniciada no se pueden construir ni demostrar las seis historias que habilita: HU-006 (necesita una sesión con rol), HU-007 (cierra la sesión que abre el ingreso), HU-009 (protege la sesión que abre el ingreso), HU-084 (abre los canales al iniciar sesión), HU-087 (registra el dispositivo al iniciar sesión) y HU-111 (el aviso se presenta tras el primer ingreso).
+**Por qué esta prioridad (Why this priority)**: En el backlog tiene prioridad Alta y pertenece a la entrega R1 · Ver el mercado en vivo. El ingreso con Google es la única forma de entrar a la plataforma (D-12) y la primera acción que la matriz de permisos da a los tres roles (PM-01). Habilita seis historias: HU-006 (necesita una sesión con rol), HU-007 (cierra la sesión que abre el ingreso), HU-009 (protege la sesión que abre el ingreso), HU-084 (abre los canales al iniciar sesión), HU-087 (registra el token al iniciar sesión) y HU-111 (el aviso se presenta tras el primer ingreso).
 
 **Prueba independiente (Independent Test)**: Se demuestra sola con la prueba manual de `docs/04` §3, paso 10, hecha en Android y en el navegador con tres cuentas: la cuenta invitada entra y queda con la sesión iniciada en la pantalla de inicio; la cuenta del dominio que no fue invitada es rechazada; y la cuenta personal de Gmail la rechaza Google. Entrega una persona invitada con la sesión iniciada. No tiene escenario E2E propio, porque el ingreso con Google no se puede automatizar (`docs/04` §1).
 
@@ -32,7 +32,7 @@
 
 ### Casos borde (Edge Cases)
 
-- **CB-01** · Un empleado del dominio sin invitación intenta entrar: el hook de alta rechaza, no se crea el usuario y la persona ve "Tu correo no tiene una invitación vigente. Pídele una al administrador." (`docs/12` §1; fuente: 04 §5). Lo comprueba CA-5.
+- **CB-01** · Un empleado del dominio sin invitación intenta entrar. El hook de alta rechaza; no se crea el usuario; mensaje "Tu correo no tiene una invitación vigente…" (`docs/12` §1; fuente: 04 §5). Lo comprueba CA-5.
 
 ## Requisitos (Requirements) *(obligatorio)*
 
@@ -61,7 +61,7 @@ La historia no agrega entidades. Usa estas dos, ya definidas en `docs/06` §5.1:
 
 ## Supuestos (Assumptions)
 
-- Depende de TT-04 · Esqueleto de la app Flutter para Android y web: la pantalla de ingreso se construye sobre el esqueleto de la app.
+- Depende de TT-04 · Esqueleto de la app Flutter para Android y web: la pantalla se construye sobre el esqueleto de la app.
 - Depende de TT-02 · Cuentas, conexiones y secretos de los servicios externos: necesita los clientes OAuth de Google y el proveedor configurado en Supabase.
 - Depende de HU-002 · Alta solo con invitación vigente: el primer ingreso depende del hook y del trigger de alta.
 - La historia no necesita entidades de datos nuevas.
@@ -69,6 +69,6 @@ La historia no agrega entidades. Usa estas dos, ya definidas en `docs/06` §5.1:
 - El ingreso con Google no se puede automatizar (`docs/04` §1): las pruebas automáticas usan el ingreso con correo del modo pruebas, que existe solo en local y en CI.
 - En R1, CA-3 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
 - **S1** (`docs/01` §5): RiTech usa Google Workspace con dominio propio. Si resulta falso: pantalla de consentimiento Externa en modo prueba (04 §1); el resto no cambia.
-- **S2** (`docs/01` §5): la app sigue siendo Flutter (Android + web). Si resulta falso: la arquitectura de backend no cambia; cambia solo el cliente.
+- **S2** (`docs/01` §5): La app sigue siendo Flutter (Android + web). Si resulta falso: la arquitectura de backend no cambia; cambia solo el cliente.
 - **Q-22** (`docs/13` §2, abierta): ¿RiTech tiene organización de Google Workspace, o se usa la pantalla Externa en modo prueba? Valor provisional: Workspace.
-- **Q-08** (`docs/13` §2, abierta): dominio de Google Workspace y correo del primer administrador. Sin valor provisional en `docs/13`. A esta historia le aplica el dominio, que es el que se usa para preseleccionar la cuenta corporativa en la web (CA-2).
+- **Q-08** (`docs/13` §2, abierta): Dominio de Google Workspace y correo del primer administrador. Sin valor provisional en `docs/13`. A esta historia le aplica el dominio, que es el que se usa para preseleccionar la cuenta corporativa en la web (CA-2).
