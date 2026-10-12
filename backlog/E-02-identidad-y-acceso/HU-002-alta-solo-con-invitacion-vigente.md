@@ -25,16 +25,17 @@
 
 ## Reglas
 
-PM-01 · RN-58 · 04 §5 · 04 §6 · D-12 · D-48
+PM-01 · RN-58 · 04 §5 · 04 §6 · 15 §3 · D-12 · D-48
 
 ## Criterios de aceptación
 
 - **CA-1** Dado un correo con una invitación pendiente y no vencida, cuando esa persona ingresa por primera vez, entonces se crea su perfil activo con el rol de la invitación, la invitación queda aceptada y se registra `cuenta.activada`.
 - **CA-2** (caso borde) CB-01: Dado un correo del dominio sin invitación, cuando intenta ingresar, entonces el usuario no se crea y recibe "Tu correo no tiene una invitación vigente. Pídele una al administrador."
 - **CA-3** (caso borde) CB-02: Dada una invitación con más de 7 días, cuando su correo intenta ingresar, entonces ocurre lo mismo que sin invitación.
-- **CA-4** Dado un correo de un dominio que no está en `auth.dominios_permitidos`, cuando intenta ingresar, entonces recibe "Solo se admiten cuentas corporativas de RiTech."
-- **CA-5** (caso borde) CB-92: Dado `auth.proveedores_permitidos` con solo `google`, cuando alguien intenta darse de alta con correo y contraseña, entonces recibe "Solo puedes ingresar con tu cuenta de Google de RiTech."
+- **CA-4** Dado un correo de un dominio que no está en `auth.dominios_permitidos`, cuando intenta ingresar, entonces el usuario no se crea y recibe "Solo se admiten cuentas corporativas de RiTech."
+- **CA-5** (caso borde) CB-92: Dado `auth.proveedores_permitidos` con solo `google`, cuando alguien intenta darse de alta con correo y contraseña, entonces el usuario no se crea y recibe "Solo puedes ingresar con tu cuenta de Google de RiTech."
 - **CA-6** (caso borde) CB-05: Dado que Workspace cambió el correo de una cuenta, cuando esa persona vuelve a ingresar, entonces `perfiles.email` se actualiza y el cambio queda en la bitácora.
+- **CA-7** Dado el entorno local o de CI con la semilla aplicada, cuando un usuario de prueba ingresa con correo y contraseña, entonces el ingreso se acepta.
 
 ## Casos borde
 

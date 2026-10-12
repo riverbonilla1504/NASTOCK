@@ -33,6 +33,8 @@ RN-41 · RN-42 · RN-43 · 08 §6 · 10 §12
 - **CA-3** (caso borde) CB-50: Dada una media jornada, cuando se consulta, entonces el cierre es a las 13:00 de Nueva York y la ventana de compras se calcula con ese cierre.
 - **CA-4** (caso borde) CB-51: Dado el cambio de horario de verano en EE. UU., cuando se consulta, entonces las horas guardadas en UTC siguen correctas sin intervención.
 - **CA-5** Dado un símbolo que deja de ser negociable en Alpaca, cuando corre la sincronización diaria, entonces queda desactivado en la lista blanca.
+- **CA-6** Dado el trabajo diario `calendario`, cuando corre, entonces el calendario queda sincronizado con el del broker, con la apertura y el cierre de cada sesión en UTC.
+- **CA-7** Dado un símbolo de la lista blanca, cuando corre la sincronización diaria, entonces `lista_blanca` guarda si es negociable y si es fraccionable según Alpaca.
 
 ## Casos borde
 

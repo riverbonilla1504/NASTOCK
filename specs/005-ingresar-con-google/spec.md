@@ -26,6 +26,7 @@
 4. **CA-4** · **Dado** un dispositivo sin conexión, **cuando** la persona intenta ingresar, **entonces** ve "No hay conexión. Revisa tu internet e inténtalo de nuevo."; y **dada** la ventana de Google abierta, **cuando** la persona la cierra, **entonces** vuelve a la pantalla de ingreso sin mensaje.
 5. **CA-5** (caso borde CB-01) · **Dado** un correo del dominio sin una invitación vigente, **cuando** intenta ingresar, **entonces** ve "Tu correo no tiene una invitación vigente. Pídele una al administrador."
 6. **CA-6** · **Dado** un error inesperado al iniciar sesión, **cuando** ocurre, **entonces** ve "No pudimos iniciar tu sesión. Inténtalo de nuevo." y el detalle queda en el registro técnico, no en la pantalla.
+7. **CA-7** · **Dada** una cuenta de Google de fuera del Workspace de RiTech (por ejemplo, una personal de Gmail), **cuando** intenta ingresar, **entonces** Google la rechaza.
 
 ---
 

@@ -743,6 +743,7 @@ Puntos de una historia concreta. Cada uno está también en la sección "Documen
 
 | Historia | Qué falta o choca en `docs/` |
 |---|---|
+| [HU-003](E-02-identidad-y-acceso/HU-003-invitar-a-una-persona-y-revocar-invitaciones.md) | 08 §5 define que una invitación pasa de pendiente a vencida a los 7 días, pero `docs/` no dice qué proceso la marca como vencida. 06 §5.1 permite una sola invitación pendiente por correo y CB-02 pide que el Administrador cree una nueva. Precisarlo en `docs/` antes de implementar. |
 | [HU-018](E-03-fondo-y-libro-contable/HU-018-asignar-y-reducir-cupos.md) | 06 §9 no define el código de error cuando una asignación supera `cupos.maximo_usd` (RN-19). Precisarlo en `docs/` antes de implementar. |
 | [HU-022](E-03-fondo-y-libro-contable/HU-022-registrar-ajustes-contables.md) | 03 §3 no dice en qué pantalla de Administración se registran los ajustes (PM-45). Precisarlo en `docs/` antes de construir la pantalla. |
 | [HU-025](E-03-fondo-y-libro-contable/HU-025-ajuste-por-split-o-agrupacion-de-acciones.md) | 06 §8 no nombra la función que ajusta la cantidad y el costo promedio de las posiciones: `registrar_ajuste` solo recibe asientos. Definirla en `docs/` antes de implementar. |

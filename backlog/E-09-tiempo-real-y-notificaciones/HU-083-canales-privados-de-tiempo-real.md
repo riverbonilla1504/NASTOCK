@@ -28,7 +28,7 @@
 ## Criterios de aceptación
 
 - **CA-1** Dada una persona activa, cuando se suscribe a `mercado`, a `fondo` y a `usuario:{su id}`, entonces la suscripción se acepta.
-- **CA-2** (aislamiento) Dado un Usuario, cuando intenta suscribirse a `usuario:{otro id}`, a `supervision` o a `admin`, entonces la suscripción se rechaza; un Analista entra a `supervision` y solo un Administrador entra a `admin`.
+- **CA-2** (aislamiento) Dado un Usuario, cuando intenta suscribirse a `usuario:{otro id}`, a `supervision` o a `admin`, entonces la suscripción se rechaza; un Analista y un Administrador entran a `supervision`, y solo un Administrador entra a `admin`.
 - **CA-3** (permiso) Dado un cliente con sesión, cuando intenta publicar en cualquier canal, entonces se rechaza: solo la base de datos publica.
 - **CA-4** Dado un evento de entidad, cuando se publica, entonces su carga trae solo tabla, id, versión y estado, sin montos.
 - **CA-5** Dada una cuenta suspendida, cuando intenta suscribirse, entonces todas las suscripciones se rechazan.

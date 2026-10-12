@@ -27,7 +27,7 @@
 ## Criterios de aceptación
 
 - **CA-1** Dado el repositorio v2, cuando se copia `performance_engine.dart` con su prueba, entonces queda en la app nueva y su prueba pasa en `flutter test`.
-- **CA-2** Dada una serie de QQQ, cuando se calcula ×2 teórico, entonces es dos veces la variación acumulada desde el inicio del periodo.
+- **CA-2** Dada una serie de barras diarias de QQQ, cuando se calcula ×2 teórico, entonces es dos veces la variación acumulada desde el inicio del periodo.
 - **CA-3** Dado el código copiado, cuando se revisa, entonces no arrastra los controladores en memoria, el login con contraseña ni la bitácora en memoria de la v2.
 
 ## Casos borde

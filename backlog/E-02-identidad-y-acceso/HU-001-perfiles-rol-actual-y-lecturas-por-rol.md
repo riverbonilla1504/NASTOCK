@@ -24,7 +24,7 @@
 
 ## Reglas
 
-03 §4.1 a §4.4 · 04 §7 · D-01
+03 §4.1 a §4.4 · 04 §7 · 04 §8 · D-01
 
 ## Criterios de aceptación
 
@@ -32,6 +32,8 @@
 - **CA-2** Dado un perfil suspendido con un token todavía vigente, cuando consulta cualquier tabla, entonces `private.rol_actual()` devuelve NULL y no recibe ninguna fila.
 - **CA-3** Dado un Usuario, cuando consulta `perfiles`, entonces solo ve su propia fila; un Analista o un Administrador ven todas.
 - **CA-4** (permiso) Dado cualquier rol, cuando intenta un `INSERT`, `UPDATE` o `DELETE` directo sobre `perfiles`, entonces la base de datos lo rechaza.
+- **CA-5** Dado un token de sesión recién emitido, cuando se revisa su vencimiento, entonces dura 15 minutos (900 s).
+- **CA-6** Dado un perfil cuyo rol cambió en `perfiles` y un token que todavía trae el rol anterior, cuando consulta, entonces la autorización usa el rol de `perfiles` y no el del token.
 
 ## Casos borde
 

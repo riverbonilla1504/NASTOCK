@@ -33,6 +33,7 @@
 - **CA-3** (caso borde) CB-66: Dada una pérdida de conexión, cuando ocurre, entonces la app muestra "Reconectando…" con los datos atenuados y, al reconectar, pide otra vez las fotos completas.
 - **CA-4** Dado el estado sin conexión, cuando la persona ve una pantalla con decisiones, entonces los botones de decisión quedan deshabilitados.
 - **CA-5** (caso borde) CB-70: Dado un teléfono con el reloj desfasado, cuando se muestra una cuenta regresiva, entonces usa el desfase medido contra el servidor.
+- **CA-6** Dada una pantalla con datos en vivo, cuando se monta, entonces la app pide la foto por la API y se suscribe al canal.
 
 ## Casos borde
 

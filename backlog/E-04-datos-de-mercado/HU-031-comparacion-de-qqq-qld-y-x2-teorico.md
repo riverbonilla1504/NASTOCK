@@ -28,7 +28,7 @@ PM-04 · 02 §1 · 02 §13 · RSG-08
 ## Criterios de aceptación
 
 - **CA-1** Dada la pantalla de mercado, cuando la persona abre la comparación, entonces ve tres líneas: QQQ, QLD real y ×2 teórico.
-- **CA-2** Dado un periodo elegido, cuando se dibuja ×2 teórico, entonces vale dos veces la variación acumulada de QQQ desde el inicio de ese periodo.
+- **CA-2** Dado un periodo elegido, cuando se dibuja ×2 teórico, entonces vale dos veces la variación acumulada de QQQ desde el inicio de ese periodo, calculada con barras diarias.
 - **CA-3** Dada la comparación, cuando se muestra, entonces incluye la advertencia de que QLD duplica el movimiento de cada día y no el del periodo.
 
 ## Casos borde
