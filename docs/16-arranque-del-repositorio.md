@@ -130,6 +130,8 @@ curl -s -X POST https://api.typesafe.ai/v1/systemone \
 | Python 3.12+ | `scripts/verificar_docs.py`, `scripts/publicar_wiki.py` |
 | Google Chrome + chromedriver | E2E de la app |
 | GitHub CLI (`gh`) | Backlog, proyecto, secretos |
+| `uv` | Instalar la línea de comandos de spec-kit sin tocar el Python del sistema |
+| spec-kit (`specify-cli`, versión fijada: v1.1.3) | Especificación por historia en `specs/` (D-56) |
 | Node LTS + `firebase-tools` | Despliegue manual de hosting o distribución, si hace falta |
 | GPG | Descifrar respaldos |
 
@@ -144,6 +146,10 @@ curl -s -X POST https://api.typesafe.ai/v1/systemone \
   escritura sobre la nube: los cambios van por migraciones.
 - [ ] `gh` autenticado en la máquina, para que el agente pueda leer y
   actualizar issues.
+- [ ] spec-kit para Claude Code: sus comandos `/speckit-…` (`.claude/skills/`),
+  la constitución y las plantillas (`.specify/`) están en el repositorio y se
+  usan como dice el flujo de `CLAUDE.md`. No se instalan sus extensiones
+  `git`, `github` ni `agent-context`.
 
 ---
 
@@ -237,11 +243,11 @@ R=<dueño>/<repo>; OWNER=<dueño>; P=<número del proyecto>
 
 # Épica
 gh issue create -R $R --title "E-07 · Sugerencias y decisiones" \
-  --body-file backlog/epicas/E-07.md --label epica --label E-07
+  --body-file backlog/E-07-sugerencias-y-decisiones/README.md --label epica --label E-07
 
 # Historia (el cuerpo sigue el formulario historia-de-usuario.yml)
 gh issue create -R $R --title "Aprobar una sugerencia de mi cupo" \
-  --body-file backlog/historias/HU-042.md \
+  --body-file backlog/E-07-sugerencias-y-decisiones/HU-062-aprobar-una-sugerencia-de-mi-cupo.md \
   --label historia --label E-07 --label M-09 --label M-08 \
   --milestone "R4 · Decidir y operar en paper" --assignee <usuario>
 

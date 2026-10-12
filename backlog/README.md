@@ -733,9 +733,9 @@ Al derivar el backlog aparecieron puntos que `docs/` no define o donde dos docum
 Puntos generales, que no pertenecen a una sola historia:
 
 1. **Escenarios E2E.** `docs/15` §4 tiene 16 escenarios y `CLAUDE.md` pide agregar o actualizar uno cuando un cambio toca un flujo. Muchas historias no tienen un escenario propio en ese catálogo; en ellas dice "Sin escenario propio". Al implementarlas habrá que decidir si se agrega un escenario nuevo, lo que exige un identificador nuevo en `docs/15`.
-2. **Identificadores nuevos.** `FR-xxx`, `HU-xxx` y `TT-xx` no están en la tabla de convenciones de `docs/README.md` ni en `scripts/verificar_docs.py`, que solo revisa `docs/*.md`. Este backlog vive fuera de `docs/`, así que CI no lo valida. El prefijo `FR` es el que se pidió; los demás identificadores del proyecto están en español.
-3. **Rutas del backlog.** Los comandos de `docs/16` §6.2 usan `backlog/epicas/E-07.md` y `backlog/historias/HU-042.md`. Aquí cada épica es una carpeta que contiene sus historias; más abajo están los comandos con estas rutas.
-4. **Nombre de la rama.** `docs/15` §7 define la rama como `hu-<número>-<descripcion-corta>` con el número del issue (`#42`), no con el identificador `HU-xxx` de este backlog. Los dos números van a ser distintos.
+2. **Identificadores nuevos.** Resuelto en parte en la v3.3 de `docs/`: `FR-xxx`, `HU-xxx` y `TT-xx` ya están en la tabla de convenciones de `docs/README.md`. Sigue pendiente que `scripts/verificar_docs.py` solo revisa `docs/*.md`: este backlog vive fuera de `docs/`, así que CI no lo valida.
+3. **Rutas del backlog.** Resuelto en la v3.3 de `docs/`: los comandos de `docs/16` §6.2 usan las rutas de esta carpeta.
+4. **Nombre de la rama.** Resuelto en la v3.3 de `docs/` (D-56): la rama de una historia lleva su número de historia en 3 dígitos y se llama igual que su carpeta en `specs/` (`docs/15` §7). El número del issue va en los commits y en el PR.
 5. **E-01 sin narrativa.** `docs/16` §6.1 crea E-01 como tareas técnicas. Si se prefiere que todo el backlog sean historias con narrativa, hay que cambiarlo en `docs/` primero.
 6. **Pantallas de Administración.** `docs/14` §2 define E-11 como "pantallas del admin sobre las capacidades de las demás épicas". Por eso las historias de las otras épicas llegan hasta la función y sus pruebas, y la pantalla del Administrador está en una historia de E-11 que depende de ellas. La excepción es el formulario de invitación ([HU-003](E-02-identidad-y-acceso/HU-003-invitar-a-una-persona-y-revocar-invitaciones.md)), que R1 necesita para su demostración.
 

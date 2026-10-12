@@ -4,6 +4,14 @@ Documento informativo. Describe la herramienta [github/spec-kit](https://github.
 
 Fuentes: el repositorio de spec-kit, su [documentación](https://github.github.io/spec-kit/) y su plantilla de especificación, consultados el 9 de octubre de 2026. La herramienta cambia seguido: los nombres de comandos y opciones hay que confirmarlos con la versión que se instale.
 
+> **Actualización del 12 de octubre de 2026.** La adopción quedó decidida (D-56, `docs/13`). Lo vigente está en `CLAUDE.md` (flujo y reglas de spec-kit), `docs/15` §7 (ramas) y `docs/16` §3.7–§3.8 (herramientas); este documento queda como referencia de la consulta inicial. Lo que cambió en el kit desde entonces:
+>
+> - La versión fijada es `v1.1.3`, el último release.
+> - `/speckit-specify` solo crea la carpeta de `specs/`. La rama la crea la extensión `git`, que es opcional y aquí no se instala.
+> - La conversión de tareas a issues salió del núcleo y pasó a la extensión `github`, que tampoco se instala.
+> - `CLAUDE.md` solo lo modifica la extensión `agent-context`, que no se instala.
+> - `/speckit-specify` crea además `checklists/requirements.md` en la carpeta de la spec y admite como máximo tres `[NEEDS CLARIFICATION]`.
+
 ## Qué es
 
 spec-kit es un conjunto de herramientas de código abierto de GitHub para el **desarrollo guiado por especificaciones**: primero se escribe qué se quiere y por qué, luego un plan técnico, luego las tareas y al final el código. Le da al agente de IA un proceso con pasos, plantillas y resultados escritos, en lugar de pedirle código directamente.

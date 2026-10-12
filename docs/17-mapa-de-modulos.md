@@ -204,8 +204,9 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Depende de**: — · **Lo usan**: M-05, M-06, M-07, M-10, M-12, M-14
 
 ### M-20 · Plataforma, CI/CD y calidad
-- **Qué hace**: flujos de GitHub Actions, scripts de verificación, despliegue, respaldo, wiki, plantillas.
+- **Qué hace**: flujos de GitHub Actions, scripts de verificación, despliegue, respaldo, wiki, plantillas, backlog y especificación por historia con spec-kit (D-56).
 - **Docs**: 15 completo · 16 completo · 05 §10–§12
+- **Planeación y specs**: `backlog/`, `specs/`, `.specify/`, `.claude/skills/`
 - **BD**: `public.ping()`
 - **Funciones**: —
 - **App**: `integration_test/`, `test_driver/`

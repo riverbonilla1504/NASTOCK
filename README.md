@@ -30,7 +30,7 @@ un agente de IA, las reglas están en [`CLAUDE.md`](CLAUDE.md).
 
 ## Estado
 
-- Especificación v3.1 lista.
+- Especificación v3.3 lista.
 - **Siguiente paso**: crear el backlog en GitHub Projects con GitHub CLI y
   conectar los servicios ([16 §3–§7](docs/16-arranque-del-repositorio.md)).
 - Aún no hay código.

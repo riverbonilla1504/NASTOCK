@@ -109,6 +109,9 @@ los módulos afectados.
 | `E2E-xx` | Escenario de prueba de punta a punta | [15 §4](15-calidad-pruebas-y-ci-cd.md#4-escenarios-e2e-obligatorios) |
 | `M-xx` | Módulo | [17](17-mapa-de-modulos.md) |
 | `EC-xxx` | Error conocido | [errores-conocidos](errores-conocidos.md) |
+| `FR-xxx` | Requisito funcional | `backlog/requisitos-funcionales/` |
+| `HU-xxx` | Historia de usuario | `backlog/`, en la carpeta de su épica |
+| `TT-xx` | Tarea técnica de E-01 | `backlog/E-01-cimientos-y-calidad-continua/` |
 
 - Un identificador **nunca se reutiliza**. Si una regla deja de aplicar, se
   marca como *retirada* y su número queda libre para siempre (p. ej. RN-15,
@@ -117,7 +120,8 @@ los módulos afectados.
 - Parámetros configurables: por su clave, p. ej. `sugerencias.minutos_vencimiento`
   (catálogo en [02 §10](02-logica-de-negocio.md#10-parámetros-configurables)).
 - `scripts/verificar_docs.py` comprueba en CI que todo identificador citado
-  esté definido y que todo enlace y ancla exista.
+  esté definido y que todo enlace y ancla exista. No revisa `FR`, `HU` ni
+  `TT`, que viven en `backlog/`.
 
 ## Idioma y nombres
 

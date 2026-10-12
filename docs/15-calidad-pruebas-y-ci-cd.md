@@ -139,12 +139,19 @@ Secretos y variables que necesitan: [16 §4](16-arranque-del-repositorio.md#4-se
 ## 7. Ramas y pull requests
 
 - Rama principal: `main`, siempre desplegable.
-- Una rama por historia: `hu-<número>-<descripcion-corta>` (p. ej.
-  `hu-42-aprobar-sugerencia`). Vida corta: se integra en días, no semanas.
-- Commits en español, en imperativo, con la historia: `Agrega la aprobación
-  de sugerencias (#42)`.
+- Una rama por historia, con el mismo nombre que su carpeta en `specs/`:
+  `<número de la historia en 3 dígitos>-<descripcion-corta>` (p. ej.
+  `062-aprobar-sugerencia` para HU-062). Vida corta: se integra en días, no
+  semanas.
+- Las tareas técnicas no llevan spec y su rama es
+  `tt-<número>-<descripcion-corta>` (p. ej. `tt-03-base-de-supabase`). Lo
+  demás (documentación, herramientas) usa un nombre corto en minúsculas con
+  guiones.
+- Commits en español, en imperativo, con el issue de la historia: `Agrega la
+  aprobación de sugerencias (#42)`.
 - PR con la plantilla (`.github/pull_request_template.md`): historia,
   módulos, escenario E2E, documentación actualizada, errores registrados.
+  Incluye la carpeta de la historia en `specs/`.
 - Integración por *squash*.
 - Si el repositorio es privado en plan gratuito no hay reglas de protección
   de rama ([16 §2](16-arranque-del-repositorio.md#2-decisiones-antes-de-crear-el-repositorio)):

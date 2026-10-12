@@ -75,18 +75,43 @@ si el enfoque funciona.
 ## Flujo para implementar una historia
 
 ```
-0. gh issue view <n>  → criterios, reglas (RN/RR/PM), casos borde (CB), módulos (M), E2E
+0. gh issue view <n> y su archivo en backlog/ (HU-xxx)
+     → criterios, reglas (RN/RR/PM), casos borde (CB), módulos (M), E2E
 1. docs/17 → secciones de docs/ y rutas de esos módulos; errores conocidos de esos módulos
-2. ¿Contradice o falta en docs/?  → regla de oro 2
-3. Rama: hu-<n>-<descripcion-corta>
-4. Implementar por capas, cada una con sus pruebas:
+2. ¿Contradice o falta en docs/?  → regla de oro 2 (antes de especificar)
+3. Rama: <historia en 3 dígitos>-<descripcion-corta>, igual a su carpeta en specs/
+     (HU-005 → 005-ingresar-con-google)
+4. Especificar con spec-kit, a partir de la historia:
+     /speckit-specify → specs/<rama>/spec.md   qué y por qué
+     /speckit-plan    → plan.md                cómo: módulos de docs/17, por capas
+     /speckit-tasks   → tasks.md               desde la sección "Tareas" de la historia
+     /speckit-analyze → consistencia entre los tres
+5. Implementar por capas (/speckit-implement), cada una con sus pruebas:
      migración (tablas, RLS) → RPC / funciones private → Edge Functions → app
-5. Escenario E2E nuevo o actualizado
-6. scripts/verificar.sh  (completo, en verde)
-7. Actualizar: docs/ (si cambió una regla) · docs/17 (si cambiaron rutas)
+6. Escenario E2E nuevo o actualizado
+7. scripts/verificar.sh  (completo, en verde)
+8. Actualizar: docs/ (si cambió una regla) · docs/17 (si cambiaron rutas)
               · errores-conocidos.md (si aplica) · historial 13 §4 (si cambió una regla)
-8. PR con la plantilla, "Closes #<n>"; actualizar el ítem en GitHub Projects
+9. PR con la plantilla, "Closes #<n>", con la carpeta de la historia en specs/;
+   actualizar el ítem en GitHub Projects
 ```
+
+### Reglas de spec-kit (D-56)
+
+- `specs/` es un derivado de `docs/` y de `backlog/`. Si una spec choca con
+  `docs/`, manda `docs/` y se corrige la spec.
+- Una spec por historia, generada por entrega cuando se va a construir. Las
+  tareas técnicas de E-01 no llevan spec (rama `tt-<nn>-<descripcion-corta>`).
+- La spec conserva los criterios de aceptación con su `CA-n`, cita los `FR` del
+  catálogo sin renumerarlos y, en "Supuestos", incluye los supuestos de
+  `docs/01` §5 y las preguntas `Q-xx` de `docs/13` §2 que apliquen.
+- `/speckit-clarify` solo para dudas que no tocan una regla. Si la tocan, va
+  primero a `docs/` (regla de oro 2).
+- No se usan `/speckit-taskstoissues` ni las extensiones `git`, `github` y
+  `agent-context` del kit: los issues salen del backlog, las ramas y los
+  commits siguen `docs/15` §7 y este archivo no lo edita el kit.
+- La constitución (`.specify/memory/constitution.md`) remite a este archivo y
+  a `docs/`; no agrega reglas.
 
 ## Cuando algo falla
 
@@ -112,6 +137,10 @@ flutter test
 flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d web-server
 
 gh issue view <n> · gh issue list --search "<ID>" · gh issue comment <n> --body "…"
+
+specify version · specify self check   # línea de comandos de spec-kit (versión fijada en docs/16 §3.7)
+# En el chat del agente, no en la terminal:
+/speckit-specify · /speckit-plan · /speckit-tasks · /speckit-analyze · /speckit-implement
 ```
 
 ## Convenciones
@@ -125,9 +154,9 @@ gh issue view <n> · gh issue list --search "<ID>" · gh issue comment <n> --bod
 
 ## Estado del proyecto
 
-- Especificación v3.1 completa en `docs/`.
-- **Pendiente inmediato**: crear el backlog completo en GitHub (épicas e
-  historias como issues con GitHub CLI, en GitHub Projects, con la
-  documentación en la wiki) y conectar los servicios. Todo está en
-  `docs/16-arranque-del-repositorio.md` §3–§7.
+- Especificación v3.3 completa en `docs/`.
+- Backlog completo en `backlog/` (227 requisitos, 13 épicas, 117 historias y
+  9 tareas técnicas). **Pendiente**: publicarlo como issues en GitHub Projects
+  y conectar los servicios (`docs/16-arranque-del-repositorio.md` §3–§7).
+- spec-kit adoptado (D-56). Las specs se generan por entrega; la primera es R1.
 - Aún no hay código: la primera épica es E-01 (cimientos y calidad continua).
