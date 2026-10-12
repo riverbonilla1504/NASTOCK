@@ -30,6 +30,7 @@ RR-11 · 09 §2 · 08 §9.4
 - **CA-2** (caso borde) CB-52: Dada una suspensión general del mercado, cuando los precios se congelan, entonces todos quedan marcados como desactualizados.
 - **CA-3** Dado un precio desactualizado, cuando la persona está en una pantalla con botones de aprobar o de comprar, entonces esos botones quedan deshabilitados.
 - **CA-4** Dado que llegan precios nuevos, cuando se reciben, entonces la marca desaparece.
+- **CA-5** (caso borde) CB-69: Dado que el trabajo programado deja de correr, cuando el precio supera la antigüedad máxima, entonces la app muestra "dato desactualizado" por la antigüedad del precio.
 
 ## Casos borde
 

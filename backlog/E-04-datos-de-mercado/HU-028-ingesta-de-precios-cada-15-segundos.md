@@ -37,7 +37,7 @@
 
 ## Casos borde
 
-CB-53, CB-54
+CB-53
 
 ## Escenario E2E
 

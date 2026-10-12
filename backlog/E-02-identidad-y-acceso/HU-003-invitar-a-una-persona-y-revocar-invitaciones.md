@@ -33,7 +33,7 @@ PM-50 · 03 §4.4 · 04 §4.1 · 08 §5
 - **CA-3** (caso borde) CB-03: Dado un correo que ya tiene cuenta, cuando el Administrador lo invita, entonces recibe `CORREO_YA_REGISTRADO`.
 - **CA-4** Dada una invitación pendiente, cuando el Administrador la revoca, entonces pasa a revocada, se registra `cuenta.invitacion_revocada` y ese correo ya no puede ingresar.
 - **CA-5** (permiso) Dado un Usuario o un Analista, cuando llama `invitar_usuario` o `revocar_invitacion`, entonces recibe `NO_AUTORIZADO`.
-- **CA-6** (caso borde) CB-02: Dada una invitación pendiente con más de 7 días, cuando su correo intenta ingresar, entonces no puede entrar; y cuando el Administrador invita de nuevo ese correo, entonces se crea una invitación nueva.
+- **CA-6** (caso borde) CB-02: Dada una invitación pendiente con más de 7 días, cuando su correo intenta ingresar, entonces no puede entrar; y cuando el Administrador invita de nuevo ese correo, entonces la invitación anterior pasa a vencida y se crea una nueva.
 - **CA-7** (permiso) Dado un Administrador suspendido con un token todavía vigente, cuando llama `invitar_usuario` o `revocar_invitacion`, entonces la función la rechaza por no tener una sesión activa.
 
 ## Casos borde
@@ -66,7 +66,7 @@ El sistema no envía correos de invitación: el Administrador avisa por los cana
 
 ## Documentación a actualizar
 
-08 §5 define que una invitación pasa de pendiente a vencida a los 7 días, pero `docs/` no dice qué proceso la marca como vencida. 06 §5.1 permite una sola invitación pendiente por correo y CB-02 pide que el Administrador cree una nueva. Precisarlo en `docs/` antes de implementar.
+Ninguna.
 
 ## Definición de terminado
 

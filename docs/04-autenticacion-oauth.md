@@ -380,6 +380,8 @@ le crea un cupo nuevo en 0.
 |---|---|
 | Cuenta fuera del Workspace | Lo muestra Google (la app Interna no la admite). |
 | Del dominio pero sin invitación / invitación vencida o revocada | "Tu correo no tiene una invitación vigente. Pídele una al administrador." |
+| Dominio que no está en `auth.dominios_permitidos` (§5) | "Solo se admiten cuentas corporativas de RiTech." |
+| Proveedor que no está en `auth.proveedores_permitidos` (§5, CB-92) | "Solo puedes ingresar con tu cuenta de Google de RiTech." |
 | Cuenta suspendida o de baja | "Tu cuenta está suspendida. Comunícate con el administrador." |
 | El usuario cerró la ventana de Google | Sin mensaje; vuelve a la pantalla de ingreso. |
 | Sin conexión | "No hay conexión. Revisa tu internet e inténtalo de nuevo." |
