@@ -1,50 +1,83 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Versión: plantilla → 1.0.0 (primera versión)
+- Principios: I a VII, uno por cada regla de oro de CLAUDE.md
+- Secciones: Invariantes · Uso de spec-kit · Gobierno
+- Plantillas: .specify/templates/overrides/spec-template.md (en español) ✅
+- Pendientes: ninguno
+-->
 
-## Core Principles
+# Constitución de la plataforma de inversión de RiTech (Constitution)
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+Este archivo **no es una fuente de verdad**. Es el índice que spec-kit lee antes de especificar, planear y analizar: una línea por regla y el lugar donde está escrita completa. Si algo de aquí choca con `docs/` o con `CLAUDE.md`, mandan ellos (ver Gobierno).
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+## Principios (Core Principles)
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### I. `docs/` es la fuente de verdad
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+Lo que no está en `docs/` no está decidido. Ninguna regla de negocio se escribe de memoria ni porque parezca razonable: al especificar no se suponen valores ni comportamientos, y lo que falte se marca en lugar de adivinarlo.
+→ `CLAUDE.md`, regla de oro 1 · `docs/13` D-49
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. Documentación primero
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Si lo pedido no está en `docs/` o lo contradice, se detiene el trabajo, se propone el cambio a `docs/`, se aprueba, se anota en el historial y recién entonces se implementa.
+→ `CLAUDE.md`, regla de oro 2 · `docs/13` §4
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. Sincronía en ambos sentidos
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Las historias y `docs/` cambian juntas. La wiki se genera sola y nunca se edita a mano.
+→ `CLAUDE.md`, regla de oro 3
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### IV. Investigación acotada
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+Se leen solo los módulos afectados: sus secciones de `docs/`, sus errores conocidos y sus rutas.
+→ `CLAUDE.md`, regla de oro 4 · `docs/17` §1 · D-52
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### V. Errores conocidos
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Ante un error, primero se busca en el registro; lo que costó resolver se anota ahí.
+→ `CLAUDE.md`, regla de oro 5 · `docs/errores-conocidos.md` · D-50
+
+### VI. El sistema siempre queda funcionando de punta a punta
+
+Nada está terminado sin `scripts/verificar.sh` completo en verde. Un cambio que toca un flujo agrega o actualiza su escenario E2E. Nunca se desactiva ni se relaja una prueba para que pase.
+→ `CLAUDE.md`, regla de oro 6 · `docs/15` · D-51
+
+### VII. Alcance y costo
+
+Solo MVP en paper trading: nada de dinero real. Solo herramientas gratuitas, salvo DeepSeek y JEV.
+→ `CLAUDE.md`, regla de oro 7 · D-44 · D-45
+
+## Invariantes (Additional Constraints)
+
+Todo plan y toda tarea los respetan. El texto completo está en `CLAUDE.md`, sección "Invariantes que nunca se rompen".
+
+1. La IA no ejecuta: toda compra o venta discrecional la aprueba una persona.
+2. Toda operación pasa por el motor de políticas.
+3. El dinero solo se mueve con asientos de doble partida que suman cero; nunca con un cambio directo de saldos.
+4. La app escribe solo por RPC y hay RLS en todas las tablas de `public`. → `docs/03` §4.3 y §4.4
+5. La autorización lee `perfiles`, no los claims del token. → `docs/03` §4.1 y §4.2
+6. Ninguna llave en la app, en el repositorio, en issues ni en registros.
+7. A DeepSeek y a JEV no se les envían datos personales; a JEV, etiquetas en inglés, nunca cifras ni fechas. → D-40
+8. Proveedores simulados y correo + contraseña solo en local y CI. → `docs/15` §3 · D-47 · D-48
+9. Migraciones solo hacia adelante; la base de datos de la nube nunca se edita a mano.
+10. Los eventos de tiempo real llevan identificadores y versión, nunca montos. → `docs/09` §4 · D-32
+
+## Uso de spec-kit (Development Workflow)
+
+El flujo y las reglas de uso están en `CLAUDE.md`: "Flujo para implementar una historia" y "Reglas de spec-kit (D-56)". Lo que todo comando del kit debe tener presente:
+
+- La entrada de una spec es una historia de `backlog/`. `specs/` es un derivado de `docs/` y de `backlog/`.
+- La spec conserva los criterios de aceptación con su `CA-n` y cita los `FR` del catálogo; no crea requisitos ni criterios.
+- El plan parte de los módulos de `docs/17` y se implementa por capas, cada una con sus pruebas: migración → RPC y funciones `private` → Edge Functions → app.
+- Las tareas salen de la sección "Tareas" de la historia.
+- Los issues salen del backlog; el kit no los crea.
+
+## Gobierno (Governance)
+
+- **Precedencia**: `docs/` → `CLAUDE.md` → esta constitución → `spec.md`, `plan.md` y `tasks.md`. En caso de conflicto manda `docs/`.
+- **Cambios**: las reglas se cambian en `docs/` y en `CLAUDE.md`, con el procedimiento de la regla de oro 2. Después se ajusta esta constitución para que siga diciendo lo mismo; nunca al revés.
+- **Versiones**: mayor si se quita o se redefine un principio, menor si se agrega uno, parche si solo cambia la redacción.
+- **Cumplimiento**: `/speckit-plan` y `/speckit-analyze` revisan estos principios; el PR lo confirma con su plantilla y con `scripts/verificar.sh` en verde.
+
+**Version**: 1.0.0 | **Ratified**: 2026-10-12 | **Last Amended**: 2026-10-12

@@ -23,7 +23,7 @@
 1. **CA-1** · **Dada** una persona invitada, **cuando** toca "Entrar con Google" en Android, **entonces** el ingreso nativo entrega el `id_token` a Supabase y la persona queda con la sesión iniciada en la pantalla de inicio.
 2. **CA-2** · **Dada** una persona invitada, **cuando** entra desde la web, **entonces** la redirección OAuth con PKCE preselecciona la cuenta corporativa y vuelve a la app con la sesión iniciada.
 3. **CA-3** · **Dada** una cuenta suspendida o de baja, **cuando** intenta ingresar, **entonces** ve "Tu cuenta está suspendida. Comunícate con el administrador."
-4. **CA-4** · **Dado** un dispositivo sin conexión, **cuando** la persona intenta ingresar, **entonces** ve "No hay conexión. Revisa tu internet e inténtalo de nuevo."; y **dada** la ventana de Google abierta, **cuando** la persona la cierra, **entonces** vuelve a la pantalla de ingreso sin mensaje.
+4. **CA-4** · **Dado** un dispositivo sin conexión, **cuando** intenta ingresar, **entonces** ve "No hay conexión. Revisa tu internet e inténtalo de nuevo."; y si cierra la ventana de Google, vuelve a la pantalla de ingreso sin mensaje.
 5. **CA-5** (caso borde CB-01) · **Dado** un correo del dominio sin una invitación vigente, **cuando** intenta ingresar, **entonces** ve "Tu correo no tiene una invitación vigente. Pídele una al administrador."
 6. **CA-6** · **Dado** un error inesperado al iniciar sesión, **cuando** ocurre, **entonces** ve "No pudimos iniciar tu sesión. Inténtalo de nuevo." y el detalle queda en el registro técnico, no en la pantalla.
 7. **CA-7** · **Dada** una cuenta de Google de fuera del Workspace de RiTech (por ejemplo, una personal de Gmail), **cuando** intenta ingresar, **entonces** Google la rechaza.
