@@ -64,6 +64,8 @@ E2E-02 (actualizado)
 
 El sistema no envía correos de invitación: el Administrador avisa por los canales internos (04 §4.1). El cupo inicial es solo una intención hasta que la persona acepta (02 §11). La pantalla completa de cuentas está en [HU-098](../E-11-administracion/HU-098-pantalla-de-usuarios-e-invitaciones.md).
 
+En R1, CA-7 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
+
 ## Documentación a actualizar
 
 Ninguna.

@@ -35,5 +35,4 @@
 
 - **Excepción del proyecto.** Los criterios de aceptación, la descripción de los requisitos, el texto de los casos borde y los motivos de las relaciones se copian tal cual de la historia, del catálogo y de `docs/`, y pueden nombrar tecnología. No se reescriben: lo pide la plantilla del proyecto.
 - No tiene escenario E2E propio: la ejercita E2E-04.
-- CA-2 solo nombra el mensaje de fondos insuficientes: el del máximo por persona (`CUPO_SUPERA_MAXIMO`) no tiene criterio en la pantalla.
 - Los puntos sin marcar exigen corregir la spec antes de `/speckit-clarify` o `/speckit-plan`.

@@ -27,7 +27,7 @@ PM-42 · RN-16 · RN-17 · 02 §5
 ## Criterios de aceptación
 
 - **CA-1** Dado un Administrador, cuando abre Cupos, entonces ve el disponible de `usuarios_comun` y cada cupo con su titular, su efectivo, su disponible y su patrimonio.
-- **CA-2** Dado un cupo, cuando asigna o reduce un monto tras la confirmación, entonces los saldos se actualizan; si falla, ve el mensaje de `FONDOS_INSUFICIENTES`.
+- **CA-2** Dado un cupo, cuando asigna o reduce un monto tras la confirmación, entonces los saldos se actualizan; si falla, ve el mensaje de `FONDOS_INSUFICIENTES` o de `CUPO_SUPERA_MAXIMO`.
 - **CA-3** Dado un cambio de saldos, cuando ocurre, entonces la pantalla se actualiza en vivo.
 - **CA-4** (permiso) Dado un Usuario o un Analista, cuando abre esta pantalla, entonces el enrutador lo lleva a `/inicio`.
 

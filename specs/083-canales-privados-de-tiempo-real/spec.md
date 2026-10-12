@@ -60,4 +60,5 @@ La historia no agrega entidades de `docs/06`. Define los cinco canales de `docs/
 - Depende de HU-001 · Perfiles, rol actual y lecturas por rol: las políticas usan `private.rol_actual()` y `private.es_supervisor()`.
 - Cada historia que cambia algo visible en vivo publica su evento en el canal que le corresponde (`docs/14` §6).
 - Los mensajes de tiempo real se borran a las 72 horas.
+- En R1, CA-5 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
 - **S4** (`docs/01` §5): Pocos usuarios concurrentes (decenas, no miles). Si resulta falso: revisar límites de Realtime y el plan de datos de mercado.

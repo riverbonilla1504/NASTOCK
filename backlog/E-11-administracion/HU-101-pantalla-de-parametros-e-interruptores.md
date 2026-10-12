@@ -30,7 +30,7 @@ PM-54 · PM-56 · PM-57 · 02 §10 · 06 §4
 - **CA-1** Dado un Administrador, cuando abre Parámetros, entonces ve cada parámetro con su valor, su rango y su descripción, agrupados por tema.
 - **CA-2** Dado un parámetro, cuando lo cambia con un motivo, entonces se guarda y aparece en su historial; un valor fuera de rango muestra el mensaje de `PARAMETRO_FUERA_DE_RANGO`.
 - **CA-3** Dados los tres porcentajes de reparto, cuando los edita, entonces la pantalla los cambia juntos y no deja guardar si no suman 100.
-- **CA-4** Dado un Administrador, cuando abre Interruptores, entonces ve el estado de `ia_activa` y de `trading_activo` con el motivo, el autor y la hora de la pausa, y puede encenderlos o apagarlos con confirmación.
+- **CA-4** Dado un Administrador, cuando abre Interruptores, entonces ve el estado de `ia_activa` y de `trading_activo` con el motivo, el autor y la hora de la pausa, y puede encenderlos o apagarlos con confirmación; si el fondo no tiene capital, ve el mensaje de `FONDO_SIN_CAPITAL`.
 - **CA-5** (permiso) Dado un Usuario o un Analista, cuando abre esta pantalla, entonces el enrutador lo lleva a `/inicio`.
 
 ## Casos borde

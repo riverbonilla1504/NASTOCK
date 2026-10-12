@@ -62,3 +62,4 @@ La historia agrega una entidad, definida en `docs/06` §5.1:
 
 - Depende de TT-03 · Base de Supabase: esquema private, extensiones, Vault y ping: usa el esquema `private` y el proyecto local.
 - Los datos de rol y estado que viajan en la sesión son solo para la interfaz: la autorización consulta el perfil en cada operación (`docs/03` §4.1).
+- En R1, CA-2 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).

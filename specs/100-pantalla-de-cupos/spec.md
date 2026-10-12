@@ -21,7 +21,7 @@
 **Escenarios de aceptación (Acceptance Scenarios)**:
 
 1. **CA-1** · **Dado** un Administrador, **cuando** abre Cupos, **entonces** ve el disponible de `usuarios_comun` y cada cupo con su titular, su efectivo, su disponible y su patrimonio.
-2. **CA-2** · **Dado** un cupo, **cuando** asigna o reduce un monto tras la confirmación, **entonces** los saldos se actualizan; si falla, ve el mensaje de `FONDOS_INSUFICIENTES`.
+2. **CA-2** · **Dado** un cupo, **cuando** asigna o reduce un monto tras la confirmación, **entonces** los saldos se actualizan; si falla, ve el mensaje de `FONDOS_INSUFICIENTES` o de `CUPO_SUPERA_MAXIMO`.
 3. **CA-3** · **Dado** un cambio de saldos, **cuando** ocurre, **entonces** la pantalla se actualiza en vivo.
 4. **CA-4** (permiso) · **Dado** un Usuario o un Analista, **cuando** abre esta pantalla, **entonces** el enrutador lo lleva a `/inicio`.
 

@@ -66,6 +66,8 @@ E2E-01 (nuevo)
 
 La navegación es experiencia de uso; la seguridad real está en RLS y en las funciones (03 §4).
 
+En R1, CA-3 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
+
 ## Documentación a actualizar
 
 Ninguna.

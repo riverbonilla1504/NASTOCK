@@ -35,6 +35,5 @@
 
 - **Excepción del proyecto.** Los criterios de aceptación, la descripción de los requisitos, el texto de los casos borde y los motivos de las relaciones se copian tal cual de la historia, del catálogo y de `docs/`, y pueden nombrar tecnología. No se reescriben: lo pide la plantilla del proyecto.
 - No tiene escenario E2E propio.
-- CA-4 no nombra el intento de encender sin capital (`FONDO_SIN_CAPITAL`) en la pantalla; lo cubre HU-034 CA-2.
 - PM-56 da el freno también al Analista, pero esta pantalla es solo del Administrador: el freno del Analista llega con HU-039.
 - Los puntos sin marcar exigen corregir la spec antes de `/speckit-clarify` o `/speckit-plan`.

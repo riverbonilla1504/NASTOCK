@@ -69,3 +69,4 @@ La historia no agrega entidades. Usa una, definida en `docs/06` §5.1:
 - El sistema no envía correos de invitación: el Administrador avisa por los canales internos (`docs/04` §4.1).
 - El cupo inicial es solo una intención hasta que la persona acepta (`docs/02` §11).
 - La pantalla completa de cuentas llega con HU-098.
+- En R1, CA-7 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).

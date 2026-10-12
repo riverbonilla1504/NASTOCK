@@ -70,6 +70,8 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercitan E2E-01 y E2E-05.
 
 Tabla `perfiles`. Funciones `private.rol_actual`, `private.es_supervisor` y `private.token_personalizado`. Los claims son solo para la interfaz: la autorización real consulta `perfiles` en cada operación (03 §4.1).
 
+En R1, CA-2 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
+
 ## Documentación a actualizar
 
 Ninguna.

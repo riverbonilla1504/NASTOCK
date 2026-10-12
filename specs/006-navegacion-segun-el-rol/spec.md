@@ -59,4 +59,5 @@ La historia no agrega entidades. Usa una, definida en `docs/06` §5.1:
 - Depende de HU-005 · Ingresar con Google en Android y web: necesita una sesión con rol.
 - Depende de TT-06 · Arnés E2E de backend y de la app: agrega el escenario E2E-01.
 - La navegación es experiencia de uso; la seguridad real está en la base de datos y en sus funciones (`docs/03` §4).
+- En R1, CA-3 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
 - **S2** (`docs/01` §5): La app sigue siendo Flutter (Android + web). Si resulta falso: la arquitectura de backend no cambia; cambia solo el cliente.

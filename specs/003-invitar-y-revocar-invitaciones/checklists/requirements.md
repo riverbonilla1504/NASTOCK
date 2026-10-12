@@ -34,5 +34,4 @@
 ## Notas (Notes)
 
 - **Excepción del proyecto.** Los criterios de aceptación, la descripción de los requisitos, el texto de los casos borde y los motivos de las relaciones se copian tal cual de la historia, del catálogo y de `docs/`, y pueden nombrar tecnología. No se reescriben: lo pide la plantilla del proyecto.
-- CA-7 necesita una cuenta suspendida, y suspender llega con HU-010 (R2): en R1 se prueba con una cuenta de prueba ya suspendida.
 - Los puntos sin marcar exigen corregir la spec antes de `/speckit-clarify` o `/speckit-plan`.

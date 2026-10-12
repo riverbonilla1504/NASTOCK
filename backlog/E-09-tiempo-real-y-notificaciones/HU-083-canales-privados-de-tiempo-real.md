@@ -67,6 +67,8 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercitan E2E-03 y E2E-08.
 
 Cada historia que cambia algo visible en vivo publica su evento con `private.publicar_evento` en el canal que le corresponde (14 §6). Supabase borra los mensajes a las 72 horas.
 
+En R1, CA-5 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
+
 ## Documentación a actualizar
 
 Ninguna.
