@@ -212,6 +212,13 @@ stateDiagram-v2
   }
 ```
 
+Una invitación está **vigente** mientras esté `pendiente` y no haya pasado su
+fecha de vencimiento ([04 §5](04-autenticacion-oauth.md#5-hook-antes-de-crear-usuario)).
+Pasada esa fecha no sirve para ingresar ni impide invitar de nuevo:
+`invitar_usuario` pasa a `vencida` la invitación pendiente ya vencida de ese
+correo y crea la nueva (CB-02). `INVITACION_DUPLICADA` solo aplica cuando la
+pendiente sigue vigente (CB-04).
+
 Efectos de cada transición de cuenta en
 [03 §5](03-roles-y-permisos.md#5-reglas-estructurales-sobre-las-cuentas),
 [04 §10](04-autenticacion-oauth.md#10-suspensión-y-baja) y

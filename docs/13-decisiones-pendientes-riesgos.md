@@ -64,6 +64,7 @@ las historias afectadas. *Supuesto* = se asumió por el contexto.
 | D-53 | Entregas por valor: algo tangible desde la primera, cortes verticales. | Cliente | 14 §1 |
 | D-54 | Repositorio nuevo; backlog como issues con GitHub CLI en GitHub Projects; documentación en la wiki. | Cliente | 16 |
 | D-55 | Respaldo diario cifrado desde GitHub Actions (el plan gratuito de Supabase no respalda). | Propuesta | 11 §7 |
+| D-56 | Desarrollo guiado por especificaciones con **spec-kit** (versión fijada): una spec por historia en `specs/`, generada desde `backlog/` por entrega. `docs/` sigue siendo la fuente de verdad y la constitución del kit remite a `CLAUDE.md` y a `docs/`. Los issues salen del backlog, no del kit. | Propuesta | `CLAUDE.md`, 05 §12, 15 §7, 16 §3.7–§3.8, 17 |
 
 ---
 
@@ -134,3 +135,6 @@ anota aquí (además del registro de git), con las historias afectadas.
 |---|---|---|---|
 | 3.0 | 2026-09-28 | Especificación inicial v3: fondo 50/25/25, tres roles, Supabase, Google Workspace, paper trading en Alpaca, agente con DeepSeek. | — (backlog aún no creado) |
 | 3.1 | 2026-09-28 | Solo MVP en paper (se retira todo lo de dinero real). Agente rediseñado: IA principal + DeepSeek (contexto con noticias) + JEV (decisión). Herramientas gratuitas salvo las IAs; Android y web. Proveedores simulados, calidad y CI/CD (15), arranque del repositorio (16), mapa de módulos (17), errores conocidos, `CLAUDE.md`. Paquete para el repositorio nuevo. | — (backlog aún no creado) |
+| 3.2 | 2026-10-12 | Precisiones de identidad encontradas al revisar las historias de R1. Una invitación pendiente ya vencida no impide invitar de nuevo: `invitar_usuario` la pasa a `vencida` y crea la nueva (08 §5). La tabla de mensajes de ingreso incluye los dos mensajes del hook de alta (04 §11). | HU-002, HU-003, HU-005 |
+| 3.3 | 2026-10-12 | Se adopta spec-kit (D-56): flujo y comandos de `CLAUDE.md`, nombre de las ramas (15 §7), herramientas (16 §3.7–§3.8), estructura del repositorio (05 §12) y rutas de M-20 (17). Entran `backlog/` y `specs/` a la estructura, y `FR`, `HU` y `TT` a las convenciones de identificadores. Las rutas de ejemplo de 16 §6.2 son las del backlog real. | Todas: cambia el nombre de la rama y se agrega la spec antes de implementar |
+| 3.4 | 2026-10-12 | Cuatro precisiones encontradas al revisar las historias de R2. Códigos de error nuevos `CUPO_SUPERA_MAXIMO` (una asignación supera `cupos.maximo_usd`, RN-19) y `FONDO_SIN_CAPITAL` (encender un interruptor antes del primer aporte confirmado, RN-11), en 06 §9. Los tres porcentajes de reparto se cambian juntos con la clave `reparto` (06 §8.1). Los ajustes contables se registran en la pantalla Capital (03 §3). | HU-018, HU-022, HU-033, HU-034, HU-099 |

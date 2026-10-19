@@ -119,7 +119,7 @@
 | Alertas | ✅ | ✅ | ✅ |
 | Reportes | propio | fondo | fondo |
 | Perfil y notificaciones | ✅ | ✅ | ✅ |
-| **Administración** → Usuarios e invitaciones, Capital (aportes / retiros), Cupos, Rebalanceos, Parámetros, Lista blanca, Interruptores, Salud e integraciones, Bitácora, Prompts | — | — | ✅ |
+| **Administración** → Usuarios e invitaciones, Capital (aportes / retiros / ajustes), Cupos, Rebalanceos, Parámetros, Lista blanca, Interruptores, Salud e integraciones, Bitácora, Prompts | — | — | ✅ |
 | Freno de emergencia (botón visible en la barra) | — | ✅ | ✅ |
 
 La navegación se arma según el rol que viene en el token (§4.1). Si alguien

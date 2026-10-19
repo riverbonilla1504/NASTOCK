@@ -400,7 +400,11 @@ clientes OAuth de Android y los enlaces profundos).
 │  ├─ pull_request_template.md
 │  ├─ dependabot.yml
 │  └─ workflows/             ci.yml, despliegue.yml, wiki.yml, mantenimiento.yml
+├─ .specify/                 spec-kit: constitución (memory/), plantillas (templates/ y overrides/) y scripts
+├─ .claude/skills/           Comandos de spec-kit para Claude Code (speckit-*)
 ├─ docs/                     Esta especificación (fuente de verdad) + errores-conocidos.md
+├─ backlog/                  Planeación derivada de docs/: requisitos (FR), épicas, historias (HU) y tareas técnicas (TT)
+├─ specs/                    Una carpeta por historia (spec.md, plan.md, tasks.md), derivada de docs/ y de backlog/
 ├─ scripts/
 │  ├─ verificar.sh           Corre localmente lo mismo que CI
 │  ├─ verificar_docs.py      Enlaces, anclas e identificadores de docs/

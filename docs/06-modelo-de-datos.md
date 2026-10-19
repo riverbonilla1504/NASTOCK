@@ -775,7 +775,7 @@ Reglas generales:
 | `asignar_cupo(usuario_id, monto)` / `reducir_cupo(usuario_id, monto)` | Admin | RN-16, RN-17. |
 | `solicitar_liquidacion(usuario_id, motivo)` | Admin | Crea sugerencias de venta para analistas (02 §11). |
 | `registrar_ajuste(asientos, justificacion)` | Admin | Movimiento `ajuste`; exige que sume 0. |
-| `actualizar_parametro(clave, valor, motivo)` | Admin | Valida rango, historial, auditoría. |
+| `actualizar_parametro(clave, valor, motivo)` | Admin | Valida rango, historial, auditoría. Los tres porcentajes de reparto se cambian juntos, con la clave `reparto` y sus tres valores; cambiar uno solo responde `PARAMETRO_FUERA_DE_RANGO` (CB-78). |
 | `actualizar_lista_blanca(bolsillo, simbolo, nombre, activo, notas)` | Admin | PM-55. |
 | `crear_prompt(proposito, texto, esquema, notas)` / `activar_prompt(id)` | Admin | PM-59 (prompt de contexto de DeepSeek). |
 | `crear_configuracion(preguntas, etiquetas, pesos, umbrales, notas)` / `poner_en_sombra(id)` / `activar_configuracion(id)` | Admin | PM-59 (configuración de decisión de JEV; valida que los pesos sumen 1). |
@@ -845,6 +845,8 @@ Postgres.
 | `PARAMETRO_FUERA_DE_RANGO` | El valor está fuera del rango permitido (mín.–máx.). |
 | `INVITACION_DUPLICADA` | Ya existe una invitación vigente para ese correo. |
 | `CORREO_YA_REGISTRADO` | Ese correo ya tiene una cuenta. |
+| `CUPO_SUPERA_MAXIMO` | El cupo supera el máximo permitido por persona. |
+| `FONDO_SIN_CAPITAL` | Fondo sin capital. |
 | `REGLA_RR_xx` | Texto de la regla violada (02 §9). |
 
 ---
