@@ -82,12 +82,34 @@ campo "Prioridad"  --data-type SINGLE_SELECT --single-select-options "Alta,Media
 campo "Módulos"    --data-type TEXT
 campo "Estimación" --data-type NUMBER
 
+echo "Columnas de Status…"
+STATUS_ID="$(gh project field-list "$NUM" --owner "$OWNER" --format json \
+  --jq '.fields[] | select(.name == "Status") | .id')"
+OPCIONES="$(gh project field-list "$NUM" --owner "$OWNER" --format json \
+  --jq '.fields[] | select(.name == "Status") | [.options[].name] | join(",")')"
+if [[ "$OPCIONES" == "Backlog,Listo,En curso,En revisión,Hecho" ]]; then
+  echo "  Status ya tiene las columnas del flujo"
+else
+  gh api graphql -f fieldId="$STATUS_ID" -f query='
+    mutation($fieldId: ID!) { updateProjectV2Field(input: {fieldId: $fieldId, singleSelectOptions: [
+      {name: "Backlog",     color: GRAY,   description: "Aún no está listo para empezar"},
+      {name: "Listo",       color: BLUE,   description: "Refinado y con dependencias resueltas"},
+      {name: "En curso",    color: YELLOW, description: "Alguien trabaja en él"},
+      {name: "En revisión", color: PURPLE, description: "PR abierto"},
+      {name: "Hecho",       color: GREEN,  description: "Integrado a main con CI en verde"}
+    ]}) { clientMutationId } }' >/dev/null
+  echo "  Status: Backlog, Listo, En curso, En revisión, Hecho"
+fi
+
+gh project edit "$NUM" --owner "$OWNER" \
+  --description "Backlog del MVP de RiTech SAS: épicas, historias y tareas técnicas por entrega." \
+  --readme "Fuente de verdad: docs/ del repositorio, publicada en la wiki: https://github.com/$REPO/wiki. Los ítems se publican desde backlog/ con scripts/github/publicar-backlog.py." \
+  >/dev/null
+
 cat <<EOF
 
 Listo. Pasos manuales (la CLI no los permite), ver docs/16 §5:
-  1. En el proyecto #$NUM, cambiar las opciones de "Status" a:
-     Backlog, Listo, En curso, En revisión, Hecho.
-  2. Crear las vistas: Tablero (por Status), Por entrega, Por épica.
-  3. Si el repositorio es público o tiene Pro: proteger "main" exigiendo CI.
+  1. En el proyecto #$NUM, crear las vistas: Tablero (por Status), Por entrega, Por épica.
+  2. Si el repositorio es público o tiene Pro: proteger "main" exigiendo CI.
 Siguiente: crear el backlog (docs/16 §6).
 EOF

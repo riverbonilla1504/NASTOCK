@@ -30,9 +30,12 @@ un agente de IA, las reglas están en [`CLAUDE.md`](CLAUDE.md).
 
 ## Estado
 
-- Especificación v3.4 lista.
-- **Siguiente paso**: crear el backlog en GitHub Projects con GitHub CLI y
-  conectar los servicios ([16 §3–§7](docs/16-arranque-del-repositorio.md)).
+- Especificación v3.5 lista.
+- Backlog publicado como issues y en el proyecto de GitHub "RiTech SAS · MVP"
+  ([16 §6](docs/16-arranque-del-repositorio.md)); `docs/` publicada en la
+  [wiki](https://github.com/riverbonilla1504/NASTOCK/wiki).
+- **Siguiente paso**: conectar los servicios
+  ([16 §3–§4](docs/16-arranque-del-repositorio.md)) y empezar E-01.
 - Aún no hay código.
 
 ## Desarrollo local

@@ -409,7 +409,9 @@ clientes OAuth de Android y los enlaces profundos).
 │  ├─ verificar.sh           Corre localmente lo mismo que CI
 │  ├─ verificar_docs.py      Enlaces, anclas e identificadores de docs/
 │  ├─ publicar_wiki.py       Convierte docs/ en páginas de la wiki
-│  └─ github/preparar-github.sh  Etiquetas, hitos y proyecto
+│  └─ github/
+│     ├─ preparar-github.sh   Etiquetas, hitos y proyecto
+│     └─ publicar-backlog.py  backlog/ como issues, sub-issues, dependencias y campos del proyecto
 ├─ lib/  test/  integration_test/  test_driver/  android/  web/   (se crean en E-01)
 └─ supabase/                                                        (se crea en E-01)
    ├─ config.toml
