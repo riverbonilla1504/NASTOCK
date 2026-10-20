@@ -206,7 +206,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-20 · Plataforma, CI/CD y calidad
 - **Qué hace**: flujos de GitHub Actions, scripts de verificación, despliegue, respaldo, wiki, plantillas, backlog y especificación por historia con spec-kit (D-56).
 - **Docs**: 15 completo · 16 completo · 05 §10–§12
-- **Planeación y specs**: `backlog/`, `specs/`, `.specify/`, `.claude/skills/`
+- **Planeación y specs**: `backlog/`, `specs/`, `.specify/`, `.claude/skills/`, `scripts/github/` (etiquetas, hitos, proyecto y publicación del backlog como issues)
 - **BD**: `public.ping()`
 - **Funciones**: —
 - **App**: `integration_test/`, `test_driver/`

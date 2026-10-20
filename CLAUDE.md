@@ -154,9 +154,10 @@ specify version · specify self check   # línea de comandos de spec-kit (versi�
 
 ## Estado del proyecto
 
-- Especificación v3.4 completa en `docs/`.
+- Especificación v3.5 completa en `docs/`.
 - Backlog completo en `backlog/` (227 requisitos, 13 épicas, 117 historias y
-  9 tareas técnicas). **Pendiente**: publicarlo como issues en GitHub Projects
-  y conectar los servicios (`docs/16-arranque-del-repositorio.md` §3–§7).
+  9 tareas técnicas), publicado como issues y en el proyecto de GitHub
+  "RiTech SAS · MVP" con `scripts/github/publicar-backlog.py` (`docs/16` §6).
+  **Pendiente**: conectar los servicios (`docs/16-arranque-del-repositorio.md` §3–§4).
 - spec-kit adoptado (D-56). Las specs se generan por entrega; la primera es R1.
 - Aún no hay código: la primera épica es E-01 (cimientos y calidad continua).

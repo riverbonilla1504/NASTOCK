@@ -3,8 +3,8 @@
 Puente entre esta especificación y el tablero de GitHub Projects. Propone
 **épicas**, sus **capacidades** (cada una da una o más historias), las
 **dependencias**, un **orden de entregas por valor** y una **definición de
-terminado** común. Las historias se escriben en el repositorio nuevo
-([16 §6](16-arranque-del-repositorio.md#6-pendiente-crear-el-backlog-en-github)).
+terminado** común. Las historias están en `backlog/` y publicadas como issues
+([16 §6](16-arranque-del-repositorio.md#6-crear-el-backlog-en-github)).
 
 ---
 
