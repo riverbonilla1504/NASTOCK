@@ -149,6 +149,8 @@ Secretos y variables que necesitan: [16 §4](16-arranque-del-repositorio.md#4-se
   guiones.
 - Commits en español, en imperativo, con el issue de la historia: `Agrega la
   aprobación de sugerencias (#42)`.
+- Los agentes de IA nunca figuran como autores ni coautores: sin
+  `Co-Authored-By` ni firmas de la herramienta en commits ni PR.
 - PR con la plantilla (`.github/pull_request_template.md`): historia,
   módulos, escenario E2E, documentación actualizada, errores registrados.
   Incluye la carpeta de la historia en `specs/`.
