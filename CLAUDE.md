@@ -148,6 +148,8 @@ specify version · specify self check   # línea de comandos de spec-kit (versi�
 - Español en documentación, interfaz, modelo de datos, commits y PR.
   Identificadores sin tildes. Preguntas a JEV en inglés.
 - Commits en imperativo con la historia: `Agrega la aprobación de sugerencias (#42)`.
+- **Nunca** te pongas como autor ni coautor: sin `Co-Authored-By` ni firmas
+  de la herramienta ("Generated with…") en commits ni PR (`docs/15` §7).
 - Dinero `numeric(14,2)` en USD; horas en UTC (se muestran en hora de Bogotá).
 - Identificadores de reglas y casos (`RN`, `RR`, `PM`, `CB`, `D`, `Q`, `RSG`,
   `E`, `E2E`, `M`, `EC`): nunca se reutilizan (ver `docs/README.md`).
