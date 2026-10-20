@@ -160,4 +160,19 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 
 ## Encontrados durante la implementación
 
-*(Vacío. Las sesiones de implementación agregan aquí sus entradas, numeradas a partir de `EC-019`.)*
+### EC-019 · `publicar-backlog.py` actualiza todas las issues aunque `backlog/` no cambió
+- Fecha: 2026-10-19 · Módulos: M-20 · Origen: implementación
+- Síntoma: al volver a correr el script en Windows, todas las issues salen como "actualizada".
+- Causa: el archivo temporal del cuerpo se escribía en modo texto con `
+`, GitHub guarda esos saltos tal cual y la comparación con el cuerpo generado (`
+`) nunca coincidía.
+- Solución: escribir el archivo con `newline="
+"` y comparar el cuerpo de GitHub sin ``.
+- Para no repetirlo: al pasar texto a `gh` con `--body-file` desde Python, fijar siempre `newline`.
+
+### EC-020 · `gh` falla a mitad de una publicación larga con `TLS handshake timeout`
+- Fecha: 2026-10-19 · Módulos: M-20 · Origen: implementación
+- Síntoma: `publicar-backlog.py` se detiene con `TLS handshake timeout`, `stream error … CANCEL` o `GraphQL: Something went wrong`.
+- Causa: cortes de red o del servidor de GitHub durante cientos de llamadas seguidas; no es un error de la petición.
+- Solución: el script repite hasta 4 veces solo esos errores de transporte y solo en operaciones idempotentes; `issue create` no se repite (podría duplicar) y basta volver a correr el script, que reconoce las issues por el prefijo del título.
+- Para no repetirlo: no agregar reintentos a `issue create`; ante un corte, volver a correr el script.

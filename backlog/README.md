@@ -676,7 +676,7 @@ Estos ítems no dependen de ningún otro:
 
 ## Cómo pasarlo a GitHub Projects
 
-`scripts/github/preparar-github.sh` ya crea lo necesario (`docs/16` §5): las etiquetas, los hitos y el proyecto "RiTech SAS · MVP" con sus campos. Cada archivo de este backlog trae los datos que van a esos campos:
+`scripts/github/preparar-github.sh` ya crea lo necesario (`docs/16` §5): las etiquetas, los hitos y el proyecto "RiTech SAS · MVP" con sus campos. Después, `scripts/github/publicar-backlog.py <dueño>/<repo> --proyecto <número>` publica esta carpeta completa (`docs/16` §6). Cada archivo de este backlog trae los datos que van a esos campos:
 
 | En el `.md` | En GitHub |
 |---|---|
@@ -684,13 +684,13 @@ Estos ítems no dependen de ningún otro:
 | El archivo completo | Cuerpo del issue |
 | Etiquetas | Etiquetas `historia`, `tarea-tecnica` o `epica`, más `E-xx`, `M-xx` y `prioridad-*` |
 | Entrega (hito) | Hito del issue y campo `Entrega` del proyecto |
-| Épica | Campo `Épica` del proyecto, y la historia como sub-issue del issue de su épica |
+| Épica | Campo `Épica` del proyecto, y la historia como sub-issue del issue de su épica (la épica no va al tablero) |
 | Prioridad | Campo `Prioridad` del proyecto |
 | Módulos afectados | Campo `Módulos` del proyecto |
 | Estimación | Campo `Estimación` del proyecto, al refinar |
-| Depende de | Relación "bloqueado por" entre issues, si el repositorio la tiene, o un comentario con los enlaces; la etiqueta `bloqueada` mientras la dependencia siga abierta |
+| Depende de | Relación "bloqueada por" entre issues (GitHub marca el ítem como bloqueado mientras la dependencia siga abierta) |
 
-Comandos de `docs/16` §6.2 con las rutas de esta carpeta:
+Comandos sueltos de `docs/16` §6.2 con las rutas de esta carpeta, para un ítem a mano:
 
 ```bash
 R=<dueño>/<repo>; OWNER=<dueño>; P=<número del proyecto>
@@ -722,10 +722,7 @@ gh project item-edit --project-id <PROJECT_ID> --id <ITEM_ID> \
   --field-id <FIELD_ID_ENTREGA> --single-select-option-id <OPCION_R4>
 ```
 
-Dos cosas a tener en cuenta al publicar:
-
-- Los enlaces relativos entre archivos funcionan al navegar el repositorio, pero no dentro del cuerpo de un issue. Conviene convertirlos a enlaces absolutos (`https://github.com/<dueño>/<repo>/blob/main/backlog/…`) o dejar solo los identificadores.
-- Conviene crear los issues en el orden de este backlog (épicas, luego tareas técnicas y luego historias) para poder enlazar cada dependencia con un issue que ya existe.
+El script resuelve lo que no funciona copiando los archivos tal cual: los enlaces entre ítems del backlog pasan a `#n` (en una segunda pasada, cuando ya existen todas las issues) y los demás enlaces relativos a enlaces absolutos a `main`.
 
 ## Dudas e inconsistencias encontradas en docs
 

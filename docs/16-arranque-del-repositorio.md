@@ -17,7 +17,7 @@ gh repo create <dueño>/ritech-inversiones --public --clone --description "Plata
 cp -a ritech-sas-inversiones/repo-nuevo/. ritech-inversiones/
 cd ritech-inversiones
 git add -A
-git update-index --chmod=+x scripts/verificar.sh scripts/github/preparar-github.sh
+git update-index --chmod=+x scripts/verificar.sh scripts/github/preparar-github.sh scripts/github/publicar-backlog.py
 git commit -m "Especificación v3.1, reglas para agentes, CI/CD y plantillas"
 git push -u origin main
 ```
@@ -202,24 +202,34 @@ idempotente (se puede correr varias veces):
 |---|---|
 | Etiquetas | `historia`, `epica`, `tarea-tecnica`, `error`, `documentacion`, `bloqueada`, `prioridad-alta/media/baja`, una por épica (`E-01` … `E-13`) y una por módulo (`M-01` … `M-20`) |
 | Hitos | Uno por entrega (`R1 · Ver el mercado en vivo` … `R6 · Medir y mejorar`) |
-| Proyecto | "RiTech SAS · MVP" enlazado al repositorio, con campos `Épica`, `Entrega`, `Prioridad`, `Módulos` y `Estimación` |
+| Proyecto | "RiTech SAS · MVP" enlazado al repositorio, con campos `Épica`, `Entrega`, `Prioridad`, `Módulos` y `Estimación`, y las opciones de **Status**: `Backlog`, `Listo`, `En curso`, `En revisión`, `Hecho` |
 
 Pasos manuales después del script (la CLI no los permite):
 
-- En el proyecto, cambiar las opciones del campo **Status** a: `Backlog`,
-  `Listo`, `En curso`, `En revisión`, `Hecho`, y crear las vistas Tablero (por
-  Status), Por entrega (agrupada por `Entrega`) y Por épica.
+- En el proyecto, crear las vistas Tablero (por Status), Por entrega
+  (agrupada por `Entrega`) y Por épica.
 - Si el repositorio es público o tiene Pro: regla de protección de `main`
   que exija los trabajos de `ci.yml` y un PR para integrar.
 
 ---
 
-## 6. PENDIENTE: crear el backlog en GitHub
+## 6. Crear el backlog en GitHub
 
-> **Esto es lo siguiente que hay que hacer en el repositorio nuevo.** El
-> backlog completo (épicas e historias de usuario) se crea **como issues con
-> GitHub CLI**, a partir de esta especificación, se agrega al proyecto, se
-> asigna y se organiza por entregas. La documentación se publica en la wiki.
+El backlog completo (épicas, historias de usuario y tareas técnicas) se crea
+**como issues con GitHub CLI** a partir de `backlog/`, se agrega al proyecto,
+se asigna y se organiza por entregas. La documentación se publica en la wiki.
+
+```bash
+python scripts/github/publicar-backlog.py <dueño>/<repo> --proyecto <número>
+```
+
+El script es idempotente (reconoce las issues por el prefijo `ID · ` del
+título) y hace §6.1 pasos 1 a 5: issues con etiquetas e hito, enlaces entre
+ítems como `#n`, sub-issues, dependencias "bloqueada por" a partir de la
+sección "Relaciones", y los campos `Épica`, `Entrega`, `Prioridad`, `Módulos`
+y `Status = Backlog` en el proyecto (sin las épicas). Si cambia un archivo de `backlog/`,
+volver a correrlo actualiza el cuerpo de su issue. Las asignaciones (paso 6)
+siguen siendo manuales.
 
 ### 6.1 Qué hay que crear
 
@@ -232,8 +242,10 @@ Pasos manuales después del script (la CLI no los permite):
    pueden quedar más gruesas y refinarse al acercarse.
 3. **Tareas técnicas** de E-01 (arranque, CI/CD, simulados, E2E).
 4. Cada historia como **sub-issue** de su épica.
-5. Todo agregado al **proyecto**, con `Épica`, `Entrega`, `Prioridad` y
-   `Módulos`, y con su **hito**.
+5. Historias y tareas técnicas agregadas al **proyecto**, con `Épica`,
+   `Entrega`, `Prioridad` y `Módulos`, y con su **hito**. Las épicas **no**
+   van al tablero: no se trabajan directamente; quedan como issues padre con
+   la barra de avance de sus sub-issues.
 6. **Asignaciones** según el equipo.
 
 ### 6.2 Comandos de referencia
@@ -266,9 +278,8 @@ gh project item-edit --project-id <PROJECT_ID> --id <ITEM_ID> \
 gh issue edit <n> -R $R --add-assignee <usuario>
 ```
 
-Conviene escribir los cuerpos en archivos `backlog/**/*.md` y crear los
-issues con un pequeño script que lea esa carpeta, para poder revisar el
-backlog completo en un PR antes de publicarlo.
+Los cuerpos viven en `backlog/**/*.md` y se revisan en un PR antes de
+publicarlos con `scripts/github/publicar-backlog.py`.
 
 ### 6.3 Documentación en la wiki
 
