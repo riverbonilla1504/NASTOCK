@@ -156,9 +156,9 @@ specify version · specify self check   # línea de comandos de spec-kit (versi�
 
 ## Estado del proyecto
 
-- Especificación v3.7 completa en `docs/`.
-- **Alcance: MVP corto** (D-58, `docs/14` §4.1): primero se construyen 61
-  ítems de R1 a R4, con seis simplificaciones (D-59 a D-64). Lo demás queda
+- Especificación v3.8 completa en `docs/`.
+- **Alcance: MVP corto** (D-58, `docs/14` §4.1): primero se construyen 55
+  ítems de R1 a R4, con siete simplificaciones (D-59 a D-65). Lo demás queda
   para la fase siguiente. Antes de tomar una historia, revisa que esté en
   `docs/14` §4.1.
 - Backlog completo en `backlog/` (227 requisitos, 13 épicas, 117 historias y

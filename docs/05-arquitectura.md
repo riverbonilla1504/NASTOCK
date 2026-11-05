@@ -213,6 +213,9 @@ herramientas que ejecuten órdenes.
 > - **`notificador`** (D-62): tampoco `barrer_notificador`, la cola
 >   `notificaciones_push` ni `_shared/push/`.
 >
+> Tampoco se crea el trabajo `expirar_sugerencias` (§7), porque no hay
+> sugerencias (D-65).
+>
 > Las demás funciones hacen solo lo que piden las historias que entran.
 
 **Código compartido** (`supabase/functions/_shared/`):

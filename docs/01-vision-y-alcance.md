@@ -71,16 +71,17 @@ capacidades:
 1. Iniciar sesión con Google.
 2. Manejar usuarios: invitar, cambiar el rol, suspender y reactivar.
 3. Ver las acciones del NASDAQ-100 en vivo.
-4. Comprar y vender en paper trading, con órdenes manuales y con las
-   sugerencias de la IA.
-5. La IA que analiza y sugiere, con su explicación en Oportunidades.
+4. Comprar y vender en paper trading con órdenes manuales.
+5. La IA que analiza y recomienda en Oportunidades, con su explicación. No
+   envía sugerencias para aprobar: la persona decide creando la orden
+   (D-65).
 
 Todo es **paper trading con dinero ficticio**: la cuenta de Alpaca paper
 tiene un saldo simulado y ninguna orden mueve dinero real. El único gasto
 real es el uso de JEV; DeepSeek no se usa en el MVP corto (D-59).
 
-Las historias que entran, las entregas y las seis simplificaciones (D-59 a
-D-64) están en [14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58).
+Las historias que entran, las entregas y las siete simplificaciones (D-59 a
+D-65) están en [14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58).
 Las listas de abajo describen el **alcance completo**: lo que no está en el
 MVP corto queda para la fase siguiente, con su especificación intacta.
 Algunos indicadores de §6 se miden recién en esa fase, como la calibración

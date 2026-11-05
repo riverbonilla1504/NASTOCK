@@ -185,8 +185,10 @@ Una compra puede nacer de:
 > **MVP corto** ([14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
 > solo operan los cupos. La IA no crea sugerencias para `arriesgadas`: ese
 > 25 % queda en efectivo y el Analista solo supervisa (D-64). Las
-> evaluaciones de Arriesgadas siguen visibles en Oportunidades. La orden
-> manual se crea **sin** opinión previa de la IA (D-60).
+> evaluaciones de Arriesgadas siguen visibles en Oportunidades. Tampoco hay
+> sugerencias de la IA para los cupos: toda compra o venta del MVP corto es
+> una orden manual del empleado (D-65), que se crea **sin** opinión previa
+> de la IA (D-60).
 
 ### 6.1 Tamaño de la orden
 

@@ -65,8 +65,8 @@ Son los hitos de `docs/14` §4. Cada historia pertenece a una.
 
 ## MVP corto
 
-Por falta de tiempo, primero se construye un **MVP corto** (D-58): 61 de los
-125 ítems abiertos. Tiene seis simplificaciones (D-59 a D-64). El detalle
+Por falta de tiempo, primero se construye un **MVP corto** (D-58): 55 de los
+125 ítems abiertos. Tiene siete simplificaciones (D-59 a D-65). El detalle
 está en [docs/14 §4.1](../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58).
 
 | Entrega (hito) | Ítems | En el MVP corto |
@@ -74,7 +74,7 @@ está en [docs/14 §4.1](../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-
 | R1 · Ver el mercado en vivo | 30 | 25 (incluida TT-01, ya hecha) |
 | R2 · El fondo existe | 23 | 16 |
 | R3 · La IA analiza | 17 | 7 |
-| R4 · Decidir y operar en paper | 26 | 14 |
+| R4 · Decidir y operar en paper | 26 | 8 |
 | R5 · Protegido y avisado | 9 | 0 |
 | R6 · Medir y mejorar | 21 | 0 |
 
@@ -82,24 +82,25 @@ Cómo está marcado en esta carpeta:
 
 - **En cada ítem**, la tabla inicial tiene la fila **MVP corto**, con uno de
   estos valores: "Sí", "Sí, con menos alcance (D-xx)", "Sí, con tareas de
-  HU-009 (D-61)" o "No: queda para la fase siguiente (D-58)".
-- **Las 19 historias que cambian de alcance** tienen una sección **MVP
+  HU-009 (D-61)" o "No: queda para la fase siguiente (D-58 o D-65)".
+- **Las 14 historias que cambian de alcance** tienen una sección **MVP
   corto** con lo que no aplica o cambia.
 - **En el README de cada épica**, los ítems que salen llevan *fuera del MVP
   corto*.
-- **Las 11 dependencias que no aplican en el MVP corto** están en la tabla
+- **Las 8 dependencias que no aplican en el MVP corto** están en la tabla
   de relaciones de su historia como "Depende de (después del MVP corto)":
 
   | Historia | Ya no depende de | Por qué |
   |---|---|---|
   | HU-047 | HU-043 | D-59: sin contexto |
-  | HU-058 | HU-086 | D-62: sin notificaciones |
-  | HU-062 | HU-009 | D-61: confirmación con diálogo |
-  | HU-063 | HU-009 | D-61: confirmación con diálogo |
-  | HU-066 | HU-086 | D-62: sin notificaciones |
+  | HU-073 | HU-062 | D-65: sin sugerencias, solo órdenes manuales |
   | HU-075 | HU-052, HU-009 | D-60 y D-61: sin opinión y con diálogo |
   | HU-099 | HU-009, HU-016, HU-022 | D-61 y D-58: diálogo; retiros y ajustes salen |
   | HU-100 | HU-009 | D-61: confirmación con diálogo |
+
+- **Dos dependencias se agregan en el MVP corto** (D-65): HU-074 depende de
+  HU-075, porque E2E-08 empieza con la orden manual, y HU-075 depende de
+  HU-032, porque la orden manual se deshabilita con el dato desactualizado.
 
 Las tablas y los diagramas de relaciones de este archivo y de las épicas
 siguen mostrando el **plan completo**.

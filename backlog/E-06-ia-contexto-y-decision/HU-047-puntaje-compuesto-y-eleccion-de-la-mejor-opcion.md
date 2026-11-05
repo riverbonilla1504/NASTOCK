@@ -4,7 +4,7 @@
 |---|---|
 | Épica | [E-06 · IA: contexto y decisión](README.md) |
 | Entrega (hito) | R3 · La IA analiza |
-| MVP corto | Sí, con menos alcance (D-59) |
+| MVP corto | Sí, con menos alcance (D-59, D-65) |
 | Rol | Analista |
 | Prioridad | Alta |
 | Módulos afectados | M-07 |
@@ -19,6 +19,7 @@ Sin contexto (D-59, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-co
 - CA-7: la evaluación guarda el contexto vacío.
 - La dependencia de HU-043 no aplica.
 
+- Las señales se registran y **no** se convierten en sugerencias (D-65). Lo que las notas técnicas dicen de HU-058 y HU-059 queda para la fase siguiente.
 ## Historia
 
 **Como** Analista,  

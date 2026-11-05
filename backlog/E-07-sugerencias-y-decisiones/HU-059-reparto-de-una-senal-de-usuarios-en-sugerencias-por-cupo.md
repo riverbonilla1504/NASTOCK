@@ -4,19 +4,12 @@
 |---|---|
 | Épica | [E-07 · Sugerencias y decisiones](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
-| MVP corto | Sí, con menos alcance (D-62, D-63) |
+| MVP corto | No: queda para la fase siguiente (D-65) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-09 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-07` · `M-09` · `prioridad-alta` |
-
-## MVP corto
-
-Cambios del MVP corto ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
-
-- CA-1: un cupo solo califica si le alcanza para **al menos una acción entera** (D-63, 02 §6.1).
-- No aplica la notificación `sugerencia_nueva` (D-62). El evento `sugerencia` en `usuario:{id}` sí se emite y actualiza la pantalla.
 
 ## Historia
 

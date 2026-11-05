@@ -105,7 +105,7 @@ no toca dinero real.
 y se les sumaron todas sus dependencias, según la sección "Relaciones" de
 cada historia. Por ejemplo, comprar necesita el cupo de la persona, el cupo
 necesita el libro contable y el libro necesita los perfiles. Con las seis
-simplificaciones de abajo quedan **61 de los 125 ítems abiertos** (TT-01 ya
+simplificaciones de abajo quedan **55 de los 125 ítems abiertos** (TT-01 ya
 está hecha).
 
 **Qué entra.**
@@ -117,7 +117,7 @@ está hecha).
 | Ver las acciones | HU-026 a HU-030, HU-032 |
 | Fondo y cupos (sin ellos no hay con qué comprar) | HU-013, HU-014, HU-015, HU-017, HU-018, HU-019, HU-023, HU-033, HU-034, HU-099, HU-100, HU-101 |
 | IA | HU-035, HU-037, HU-044, HU-045, HU-046, HU-047, HU-048 |
-| Sugerencias, compra y venta | HU-058, HU-059, HU-061, HU-062, HU-063, HU-066, HU-072 a HU-077, HU-091 |
+| Compra y venta con órdenes manuales | HU-072 a HU-077, HU-091 |
 
 **Entregas del MVP corto.** Mandan sobre la tabla de §4 mientras dure el
 MVP corto.
@@ -127,10 +127,10 @@ MVP corto.
 | **R1 · Ver el mercado en vivo** | Entrar con Google por invitación y ver el NASDAQ-100 moverse | Sin la comparación QQQ / QLD / ×2 (HU-031), sin "Ver mi perfil" (HU-008) y sin las piezas de la v2 (HU-115, HU-116, HU-117) | E2E-01, E2E-02, E2E-03 |
 | **R2 · El fondo existe** | El admin carga el capital, reparte cupos y maneja usuarios; cada empleado ve su cupo | La pantalla de capital (HU-099) solo registra y confirma aportes. Salen retiros (HU-016), ajustes (HU-022), resumen del fondo (HU-020), foto diaria (HU-021), pantalla de bitácora (HU-108), suite de aislamiento (HU-109) y la confirmación biométrica (HU-009, D-61) | E2E-04, E2E-05 |
 | **R3 · La IA analiza** | Ver en **Oportunidades** qué acciones evalúa la IA, con puntaje, confianza y explicación | Sin noticias ni contexto de DeepSeek (D-59). Salen las alertas de contradicción (HU-049), el presupuesto de IA (HU-050), el análisis bajo demanda (HU-051), la lista blanca editable (HU-036, HU-102), la pantalla de salud (HU-103) y la bandeja de notificaciones (HU-086, D-62) | E2E-06 (siempre "sin contexto"), E2E-07 |
-| **R4 · Decidir y operar en paper** | Recibir sugerencias de la IA en su cupo, aprobarlas o rechazarlas, crear órdenes manuales de compra y de venta, y verlas ejecutadas y protegidas en Alpaca paper | Solo opera el bolsillo de Usuarios (D-64), sin opinión de la IA en la orden manual (D-60) y solo acciones enteras (D-63). Salen la invalidación por precio (HU-067) y las señales de venta de la IA (HU-053, HU-060): se vende con una orden manual o al tocar el stop-loss o el objetivo | E2E-08, E2E-10 (solo vencimiento por tiempo), E2E-11 (sin opinión) |
-| **Después del MVP corto** | — | R5 y R6 completas y los ítems que salen de R1 a R4: 64 en total | E2E-09, E2E-12 a E2E-16 |
+| **R4 · Decidir y operar en paper** | Ver en Oportunidades qué recomienda la IA, crear órdenes manuales de compra y de venta en su cupo, y verlas ejecutadas y protegidas en Alpaca paper | Sin sugerencias de la IA (D-65): salen la bandeja, aprobar, rechazar, el vencimiento y el reparto de señales en cupos (HU-058, HU-059, HU-061, HU-062, HU-063, HU-066). Solo opera el bolsillo de Usuarios (D-64), sin opinión de la IA en la orden manual (D-60) y solo acciones enteras (D-63). Se vende con una orden manual o al tocar el stop-loss o el objetivo | E2E-08 (desde una orden manual), E2E-11 (sin opinión) |
+| **Después del MVP corto** | — | R5 y R6 completas y los ítems que salen de R1 a R4: 70 en total | E2E-09, E2E-10, E2E-12 a E2E-16 |
 
-**Las seis simplificaciones.** Cada una está anotada donde se define su
+**Las siete simplificaciones.** Cada una está anotada donde se define su
 regla. La especificación completa se conserva para la fase siguiente.
 
 | Decisión | Qué cambia en el MVP corto | Regla original |
@@ -141,22 +141,26 @@ regla. La especificación completa se conserva para la fase siguiente.
 | D-62 | Sin bandeja de notificaciones ni push: cada pantalla muestra su propio estado | [09 §5](09-tiempo-real-y-notificaciones.md#5-notificaciones) |
 | D-63 | Solo acciones enteras: sin compras fraccionales ni protección virtual | [02 §6.1](02-logica-de-negocio.md#61-tamaño-de-la-orden), [10 §5](10-integracion-bolsa.md#5-órdenes-que-usamos) |
 | D-64 | El bolsillo de Arriesgadas no opera: queda en efectivo y el Analista solo supervisa | [02 §6](02-logica-de-negocio.md#6-compras), [07 §7.2](07-agente-ia.md#72-compra-en-arriesgadas) |
+| D-65 | Sin sugerencias de la IA: la IA analiza y recomienda en Oportunidades, y la persona compra y vende con órdenes manuales | [07 §7](07-agente-ia.md#7-de-la-decisión-a-la-sugerencia), [08 §1](08-estados-y-flujos.md#1-sugerencia) |
 
 **Historias que entran con otro alcance.** Su archivo en `backlog/` se
 ajusta a estas decisiones:
 
 - HU-005 toma de HU-009 dos piezas: la sesión en almacenamiento seguro y el
   componente común de confirmación, solo con diálogo.
+- HU-047 solo registra las señales; HU-048 las muestra como recomendación en
+  Oportunidades. No se convierten en sugerencias (D-65).
+- HU-073 crea las tablas de órdenes y la cola de envío, que antes creaba
+  HU-062, y envía solo órdenes manuales (D-65).
+- HU-075 crea E2E-08, que en el MVP corto empieza con una orden manual, y
+  HU-074 depende de HU-075 para extenderlo. HU-075 también depende de
+  HU-032: con el precio desactualizado se deshabilita la compra (D-65).
 - HU-046, HU-047 y HU-048 trabajan siempre "sin contexto".
-- HU-058 crea las tablas y la función de sugerencias, pero no emite
-  sugerencias para Arriesgadas.
-- HU-062, HU-063, HU-075, HU-099 y HU-100 confirman con el diálogo.
-- HU-058, HU-059, HU-066, HU-073, HU-074 y HU-077 no envían
-  notificaciones. Cada pantalla muestra el estado en vivo por sus eventos.
-- HU-066 vence la sugerencia sin aviso previo; el tiempo restante se ve en
-  la sugerencia.
-- HU-059, HU-072, HU-073, HU-074, HU-075 y HU-091 trabajan solo con
-  acciones enteras y protección nativa.
+- HU-075, HU-099 y HU-100 confirman con el diálogo.
+- HU-073, HU-074 y HU-077 no envían notificaciones. Cada pantalla muestra
+  el estado en vivo por sus eventos.
+- HU-072, HU-073, HU-074, HU-075 y HU-091 trabajan solo con acciones
+  enteras y protección nativa.
 - HU-099 solo registra y confirma aportes.
 - HU-006 y HU-097 muestran solo las pantallas del MVP corto, según la
   tabla de [03 §3](03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas).

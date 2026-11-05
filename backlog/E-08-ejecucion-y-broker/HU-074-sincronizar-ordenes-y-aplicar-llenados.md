@@ -4,7 +4,7 @@
 |---|---|
 | Épica | [E-08 · Ejecución y broker](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
-| MVP corto | Sí, con menos alcance (D-62, D-63) |
+| MVP corto | Sí, con menos alcance (D-62, D-63, D-65) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-10, M-11 |
@@ -17,6 +17,8 @@ Cambios del MVP corto ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp
 
 - Las protecciones son siempre nativas (D-63). El tipo `tipo_proteccion` se crea con todos sus valores, pero solo se usa `nativa`.
 - No aplican las notificaciones `orden_ejecutada` y `orden_fallida` (D-62). Los eventos `orden`, `posicion` y `cupo` sí se emiten.
+- **Sin sugerencias (D-65):** las órdenes son manuales y no tienen sugerencia. Lo que CA-1, CA-4 y CA-5 dicen de la sugerencia no aplica; lo demás sí.
+- E2E-08 lo crea HU-075 en el MVP corto, así que esta historia depende de HU-075 para extenderlo.
 
 ## Historia
 
@@ -68,6 +70,7 @@ E2E-08 (actualizado)
 | Tipo | Ítem | Motivo |
 |---|---|---|
 | Depende de | [HU-073 · Enviar al broker las órdenes aprobadas](HU-073-enviar-al-broker-las-ordenes-aprobadas.md) | Sincroniza las órdenes que envía el ejecutor. |
+| Depende de | [HU-075 · Crear una orden manual en mi cupo](HU-075-crear-una-orden-manual-en-mi-cupo.md) | En el MVP corto, E2E-08 empieza con la orden manual (D-65). |
 | Habilita | [HU-023 · Reparto de la ganancia realizada y absorción de pérdidas](../E-03-fondo-y-libro-contable/HU-023-reparto-de-la-ganancia-realizada-y-absorcion-de-perdidas.md) | HU-023: el reparto ocurre dentro de `private.aplicar_llenado`. |
 | Habilita | [HU-053 · Señales de venta de posiciones abiertas](../E-06-ia-contexto-y-decision/HU-053-senales-de-venta-de-posiciones-abiertas.md) | HU-053: evalúa las posiciones abiertas. |
 | Habilita | [HU-056 · Evaluación de sugerencias y candidatas tras el cierre](../E-06-ia-contexto-y-decision/HU-056-evaluacion-de-sugerencias-y-candidatas-tras-el-cierre.md) | HU-056: toma del libro el rendimiento real de las ejecutadas. |

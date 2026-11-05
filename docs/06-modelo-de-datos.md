@@ -597,6 +597,13 @@ protecciones (
 )
 ```
 
+> **MVP corto (D-65, D-60,** [14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)**):**
+> no se crean `sugerencias`, `decisiones` ni `opiniones_ia`. En `ordenes`,
+> las columnas `sugerencia_id` y `opinion_id` existen pero quedan nulas y
+> **sin llave foránea**: la migración que cree esas tablas en la fase
+> siguiente agrega la llave (las migraciones van solo hacia adelante). Toda
+> orden del MVP corto tiene `origen = 'manual'`.
+
 ### 5.5 Comunicación
 
 ```sql

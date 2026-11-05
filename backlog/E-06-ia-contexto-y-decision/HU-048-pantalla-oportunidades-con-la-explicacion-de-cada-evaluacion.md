@@ -4,7 +4,7 @@
 |---|---|
 | Épica | [E-06 · IA: contexto y decisión](README.md) |
 | Entrega (hito) | R3 · La IA analiza |
-| MVP corto | Sí, con menos alcance (D-59) |
+| MVP corto | Sí, con menos alcance (D-59, D-65) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-07, M-06 |
@@ -20,6 +20,7 @@ Sin contexto (D-59, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-co
 - CA-4: toda candidata lleva la advertencia "sin contexto".
 - Tareas: la RPC `oportunidades(bolsillo)` y el detalle de la app van sin contexto ni titulares. E2E-06 queda así: ciclo con JEV simulado → Oportunidades con explicación, y toda candidata sale "sin contexto" (15 §4).
 
+- La candidata elegida se muestra como **recomendación**, sin botón para aprobarla: la persona decide creando una orden manual (D-65).
 ## Historia
 
 **Como** Usuario, Analista o Administrador,  

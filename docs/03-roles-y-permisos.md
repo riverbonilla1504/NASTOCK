@@ -130,14 +130,13 @@
 > |---|---|---|---|
 > | Inicio / Mercado | ✅ | ✅ | ✅ |
 > | Oportunidades | Usuarios | todas | todas |
-> | Mis sugerencias | ✅ | — | — |
 > | Mi cupo (posiciones y resultado, sin historial) | ✅ | — | — |
 > | Nueva orden manual | ✅ | — | — |
 > | Alertas | ✅ | ✅ | ✅ |
 > | **Administración** → Usuarios e invitaciones, Capital (solo aportes), Cupos, Parámetros e Interruptores | — | — | ✅ |
 >
-> No existen en el MVP corto: Bandeja de riesgo, Fondo, Desempeño de la
-> IA, Reportes, Perfil y notificaciones, Freno de emergencia y, dentro de
+> No existen en el MVP corto: Mis sugerencias (D-65), Bandeja de riesgo,
+> Fondo, Desempeño de la IA, Reportes, Perfil y notificaciones, Freno de emergencia y, dentro de
 > Administración, Rebalanceos, Lista blanca, Salud e integraciones,
 > Bitácora y Prompts. El Analista ve el mercado, Oportunidades y Alertas
 > (D-64).

@@ -34,5 +34,5 @@
 ## Notas (Notes)
 
 - **Excepción del proyecto.** Los criterios de aceptación, la descripción de los requisitos, el texto de los casos borde y los motivos de las relaciones se copian tal cual de la historia, del catálogo y de `docs/`, y pueden nombrar tecnología. No se reescriben: lo pide la plantilla del proyecto.
-- CA-3 habla de pantallas con botones de aprobar o de comprar, que llegan en R4 (HU-061): en R1 solo se puede demostrar la marca.
+- CA-3 habla de pantallas con botones de aprobar o de comprar, que llegan en R4 (HU-061; en el MVP corto, la orden manual de HU-075, D-65): en R1 solo se puede demostrar la marca.
 - Los puntos sin marcar exigen corregir la spec antes de `/speckit-clarify` o `/speckit-plan`.

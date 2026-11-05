@@ -343,6 +343,12 @@ el acierto (§11).
 
 ## 7. De la decisión a la sugerencia
 
+> **MVP corto (D-65,** [14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)**):** las señales no se convierten
+> en sugerencias. El código calcula igual el tamaño, el stop y el objetivo
+> (§7.1), la señal queda registrada y Oportunidades la muestra como
+> recomendación. La persona decide creando una orden manual. §7.2 a §7.5
+> quedan para la fase siguiente.
+
 ### 7.1 Tamaño, stop y objetivo (código)
 
 JEV no da cifras; las fija el código a partir de su confianza y de la

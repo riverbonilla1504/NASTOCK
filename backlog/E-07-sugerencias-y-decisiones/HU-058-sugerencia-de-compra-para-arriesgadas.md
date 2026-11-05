@@ -4,21 +4,12 @@
 |---|---|
 | Épica | [E-07 · Sugerencias y decisiones](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
-| MVP corto | Sí, con menos alcance (D-62, D-64) |
+| MVP corto | No: queda para la fase siguiente (D-65) |
 | Rol | Analista |
 | Prioridad | Alta |
 | Módulos afectados | M-09 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-07` · `M-09` · `prioridad-alta` |
-
-## MVP corto
-
-Solo crea la base que usa HU-059, porque Arriesgadas no opera (D-64, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
-
-- **Se hace:** los tipos y las tablas `sugerencias` y `decisiones`; `private.crear_sugerencias_desde_senal(senal_id)` **sin** la rama de Arriesgadas; los parámetros `sugerencias.minutos_vencimiento` y `sugerencias.banda_precio_pct`; y el llamado desde `agente`.
-- **No aplica:** CA-1 a CA-5, el parámetro `aprobacion.umbral_doble_usd`, la notificación `sugerencia_nueva` (D-62) ni las pruebas de recorte y doble aprobación.
-- **CA-6** (MVP corto) Dada una señal de compra de Arriesgadas, cuando se procesa, entonces no se crea ninguna sugerencia y la señal queda registrada.
-- La dependencia de HU-086 no aplica.
 
 ## Historia
 
@@ -52,7 +43,7 @@ CB-25
 
 ## Escenario E2E
 
-Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-09. En el MVP corto E2E-09 queda para la fase siguiente (15 §4) y esta historia se prueba con pgTAP.
+Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-09.
 
 ## Tareas
 
@@ -70,7 +61,7 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-09. En el MVP co
 |---|---|---|
 | Depende de | [HU-047 · Puntaje compuesto y elección de la mejor opción](../E-06-ia-contexto-y-decision/HU-047-puntaje-compuesto-y-eleccion-de-la-mejor-opcion.md) | Convierte las señales del ciclo. |
 | Depende de | [HU-037 · Motor de políticas: reglas de la propuesta](../E-05-motor-de-politicas-y-configuracion/HU-037-motor-de-politicas-reglas-de-la-propuesta.md) | Valida la propuesta con el motor de políticas. |
-| Depende de (después del MVP corto) | [HU-086 · Bandeja de notificaciones](../E-09-tiempo-real-y-notificaciones/HU-086-bandeja-de-notificaciones.md) | Avisa a los Analistas con `sugerencia_nueva`. En el MVP corto no aplica (D-62). |
+| Depende de | [HU-086 · Bandeja de notificaciones](../E-09-tiempo-real-y-notificaciones/HU-086-bandeja-de-notificaciones.md) | Avisa a los Analistas con `sugerencia_nueva`. |
 | Habilita | [HU-024 · Propuesta de rebalanceo tras el cierre](../E-03-fondo-y-libro-contable/HU-024-propuesta-de-rebalanceo-tras-el-cierre.md) | HU-024: la propuesta se guarda en la tabla `sugerencias`. |
 | Habilita | [HU-059 · Reparto de una señal de Usuarios en sugerencias por cupo](HU-059-reparto-de-una-senal-de-usuarios-en-sugerencias-por-cupo.md) | HU-059: usa las tablas de sugerencias y la función de reparto. |
 | Habilita | [HU-064 · Bandeja de riesgo del Analista](HU-064-bandeja-de-riesgo-del-analista.md) | HU-064: muestra las sugerencias de Arriesgadas. |
