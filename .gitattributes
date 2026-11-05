@@ -9,6 +9,10 @@
 *.ts   text eol=lf
 *.dart text eol=lf
 *.md   text eol=lf
+# deno fmt --check rechaza estos archivos si llegan con CRLF (supabase/functions/deno.json).
+*.json text eol=lf
+*.lock text eol=lf
+*.toml text eol=lf
 .env.example text eol=lf
 
 # Binarios
