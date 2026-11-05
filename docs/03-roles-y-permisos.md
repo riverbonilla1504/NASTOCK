@@ -226,6 +226,7 @@ Matriz de lectura por tabla (quién ve qué filas):
 | `movimientos_capital` | — | ✅ | ✅ |
 | `salud_integraciones`, `conciliaciones` | — | ✅ | ✅ |
 | `auditoria`, `parametros_historial` | — | — | ✅ |
+| `latido` (solo la actualiza `ping()`, [06 §5.6](06-modelo-de-datos.md#latido-del-proyecto-latido)) | — | — | — |
 
 ### 4.4 Escrituras: solo por funciones (RPC)
 

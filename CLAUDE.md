@@ -156,7 +156,7 @@ specify version · specify self check   # línea de comandos de spec-kit (versi�
 
 ## Estado del proyecto
 
-- Especificación v3.5 completa en `docs/`.
+- Especificación v3.6 completa en `docs/`.
 - Backlog completo en `backlog/` (227 requisitos, 13 épicas, 117 historias y
   9 tareas técnicas), publicado como issues y en el proyecto de GitHub
   "RiTech SAS · MVP" con `scripts/github/publicar-backlog.py` (`docs/16` §6).

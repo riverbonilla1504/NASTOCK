@@ -207,7 +207,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Qué hace**: flujos de GitHub Actions, scripts de verificación, despliegue, respaldo, wiki, plantillas, backlog y especificación por historia con spec-kit (D-56).
 - **Docs**: 15 completo · 16 completo · 05 §10–§12
 - **Planeación y specs**: `backlog/`, `specs/`, `.specify/`, `.claude/skills/`, `scripts/github/` (etiquetas, hitos, proyecto y publicación del backlog como issues)
-- **BD**: `public.ping()`
+- **BD**: `public.ping()`, `latido` (06 §5.6)
 - **Funciones**: —
 - **App**: `integration_test/`, `test_driver/`
 - **Pruebas**: `scripts/verificar.sh`, `scripts/verificar_docs.py`

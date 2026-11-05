@@ -705,7 +705,72 @@ auditoria (
   hash_anterior  text not null,
   hash           text not null      -- sha256(hash_anterior || contenido): cadena a prueba de alteraciones
 )
+
+latido (
+  id         boolean pk default true check (id),   -- solo puede existir la fila true: una sola fila
+  ultimo_en  timestamptz not null default now()    -- hora del último ping() que llegó
+)
+-- RLS activo y sin políticas: solo la actualiza public.ping() (D-57)
 ```
+
+#### Latido del proyecto (`latido`)
+
+**Qué es y qué hace.** Es una tabla de una sola fila que guarda la hora del
+último `ping()`. Una vez al día, el flujo `mantenimiento.yml` de GitHub
+Actions llama a `public.ping()` ([15 §6](15-calidad-pruebas-y-ci-cd.md#6-flujos-de-github-actions)).
+La función pone `ultimo_en = now()` en esa fila y devuelve la hora del
+servidor. Si la respuesta no llega, el flujo falla y avisa (CB-93).
+
+**Por qué existe.**
+
+1. El plan gratuito de Supabase pausa el proyecto tras 7 días sin actividad
+   ([05 §3.4](05-arquitectura.md#34-límites-del-plan-gratuito-de-supabase-y-cómo-se-manejan),
+   CB-93). El `ping()` diario es una de las dos defensas; la otra son los
+   trabajos de `pg_cron`. Para que esa defensa sea comprobable, `ping()`
+   escribe en la base en lugar de solo responder.
+2. Deja evidencia dentro de la propia base. Ejemplo: si hoy es 2026-11-06 y
+   `ultimo_en` dice 2026-11-02, el flujo diario lleva cuatro días sin llegar
+   al proyecto, aunque nadie haya visto su aviso de fallo.
+3. Faltaba definirla. §7 y FR-008 ya decían que `ping()` "actualiza una fila
+   de latido", pero ningún documento decía en qué tabla. Esta sección lo
+   define (D-57).
+
+**Por qué una tabla propia y no una que ya existe.**
+
+| Tabla existente | Por qué no sirve para el latido |
+|---|---|
+| `salud_integraciones` | Solo admite las seis integraciones externas, y sus fallos seguidos deciden si una integración está degradada o caída (RR-21). El latido no es una integración. |
+| `parametros` | Es configuración que cambia el Administrador, con historial y auditoría. Una escritura diaria llenaría `parametros_historial` sin aportar nada. |
+| `auditoria` | Registra acciones de personas y del sistema con cadena de hash, y se guarda para siempre (§10). Un registro diario solo sumaría ruido y espacio. |
+
+Una tabla aparte de una sola fila no crece y no necesita retención. Además,
+no mezcla el latido con las reglas de otra tabla.
+
+**Reglas.**
+
+- **Una sola fila.** La clave `id` es `boolean` con `check (id)`, así que solo
+  puede existir la fila `true`. La crea la misma migración que crea la tabla,
+  de modo que el primer `ping()` ya tiene dónde escribir, también en la nube.
+- **Nadie la toca por la API.** Tiene RLS activo y ninguna política: ni `anon`
+  ni `authenticated` la leen ni la escriben (§7). Solo la actualiza
+  `public.ping()`, que es `security definer` con `set search_path = ''`.
+- **`anon` solo ejecuta `ping()`.** No tiene ningún permiso sobre la tabla.
+- **Sin `version`** (§1): la tabla no tiene estados ni emite eventos de tiempo
+  real.
+- **Sin auditoría.** `ping()` no es una acción de una persona ni cambia
+  dinero, operación o configuración, así que no escribe en `auditoria`
+  ([11 §4](11-seguridad-y-auditoria.md)).
+
+**Cómo afecta al proyecto.**
+
+| Dónde | Efecto |
+|---|---|
+| TT-03 (base de Supabase) | Crea la tabla, su fila y `ping()` en la primera migración. Sus pruebas pgTAP comprueban que `anon` ejecuta `ping()` pero no puede leer ni escribir `latido`. |
+| TT-09 (mantenimiento) | Sin cambios: el flujo diario sigue llamando a `ping()` y falla si no responde. |
+| HU-109 (aislamiento verificado) | `latido` entra en su revisión de todas las tablas de `public`: RLS activo y ningún rol escribe directo. |
+| Matriz de lecturas ([03 §4.3](03-roles-y-permisos.md#43-lecturas-rls-en-todas-las-tablas)) | Fila nueva: ningún rol la lee. |
+| Espacio (§10) | Una fila; no pesa en el límite de 500 MB. |
+| Pantallas | Ninguna la muestra. Si se quiere ver el último latido, por ejemplo en Salud e integraciones (HU-103), primero hay que decidirlo en `docs/`. |
 
 ---
 
@@ -737,9 +802,11 @@ Reglas generales:
    en tablas de dinero, operación, cuentas, configuración o auditoría.
    Excepciones: `notificaciones.leida` y `dispositivos`, también vía RPC para
    uniformidad.
-2. `anon` no tiene acceso a nada, salvo `public.ping()` (actualiza una fila
-   de latido y devuelve la hora): lo usa el flujo diario que evita la pausa
-   del proyecto gratuito ([15 §6](15-calidad-pruebas-y-ci-cd.md#6-flujos-de-github-actions)).
+2. `anon` no tiene acceso a nada, salvo ejecutar `public.ping()`, que
+   actualiza la única fila de `latido` y devuelve la hora (§5.6). Lo usa el
+   flujo diario que evita la pausa del proyecto gratuito
+   ([15 §6](15-calidad-pruebas-y-ci-cd.md#6-flujos-de-github-actions)).
+   `anon` no puede leer ni escribir la tabla `latido`.
 3. Las Edge Functions usan la llave secreta (se salta RLS) y **solo llaman
    funciones `private`**, que tienen su propia validación.
 4. Cada política usa `(select auth.uid())` y `(select private.rol_actual())`
@@ -870,6 +937,7 @@ está pensada para no acercarse a ese límite.
 | `notificaciones` leídas | 90 días |
 | Mensajes de Realtime (`realtime.messages`) | 72 h (lo gestiona Supabase) |
 | Mensajes archivados de colas | 30 días |
+| `latido` | Una sola fila que se sobrescribe; no crece (§5.6) |
 
 Un trabajo semanal registra el tamaño de la base de datos y alerta al admin
 al pasar de 350 MB.
