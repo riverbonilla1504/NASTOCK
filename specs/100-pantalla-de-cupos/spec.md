@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-100 · Pantalla de cupos", en [`backlog/E-11-administracion/HU-100-pantalla-de-cupos.md`](../../backlog/E-11-administracion/HU-100-pantalla-de-cupos.md)
 
+> **MVP corto** (D-61, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): la confirmación usa el diálogo común que crea HU-005, sin biometría. La dependencia de HU-009 no aplica.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Pantalla de cupos (Prioridad: P1)

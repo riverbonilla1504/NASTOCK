@@ -9,6 +9,8 @@
 | Entregas en las que avanza | R4, R5, R6 |
 | Etiquetas | `epica` · `E-08` |
 
+> **MVP corto** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): entran 6 de los 11 ítems de esta épica. Los marcados *fuera del MVP corto* quedan para la fase siguiente; las relaciones de abajo son las del plan completo.
+
 ## Capacidades
 
 Tomadas de `docs/14` §2:
@@ -34,11 +36,11 @@ Cada historia tiene su narrativa, sus criterios de aceptación, sus tareas y sus
 | [HU-075](HU-075-crear-una-orden-manual-en-mi-cupo.md) | Crear una orden manual en mi cupo | Usuario | R4 | Alta | [HU-073](HU-073-enviar-al-broker-las-ordenes-aprobadas.md), [HU-052](../E-06-ia-contexto-y-decision/HU-052-opinion-de-la-ia-sobre-una-orden-manual.md), [HU-019](../E-03-fondo-y-libro-contable/HU-019-ver-mi-cupo.md), [HU-009](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md), [TT-06](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) |
 | [HU-076](HU-076-ver-mis-ordenes-y-cancelar-una-que-no-se-ha-llenado.md) | Ver mis órdenes y cancelar una que no se ha llenado | Usuario | R4 | Media | [HU-075](HU-075-crear-una-orden-manual-en-mi-cupo.md), [HU-074](HU-074-sincronizar-ordenes-y-aplicar-llenados.md) |
 | [HU-077](HU-077-proteccion-nativa-en-compras-de-acciones-enteras.md) | Protección nativa en compras de acciones enteras | Usuario | R4 | Alta | [HU-074](HU-074-sincronizar-ordenes-y-aplicar-llenados.md) |
-| [HU-078](HU-078-proteccion-virtual-en-compras-fraccionales.md) | Protección virtual en compras fraccionales | Usuario | R4 | Alta | [HU-074](HU-074-sincronizar-ordenes-y-aplicar-llenados.md), [HU-028](../E-04-datos-de-mercado/HU-028-ingesta-de-precios-cada-15-segundos.md), [HU-085](../E-09-tiempo-real-y-notificaciones/HU-085-alertas-del-sistema-por-audiencia.md), [TT-06](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) |
-| [HU-079](HU-079-ajustar-el-stop-y-el-objetivo-de-una-posicion.md) | Ajustar el stop y el objetivo de una posición | Usuario | R4 | Media | [HU-077](HU-077-proteccion-nativa-en-compras-de-acciones-enteras.md), [HU-078](HU-078-proteccion-virtual-en-compras-fraccionales.md) |
-| [HU-080](HU-080-conciliacion-completa-con-pausa-automatica.md) | Conciliación completa con pausa automática | Administrador | R5 | Alta | [HU-015](../E-03-fondo-y-libro-contable/HU-015-confirmar-el-aporte-por-conciliacion-y-repartirlo-50-25-25.md), [HU-074](HU-074-sincronizar-ordenes-y-aplicar-llenados.md), [HU-039](../E-05-motor-de-politicas-y-configuracion/HU-039-freno-de-emergencia.md), [TT-06](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) |
-| [HU-081](HU-081-revisar-un-descuadre-y-lanzar-una-conciliacion.md) | Revisar un descuadre y lanzar una conciliación | Administrador | R5 | Media | [HU-080](HU-080-conciliacion-completa-con-pausa-automatica.md) |
-| [HU-082](HU-082-renovar-las-protecciones-nativas-a-los-80-dias.md) | Renovar las protecciones nativas a los 80 días | Usuario | R6 | Baja | [HU-077](HU-077-proteccion-nativa-en-compras-de-acciones-enteras.md) |
+| [HU-078](HU-078-proteccion-virtual-en-compras-fraccionales.md) | Protección virtual en compras fraccionales · *fuera del MVP corto* | Usuario | R4 | Alta | [HU-074](HU-074-sincronizar-ordenes-y-aplicar-llenados.md), [HU-028](../E-04-datos-de-mercado/HU-028-ingesta-de-precios-cada-15-segundos.md), [HU-085](../E-09-tiempo-real-y-notificaciones/HU-085-alertas-del-sistema-por-audiencia.md), [TT-06](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) |
+| [HU-079](HU-079-ajustar-el-stop-y-el-objetivo-de-una-posicion.md) | Ajustar el stop y el objetivo de una posición · *fuera del MVP corto* | Usuario | R4 | Media | [HU-077](HU-077-proteccion-nativa-en-compras-de-acciones-enteras.md), [HU-078](HU-078-proteccion-virtual-en-compras-fraccionales.md) |
+| [HU-080](HU-080-conciliacion-completa-con-pausa-automatica.md) | Conciliación completa con pausa automática · *fuera del MVP corto* | Administrador | R5 | Alta | [HU-015](../E-03-fondo-y-libro-contable/HU-015-confirmar-el-aporte-por-conciliacion-y-repartirlo-50-25-25.md), [HU-074](HU-074-sincronizar-ordenes-y-aplicar-llenados.md), [HU-039](../E-05-motor-de-politicas-y-configuracion/HU-039-freno-de-emergencia.md), [TT-06](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) |
+| [HU-081](HU-081-revisar-un-descuadre-y-lanzar-una-conciliacion.md) | Revisar un descuadre y lanzar una conciliación · *fuera del MVP corto* | Administrador | R5 | Media | [HU-080](HU-080-conciliacion-completa-con-pausa-automatica.md) |
+| [HU-082](HU-082-renovar-las-protecciones-nativas-a-los-80-dias.md) | Renovar las protecciones nativas a los 80 días · *fuera del MVP corto* | Usuario | R6 | Baja | [HU-077](HU-077-proteccion-nativa-en-compras-de-acciones-enteras.md) |
 
 ## Relaciones
 

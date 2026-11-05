@@ -74,6 +74,17 @@ actualiza.
 | E2E-15 | Push: una sugerencia nueva genera push simulado al dispositivo; un token inválido se elimina | Backend | R5 |
 | E2E-16 | Liquidación, baja y reincorporación de un empleado | Backend | R6 |
 
+> **MVP corto** ([14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+>
+> - **Se construyen** E2E-01 a E2E-08, E2E-10 y E2E-11. Tres se achican:
+>   - **E2E-06:** sin contexto ni alerta de contradicción. Toda candidata
+>     sale "sin contexto" (D-59).
+>   - **E2E-10:** solo vencimiento por tiempo, sin invalidación por banda.
+>   - **E2E-11:** orden manual sin opinión de JEV (D-60).
+> - **Quedan para la fase siguiente** E2E-09, E2E-12, E2E-13, E2E-14,
+>   E2E-15 y E2E-16, porque las historias que los crean salen del MVP
+>   corto. Para E2E-14, la bitácora sigue probada con pgTAP en HU-107.
+
 ---
 
 ## 5. Cuándo corre qué

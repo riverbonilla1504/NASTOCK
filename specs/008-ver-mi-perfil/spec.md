@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-008 · Ver mi perfil", en [`backlog/E-02-identidad-y-acceso/HU-008-ver-mi-perfil.md`](../../backlog/E-02-identidad-y-acceso/HU-008-ver-mi-perfil.md)
 
+> **Fuera del MVP corto** (D-58, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): esta historia no se construye ahora. La spec se conserva para la fase siguiente.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Ver mi perfil (Prioridad: P1)

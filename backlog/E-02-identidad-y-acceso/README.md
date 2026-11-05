@@ -9,6 +9,8 @@
 | Entregas en las que avanza | R1, R2, R6 |
 | Etiquetas | `epica` · `E-02` |
 
+> **MVP corto** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): entran 9 de los 12 ítems de esta épica. Los marcados *fuera del MVP corto* quedan para la fase siguiente; las relaciones de abajo son las del plan completo.
+
 ## Capacidades
 
 Tomadas de `docs/14` §2:
@@ -36,11 +38,11 @@ Cada historia tiene su narrativa, sus criterios de aceptación, sus tareas y sus
 | [HU-005](HU-005-ingresar-con-google-en-android-y-web.md) | Ingresar con Google en Android y web | Usuario | R1 | Alta | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md), [TT-02](../E-01-cimientos-y-calidad-continua/TT-02-cuentas-conexiones-y-secretos-de-los-servicios-externos.md), [HU-002](HU-002-alta-solo-con-invitacion-vigente.md) |
 | [HU-006](HU-006-navegacion-y-guardas-segun-el-rol.md) | Navegación y guardas según el rol | Usuario | R1 | Alta | [HU-005](HU-005-ingresar-con-google-en-android-y-web.md), [TT-06](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) |
 | [HU-007](HU-007-cerrar-sesion.md) | Cerrar sesión | Usuario | R1 | Media | [HU-005](HU-005-ingresar-con-google-en-android-y-web.md) |
-| [HU-008](HU-008-ver-mi-perfil.md) | Ver mi perfil | Usuario | R1 | Baja | [HU-006](HU-006-navegacion-y-guardas-segun-el-rol.md) |
-| [HU-009](HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Sesión segura, bloqueo biométrico y confirmación de acciones sensibles | Usuario | R2 | Alta | [HU-005](HU-005-ingresar-con-google-en-android-y-web.md) |
+| [HU-008](HU-008-ver-mi-perfil.md) | Ver mi perfil · *fuera del MVP corto* | Usuario | R1 | Baja | [HU-006](HU-006-navegacion-y-guardas-segun-el-rol.md) |
+| [HU-009](HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Sesión segura, bloqueo biométrico y confirmación de acciones sensibles · *fuera del MVP corto* | Usuario | R2 | Alta | [HU-005](HU-005-ingresar-con-google-en-android-y-web.md) |
 | [HU-010](HU-010-suspender-y-reactivar-una-cuenta.md) | Suspender y reactivar una cuenta | Administrador | R2 | Alta | [HU-001](HU-001-perfiles-rol-actual-y-lecturas-por-rol.md), [HU-083](../E-09-tiempo-real-y-notificaciones/HU-083-canales-privados-de-tiempo-real.md), [HU-084](../E-09-tiempo-real-y-notificaciones/HU-084-gestor-de-tiempo-real-en-la-app.md), [HU-107](../E-12-seguridad-auditoria-y-cumplimiento/HU-107-bitacora-inmutable-con-cadena-de-hash.md) |
 | [HU-011](HU-011-cambiar-el-rol-de-una-cuenta.md) | Cambiar el rol de una cuenta | Administrador | R2 | Media | [HU-001](HU-001-perfiles-rol-actual-y-lecturas-por-rol.md), [HU-017](../E-03-fondo-y-libro-contable/HU-017-cupo-al-aceptar-la-invitacion.md), [HU-084](../E-09-tiempo-real-y-notificaciones/HU-084-gestor-de-tiempo-real-en-la-app.md), [HU-107](../E-12-seguridad-auditoria-y-cumplimiento/HU-107-bitacora-inmutable-con-cadena-de-hash.md) |
-| [HU-012](HU-012-dar-de-baja-y-reincorporar-una-cuenta.md) | Dar de baja y reincorporar una cuenta | Administrador | R6 | Media | [HU-010](HU-010-suspender-y-reactivar-una-cuenta.md), [HU-018](../E-03-fondo-y-libro-contable/HU-018-asignar-y-reducir-cupos.md), [HU-070](../E-07-sugerencias-y-decisiones/HU-070-aprobar-las-ventas-de-liquidacion.md), [HU-098](../E-11-administracion/HU-098-pantalla-de-usuarios-e-invitaciones.md) |
+| [HU-012](HU-012-dar-de-baja-y-reincorporar-una-cuenta.md) | Dar de baja y reincorporar una cuenta · *fuera del MVP corto* | Administrador | R6 | Media | [HU-010](HU-010-suspender-y-reactivar-una-cuenta.md), [HU-018](../E-03-fondo-y-libro-contable/HU-018-asignar-y-reducir-cupos.md), [HU-070](../E-07-sugerencias-y-decisiones/HU-070-aprobar-las-ventas-de-liquidacion.md), [HU-098](../E-11-administracion/HU-098-pantalla-de-usuarios-e-invitaciones.md) |
 
 ## Relaciones
 

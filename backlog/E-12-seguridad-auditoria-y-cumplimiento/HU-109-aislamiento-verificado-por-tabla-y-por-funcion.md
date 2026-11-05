@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-12 · Seguridad, auditoría y cumplimiento](README.md) |
 | Entrega (hito) | R2 · El fondo existe |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-02, M-20 |

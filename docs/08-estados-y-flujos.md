@@ -336,6 +336,10 @@ sequenceDiagram
 5. Sigue como 7.1 desde la retención.
 ```
 
+> **MVP corto (D-60, D-61):** sin el paso 2. En el paso 3, Ana confirma en
+> el diálogo que repite monto y símbolo, sin biometría, y
+> `crear_orden_manual` se llama sin `opinion_id`. El paso 4 no cambia.
+
 ### 7.6 Aporte de capital
 
 ```

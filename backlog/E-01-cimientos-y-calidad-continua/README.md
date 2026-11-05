@@ -9,6 +9,8 @@
 | Entregas en las que avanza | R1 |
 | Etiquetas | `epica` · `E-01` |
 
+> **MVP corto** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): entran 9 de los 9 ítems de esta épica. Los marcados *fuera del MVP corto* quedan para la fase siguiente; las relaciones de abajo son las del plan completo.
+
 ## Capacidades
 
 Tomadas de `docs/14` §2:

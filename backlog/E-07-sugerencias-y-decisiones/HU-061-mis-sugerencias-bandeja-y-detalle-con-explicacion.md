@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-07 · Sugerencias y decisiones](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-09 |

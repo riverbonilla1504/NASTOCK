@@ -4,11 +4,16 @@
 |---|---|
 | Épica | [E-10 · Cartera y reportes](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí, con menos alcance (D-63) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-15, M-11 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-10` · `M-15` · `M-11` · `prioridad-alta` |
+
+## MVP corto
+
+Solo acciones enteras (D-63, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): en CA-3 la protección es siempre nativa.
 
 ## Historia
 

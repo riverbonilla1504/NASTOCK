@@ -9,6 +9,8 @@
 | Entregas en las que avanza | R4, R6 |
 | Etiquetas | `epica` · `E-10` |
 
+> **MVP corto** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): entran 1 de los 6 ítems de esta épica. Los marcados *fuera del MVP corto* quedan para la fase siguiente; las relaciones de abajo son las del plan completo.
+
 ## Capacidades
 
 Tomadas de `docs/14` §2:
@@ -26,11 +28,11 @@ Cada historia tiene su narrativa, sus criterios de aceptación, sus tareas y sus
 | ID | Historia | Rol | Entrega | Prioridad | Depende de |
 |---|---|---|---|---|---|
 | [HU-091](HU-091-ver-mis-posiciones-y-sus-protecciones.md) | Ver mis posiciones y sus protecciones | Usuario | R4 | Alta | [HU-074](../E-08-ejecucion-y-broker/HU-074-sincronizar-ordenes-y-aplicar-llenados.md), [HU-077](../E-08-ejecucion-y-broker/HU-077-proteccion-nativa-en-compras-de-acciones-enteras.md), [HU-019](../E-03-fondo-y-libro-contable/HU-019-ver-mi-cupo.md) |
-| [HU-092](HU-092-ver-el-detalle-del-fondo.md) | Ver el detalle del fondo | Analista | R4 | Alta | [HU-020](../E-03-fondo-y-libro-contable/HU-020-ver-el-resumen-del-fondo-por-bolsillos.md), [HU-074](../E-08-ejecucion-y-broker/HU-074-sincronizar-ordenes-y-aplicar-llenados.md), [HU-064](../E-07-sugerencias-y-decisiones/HU-064-bandeja-de-riesgo-del-analista.md) |
-| [HU-093](HU-093-ver-el-historial-de-operaciones.md) | Ver el historial de operaciones | Usuario | R4 | Media | [HU-074](../E-08-ejecucion-y-broker/HU-074-sincronizar-ordenes-y-aplicar-llenados.md), [HU-023](../E-03-fondo-y-libro-contable/HU-023-reparto-de-la-ganancia-realizada-y-absorcion-de-perdidas.md), [HU-019](../E-03-fondo-y-libro-contable/HU-019-ver-mi-cupo.md) |
-| [HU-094](HU-094-ver-el-rendimiento-y-compararlo-con-el-nasdaq-100.md) | Ver el rendimiento y compararlo con el NASDAQ-100 | Usuario | R6 | Media | [HU-021](../E-03-fondo-y-libro-contable/HU-021-foto-diaria-de-patrimonio-y-rendimiento-twr.md), [HU-031](../E-04-datos-de-mercado/HU-031-comparacion-de-qqq-qld-y-x2-teorico.md), [HU-091](HU-091-ver-mis-posiciones-y-sus-protecciones.md) |
-| [HU-095](HU-095-exportar-reportes-en-csv.md) | Exportar reportes en CSV | Usuario | R6 | Media | [HU-093](HU-093-ver-el-historial-de-operaciones.md), [HU-094](HU-094-ver-el-rendimiento-y-compararlo-con-el-nasdaq-100.md), [HU-117](../E-13-transicion-desde-la-v2/HU-117-exportador-de-reportes-de-la-v2-con-sus-pruebas.md) |
-| [HU-096](HU-096-reporte-diario-al-administrador.md) | Reporte diario al Administrador | Administrador | R6 | Media | [HU-107](../E-12-seguridad-auditoria-y-cumplimiento/HU-107-bitacora-inmutable-con-cadena-de-hash.md), [HU-021](../E-03-fondo-y-libro-contable/HU-021-foto-diaria-de-patrimonio-y-rendimiento-twr.md), [HU-086](../E-09-tiempo-real-y-notificaciones/HU-086-bandeja-de-notificaciones.md) |
+| [HU-092](HU-092-ver-el-detalle-del-fondo.md) | Ver el detalle del fondo · *fuera del MVP corto* | Analista | R4 | Alta | [HU-020](../E-03-fondo-y-libro-contable/HU-020-ver-el-resumen-del-fondo-por-bolsillos.md), [HU-074](../E-08-ejecucion-y-broker/HU-074-sincronizar-ordenes-y-aplicar-llenados.md), [HU-064](../E-07-sugerencias-y-decisiones/HU-064-bandeja-de-riesgo-del-analista.md) |
+| [HU-093](HU-093-ver-el-historial-de-operaciones.md) | Ver el historial de operaciones · *fuera del MVP corto* | Usuario | R4 | Media | [HU-074](../E-08-ejecucion-y-broker/HU-074-sincronizar-ordenes-y-aplicar-llenados.md), [HU-023](../E-03-fondo-y-libro-contable/HU-023-reparto-de-la-ganancia-realizada-y-absorcion-de-perdidas.md), [HU-019](../E-03-fondo-y-libro-contable/HU-019-ver-mi-cupo.md) |
+| [HU-094](HU-094-ver-el-rendimiento-y-compararlo-con-el-nasdaq-100.md) | Ver el rendimiento y compararlo con el NASDAQ-100 · *fuera del MVP corto* | Usuario | R6 | Media | [HU-021](../E-03-fondo-y-libro-contable/HU-021-foto-diaria-de-patrimonio-y-rendimiento-twr.md), [HU-031](../E-04-datos-de-mercado/HU-031-comparacion-de-qqq-qld-y-x2-teorico.md), [HU-091](HU-091-ver-mis-posiciones-y-sus-protecciones.md) |
+| [HU-095](HU-095-exportar-reportes-en-csv.md) | Exportar reportes en CSV · *fuera del MVP corto* | Usuario | R6 | Media | [HU-093](HU-093-ver-el-historial-de-operaciones.md), [HU-094](HU-094-ver-el-rendimiento-y-compararlo-con-el-nasdaq-100.md), [HU-117](../E-13-transicion-desde-la-v2/HU-117-exportador-de-reportes-de-la-v2-con-sus-pruebas.md) |
+| [HU-096](HU-096-reporte-diario-al-administrador.md) | Reporte diario al Administrador · *fuera del MVP corto* | Administrador | R6 | Media | [HU-107](../E-12-seguridad-auditoria-y-cumplimiento/HU-107-bitacora-inmutable-con-cadena-de-hash.md), [HU-021](../E-03-fondo-y-libro-contable/HU-021-foto-diaria-de-patrimonio-y-rendimiento-twr.md), [HU-086](../E-09-tiempo-real-y-notificaciones/HU-086-bandeja-de-notificaciones.md) |
 
 ## Relaciones
 

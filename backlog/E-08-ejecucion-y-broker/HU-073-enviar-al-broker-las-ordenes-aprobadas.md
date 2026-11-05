@@ -4,11 +4,19 @@
 |---|---|
 | Épica | [E-08 · Ejecución y broker](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí, con menos alcance (D-62, D-63) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-10 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-08` · `M-10` · `prioridad-alta` |
+
+## MVP corto
+
+Cambios del MVP corto ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+
+- CA-2: solo la compra de acciones enteras (`bracket`). La compra fraccional no existe (D-63).
+- No aplica la notificación `orden_fallida` (D-62). El evento `orden` sí se emite y la pantalla de órdenes muestra el motivo.
 
 ## Historia
 

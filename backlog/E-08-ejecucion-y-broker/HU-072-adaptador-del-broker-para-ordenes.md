@@ -4,11 +4,16 @@
 |---|---|
 | Épica | [E-08 · Ejecución y broker](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí, con menos alcance (D-63) |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-10, M-19 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-08` · `M-10` · `M-19` · `prioridad-alta` |
+
+## MVP corto
+
+Solo acciones enteras (D-63, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): el adaptador envía compras de acciones enteras (`bracket`) y ventas límite. El simulado no necesita llenar fracciones.
 
 ## Historia
 

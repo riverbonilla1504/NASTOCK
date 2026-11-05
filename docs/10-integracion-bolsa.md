@@ -118,6 +118,17 @@ excedente no asignado.
 | Venta por protección virtual | `simple` | `market` | `day` | Toda la posición protegida | — |
 | Venta de liquidación | `simple` | `market` | `day` | Toda la posición | — |
 
+> **MVP corto (D-63,** [14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)**):**
+> solo se usan dos filas:
+>
+> - **La compra con acciones enteras** (`bracket`). Sus patas de stop-loss
+>   y objetivo venden solas cuando se tocan.
+> - **La venta**, que en el MVP corto solo es manual.
+>
+> Las sugerencias de venta y la liquidación quedan para la fase siguiente.
+> No hay compras fraccionales, así que tampoco hay protección virtual (§6)
+> ni venta por protección virtual.
+
 Detalles:
 
 - **Límite marcable**: una orden límite con precio un poco peor que el

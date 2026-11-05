@@ -9,6 +9,8 @@
 | Entregas en las que avanza | R1 |
 | Etiquetas | `epica` · `E-13` |
 
+> **MVP corto** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): entran 0 de los 3 ítems de esta épica. Los marcados *fuera del MVP corto* quedan para la fase siguiente; las relaciones de abajo son las del plan completo.
+
 ## Capacidades
 
 Tomadas de `docs/14` §2:
@@ -21,9 +23,9 @@ Cada historia tiene su narrativa, sus criterios de aceptación, sus tareas y sus
 
 | ID | Historia | Rol | Entrega | Prioridad | Depende de |
 |---|---|---|---|---|---|
-| [HU-115](HU-115-motor-x2-teorico-de-la-v2-con-sus-pruebas.md) | Motor ×2 teórico de la v2 con sus pruebas | Usuario | R1 | Media | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
-| [HU-116](HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md) | Tema, estilos, widgets y fuentes de la v2 | Usuario | R1 | Baja | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
-| [HU-117](HU-117-exportador-de-reportes-de-la-v2-con-sus-pruebas.md) | Exportador de reportes de la v2 con sus pruebas | Administrador | R1 | Baja | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
+| [HU-115](HU-115-motor-x2-teorico-de-la-v2-con-sus-pruebas.md) | Motor ×2 teórico de la v2 con sus pruebas · *fuera del MVP corto* | Usuario | R1 | Media | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
+| [HU-116](HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md) | Tema, estilos, widgets y fuentes de la v2 · *fuera del MVP corto* | Usuario | R1 | Baja | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
+| [HU-117](HU-117-exportador-de-reportes-de-la-v2-con-sus-pruebas.md) | Exportador de reportes de la v2 con sus pruebas · *fuera del MVP corto* | Administrador | R1 | Baja | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
 
 ## Relaciones
 

@@ -9,6 +9,8 @@
 | Entregas en las que avanza | R1 |
 | Etiquetas | `epica` · `E-04` |
 
+> **MVP corto** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): entran 6 de los 7 ítems de esta épica. Los marcados *fuera del MVP corto* quedan para la fase siguiente; las relaciones de abajo son las del plan completo.
+
 ## Capacidades
 
 Tomadas de `docs/14` §2:
@@ -32,7 +34,7 @@ Cada historia tiene su narrativa, sus criterios de aceptación, sus tareas y sus
 | [HU-028](HU-028-ingesta-de-precios-cada-15-segundos.md) | Ingesta de precios cada 15 segundos | Usuario | R1 | Alta | [HU-026](HU-026-universo-del-nasdaq-100-y-carga-historica-de-barras.md), [HU-027](HU-027-calendario-reloj-y-estado-del-mercado.md), [HU-083](../E-09-tiempo-real-y-notificaciones/HU-083-canales-privados-de-tiempo-real.md) |
 | [HU-029](HU-029-barra-diaria-tras-el-cierre-y-retencion-de-barras-de-minuto.md) | Barra diaria tras el cierre y retención de barras de minuto | Analista | R1 | Media | [HU-026](HU-026-universo-del-nasdaq-100-y-carga-historica-de-barras.md), [HU-027](HU-027-calendario-reloj-y-estado-del-mercado.md) |
 | [HU-030](HU-030-pantalla-de-mercado-en-vivo.md) | Pantalla de mercado en vivo | Usuario | R1 | Alta | [HU-028](HU-028-ingesta-de-precios-cada-15-segundos.md), [HU-084](../E-09-tiempo-real-y-notificaciones/HU-084-gestor-de-tiempo-real-en-la-app.md), [HU-006](../E-02-identidad-y-acceso/HU-006-navegacion-y-guardas-segun-el-rol.md), [TT-06](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) |
-| [HU-031](HU-031-comparacion-de-qqq-qld-y-x2-teorico.md) | Comparación de QQQ, QLD y ×2 teórico | Usuario | R1 | Media | [HU-030](HU-030-pantalla-de-mercado-en-vivo.md), [HU-029](HU-029-barra-diaria-tras-el-cierre-y-retencion-de-barras-de-minuto.md), [HU-115](../E-13-transicion-desde-la-v2/HU-115-motor-x2-teorico-de-la-v2-con-sus-pruebas.md) |
+| [HU-031](HU-031-comparacion-de-qqq-qld-y-x2-teorico.md) | Comparación de QQQ, QLD y ×2 teórico · *fuera del MVP corto* | Usuario | R1 | Media | [HU-030](HU-030-pantalla-de-mercado-en-vivo.md), [HU-029](HU-029-barra-diaria-tras-el-cierre-y-retencion-de-barras-de-minuto.md), [HU-115](../E-13-transicion-desde-la-v2/HU-115-motor-x2-teorico-de-la-v2-con-sus-pruebas.md) |
 | [HU-032](HU-032-aviso-de-dato-desactualizado.md) | Aviso de dato desactualizado | Usuario | R1 | Alta | [HU-030](HU-030-pantalla-de-mercado-en-vivo.md) |
 
 ## Relaciones

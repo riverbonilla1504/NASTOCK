@@ -4,11 +4,20 @@
 |---|---|
 | Épica | [E-07 · Sugerencias y decisiones](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí, con menos alcance (D-61) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-09, M-08 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-07` · `M-09` · `M-08` · `prioridad-alta` |
+
+## MVP corto
+
+Sin biometría (D-61, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+
+- CA-1: la aprobación se confirma en el **diálogo** que repite monto y símbolo, no con biometría.
+- Tarea: el botón Aprobar usa el componente común de confirmación que crea HU-005.
+- La dependencia de HU-009 no aplica.
 
 ## Historia
 
@@ -58,7 +67,7 @@ E2E-08 (nuevo)
 | Tipo | Ítem | Motivo |
 |---|---|---|
 | Depende de | [HU-061 · Mis sugerencias: bandeja y detalle con explicación](HU-061-mis-sugerencias-bandeja-y-detalle-con-explicacion.md) | Se aprueba desde el detalle de la sugerencia. |
-| Depende de | [HU-009 · Sesión segura, bloqueo biométrico y confirmación de acciones sensibles](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Exige la confirmación biométrica. |
+| Depende de (después del MVP corto) | [HU-009 · Sesión segura, bloqueo biométrico y confirmación de acciones sensibles](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Exige la confirmación biométrica. En el MVP corto no aplica (D-61). |
 | Depende de | [HU-037 · Motor de políticas: reglas de la propuesta](../E-05-motor-de-politicas-y-configuracion/HU-037-motor-de-politicas-reglas-de-la-propuesta.md) | Revalida con el motor de políticas al aprobar. |
 | Depende de | [TT-06 · Arnés E2E de backend y de la app](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) | Agrega el escenario E2E-08. |
 | Habilita | [HU-038 · Motor de políticas completo en los cuatro momentos](../E-05-motor-de-politicas-y-configuracion/HU-038-motor-de-politicas-completo-en-los-cuatro-momentos.md) | HU-038: RR-10 y RR-16 miran sugerencias y órdenes. |

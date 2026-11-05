@@ -4,11 +4,16 @@
 |---|---|
 | Épica | [E-07 · Sugerencias y decisiones](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí, con menos alcance (D-61) |
 | Rol | Usuario |
 | Prioridad | Media |
 | Módulos afectados | M-09 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-07` · `M-09` · `prioridad-media` |
+
+## MVP corto
+
+Sin biometría (D-61, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): la confirmación del rechazo usa el componente común de confirmación que crea HU-005. La dependencia de HU-009 no aplica. Los criterios de aceptación no cambian.
 
 ## Historia
 
@@ -53,7 +58,7 @@ Sin escenario propio en el catálogo de 15 §4.
 | Tipo | Ítem | Motivo |
 |---|---|---|
 | Depende de | [HU-061 · Mis sugerencias: bandeja y detalle con explicación](HU-061-mis-sugerencias-bandeja-y-detalle-con-explicacion.md) | Se rechaza desde el detalle de la sugerencia. |
-| Depende de | [HU-009 · Sesión segura, bloqueo biométrico y confirmación de acciones sensibles](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Exige la confirmación de la acción. |
+| Depende de (después del MVP corto) | [HU-009 · Sesión segura, bloqueo biométrico y confirmación de acciones sensibles](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Exige la confirmación de la acción. En el MVP corto no aplica (D-61). |
 | Habilita | [HU-065 · Decidir en Arriesgadas con doble aprobación](HU-065-decidir-en-arriesgadas-con-doble-aprobacion.md) | HU-065: usa `rechazar_sugerencia`. |
 | Habilita | [HU-071 · Aprobar o rechazar un rebalanceo](HU-071-aprobar-o-rechazar-un-rebalanceo.md) | HU-071: usa `rechazar_sugerencia`. |
 

@@ -182,6 +182,12 @@ Una compra puede nacer de:
 | Sugerencia de la IA | `cupo` | El dueño del cupo |
 | Orden manual del empleado | `cupo` | El mismo empleado (al crearla), con opinión previa de la IA |
 
+> **MVP corto** ([14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+> solo operan los cupos. La IA no crea sugerencias para `arriesgadas`: ese
+> 25 % queda en efectivo y el Analista solo supervisa (D-64). Las
+> evaluaciones de Arriesgadas siguen visibles en Oportunidades. La orden
+> manual se crea **sin** opinión previa de la IA (D-60).
+
 ### 6.1 Tamaño de la orden
 
 La señal trae un **porcentaje del disponible** que calcula el código a partir
@@ -200,6 +206,13 @@ si no, y el activo es fraccionable:
 si no:
     no se puede comprar: la sugerencia no se crea para esa subcuenta
 ```
+
+> **MVP corto (D-63):** solo acciones enteras. Si `cantidad_entera < 1`, la
+> sugerencia no se crea para esa subcuenta, aunque el activo sea
+> fraccionable. Una orden manual por menos de una acción se rechaza.
+> Así toda compra lleva protección nativa en el broker y se cumple RR-08
+> sin construir la protección virtual. Por ejemplo, con un disponible de
+> USD 300 se puede comprar 1 acción de USD 250, pero no 1,2 acciones.
 
 - **RN-21** Se prefieren acciones enteras porque solo así el broker acepta la
   protección nativa (orden *bracket*). Detalle técnico en

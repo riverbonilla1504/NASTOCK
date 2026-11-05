@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-05 · Motor de políticas y configuración](README.md) |
 | Entrega (hito) | R5 · Protegido y avisado |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-08, M-12 |

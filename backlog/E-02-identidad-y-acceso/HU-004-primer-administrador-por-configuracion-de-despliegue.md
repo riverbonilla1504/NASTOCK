@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-02 · Identidad y acceso](README.md) |
 | Entrega (hito) | R1 · Ver el mercado en vivo |
+| MVP corto | Sí |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-01 |

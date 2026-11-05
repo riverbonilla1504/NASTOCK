@@ -4,11 +4,20 @@
 |---|---|
 | Épica | [E-06 · IA: contexto y decisión](README.md) |
 | Entrega (hito) | R3 · La IA analiza |
+| MVP corto | Sí, con menos alcance (D-59) |
 | Rol | Analista |
 | Prioridad | Alta |
 | Módulos afectados | M-07 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-06` · `M-07` · `prioridad-alta` |
+
+## MVP corto
+
+Sin contexto (D-59, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+
+- CA-2 se cumple siempre: toda candidata queda "sin contexto", con C, S y T en 0,5.
+- CA-7: la evaluación guarda el contexto vacío.
+- La dependencia de HU-043 no aplica.
 
 ## Historia
 
@@ -64,7 +73,7 @@ E2E-07 (nuevo)
 |---|---|---|
 | Depende de | [HU-046 · Ciclo del agente: programación, uno a la vez y omisiones](HU-046-ciclo-del-agente-programacion-uno-a-la-vez-y-omisiones.md) | La decisión corre dentro del ciclo. |
 | Depende de | [HU-045 · Adaptador de JEV y estado en etiquetas](HU-045-adaptador-de-jev-y-estado-en-etiquetas.md) | Usa las respuestas de JEV. |
-| Depende de | [HU-043 · Vigencia y regeneración del contexto](HU-043-vigencia-y-regeneracion-del-contexto.md) | Usa el contexto vigente o evalúa sin contexto. |
+| Depende de (después del MVP corto) | [HU-043 · Vigencia y regeneración del contexto](HU-043-vigencia-y-regeneracion-del-contexto.md) | Usa el contexto vigente o evalúa sin contexto. En el MVP corto no aplica (D-59). |
 | Depende de | [HU-037 · Motor de políticas: reglas de la propuesta](../E-05-motor-de-politicas-y-configuracion/HU-037-motor-de-politicas-reglas-de-la-propuesta.md) | Toda señal pasa por `validar_operacion`. |
 | Depende de | [TT-06 · Arnés E2E de backend y de la app](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) | Agrega el escenario E2E-07. |
 | Habilita | [HU-048 · Pantalla Oportunidades con la explicación de cada evaluación](HU-048-pantalla-oportunidades-con-la-explicacion-de-cada-evaluacion.md) | HU-048: muestra las evaluaciones del último ciclo. |

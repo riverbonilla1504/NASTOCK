@@ -4,11 +4,16 @@
 |---|---|
 | Épica | [E-06 · IA: contexto y decisión](README.md) |
 | Entrega (hito) | R3 · La IA analiza |
+| MVP corto | Sí, con menos alcance (D-59) |
 | Rol | Analista |
 | Prioridad | Alta |
 | Módulos afectados | M-07 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-06` · `M-07` · `prioridad-alta` |
+
+## MVP corto
+
+Sin contexto (D-59, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): el ciclo no busca contexto ni encola su regeneración (paso 4 de 07 §3). Cada candidata pasa a JEV "sin contexto". Los criterios de aceptación no cambian.
 
 ## Historia
 

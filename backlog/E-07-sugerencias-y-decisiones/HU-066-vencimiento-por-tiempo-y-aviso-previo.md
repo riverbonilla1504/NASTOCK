@@ -4,11 +4,23 @@
 |---|---|
 | Épica | [E-07 · Sugerencias y decisiones](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí, con menos alcance (D-62, D-64) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-09 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-07` · `M-09` · `prioridad-alta` |
+
+## MVP corto
+
+Sin bandeja de notificaciones (D-62, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+
+- CA-1: la sugerencia pasa a vencida **sin** notificación `sugerencia_vencida`. Su estado se ve en vivo en la pantalla de sugerencias.
+- CA-2 no aplica: no hay aviso previo. El tiempo restante ya se ve en la sugerencia (HU-061).
+- CA-4 no aplica: la doble aprobación es de Arriesgadas, que no opera (D-64).
+- Tareas que no aplican: el aviso previo, el parámetro `sugerencias.aviso_previo_min` y las notificaciones.
+- E2E-10 solo prueba el vencimiento por tiempo (15 §4).
+- La dependencia de HU-086 no aplica.
 
 ## Historia
 
@@ -54,7 +66,7 @@ E2E-10 (nuevo)
 | Tipo | Ítem | Motivo |
 |---|---|---|
 | Depende de | [HU-059 · Reparto de una señal de Usuarios en sugerencias por cupo](HU-059-reparto-de-una-senal-de-usuarios-en-sugerencias-por-cupo.md) | Vence las sugerencias emitidas. |
-| Depende de | [HU-086 · Bandeja de notificaciones](../E-09-tiempo-real-y-notificaciones/HU-086-bandeja-de-notificaciones.md) | Avisa que la sugerencia está por vencer o venció. |
+| Depende de (después del MVP corto) | [HU-086 · Bandeja de notificaciones](../E-09-tiempo-real-y-notificaciones/HU-086-bandeja-de-notificaciones.md) | Avisa que la sugerencia está por vencer o venció. En el MVP corto no aplica (D-62). |
 | Depende de | [TT-06 · Arnés E2E de backend y de la app](../E-01-cimientos-y-calidad-continua/TT-06-arnes-e2e-de-backend-y-de-la-app.md) | Agrega el escenario E2E-10. |
 | Habilita | [HU-067 · Invalidación por precio y por cambio de situación](HU-067-invalidacion-por-precio-y-por-cambio-de-situacion.md) | HU-067: extiende el escenario E2E-10. |
 

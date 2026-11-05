@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-02 · Identidad y acceso](README.md) |
 | Entrega (hito) | R1 · Ver el mercado en vivo |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Usuario |
 | Prioridad | Baja |
 | Módulos afectados | M-02 |

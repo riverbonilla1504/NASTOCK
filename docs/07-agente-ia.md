@@ -158,6 +158,14 @@ que él. Si no cumple, la candidata se evalúa como **"sin contexto"** (las
 preguntas de contexto se neutralizan, §6.2) y se encola la regeneración.
 Nunca se mezcla un contexto viejo con precios nuevos sin decirlo.
 
+> **MVP corto (D-59,** [14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)**):**
+> no se descargan noticias ni se llama a DeepSeek. Toda candidata se evalúa
+> **"sin contexto"**: C, S y T valen 0,5 (§6.2), la explicación lo dice y no
+> se encola ninguna regeneración. La IA decide con las métricas del mercado
+> (§4.1) y las respuestas de JEV (§4.3). Por ejemplo, ve que NVDA subió 8 %
+> en un mes y JEV opina sobre ese estado, pero nadie le cuenta qué noticia
+> lo explica.
+
 ### 4.3 Estado que recibe JEV
 
 JEV **no sabe hacer cuentas ni comparar números o fechas** (limitaciones
@@ -361,6 +369,10 @@ cantidad / modo según 02 §6.1
 → 1 sugerencia, decide_rol = 'analista'
 ```
 
+> **MVP corto (D-64):** este paso no se ejecuta. Una señal de Arriesgadas
+> queda registrada y visible en Oportunidades, pero no crea sugerencia.
+> El bolsillo sigue en efectivo hasta la fase siguiente.
+
 ### 7.3 Compra en Usuarios: reparto de la señal en cupos
 
 Una señal del bolsillo de Usuarios se convierte en **una sugerencia por
@@ -434,6 +446,10 @@ La opinión **no bloquea** (solo las reglas de riesgo bloquean). El texto que
 ve el empleado lo arma el código a partir de las respuestas. Si JEV no
 responde en `ia.timeout_jev_seg` (10 s), veredicto `sin_opinion` y el empleado
 puede continuar.
+
+> **MVP corto (D-60):** no hay opinión. La orden manual pasa directo por
+> `validar_operacion` al crearse, como cualquier otra operación, y se guarda
+> sin `opinion_id`.
 
 ---
 

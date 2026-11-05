@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-06 · IA: contexto y decisión](README.md) |
 | Entrega (hito) | R6 · Medir y mejorar |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Administrador |
 | Prioridad | Media |
 | Módulos afectados | M-07, M-06 |

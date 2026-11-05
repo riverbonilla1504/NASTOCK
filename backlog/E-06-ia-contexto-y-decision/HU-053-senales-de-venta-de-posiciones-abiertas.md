@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-06 · IA: contexto y decisión](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Analista |
 | Prioridad | Alta |
 | Módulos afectados | M-07 |

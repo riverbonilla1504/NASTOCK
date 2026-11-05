@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-11 · Administración](README.md) |
 | Entrega (hito) | R2 · El fondo existe |
+| MVP corto | Sí |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-16 |

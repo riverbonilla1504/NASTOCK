@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-03 · Fondo y libro contable](README.md) |
 | Entrega (hito) | R2 · El fondo existe |
+| MVP corto | Sí |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-04, M-12, M-03 |

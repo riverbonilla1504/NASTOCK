@@ -4,11 +4,22 @@
 |---|---|
 | Épica | [E-02 · Identidad y acceso](README.md) |
 | Entrega (hito) | R1 · Ver el mercado en vivo |
+| MVP corto | Sí, con tareas de HU-009 (D-61) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-01 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-02` · `M-01` · `prioridad-alta` |
+
+## MVP corto
+
+Entra con **más** tareas ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)). HU-009 sale del MVP corto (D-61), así que esta historia toma dos piezas suyas que necesitan las demás:
+
+- [ ] App: `LocalStorage` personalizado de `supabase_flutter` sobre `flutter_secure_storage` en `lib/core/`, para guardar la sesión en almacenamiento seguro (04 §8, FR-026).
+- [ ] App: componente común de confirmación, **solo con el diálogo** que repite monto y símbolo, en móvil y en web, con los estados de 08 §9.3: inactivo, confirmando, enviando, hecho, cancelado y error. Lo usan HU-062, HU-063, HU-075, HU-099 y HU-100 (FR-028).
+- [ ] Pruebas de widget del componente de confirmación.
+
+Los criterios de aceptación no cambian.
 
 ## Historia
 

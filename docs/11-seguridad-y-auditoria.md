@@ -27,6 +27,13 @@
 | Fuga de datos a la IA | Datos personales en lo enviado a DeepSeek o JEV | Estado y contexto con campos cerrados; prueba automática que busca correos, nombres y uuid de personas |
 | Filtración de llaves | Llave de Alpaca en el repositorio | Solo en secretos de Supabase; escaneo de secretos en CI; rotación; ver §5 |
 | Denegación de servicio / caída de terceros | Alpaca, DeepSeek o JEV caídos | Salud con estados; RR-21; protecciones nativas en el broker; P7 "ante la duda, no operar" |
+
+> **MVP corto (D-61):** sin biometría. Para la suplantación y el repudio,
+> la confirmación es el diálogo que repite monto y símbolo. La decisión
+> sigue guardando usuario, hora y precio, y queda en la bitácora
+> encadenada. Se acepta el riesgo porque todo es paper trading con dinero
+> ficticio: si alguien toma un teléfono desbloqueado puede aprobar, pero no
+> mueve dinero real. La biometría vuelve en la fase siguiente (HU-009).
 | Operación fuera de la plataforma | Alguien opera desde el panel de Alpaca | Prohibido; la conciliación lo detecta y pausa el trading |
 | Abuso interno del admin | El admin intenta aprobar una compra | Imposible por diseño (D-20); todo lo que sí puede hacer queda auditado |
 | Acceso al panel de Supabase | Un desarrollador con acceso total | Mínimos miembros en la organización de Supabase, MFA obligatorio en sus cuentas, cambios solo por migraciones revisadas |

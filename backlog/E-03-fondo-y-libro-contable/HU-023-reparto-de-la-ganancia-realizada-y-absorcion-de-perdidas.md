@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-03 · Fondo y libro contable](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-04, M-10 |

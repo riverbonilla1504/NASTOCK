@@ -144,6 +144,12 @@ Cada aviso importante se guarda como fila en `notificaciones` (bandeja
 dentro de la app, con contador de no leídas) y, según su tipo, también sale
 por **push** (Firebase Cloud Messaging).
 
+> **MVP corto (D-62,** [14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)**):**
+> no hay bandeja de notificaciones ni push. Cada pantalla muestra su propio
+> estado en vivo por Realtime (§1): la sugerencia, con su tiempo restante, y
+> la orden, con si se ejecutó o falló. Las alertas del sistema por audiencia
+> sí se muestran en la app (HU-085). Lo de §5 queda para la fase siguiente.
+
 ### 5.1 Catálogo
 
 | Tipo | Para | En la app | Push | Texto del push |

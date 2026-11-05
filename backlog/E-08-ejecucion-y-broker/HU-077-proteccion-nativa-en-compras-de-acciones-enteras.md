@@ -4,11 +4,16 @@
 |---|---|
 | Épica | [E-08 · Ejecución y broker](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí, con menos alcance (D-62) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-11, M-10 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-08` · `M-11` · `M-10` · `prioridad-alta` |
+
+## MVP corto
+
+Sin bandeja de notificaciones (D-62, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): en CA-2 el dueño no recibe `proteccion_disparada`. La venta, la auditoría y los eventos `proteccion` y `posicion` siguen; la pantalla de Mi cupo muestra la posición cerrada.
 
 ## Historia
 
