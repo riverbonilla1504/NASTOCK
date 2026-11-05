@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-006 · Navegación y guardas según el rol", en [`backlog/E-02-identidad-y-acceso/HU-006-navegacion-y-guardas-segun-el-rol.md`](../../backlog/E-02-identidad-y-acceso/HU-006-navegacion-y-guardas-segun-el-rol.md)
 
+> **MVP corto** (D-58, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): el menú de cada rol solo tiene las pantallas del MVP corto, según la tabla de [`docs/03` §3](../../docs/03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas). Las que no existen no tienen ruta.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Navegación y guardas según el rol (Prioridad: P1)

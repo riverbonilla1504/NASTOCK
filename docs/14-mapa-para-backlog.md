@@ -158,6 +158,8 @@ ajusta a estas decisiones:
 - HU-059, HU-072, HU-073, HU-074, HU-075 y HU-091 trabajan solo con
   acciones enteras y protección nativa.
 - HU-099 solo registra y confirma aportes.
+- HU-006 y HU-097 muestran solo las pantallas del MVP corto, según la
+  tabla de [03 §3](03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas).
 
 Cada una tiene en `backlog/` una sección **MVP corto** con lo que cambia.
 Las dependencias que no aplican están marcadas en su tabla de relaciones

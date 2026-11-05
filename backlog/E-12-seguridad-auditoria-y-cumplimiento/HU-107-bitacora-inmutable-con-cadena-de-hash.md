@@ -40,7 +40,7 @@
 
 ## Escenario E2E
 
-Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-14.
+Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-14. En el MVP corto E2E-14 queda para la fase siguiente (15 §4) y esta historia se prueba con pgTAP.
 
 ## Tareas
 

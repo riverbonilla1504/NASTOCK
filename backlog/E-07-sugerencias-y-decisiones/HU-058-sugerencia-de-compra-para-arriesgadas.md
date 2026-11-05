@@ -52,7 +52,7 @@ CB-25
 
 ## Escenario E2E
 
-Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-09.
+Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-09. En el MVP corto E2E-09 queda para la fase siguiente (15 §4) y esta historia se prueba con pgTAP.
 
 ## Tareas
 

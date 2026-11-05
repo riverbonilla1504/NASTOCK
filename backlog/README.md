@@ -83,7 +83,7 @@ Cómo está marcado en esta carpeta:
 - **En cada ítem**, la tabla inicial tiene la fila **MVP corto**, con uno de
   estos valores: "Sí", "Sí, con menos alcance (D-xx)", "Sí, con tareas de
   HU-009 (D-61)" o "No: queda para la fase siguiente (D-58)".
-- **Las 17 historias que cambian de alcance** tienen una sección **MVP
+- **Las 19 historias que cambian de alcance** tienen una sección **MVP
   corto** con lo que no aplica o cambia.
 - **En el README de cada épica**, los ítems que salen llevan *fuera del MVP
   corto*.
