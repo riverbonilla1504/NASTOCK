@@ -63,6 +63,48 @@ Son los hitos de `docs/14` §4. Cada historia pertenece a una.
 | R5 · Protegido y avisado | 9 | E-05 (2), E-08 (2), E-09 (4), E-11 (1) |
 | R6 · Medir y mejorar | 21 | E-02 (1), E-03 (2), E-06 (4), E-07 (3), E-08 (1), E-10 (3), E-11 (2), E-12 (5) |
 
+## MVP corto
+
+Por falta de tiempo, primero se construye un **MVP corto** (D-58): 55 de los
+125 ítems abiertos. Tiene siete simplificaciones (D-59 a D-65). El detalle
+está en [docs/14 §4.1](../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58).
+
+| Entrega (hito) | Ítems | En el MVP corto |
+|---|---|---|
+| R1 · Ver el mercado en vivo | 30 | 25 (incluida TT-01, ya hecha) |
+| R2 · El fondo existe | 23 | 16 |
+| R3 · La IA analiza | 17 | 7 |
+| R4 · Decidir y operar en paper | 26 | 8 |
+| R5 · Protegido y avisado | 9 | 0 |
+| R6 · Medir y mejorar | 21 | 0 |
+
+Cómo está marcado en esta carpeta:
+
+- **En cada ítem**, la tabla inicial tiene la fila **MVP corto**, con uno de
+  estos valores: "Sí", "Sí, con menos alcance (D-xx)", "Sí, con tareas de
+  HU-009 (D-61)" o "No: queda para la fase siguiente (D-58 o D-65)".
+- **Las 14 historias que cambian de alcance** tienen una sección **MVP
+  corto** con lo que no aplica o cambia.
+- **En el README de cada épica**, los ítems que salen llevan *fuera del MVP
+  corto*.
+- **Las 8 dependencias que no aplican en el MVP corto** están en la tabla
+  de relaciones de su historia como "Depende de (después del MVP corto)":
+
+  | Historia | Ya no depende de | Por qué |
+  |---|---|---|
+  | HU-047 | HU-043 | D-59: sin contexto |
+  | HU-073 | HU-062 | D-65: sin sugerencias, solo órdenes manuales |
+  | HU-075 | HU-052, HU-009 | D-60 y D-61: sin opinión y con diálogo |
+  | HU-099 | HU-009, HU-016, HU-022 | D-61 y D-58: diálogo; retiros y ajustes salen |
+  | HU-100 | HU-009 | D-61: confirmación con diálogo |
+
+- **Dos dependencias se agregan en el MVP corto** (D-65): HU-074 depende de
+  HU-075, porque E2E-08 empieza con la orden manual, y HU-075 depende de
+  HU-032, porque la orden manual se deshabilita con el dato desactualizado.
+
+Las tablas y los diagramas de relaciones de este archivo y de las épicas
+siguen mostrando el **plan completo**.
+
 ## Cómo leer una historia
 
 Cada historia usa los campos del formulario `.github/ISSUE_TEMPLATE/historia-de-usuario.yml` y de `docs/14` §5, más los requisitos funcionales, las tareas y las relaciones.
@@ -746,7 +788,7 @@ Puntos de una historia concreta. Cada uno está también en la sección "Documen
 | [HU-054](E-06-ia-contexto-y-decision/HU-054-versiones-del-prompt-de-contexto-y-de-la-configuracion-de-decision.md) | 11 §4.1 solo nombra `prompt.creado` y `prompt.activado`: no hay acciones de auditoría para crear, poner en sombra o activar una configuración de decisión. Precisarlo en `docs/`. |
 | [HU-056](E-06-ia-contexto-y-decision/HU-056-evaluacion-de-sugerencias-y-candidatas-tras-el-cierre.md) | 07 §11 pide evaluar también las candidatas cuyo horizonte se cumplió, pero 06 §5.3 define `evaluaciones_ia` solo con clave en la sugerencia. Precisar en `docs/` dónde se guarda la evaluación de una candidata que no produjo sugerencia. |
 | [HU-071](E-07-sugerencias-y-decisiones/HU-071-aprobar-o-rechazar-un-rebalanceo.md) | 07 §7.5 fija el vencimiento de compras y de ventas, pero no dice cuánto vive una sugerencia de rebalanceo, que nace después del cierre. Precisarlo en `docs/` antes de implementar. |
-| [HU-075](E-08-ejecucion-y-broker/HU-075-crear-una-orden-manual-en-mi-cupo.md) | 06 §8.1 lista los parámetros de `crear_orden_manual` sin el id generado en la app, que 08 §7.5 y 08 §9.3 usan como clave de idempotencia. Precisar la firma en `docs/`. |
+| [HU-075](E-08-ejecucion-y-broker/HU-075-crear-una-orden-manual-en-mi-cupo.md) | 06 §8.1 lista los parámetros de `crear_orden_manual` sin el id generado en la app, que 08 §7.5 y 08 §9.3 usan como clave de idempotencia. Precisar la firma en `docs/`. Además, 06 §9 no tiene un código de error para una orden manual por menos de una acción entera, que el MVP corto rechaza (D-63). |
 | [HU-076](E-08-ejecucion-y-broker/HU-076-ver-mis-ordenes-y-cancelar-una-que-no-se-ha-llenado.md) | 06 §8.1 dice que `cancelar_orden` "pide la cancelación", pero ni 05 §6 ni 10 §7 dicen qué función envía esa cancelación al broker. Precisarlo en `docs/`. |
 | [HU-079](E-08-ejecucion-y-broker/HU-079-ajustar-el-stop-y-el-objetivo-de-una-posicion.md) | Ni 05 §6 ni 10 §6 dicen qué función reemplaza las patas en el broker al ajustar una protección nativa. Precisarlo en `docs/`. |
 | [HU-082](E-08-ejecucion-y-broker/HU-082-renovar-las-protecciones-nativas-a-los-80-dias.md) | 10 §5 no dice qué pasa si falla la recreación de las patas después de cancelarlas (la posición quedaría sin protección). Precisarlo en `docs/`. |

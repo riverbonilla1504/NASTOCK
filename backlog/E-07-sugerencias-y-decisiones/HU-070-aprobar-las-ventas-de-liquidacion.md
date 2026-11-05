@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-07 · Sugerencias y decisiones](README.md) |
 | Entrega (hito) | R6 · Medir y mejorar |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Analista |
 | Prioridad | Media |
 | Módulos afectados | M-09, M-10 |

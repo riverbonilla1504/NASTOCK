@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-08 · Ejecución y broker](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí |
 | Rol | Usuario |
 | Prioridad | Media |
 | Módulos afectados | M-10 |

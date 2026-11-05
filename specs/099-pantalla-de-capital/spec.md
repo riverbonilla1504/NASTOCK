@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-099 · Pantalla de capital", en [`backlog/E-11-administracion/HU-099-pantalla-de-capital.md`](../../backlog/E-11-administracion/HU-099-pantalla-de-capital.md)
 
+> **MVP corto** (D-58, D-61, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): la pantalla solo maneja aportes. No aplican lo de retiros (CA-4, SC-004 y la parte de retiros de CA-1, FR-209 y SC-001) ni el ajuste (CA-6). Tampoco aplican las dependencias de HU-016, HU-022 y HU-009: la confirmación usa el diálogo común que crea HU-005.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Pantalla de capital (Prioridad: P1)

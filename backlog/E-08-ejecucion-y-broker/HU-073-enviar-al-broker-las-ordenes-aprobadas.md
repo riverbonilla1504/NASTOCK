@@ -4,11 +4,22 @@
 |---|---|
 | Épica | [E-08 · Ejecución y broker](README.md) |
 | Entrega (hito) | R4 · Decidir y operar en paper |
+| MVP corto | Sí, con menos alcance (D-62, D-63, D-65) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-10 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-08` · `M-10` · `prioridad-alta` |
+
+## MVP corto
+
+Cambios del MVP corto ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+
+- CA-2: solo la compra de acciones enteras (`bracket`). La compra fraccional no existe (D-63).
+- No aplica la notificación `orden_fallida` (D-62). El evento `orden` sí se emite y la pantalla de órdenes muestra el motivo.
+- **Sin sugerencias (D-65):** solo envía órdenes manuales (HU-075). Toma de HU-062, que sale del MVP corto, esta tarea:
+  - [ ] Migración: tipos `origen_orden`, `clase_orden`, `tipo_orden` y `estado_orden`, tablas `ordenes` y `ordenes_eventos` (06 §5.4) con RLS, y cola `ordenes_por_enviar`. `sugerencia_id` y `opinion_id` quedan sin llave foránea (06 §5.4).
+- La dependencia de HU-062 no aplica.
 
 ## Historia
 
@@ -44,7 +55,7 @@ CB-33, CB-36, CB-67, CB-68
 
 ## Escenario E2E
 
-E2E-08 (actualizado)
+E2E-08 (actualizado). En el MVP corto, E2E-08 lo crea HU-075, que viene después: el envío se prueba aquí con `deno test` y pgTAP, y queda cubierto de punta a punta cuando HU-075 crea E2E-08 (D-65).
 
 ## Tareas
 
@@ -61,7 +72,7 @@ E2E-08 (actualizado)
 | Tipo | Ítem | Motivo |
 |---|---|---|
 | Depende de | [HU-072 · Adaptador del broker para órdenes](HU-072-adaptador-del-broker-para-ordenes.md) | Envía las órdenes con el adaptador del broker. |
-| Depende de | [HU-062 · Aprobar una sugerencia de mi cupo](../E-07-sugerencias-y-decisiones/HU-062-aprobar-una-sugerencia-de-mi-cupo.md) | Toma las órdenes que crea la aprobación. |
+| Depende de (después del MVP corto) | [HU-062 · Aprobar una sugerencia de mi cupo](../E-07-sugerencias-y-decisiones/HU-062-aprobar-una-sugerencia-de-mi-cupo.md) | Toma las órdenes que crea la aprobación. En el MVP corto no aplica (D-65). |
 | Habilita | [HU-039 · Freno de emergencia](../E-05-motor-de-politicas-y-configuracion/HU-039-freno-de-emergencia.md) | HU-039: el ejecutor revalida y deja fallidas las aprobadas. |
 | Habilita | [HU-074 · Sincronizar órdenes y aplicar llenados](HU-074-sincronizar-ordenes-y-aplicar-llenados.md) | HU-074: sincroniza las órdenes que envía el ejecutor. |
 | Habilita | [HU-075 · Crear una orden manual en mi cupo](HU-075-crear-una-orden-manual-en-mi-cupo.md) | HU-075: la orden manual se envía con el mismo ejecutor. |

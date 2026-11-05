@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-02 · Identidad y acceso](README.md) |
 | Entrega (hito) | R2 · El fondo existe |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-01 |

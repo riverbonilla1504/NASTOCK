@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-005 · Ingresar con Google en Android y web", en [`backlog/E-02-identidad-y-acceso/HU-005-ingresar-con-google-en-android-y-web.md`](../../backlog/E-02-identidad-y-acceso/HU-005-ingresar-con-google-en-android-y-web.md)
 
+> **MVP corto** (D-61, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): HU-009 sale del MVP corto y esta historia toma dos de sus requisitos. **FR-026**: la sesión se guarda en almacenamiento seguro en móvil. **FR-028**: el componente común de confirmación, solo con el diálogo que repite monto y símbolo, en móvil y en web. FR-027 (bloqueo biométrico) no se construye. Ver la sección "MVP corto" de la historia en `backlog/`.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Ingresar con Google en Android y web (Prioridad: P1)

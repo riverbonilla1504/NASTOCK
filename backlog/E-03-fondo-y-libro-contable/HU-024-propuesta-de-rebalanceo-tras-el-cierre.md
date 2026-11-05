@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-03 · Fondo y libro contable](README.md) |
 | Entrega (hito) | R6 · Medir y mejorar |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Administrador |
 | Prioridad | Media |
 | Módulos afectados | M-04 |

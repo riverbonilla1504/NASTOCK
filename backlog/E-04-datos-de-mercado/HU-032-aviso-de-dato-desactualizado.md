@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-04 · Datos de mercado](README.md) |
 | Entrega (hito) | R1 · Ver el mercado en vivo |
+| MVP corto | Sí |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-05 |
@@ -54,6 +55,7 @@ E2E-03 (actualizado)
 | Tipo | Ítem | Motivo |
 |---|---|---|
 | Depende de | [HU-030 · Pantalla de mercado en vivo](HU-030-pantalla-de-mercado-en-vivo.md) | La marca se muestra junto a los precios de la pantalla de mercado. |
+| Habilita | [HU-075 · Crear una orden manual en mi cupo](../E-08-ejecucion-y-broker/HU-075-crear-una-orden-manual-en-mi-cupo.md) | HU-075: en el MVP corto deshabilita la compra con el dato desactualizado (D-65). |
 | Habilita | [HU-061 · Mis sugerencias: bandeja y detalle con explicación](../E-07-sugerencias-y-decisiones/HU-061-mis-sugerencias-bandeja-y-detalle-con-explicacion.md) | HU-061: deshabilita la decisión con el dato desactualizado. |
 
 ## Notas técnicas

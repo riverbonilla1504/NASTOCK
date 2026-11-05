@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-02 · Identidad y acceso](README.md) |
 | Entrega (hito) | R6 · Medir y mejorar |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Administrador |
 | Prioridad | Media |
 | Módulos afectados | M-02, M-04 |

@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-12 · Seguridad, auditoría y cumplimiento](README.md) |
 | Entrega (hito) | R1 · Ver el mercado en vivo |
+| MVP corto | Sí |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-17 |
@@ -39,7 +40,7 @@
 
 ## Escenario E2E
 
-Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-14.
+Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-14. En el MVP corto E2E-14 queda para la fase siguiente (15 §4) y esta historia se prueba con pgTAP.
 
 ## Tareas
 

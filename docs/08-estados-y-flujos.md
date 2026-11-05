@@ -20,6 +20,10 @@ Cualquier transición no listada aquí es inválida y falla con
 
 ## 1. Sugerencia
 
+> **MVP corto (D-65,** [14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)**):** no hay sugerencias. Esta
+> máquina de estados queda para la fase siguiente; en el MVP corto toda
+> orden nace como orden manual (§2 y §7.5).
+
 ```mermaid
 stateDiagram-v2
   [*] --> pendiente : creada por IA, liquidación o sistema
@@ -335,6 +339,10 @@ sequenceDiagram
 4. Si la app reintenta por mala conexión, el mismo id devuelve la misma orden (sin duplicar).
 5. Sigue como 7.1 desde la retención.
 ```
+
+> **MVP corto (D-60, D-61):** sin el paso 2. En el paso 3, Ana confirma en
+> el diálogo que repite monto y símbolo, sin biometría, y
+> `crear_orden_manual` se llama sin `opinion_id`. El paso 4 no cambia.
 
 ### 7.6 Aporte de capital
 

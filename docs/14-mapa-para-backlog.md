@@ -86,6 +86,89 @@ flowchart LR
 > IA con datos reales durante semanas antes de que una sola orden llegue al
 > broker.
 
+### 4.1 MVP corto: lo que se entrega primero (D-58)
+
+**Por qué.** No alcanza el tiempo para construir las seis entregas. El
+2026-11-05 el equipo decidió entregar primero un **MVP corto** con cinco
+capacidades:
+
+1. Iniciar sesión.
+2. Manejar usuarios.
+3. Ver las acciones en vivo.
+4. Comprar y vender en paper trading.
+5. La IA que analiza y sugiere.
+
+Todo sigue siendo **paper trading con dinero ficticio** (D-44): el MVP corto
+no toca dinero real.
+
+**Cómo se armó.** Se partió de las historias que dan esas cinco capacidades
+y se les sumaron todas sus dependencias, según la sección "Relaciones" de
+cada historia. Por ejemplo, comprar necesita el cupo de la persona, el cupo
+necesita el libro contable y el libro necesita los perfiles. Con las seis
+simplificaciones de abajo quedan **55 de los 125 ítems abiertos** (TT-01 ya
+está hecha).
+
+**Qué entra.**
+
+| Capacidad | Ítems |
+|---|---|
+| Base técnica | TT-02 a TT-09 |
+| Inicio de sesión y usuarios | HU-001 a HU-007, HU-010, HU-011, HU-083, HU-084, HU-085, HU-097, HU-098, HU-107 |
+| Ver las acciones | HU-026 a HU-030, HU-032 |
+| Fondo y cupos (sin ellos no hay con qué comprar) | HU-013, HU-014, HU-015, HU-017, HU-018, HU-019, HU-023, HU-033, HU-034, HU-099, HU-100, HU-101 |
+| IA | HU-035, HU-037, HU-044, HU-045, HU-046, HU-047, HU-048 |
+| Compra y venta con órdenes manuales | HU-072 a HU-077, HU-091 |
+
+**Entregas del MVP corto.** Mandan sobre la tabla de §4 mientras dure el
+MVP corto.
+
+| Entrega | Qué puede hacer alguien al final | Qué cambia respecto de §4 | E2E |
+|---|---|---|---|
+| **R1 · Ver el mercado en vivo** | Entrar con Google por invitación y ver el NASDAQ-100 moverse | Sin la comparación QQQ / QLD / ×2 (HU-031), sin "Ver mi perfil" (HU-008) y sin las piezas de la v2 (HU-115, HU-116, HU-117) | E2E-01, E2E-02, E2E-03 |
+| **R2 · El fondo existe** | El admin carga el capital, reparte cupos y maneja usuarios; cada empleado ve su cupo | La pantalla de capital (HU-099) solo registra y confirma aportes. Salen retiros (HU-016), ajustes (HU-022), resumen del fondo (HU-020), foto diaria (HU-021), pantalla de bitácora (HU-108), suite de aislamiento (HU-109) y la confirmación biométrica (HU-009, D-61) | E2E-04, E2E-05 |
+| **R3 · La IA analiza** | Ver en **Oportunidades** qué acciones evalúa la IA, con puntaje, confianza y explicación | Sin noticias ni contexto de DeepSeek (D-59). Salen las alertas de contradicción (HU-049), el presupuesto de IA (HU-050), el análisis bajo demanda (HU-051), la lista blanca editable (HU-036, HU-102), la pantalla de salud (HU-103) y la bandeja de notificaciones (HU-086, D-62) | E2E-06 (siempre "sin contexto"), E2E-07 |
+| **R4 · Decidir y operar en paper** | Ver en Oportunidades qué recomienda la IA, crear órdenes manuales de compra y de venta en su cupo, y verlas ejecutadas y protegidas en Alpaca paper | Sin sugerencias de la IA (D-65): salen la bandeja, aprobar, rechazar, el vencimiento y el reparto de señales en cupos (HU-058, HU-059, HU-061, HU-062, HU-063, HU-066). Solo opera el bolsillo de Usuarios (D-64), sin opinión de la IA en la orden manual (D-60) y solo acciones enteras (D-63). Se vende con una orden manual o al tocar el stop-loss o el objetivo | E2E-08 (desde una orden manual), E2E-11 (sin opinión) |
+| **Después del MVP corto** | — | R5 y R6 completas y los ítems que salen de R1 a R4: 70 en total | E2E-09, E2E-10, E2E-12 a E2E-16 |
+
+**Las siete simplificaciones.** Cada una está anotada donde se define su
+regla. La especificación completa se conserva para la fase siguiente.
+
+| Decisión | Qué cambia en el MVP corto | Regla original |
+|---|---|---|
+| D-59 | Sin noticias ni DeepSeek: toda candidata se evalúa "sin contexto" | [07 §4.2](07-agente-ia.md#42-contexto-deepseek) |
+| D-60 | La orden manual no lleva opinión previa de la IA | [07 §8](07-agente-ia.md#8-opinión-sobre-órdenes-manuales), [08 §7.5](08-estados-y-flujos.md#75-orden-manual-con-opinión) |
+| D-61 | Confirmar con un diálogo que repite monto y símbolo, sin biometría ni bloqueo de la app | [04 §8](04-autenticacion-oauth.md#8-sesión-en-la-app) |
+| D-62 | Sin bandeja de notificaciones ni push: cada pantalla muestra su propio estado | [09 §5](09-tiempo-real-y-notificaciones.md#5-notificaciones) |
+| D-63 | Solo acciones enteras: sin compras fraccionales ni protección virtual | [02 §6.1](02-logica-de-negocio.md#61-tamaño-de-la-orden), [10 §5](10-integracion-bolsa.md#5-órdenes-que-usamos) |
+| D-64 | El bolsillo de Arriesgadas no opera: queda en efectivo y el Analista solo supervisa | [02 §6](02-logica-de-negocio.md#6-compras), [07 §7.2](07-agente-ia.md#72-compra-en-arriesgadas) |
+| D-65 | Sin sugerencias de la IA: la IA analiza y recomienda en Oportunidades, y la persona compra y vende con órdenes manuales | [07 §7](07-agente-ia.md#7-de-la-decisión-a-la-sugerencia), [08 §1](08-estados-y-flujos.md#1-sugerencia) |
+
+**Historias que entran con otro alcance.** Su archivo en `backlog/` se
+ajusta a estas decisiones:
+
+- HU-005 toma de HU-009 dos piezas: la sesión en almacenamiento seguro y el
+  componente común de confirmación, solo con diálogo.
+- HU-047 solo registra las señales; HU-048 las muestra como recomendación en
+  Oportunidades. No se convierten en sugerencias (D-65).
+- HU-073 crea las tablas de órdenes y la cola de envío, que antes creaba
+  HU-062, y envía solo órdenes manuales (D-65).
+- HU-075 crea E2E-08, que en el MVP corto empieza con una orden manual, y
+  HU-074 depende de HU-075 para extenderlo. HU-075 también depende de
+  HU-032: con el precio desactualizado se deshabilita la compra (D-65).
+- HU-046, HU-047 y HU-048 trabajan siempre "sin contexto".
+- HU-075, HU-099 y HU-100 confirman con el diálogo.
+- HU-073, HU-074 y HU-077 no envían notificaciones. Cada pantalla muestra
+  el estado en vivo por sus eventos.
+- HU-072, HU-073, HU-074, HU-075 y HU-091 trabajan solo con acciones
+  enteras y protección nativa.
+- HU-099 solo registra y confirma aportes.
+- HU-006 y HU-097 muestran solo las pantallas del MVP corto, según la
+  tabla de [03 §3](03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas).
+
+Cada una tiene en `backlog/` una sección **MVP corto** con lo que cambia.
+Las dependencias que no aplican están marcadas en su tabla de relaciones
+como "Depende de (después del MVP corto)".
+
 ---
 
 ## 5. Plantilla de historia de usuario

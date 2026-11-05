@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-097 · Sección de Administración y guía de primeros pasos", en [`backlog/E-11-administracion/HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md`](../../backlog/E-11-administracion/HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md)
 
+> **MVP corto** (D-58, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): la sección solo tiene Usuarios e invitaciones, Capital (solo aportes), Cupos, y Parámetros e Interruptores ([`docs/03` §3](../../docs/03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas)). Rebalanceos, Lista blanca, Salud e integraciones, Bitácora y Prompts no aparecen.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Sección de Administración y guía de primeros pasos (Prioridad: P1)

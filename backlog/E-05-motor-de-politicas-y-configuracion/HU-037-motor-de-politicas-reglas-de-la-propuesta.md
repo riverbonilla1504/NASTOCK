@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-05 · Motor de políticas y configuración](README.md) |
 | Entrega (hito) | R3 · La IA analiza |
+| MVP corto | Sí |
 | Rol | Analista |
 | Prioridad | Alta |
 | Módulos afectados | M-08 |

@@ -4,11 +4,16 @@
 |---|---|
 | Épica | [E-02 · Identidad y acceso](README.md) |
 | Entrega (hito) | R1 · Ver el mercado en vivo |
+| MVP corto | Sí, con menos alcance (D-58) |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-01, M-02 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-02` · `M-01` · `M-02` · `prioridad-alta` |
+
+## MVP corto
+
+El menú de cada rol solo tiene las pantallas del MVP corto ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58), tabla de [docs/03 §3](../../docs/03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas)). CA-1 se cumple con esa tabla. Las rutas de las pantallas que no existen no se crean, y el enrutador devuelve al inicio a quien llegue a ellas por un enlace.
 
 ## Historia
 

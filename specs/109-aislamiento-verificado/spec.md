@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-109 · Aislamiento verificado por tabla y por función", en [`backlog/E-12-seguridad-auditoria-y-cumplimiento/HU-109-aislamiento-verificado-por-tabla-y-por-funcion.md`](../../backlog/E-12-seguridad-auditoria-y-cumplimiento/HU-109-aislamiento-verificado-por-tabla-y-por-funcion.md)
 
+> **Fuera del MVP corto** (D-58, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): esta historia no se construye ahora. La spec se conserva para la fase siguiente.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Aislamiento verificado por tabla y por función (Prioridad: P1)

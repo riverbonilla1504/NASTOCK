@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-01 · Cimientos y calidad continua](README.md) |
 | Entrega (hito) | R1 · Ver el mercado en vivo |
+| MVP corto | Sí |
 | Prioridad | Alta |
 | Módulos afectados | M-20 |
 | Estimación | Por definir al refinar |
@@ -15,7 +16,7 @@ Crear el proyecto local de Supabase y la primera migración con lo que todas las
 
 ## Documentación fuente
 
-05 §3.2 · 05 §7 · 05 §12 · 06 §1 · 06 §7 · 16 §3.2
+05 §3.2 · 05 §7 · 05 §12 · 06 §1 · 06 §5.6 (`latido`) · 06 §7 · 16 §3.2 · D-57
 
 ## Requisitos funcionales
 
@@ -24,7 +25,7 @@ Crear el proyecto local de Supabase y la primera migración con lo que todas las
 ## Criterio de terminado
 
 - [ ] `supabase start` y `supabase db reset` levantan la base local desde cero con las migraciones y `seed.sql`.
-- [ ] El rol anónimo solo puede ejecutar `ping()`, que devuelve la hora del servidor; cualquier otro acceso anónimo falla (pgTAP).
+- [ ] El rol anónimo solo puede ejecutar `ping()`, que actualiza la única fila de `latido` y devuelve la hora del servidor; cualquier otro acceso anónimo falla, incluido leer o escribir `latido` (pgTAP).
 - [ ] `private.despertar_funcion(nombre)` hace `net.http_post` con la URL y el secreto leídos de Vault, y el esquema `private` no aparece en la API.
 - [ ] `supabase db lint` y `supabase test db` pasan.
 - [ ] `scripts/verificar.sh` completo en verde y CI en verde.
@@ -33,10 +34,10 @@ Crear el proyecto local de Supabase y la primera migración con lo que todas las
 
 - [ ] `supabase init`: `supabase/config.toml`, `migrations/`, `tests/`, `functions/` y `seed.sql`.
 - [ ] Migración: esquema `private` y extensiones `pg_cron`, `pg_net` y `pgmq`.
-- [ ] Migración: `public.ping()` con su fila de latido y permiso de ejecución para `anon`.
+- [ ] Migración: tabla `latido` de una sola fila con RLS y sin políticas (06 §5.6), su fila inicial, y `public.ping()`, que la actualiza, con permiso de ejecución para `anon`.
 - [ ] Migración: `private.despertar_funcion(nombre)` con lectura de `url_funciones` y `secreto_interno` desde Vault.
 - [ ] Funciones: `_shared/auth.ts` (secreto interno, JWT y rol) y `_shared/esquemas.ts` (validación con zod).
-- [ ] Pruebas pgTAP: `anon` sin acceso salvo `ping()` y `private` no expuesto.
+- [ ] Pruebas pgTAP: `anon` sin acceso salvo `ping()` (tampoco a `latido`), `ping()` actualiza `latido.ultimo_en` y `private` no expuesto.
 
 ## Relaciones
 

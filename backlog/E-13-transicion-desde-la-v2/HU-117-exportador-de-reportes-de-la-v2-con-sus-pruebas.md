@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-13 · Transición desde la v2](README.md) |
 | Entrega (hito) | R1 · Ver el mercado en vivo |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Administrador |
 | Prioridad | Baja |
 | Módulos afectados | M-15 |

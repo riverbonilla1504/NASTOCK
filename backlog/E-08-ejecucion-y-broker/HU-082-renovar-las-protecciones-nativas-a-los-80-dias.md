@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-08 · Ejecución y broker](README.md) |
 | Entrega (hito) | R6 · Medir y mejorar |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Usuario |
 | Prioridad | Baja |
 | Módulos afectados | M-11 |

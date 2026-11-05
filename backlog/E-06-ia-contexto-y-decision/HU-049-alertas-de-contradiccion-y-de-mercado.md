@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-06 · IA: contexto y decisión](README.md) |
 | Entrega (hito) | R3 · La IA analiza |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Analista |
 | Prioridad | Media |
 | Módulos afectados | M-07, M-18 |

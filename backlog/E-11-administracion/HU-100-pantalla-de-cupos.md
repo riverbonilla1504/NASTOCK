@@ -4,11 +4,16 @@
 |---|---|
 | Épica | [E-11 · Administración](README.md) |
 | Entrega (hito) | R2 · El fondo existe |
+| MVP corto | Sí, con menos alcance (D-61) |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-16, M-04 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-11` · `M-16` · `M-04` · `prioridad-alta` |
+
+## MVP corto
+
+Sin biometría (D-61, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): asignar y reducir se confirma con el componente común de confirmación que crea HU-005. La dependencia de HU-009 no aplica. Los criterios de aceptación no cambian.
 
 ## Historia
 
@@ -52,7 +57,7 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-04.
 |---|---|---|
 | Depende de | [HU-097 · Sección de Administración y guía de primeros pasos](HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md) | Es una entrada de la sección de Administración. |
 | Depende de | [HU-018 · Asignar y reducir cupos](../E-03-fondo-y-libro-contable/HU-018-asignar-y-reducir-cupos.md) | Asigna y reduce cupos. |
-| Depende de | [HU-009 · Sesión segura, bloqueo biométrico y confirmación de acciones sensibles](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Confirma los movimientos de dinero. |
+| Depende de (después del MVP corto) | [HU-009 · Sesión segura, bloqueo biométrico y confirmación de acciones sensibles](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Confirma los movimientos de dinero. En el MVP corto no aplica (D-61). |
 | Habilita | [HU-069 · Solicitar la liquidación de un cupo](../E-07-sugerencias-y-decisiones/HU-069-solicitar-la-liquidacion-de-un-cupo.md) | HU-069: la acción vive en la pantalla de cupos. |
 
 ## Notas técnicas

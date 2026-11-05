@@ -61,9 +61,12 @@ if [[ -f supabase/config.toml ]]; then
   supabase db lint --level warning --fail-on warning
   supabase test db
   if [[ -d supabase/functions ]]; then
-    deno fmt --check supabase/functions
-    deno lint supabase/functions
-    deno test --allow-all supabase/functions
+    # Las dependencias de las funciones están en su deno.json, y Deno solo lo
+    # encuentra si se ejecuta desde esa carpeta: por eso se le indica aquí.
+    DENO_CONFIG=supabase/functions/deno.json
+    deno fmt --check --config "$DENO_CONFIG" supabase/functions
+    deno lint --config "$DENO_CONFIG" supabase/functions
+    deno test --allow-all --config "$DENO_CONFIG" supabase/functions
   fi
   ok "base de datos y funciones"
 

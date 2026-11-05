@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-115 · Motor ×2 teórico de la v2 con sus pruebas", en [`backlog/E-13-transicion-desde-la-v2/HU-115-motor-x2-teorico-de-la-v2-con-sus-pruebas.md`](../../backlog/E-13-transicion-desde-la-v2/HU-115-motor-x2-teorico-de-la-v2-con-sus-pruebas.md)
 
+> **Fuera del MVP corto** (D-58, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): esta historia no se construye ahora. La spec se conserva para la fase siguiente.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Motor ×2 teórico de la v2 con sus pruebas (Prioridad: P1)

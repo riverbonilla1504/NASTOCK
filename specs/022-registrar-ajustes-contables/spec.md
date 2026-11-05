@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-022 · Registrar ajustes contables", en [`backlog/E-03-fondo-y-libro-contable/HU-022-registrar-ajustes-contables.md`](../../backlog/E-03-fondo-y-libro-contable/HU-022-registrar-ajustes-contables.md)
 
+> **Fuera del MVP corto** (D-58, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): esta historia no se construye ahora. La spec se conserva para la fase siguiente.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Registrar ajustes contables (Prioridad: P1)

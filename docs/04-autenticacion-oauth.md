@@ -327,6 +327,21 @@ estos claims son para la **interfaz**. La autorización real consulta
 | Varios dispositivos | Permitidos. Cada uno registra su token de push. |
 | Cambio de rol | La app escucha el evento `perfil_actualizado` en su canal y **fuerza la renovación del token** para rearmar la navegación de inmediato. |
 
+> **MVP corto (D-61,** [14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)**):**
+>
+> - **Sin biometría.** Aprobar o rechazar una sugerencia, crear una orden
+>   manual o registrar un movimiento de dinero se confirma con el diálogo
+>   que repite monto y símbolo, en móvil y en web.
+> - **Sin bloqueo de la app** al volver de segundo plano:
+>   `app.minutos_bloqueo` no se usa.
+> - **La sesión sigue en almacenamiento seguro** en móvil.
+>
+> HU-009 sale del MVP corto, así que HU-005 construye dos de sus piezas: el
+> almacenamiento seguro y el componente común de confirmación, solo con
+> diálogo.
+>
+> El riesgo que se acepta está en [11 §2](11-seguridad-y-auditoria.md#2-amenazas-y-controles).
+
 ---
 
 ## 9. El primer administrador

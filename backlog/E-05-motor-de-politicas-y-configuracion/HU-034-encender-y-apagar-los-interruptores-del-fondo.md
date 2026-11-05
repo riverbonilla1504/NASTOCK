@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-05 · Motor de políticas y configuración](README.md) |
 | Entrega (hito) | R2 · El fondo existe |
+| MVP corto | Sí |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-08 |

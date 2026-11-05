@@ -207,10 +207,10 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Qué hace**: flujos de GitHub Actions, scripts de verificación, despliegue, respaldo, wiki, plantillas, backlog y especificación por historia con spec-kit (D-56).
 - **Docs**: 15 completo · 16 completo · 05 §10–§12
 - **Planeación y specs**: `backlog/`, `specs/`, `.specify/`, `.claude/skills/`, `scripts/github/` (etiquetas, hitos, proyecto y publicación del backlog como issues)
-- **BD**: `public.ping()`
-- **Funciones**: —
+- **BD**: `supabase/config.toml`, `supabase/seed.sql`, esquema `private`, extensiones `pg_cron`, `pg_net` y `pgmq`, `public.ping()`, `latido` (06 §5.6), `private.despertar_funcion(nombre)` · migraciones `supabase/migrations/*_esquema_private_y_extensiones.sql`, `*_latido_y_ping.sql`, `*_despertar_funcion.sql`
+- **Funciones**: `supabase/functions/deno.json` (dependencias de todas las funciones), `_shared/auth.ts` (secreto interno, JWT y rol), `_shared/esquemas.ts` (validación con zod)
 - **App**: `integration_test/`, `test_driver/`
-- **Pruebas**: `scripts/verificar.sh`, `scripts/verificar_docs.py`
+- **Pruebas**: `scripts/verificar.sh`, `scripts/verificar_docs.py`, `supabase/tests/database/00_base_test.sql`, `supabase/functions/_shared/*_test.ts`
 - **Depende de**: — · **Lo usan**: todos
 
 ---

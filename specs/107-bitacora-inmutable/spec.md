@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-107 · Bitácora inmutable con cadena de hash", en [`backlog/E-12-seguridad-auditoria-y-cumplimiento/HU-107-bitacora-inmutable-con-cadena-de-hash.md`](../../backlog/E-12-seguridad-auditoria-y-cumplimiento/HU-107-bitacora-inmutable-con-cadena-de-hash.md)
 
+> **MVP corto** (D-58, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): HU-108 y E2E-14 quedan para la fase siguiente. La bitácora se prueba con pgTAP.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Bitácora inmutable con cadena de hash (Prioridad: P1)

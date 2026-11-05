@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-10 · Cartera y reportes](README.md) |
 | Entrega (hito) | R6 · Medir y mejorar |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Administrador |
 | Prioridad | Media |
 | Módulos afectados | M-15, M-17 |

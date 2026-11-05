@@ -122,6 +122,25 @@
 | **Administración** → Usuarios e invitaciones, Capital (aportes / retiros / ajustes), Cupos, Rebalanceos, Parámetros, Lista blanca, Interruptores, Salud e integraciones, Bitácora, Prompts | — | — | ✅ |
 | Freno de emergencia (botón visible en la barra) | — | ✅ | ✅ |
 
+> **MVP corto** ([14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+> el menú de cada rol solo muestra las pantallas que existen en el MVP
+> corto. Las demás quedan para la fase siguiente.
+>
+> | Pantalla en el MVP corto | Usuario | Analista | Admin |
+> |---|---|---|---|
+> | Inicio / Mercado | ✅ | ✅ | ✅ |
+> | Oportunidades | Usuarios | todas | todas |
+> | Mi cupo (posiciones y resultado, sin historial) | ✅ | — | — |
+> | Nueva orden manual | ✅ | — | — |
+> | Alertas | ✅ | ✅ | ✅ |
+> | **Administración** → Usuarios e invitaciones, Capital (solo aportes), Cupos, Parámetros e Interruptores | — | — | ✅ |
+>
+> No existen en el MVP corto: Mis sugerencias (D-65), Bandeja de riesgo,
+> Fondo, Desempeño de la IA, Reportes, Perfil y notificaciones, Freno de emergencia y, dentro de
+> Administración, Rebalanceos, Lista blanca, Salud e integraciones,
+> Bitácora y Prompts. El Analista ve el mercado, Oportunidades y Alertas
+> (D-64).
+
 La navegación se arma según el rol que viene en el token (§4.1). Si alguien
 llega por un enlace a una pantalla que su rol no tiene, el enrutador lo
 devuelve al inicio.
@@ -226,6 +245,7 @@ Matriz de lectura por tabla (quién ve qué filas):
 | `movimientos_capital` | — | ✅ | ✅ |
 | `salud_integraciones`, `conciliaciones` | — | ✅ | ✅ |
 | `auditoria`, `parametros_historial` | — | — | ✅ |
+| `latido` (solo la actualiza `ping()`, [06 §5.6](06-modelo-de-datos.md#latido-del-proyecto-latido)) | — | — | — |
 
 ### 4.4 Escrituras: solo por funciones (RPC)
 

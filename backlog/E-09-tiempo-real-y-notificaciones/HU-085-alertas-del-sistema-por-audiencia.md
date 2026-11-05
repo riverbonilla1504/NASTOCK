@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-09 · Tiempo real y notificaciones](README.md) |
 | Entrega (hito) | R2 · El fondo existe |
+| MVP corto | Sí |
 | Rol | Usuario |
 | Prioridad | Alta |
 | Módulos afectados | M-18, M-14 |

@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-09 · Tiempo real y notificaciones](README.md) |
 | Entrega (hito) | R5 · Protegido y avisado |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Usuario |
 | Prioridad | Media |
 | Módulos afectados | M-14, M-01 |

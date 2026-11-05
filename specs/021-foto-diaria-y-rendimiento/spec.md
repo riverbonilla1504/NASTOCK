@@ -8,6 +8,8 @@
 
 **Input**: Historia de usuario: "HU-021 · Foto diaria de patrimonio y rendimiento TWR", en [`backlog/E-03-fondo-y-libro-contable/HU-021-foto-diaria-de-patrimonio-y-rendimiento-twr.md`](../../backlog/E-03-fondo-y-libro-contable/HU-021-foto-diaria-de-patrimonio-y-rendimiento-twr.md)
 
+> **Fuera del MVP corto** (D-58, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): esta historia no se construye ahora. La spec se conserva para la fase siguiente.
+
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
 ### Historia de usuario 1 (User Story 1) - Foto diaria de patrimonio y rendimiento TWR (Prioridad: P1)

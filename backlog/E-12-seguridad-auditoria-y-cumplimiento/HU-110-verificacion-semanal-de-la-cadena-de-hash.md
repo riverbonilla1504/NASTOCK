@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-12 · Seguridad, auditoría y cumplimiento](README.md) |
 | Entrega (hito) | R6 · Medir y mejorar |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Administrador |
 | Prioridad | Media |
 | Módulos afectados | M-17 |

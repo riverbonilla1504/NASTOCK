@@ -108,9 +108,9 @@ jobs:
       - name: Funciones (formato, lint y pruebas)
         if: hashFiles('supabase/functions/**/*.ts') != ''
         run: |
-          deno fmt --check supabase/functions
-          deno lint supabase/functions
-          deno test --allow-all supabase/functions
+          deno fmt --check --config supabase/functions/deno.json supabase/functions
+          deno lint --config supabase/functions/deno.json supabase/functions
+          deno test --allow-all --config supabase/functions/deno.json supabase/functions
 
   e2e:
     name: E2E (proveedores simulados)

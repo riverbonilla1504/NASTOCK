@@ -203,6 +203,21 @@ herramientas que ejecuten órdenes.
 | `cierre-diario` | Cron (verifica si ya cerró el mercado hoy) | Secreto interno | Barras diarias, fotos de patrimonio, revisión de rebalanceo, evaluación de sugerencias y candidatas, limpieza. | 150 s |
 | `calendario-mercado` | Cron diario | Secreto interno | Calendario, reloj y atributos de los activos de la lista blanca (`fraccionable`, `negociable`); carga inicial de barras históricas. | 120 s |
 
+> **MVP corto** ([14 §4.1](14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+> no se construyen tres funciones, ni lo que solo existe para ellas.
+>
+> - **`contexto-ia`** (D-59): tampoco el trabajo `contexto_preapertura`, el
+>   barrido `barrer_contexto` (§7), la cola `contexto_por_generar` (§8) ni
+>   `_shared/noticias/` y `_shared/ia/contexto`.
+> - **`opinion-ia`** (D-60).
+> - **`notificador`** (D-62): tampoco `barrer_notificador`, la cola
+>   `notificaciones_push` ni `_shared/push/`.
+>
+> Tampoco se crea el trabajo `expirar_sugerencias` (§7), porque no hay
+> sugerencias (D-65).
+>
+> Las demás funciones hacen solo lo que piden las historias que entran.
+
 **Código compartido** (`supabase/functions/_shared/`):
 
 ```

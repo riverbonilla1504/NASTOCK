@@ -4,11 +4,19 @@
 |---|---|
 | Épica | [E-11 · Administración](README.md) |
 | Entrega (hito) | R2 · El fondo existe |
+| MVP corto | Sí, con menos alcance (D-58) |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-16 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-11` · `M-16` · `prioridad-alta` |
+
+## MVP corto
+
+La sección de Administración solo tiene las entradas del MVP corto ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58), tabla de [docs/03 §3](../../docs/03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas)).
+
+- CA-1: el Administrador ve Usuarios e invitaciones, Capital (solo aportes), Cupos, y Parámetros e Interruptores. Rebalanceos, Lista blanca, Salud e integraciones, Bitácora y Prompts no aparecen: sus pantallas salen del MVP corto.
+- La guía de primeros pasos solo nombra esas entradas.
 
 ## Historia
 

@@ -4,11 +4,21 @@
 |---|---|
 | Épica | [E-11 · Administración](README.md) |
 | Entrega (hito) | R2 · El fondo existe |
+| MVP corto | Sí, con menos alcance (D-58, D-61) |
 | Rol | Administrador |
 | Prioridad | Alta |
 | Módulos afectados | M-16, M-04 |
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-11` · `M-16` · `M-04` · `prioridad-alta` |
+
+## MVP corto
+
+La pantalla de capital solo maneja aportes en el MVP corto ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)):
+
+- CA-1: muestra solo los aportes.
+- CA-4 (retiros) y CA-6 (ajustes) no aplican: HU-016 y HU-022 salen del MVP corto (D-58).
+- Tareas: formularios de aporte y de anulación, sin el de retiro. La confirmación usa el componente común que crea HU-005 (D-61).
+- Las dependencias de HU-009, HU-016 y HU-022 no aplican.
 
 ## Historia
 
@@ -55,9 +65,9 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-04.
 | Depende de | [HU-097 · Sección de Administración y guía de primeros pasos](HU-097-seccion-de-administracion-y-guia-de-primeros-pasos.md) | Es una entrada de la sección de Administración. |
 | Depende de | [HU-014 · Registrar y anular aportes](../E-03-fondo-y-libro-contable/HU-014-registrar-y-anular-aportes.md) | Registra y anula aportes. |
 | Depende de | [HU-015 · Confirmar el aporte por conciliación y repartirlo 50/25/25](../E-03-fondo-y-libro-contable/HU-015-confirmar-el-aporte-por-conciliacion-y-repartirlo-50-25-25.md) | Muestra la confirmación del aporte. |
-| Depende de | [HU-016 · Registrar retiros de capital](../E-03-fondo-y-libro-contable/HU-016-registrar-retiros-de-capital.md) | Registra retiros. |
-| Depende de | [HU-009 · Sesión segura, bloqueo biométrico y confirmación de acciones sensibles](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Confirma los movimientos de dinero. |
-| Depende de | [HU-022 · Registrar ajustes contables](../E-03-fondo-y-libro-contable/HU-022-registrar-ajustes-contables.md) | Registra ajustes. |
+| Depende de (después del MVP corto) | [HU-016 · Registrar retiros de capital](../E-03-fondo-y-libro-contable/HU-016-registrar-retiros-de-capital.md) | Registra retiros. En el MVP corto no aplica (D-58). |
+| Depende de (después del MVP corto) | [HU-009 · Sesión segura, bloqueo biométrico y confirmación de acciones sensibles](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) | Confirma los movimientos de dinero. En el MVP corto no aplica (D-61). |
+| Depende de (después del MVP corto) | [HU-022 · Registrar ajustes contables](../E-03-fondo-y-libro-contable/HU-022-registrar-ajustes-contables.md) | Registra ajustes. En el MVP corto no aplica (D-58). |
 
 ## Notas técnicas
 

@@ -12,11 +12,11 @@ Flujo de mantenimiento (GitHub Actions)
 
 ## Descripción
 
-El sistema debe exponer la función `ping()` sin sesión, que actualiza una fila de latido y devuelve la hora del servidor, y no debe dar ningún otro acceso al rol anónimo.
+El sistema debe exponer la función `ping()` sin sesión, que actualiza la única fila de la tabla `latido` y devuelve la hora del servidor, y no debe dar ningún otro acceso al rol anónimo.
 
 ## Fuente
 
-06 §7 · 05 §3.4 · CB-93
+06 §7 · 06 §5.6 · 05 §3.4 · CB-93 · D-57
 
 ## Historias que lo implementan
 

@@ -4,6 +4,7 @@
 |---|---|
 | Épica | [E-08 · Ejecución y broker](README.md) |
 | Entrega (hito) | R5 · Protegido y avisado |
+| MVP corto | No: queda para la fase siguiente (D-58) |
 | Rol | Administrador |
 | Prioridad | Media |
 | Módulos afectados | M-12 |
