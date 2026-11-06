@@ -46,8 +46,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 03 completo · 08 §5 · 02 §11
 - **BD**: `perfiles` y los tipos `rol_app` y `estado_cuenta` (migraciones `supabase/migrations/*_perfiles_tipos_y_tabla.sql` y `*_perfiles_politica_de_lectura.sql`; `perfiles.invitacion_id` sin llave foránea hasta HU-002); `private.rol_actual`, `private.es_supervisor` (`*_rol_actual_y_es_supervisor.sql`); RPC `cambiar_rol`; `private.suspender_cuenta`, `reactivar_cuenta`, `dar_de_baja`, `reincorporar`
 - **Funciones**: `admin-usuarios`
-- **App**: `lib/features/admin/usuarios/`, `lib/core/` (claims y `perfilProvider`)
-- **Pruebas**: `supabase/tests/database/02_perfiles_rls_test.sql`, `supabase/tests/database/03_perfiles_roles_y_token_test.sql` (y las de roles de las historias siguientes, con el mismo prefijo `NN_` de `supabase/tests/database/`) · E2E-05, E2E-16
+- **App**: `lib/features/admin/usuarios/`, `lib/core/perfil/` (`perfil.dart`, `perfil_repositorio.dart`, `perfil_provider.dart`: claims del token y fila de `perfiles`, `perfilProvider`)
+- **Pruebas**: `supabase/tests/database/02_perfiles_rls_test.sql`, `supabase/tests/database/03_perfiles_roles_y_token_test.sql`, `test/core/perfil/` (y las de roles de las historias siguientes, con el mismo prefijo `NN_` de `supabase/tests/database/`) · E2E-05, E2E-16
 - **Depende de**: M-01, M-17 · **Lo usan**: todos
 
 ### M-03 · Libro contable

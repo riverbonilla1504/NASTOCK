@@ -69,9 +69,9 @@ No hay: la única dependencia (esquema `private` y stack local) es TT-03, que ya
 
 ### Capa 5 · App (FR-018, FR-019, parte de interfaz)
 
-- [ ] T012 [US1] Antes de empezar, `git fetch` y revisar si TT-04 (esqueleto de la app) ya está en `origin/main`. Si no está, detenerse con la base de datos terminada y commiteada y avisar.
-- [ ] T013 [US1] Crear `perfilProvider` en `lib/core/` (archivo según el esqueleto de TT-04) que lee los claims `app_rol` y `app_estado` de la sesión y la fila propia de `perfiles`, y expone rol y estado a la interfaz. No decide autorización: la seguridad la hace la base de datos.
-- [ ] T014 [US1] Escribir la prueba de `perfilProvider` en `test/core/` con claims y fila simulados: rol y estado desde los claims, fila propia de `perfiles`, sesión sin claims, y cuenta no activa.
+- [X] T012 [US1] Antes de empezar, `git fetch` y revisar si TT-04 (esqueleto de la app) ya está en `origin/main`. Si no está, detenerse con la base de datos terminada y commiteada y avisar.
+- [X] T013 [US1] Crear `perfilProvider` en `lib/core/perfil/` (`perfil.dart`, `perfil_repositorio.dart`, `perfil_provider.dart`, según el esqueleto de TT-04) que lee los claims `app_rol` y `app_estado` de la sesión y la fila propia de `perfiles`, y expone rol y estado a la interfaz. No decide autorización: la seguridad la hace la base de datos.
+- [X] T014 [US1] Escribir las pruebas de `perfilProvider` en `test/core/perfil/` con claims y fila simulados: rol y estado desde los claims, fila propia de `perfiles`, sesión sin claims, y cuenta no activa.
 
 ---
 
