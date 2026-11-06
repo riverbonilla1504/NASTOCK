@@ -319,7 +319,7 @@ lib/
     reportes/     exportación CSV
     admin/        usuarios e invitaciones, capital, cupos, rebalanceos,
                   parámetros, lista blanca, interruptores, salud, bitácora
-  shared/         widgets comunes
+  shared/         widgets comunes: los componentes del sistema de diseño
 integration_test/ pruebas E2E de la app
 test_driver/      arranque de las pruebas E2E en Chrome
 ```
@@ -327,6 +327,10 @@ test_driver/      arranque de las pruebas E2E en Chrome
 Cada funcionalidad tiene tres capas: `data/` (repositorios: único lugar que
 conoce a Supabase), `domain/` (modelos inmutables), `presentation/`
 (páginas, widgets y *providers*).
+
+El diseño visual vive en `DESIGN.md`, en la raíz del repositorio (D-67): lo
+implementan el tema de `lib/app/tema.dart` y los componentes de
+`lib/shared/widgets/`, y toda pantalla los usa ([15 §12](15-calidad-pruebas-y-ci-cd.md#12-diseño-visual-de-las-pantallas-d-67)).
 
 ### 9.2 Estado
 
@@ -397,7 +401,8 @@ Las migraciones son **solo hacia adelante** y viven en
 
 El repositorio nuevo arranca vacío. Del repositorio anterior
 (`github.com/T0m4s1n/ritech-sas-inversiones`, app Flutter v2 sin backend) se
-pueden **copiar** estas piezas:
+pueden **copiar** estas piezas. La interfaz es la excepción: es
+**referencia**, no se copia (D-67).
 
 | Código v2 | Uso en v3 |
 |---|---|
@@ -406,8 +411,16 @@ pueden **copiar** estas piezas:
 | `lib/services/recommendation_engine.dart` | Su regla (±2 % en 30 días) pasa a ser una métrica más (07 §4.1) |
 | `lib/controllers/alert_controller.dart` | Lógica de deduplicación (avisar una vez, rearmar), trasladada a SQL |
 | `lib/services/report_exporter.dart` y su prueba | Base de la exportación CSV |
-| `lib/widgets/*`, `lib/config/app_theme.dart`, `lib/config/app_styles.dart`, `assets/fonts/poppins/` | Interfaz, tema y fuentes |
+| `lib/widgets/*`, `lib/config/app_theme.dart`, `lib/config/app_styles.dart`, `assets/fonts/poppins/` | **Referencia** para la identidad visual (D-67): punto de partida y evidencia, no se copia tal cual. Se conserva lo que funciona y se rehace lo que no: el calendario de la simulación, los avisos y notificaciones, y los patrones genéricos. El resultado queda en `DESIGN.md` |
 | Lo demás (login con contraseña, 2FA de demo, controladores en memoria, bitácora en memoria) | **No se copia** |
+
+**Quién manda en qué (D-67).** `DESIGN.md`, en la raíz del repositorio y
+escrito con impeccable, manda en lo visual: tokens, color, tipografía,
+componentes, movimiento y tono visual. `docs/` sigue mandando en las reglas
+de negocio, los flujos, los permisos, los datos y los textos de error. Si
+`DESIGN.md` y `docs/` chocan en algo que no es visual, manda `docs/`.
+`PRODUCT.md` (usuarios, propósito y tono) se deriva de 01 a 04 y no agrega
+nada que no esté ahí.
 
 El identificador de la app nueva es `com.ritech.inversiones` (lo exigen los
 clientes OAuth de Android y los enlaces profundos).
@@ -419,6 +432,9 @@ clientes OAuth de Android y los enlaces profundos).
 ```
 /
 ├─ CLAUDE.md                 Reglas para agentes de IA (lo primero que se lee)
+├─ DESIGN.md                 Sistema de diseño visual: tokens, componentes, movimiento (D-67)
+├─ PRODUCT.md                Usuarios, propósito y tono, derivados de docs/01 a 04 (D-67)
+├─ .impeccable/              Configuración de impeccable (D-67)
 ├─ README.md
 ├─ .env.example
 ├─ .gitignore

@@ -65,13 +65,13 @@ Son los hitos de `docs/14` §4. Cada historia pertenece a una.
 
 ## MVP corto
 
-Por falta de tiempo, primero se construye un **MVP corto** (D-58): 55 de los
-125 ítems abiertos. Tiene siete simplificaciones (D-59 a D-65). El detalle
+Por falta de tiempo, primero se construye un **MVP corto** (D-58): 56 de los
+125 ítems abiertos (HU-116 entró por D-67). Tiene siete simplificaciones (D-59 a D-65). El detalle
 está en [docs/14 §4.1](../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58).
 
 | Entrega (hito) | Ítems | En el MVP corto |
 |---|---|---|
-| R1 · Ver el mercado en vivo | 30 | 25 (incluida TT-01, ya hecha) |
+| R1 · Ver el mercado en vivo | 30 | 26 (incluida TT-01, ya hecha) |
 | R2 · El fondo existe | 23 | 16 |
 | R3 · La IA analiza | 17 | 7 |
 | R4 · Decidir y operar en paper | 26 | 8 |
@@ -82,8 +82,9 @@ Cómo está marcado en esta carpeta:
 
 - **En cada ítem**, la tabla inicial tiene la fila **MVP corto**, con uno de
   estos valores: "Sí", "Sí, con menos alcance (D-xx)", "Sí, con tareas de
-  HU-009 (D-61)" o "No: queda para la fase siguiente (D-58 o D-65)".
-- **Las 14 historias que cambian de alcance** tienen una sección **MVP
+  HU-009 (D-61)", "Sí, con otro alcance (D-67)" o "No: queda para la fase
+  siguiente (D-58 o D-65)".
+- **Las 15 historias que cambian de alcance** tienen una sección **MVP
   corto** con lo que no aplica o cambia.
 - **En el README de cada épica**, los ítems que salen llevan *fuera del MVP
   corto*.
@@ -212,7 +213,7 @@ flowchart LR
   end
   subgraph E13["E-13 · Transición desde la v2"]
     HU115["HU-115<br/>Motor ×2 teórico de la v2 con…"]
-    HU116["HU-116<br/>Tema, estilos, widgets y…"]
+    HU116["HU-116<br/>Identidad visual y sistema…"]
     HU117["HU-117<br/>Exportador de reportes de la…"]
   end
   TT01 --> TT02
@@ -713,7 +714,7 @@ Estos ítems no dependen de ningún otro:
 | [HU-113](E-12-seguridad-auditoria-y-cumplimiento/HU-113-simulacro-de-restauracion-de-un-respaldo.md) | Simulacro de restauración de un respaldo | E-12 | R6 | [TT-09](E-01-cimientos-y-calidad-continua/TT-09-mantenimiento-ping-diario-respaldo-cifrado-y-prueba-real-semanal.md), [HU-080](E-08-ejecucion-y-broker/HU-080-conciliacion-completa-con-pausa-automatica.md) | [HU-114](E-12-seguridad-auditoria-y-cumplimiento/HU-114-lista-de-verificacion-antes-de-abrir-el-mvp-al-equipo.md) |
 | [HU-114](E-12-seguridad-auditoria-y-cumplimiento/HU-114-lista-de-verificacion-antes-de-abrir-el-mvp-al-equipo.md) | Lista de verificación antes de abrir el MVP al equipo | E-12 | R6 | [HU-111](E-12-seguridad-auditoria-y-cumplimiento/HU-111-avisos-de-privacidad-y-de-no-asesoria.md), [HU-113](E-12-seguridad-auditoria-y-cumplimiento/HU-113-simulacro-de-restauracion-de-un-respaldo.md), [HU-109](E-12-seguridad-auditoria-y-cumplimiento/HU-109-aislamiento-verificado-por-tabla-y-por-funcion.md), [HU-110](E-12-seguridad-auditoria-y-cumplimiento/HU-110-verificacion-semanal-de-la-cadena-de-hash.md), [TT-08](E-01-cimientos-y-calidad-continua/TT-08-despliegue-continuo-al-proyecto-mvp-con-prueba-de-humo.md) | — |
 | [HU-115](E-13-transicion-desde-la-v2/HU-115-motor-x2-teorico-de-la-v2-con-sus-pruebas.md) | Motor ×2 teórico de la v2 con sus pruebas | E-13 | R1 | [TT-04](E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) | [HU-031](E-04-datos-de-mercado/HU-031-comparacion-de-qqq-qld-y-x2-teorico.md) |
-| [HU-116](E-13-transicion-desde-la-v2/HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md) | Tema, estilos, widgets y fuentes de la v2 | E-13 | R1 | [TT-04](E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) | — |
+| [HU-116](E-13-transicion-desde-la-v2/HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md) | Identidad visual y sistema de diseño | E-13 | R1 | [TT-04](E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) | — |
 | [HU-117](E-13-transicion-desde-la-v2/HU-117-exportador-de-reportes-de-la-v2-con-sus-pruebas.md) | Exportador de reportes de la v2 con sus pruebas | E-13 | R1 | [TT-04](E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) | [HU-095](E-10-cartera-y-reportes/HU-095-exportar-reportes-en-csv.md), [HU-108](E-12-seguridad-auditoria-y-cumplimiento/HU-108-consultar-y-exportar-la-bitacora.md) |
 
 ## Cómo pasarlo a GitHub Projects

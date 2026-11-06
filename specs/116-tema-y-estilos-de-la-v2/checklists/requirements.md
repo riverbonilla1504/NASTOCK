@@ -1,8 +1,8 @@
-# Lista de calidad de la especificación (Specification Quality Checklist): HU-116 · Tema, estilos, widgets y fuentes de la v2
+# Lista de calidad de la especificación (Specification Quality Checklist): HU-116 · Identidad visual y sistema de diseño
 
 **Purpose**: Validar que la especificación está completa y tiene la calidad necesaria antes de planear
 
-**Created**: 2026-10-12
+**Created**: 2026-10-12 · **Actualizada**: 2026-11-06 (D-67)
 
 **Feature**: [spec.md](../spec.md)
 
@@ -36,5 +36,5 @@
 - **Excepción del proyecto.** Los criterios de aceptación, la descripción de los requisitos, el texto de los casos borde y los motivos de las relaciones se copian tal cual de la historia, del catálogo y de `docs/`, y pueden nombrar tecnología. No se reescriben: lo pide la plantilla del proyecto.
 - No cita requisitos funcionales: la historia dice "Ninguno".
 - No tiene escenario E2E propio.
-- Es una historia de traslado de código: sus criterios describen el código copiado, no un flujo de usuario.
+- Es la base visual de la app (D-67): sus criterios describen el sistema de diseño y sus revisiones, no un flujo de usuario. CA-1 a CA-3 y SC-001 a SC-003 se retiraron y no se reutilizan.
 - Los puntos sin marcar exigen corregir la spec antes de `/speckit-clarify` o `/speckit-plan`.
