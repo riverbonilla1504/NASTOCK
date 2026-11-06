@@ -77,10 +77,10 @@ No hay: la única dependencia (esquema `private` y stack local) es TT-03, que ya
 
 ## Fase 4: Cierre
 
-- [ ] T015 `git fetch origin && git rebase origin/main`; si `main` trae migraciones más nuevas que las de esta historia, renombrar las nuestras con la fecha y hora actuales.
-- [ ] T016 Correr `scripts/verificar.sh` completo con el candado tomado y dejarlo en verde.
-- [ ] T017 Actualizar `docs/17-mapa-de-modulos.md` (M-01 y M-02: tabla `perfiles`, funciones, hook, rutas de migraciones, de pruebas y de `lib/core/`).
-- [ ] T018 Escribir el cuerpo del PR con `.github/pull_request_template.md` y "Closes #18" en `C:\Users\Javier\Desktop\pr-001-perfiles-y-lecturas-por-rol.md` (fuera del repositorio).
+- [X] T015 `git fetch origin && git rebase origin/main`; si `main` trae migraciones más nuevas que las de esta historia, renombrar las nuestras con la fecha y hora actuales.
+- [X] T016 Correr `scripts/verificar.sh` completo con el candado tomado y dejarlo en verde.
+- [X] T017 Actualizar `docs/17-mapa-de-modulos.md` (M-01 y M-02: tabla `perfiles`, funciones, hook, rutas de migraciones, de pruebas y de `lib/core/`).
+- [X] T018 Escribir el cuerpo del PR con `.github/pull_request_template.md` y "Closes #18" en `C:\Users\Javier\Desktop\pr-001-perfiles-y-lecturas-por-rol.md` (fuera del repositorio).
 
 ---
 
