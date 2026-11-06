@@ -15,7 +15,7 @@ supabase db reset
 supabase test db
 ```
 
-Esperado: `02_universo_y_barras_test.sql` en verde. A mano:
+Esperado: `04_universo_y_barras_test.sql` en verde. A mano:
 
 ```sql
 select bolsillo, count(*) from public.lista_blanca group by 1 order by 1;

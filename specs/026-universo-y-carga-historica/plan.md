@@ -45,14 +45,14 @@ Se construye por capas, cada una con sus pruebas: **migración** (tablas, RLS, s
 | VII · Alcance y costo | Sí | `postgres` es de código abierto y gratuito; Alpaca paper es gratis; nada de dinero real. |
 | Inv. 1 · La IA no ejecuta | Sí | `calendario-mercado` no importa `_shared/broker/`. |
 | Inv. 4 · Escrituras de la app solo por RPC, RLS en `public` | Sí | RLS activo; `authenticated` solo `select`; ni la app ni la API escriben. |
-| Inv. 5 · La autorización lee `perfiles` | Sí, cuando entre HU-001 | Las políticas de lectura usan `(select private.rol_actual()) is not null` y la llave foránea de `actualizado_por` apunta a `perfiles`. Van en una migración posterior a HU-001 (HU-001 pasa a "Depende de" en la historia). Mientras tanto las tablas quedan cerradas: RLS activo y ninguna política. |
+| Inv. 5 · La autorización lee `perfiles` | Sí | Las políticas de lectura usan `(select private.rol_actual()) is not null` y la llave foránea de `actualizado_por` apunta a `perfiles`. Van en `*_lectura_del_mercado.sql`, posterior a HU-001 (HU-001 está en "Depende de" de la historia). |
 | Inv. 6 · Ninguna llave | Sí | La función lee `ALPACA_*` del entorno solo con el proveedor real; los errores nunca copian llaves, URL de conexión ni contraseñas. |
 | Inv. 8 · Simulados solo en local y CI | Sí | `elegirProveedor("mercado", …)` de TT-05 se niega a simular con `ENTORNO=mvp`. |
 | Inv. 9 · Migraciones solo hacia adelante | Sí | Dos migraciones nuevas con `supabase migration new`. |
 
 ### Decisiones confirmadas (Javier, 2026-11-06)
 
-1. **Lectura de "persona activa" (CA-4): opción B, sin relajar.** Las políticas de `lista_blanca`, `barras_diarias` y `barras_minuto` usan `(select private.rol_actual()) is not null` (`docs/03` §4.2 y §4.3) y `lista_blanca.actualizado_por` lleva su llave foránea a `perfiles`. Como `private.rol_actual()` es de HU-001, que aún no está en `main`, HU-001 se agregó a "Depende de" de la historia y esas dos piezas van en una migración posterior (`*_lectura_del_mercado.sql`) que se agrega cuando HU-001 esté en `origin/main`. Hasta entonces las tablas no tienen ninguna política: nadie lee.
+1. **Lectura de "persona activa" (CA-4): opción B, sin relajar.** Las políticas de `lista_blanca`, `barras_diarias` y `barras_minuto` usan `(select private.rol_actual()) is not null` (`docs/03` §4.2 y §4.3) y `lista_blanca.actualizado_por` lleva su llave foránea a `perfiles`. Como `private.rol_actual()` es de HU-001, HU-001 se agregó a "Depende de" de la historia y esas dos piezas van en una migración posterior (`*_lectura_del_mercado.sql`), agregada al entrar HU-001 a `main`. Las tablas se crean cerradas (RLS activo, ninguna política) y esa migración abre la lectura.
 2. **La semilla de la lista blanca va en una migración**, para que llegue a la nube. `docs/05` §12 y `docs/15` §3 ya no la ubican en `seed.sql` (13 §4, versión 3.11). Los parámetros por defecto y la configuración de decisión v1 siguen en `seed.sql`: los decide la historia que los crea.
 
 ## Estructura del proyecto (Project Structure)
@@ -75,11 +75,12 @@ specs/026-universo-y-carga-historica/
 supabase/
 ├── migrations/
 │   ├── <fecha>_lista_blanca_y_barras.sql        # tipo bolsillo, 3 tablas, RLS, semilla del universo
-│   └── <fecha>_funciones_de_mercado.sql         # private.simbolos_del_universo, simbolos_sin_historia, guardar_barras_diarias
+│   ├── <fecha>_funciones_de_mercado.sql         # private.simbolos_del_universo, simbolos_sin_historia, guardar_barras_diarias
+│   └── <fecha>_lectura_del_mercado.sql          # políticas de lectura con private.rol_actual() y llave foránea a perfiles
 ├── seed.sql                                      # + un año de barras diarias de prueba
 ├── config.toml                                   # + [functions.calendario-mercado] verify_jwt = false
 ├── tests/database/
-│   └── 02_universo_y_barras_test.sql             # pgTAP: tablas, RLS, semilla, funciones
+│   └── 04_universo_y_barras_test.sql             # pgTAP: tablas, RLS, semilla, funciones
 └── functions/
     ├── deno.json                                 # + "postgres": "npm:postgres@3.4.9"
     ├── _shared/

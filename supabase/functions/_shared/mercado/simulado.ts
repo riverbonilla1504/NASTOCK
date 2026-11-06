@@ -6,7 +6,7 @@
 //
 // El algoritmo está en specs/026-universo-y-carga-historica/contracts/mercado.md y se repite
 // en SQL en supabase/seed.sql (un año de barras de prueba, docs/15 §3). Si cambias algo aquí,
-// cambia también el seed: simulado_test.ts y 02_universo_y_barras_test.sql comprueban los
+// cambia también el seed: simulado_test.ts y 04_universo_y_barras_test.sql comprueban los
 // mismos valores conocidos.
 //
 // Alcance: los días hábiles son de lunes a viernes. Los feriados los resuelve el calendario

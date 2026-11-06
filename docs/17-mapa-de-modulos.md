@@ -74,8 +74,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **BD**: `lista_blanca`, `cotizaciones`, `barras_minuto`, `barras_diarias`, `calendario_mercado`, tipo `bolsillo`; RPC `estado_mercado`; `private.publicar_cotizaciones`, `private.mercado_abierto`, `mercado_en_ventana`, `ventana_compras_abierta`, `private.simbolos_del_universo`, `simbolos_sin_historia`, `guardar_barras_diarias` · migraciones `supabase/migrations/*_lista_blanca_y_barras.sql` (tipo, tres tablas, RLS de lectura y semilla del universo) y `*_funciones_de_mercado.sql` · un año de barras de prueba en `supabase/seed.sql`
 - **Funciones**: `ingesta-mercado`, `calendario-mercado` (`index.ts`, `manejador.ts`, `carga_historica.ts`: carga inicial de dos años de barras diarias), `cierre-diario`; `_shared/mercado/` (`interfaz.ts`, `alpaca.ts`, `simulado.ts`, `mod.ts` con `crearProveedorDeMercado`, `tiempo.ts`, `fixtures/` con respuestas de Alpaca)
 - **App**: `lib/features/mercado/`
-- **Pruebas**: `supabase/tests/database/02_universo_y_barras_test.sql`, `supabase/functions/_shared/mercado/*_test.ts`, `supabase/functions/calendario-mercado/*_test.ts`, `supabase/functions/ingesta-mercado/*_test.ts` · E2E-03
-- **Depende de**: M-19 · **Lo usan**: M-07, M-08, M-11
+- **Pruebas**: `supabase/tests/database/04_universo_y_barras_test.sql`, `supabase/functions/_shared/mercado/*_test.ts`, `supabase/functions/calendario-mercado/*_test.ts`, `supabase/functions/ingesta-mercado/*_test.ts` · E2E-03
+- **Depende de**: M-02, M-19 · **Lo usan**: M-07, M-08, M-11
 
 ### M-06 · Noticias y contexto (DeepSeek)
 - **Qué hace**: descarga noticias, pide el contexto a DeepSeek, lo valida contra sus fuentes y controla su vigencia.

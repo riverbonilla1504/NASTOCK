@@ -10,6 +10,6 @@ Se llaman solo por conexión directa desde `_shared/bd.ts` (D-66). `execute` rev
 
 `guardar_barras_diarias` es idempotente: repetir el mismo arreglo devuelve `0`. Las barras ya guardadas no se reemplazan.
 
-## Pruebas (pgTAP, `supabase/tests/database/02_universo_y_barras_test.sql`)
+## Pruebas (pgTAP, `supabase/tests/database/04_universo_y_barras_test.sql`)
 
 Tablas y tipo; RLS; permisos de `anon` y `authenticated`; CA-1 (cuentas por bolsillo, nombre y sector); barras sembradas; las tres funciones (incluido CA-3, QQQ siempre, símbolo inactivo fuera); `execute` cerrado.

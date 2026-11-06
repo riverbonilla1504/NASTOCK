@@ -13,7 +13,7 @@ import { horaDeNuevaYork } from "./tiempo.ts";
 const mercado = new MercadoSimulado();
 
 // Valores conocidos ------------------------------------------------------------------------
-// Los mismos valores los comprueba supabase/tests/database/02_universo_y_barras_test.sql contra
+// Los mismos valores los comprueba supabase/tests/database/04_universo_y_barras_test.sql contra
 // las barras que siembra seed.sql: así el algoritmo en TypeScript y el de SQL no se separan.
 // Si cambias el algoritmo, cambia seed.sql y estas dos listas (contracts/mercado.md).
 export const VALORES_CONOCIDOS = [

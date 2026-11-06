@@ -104,7 +104,7 @@ comment on table pruebas.push_simulados is
 -- mercado/simulado.ts, contrato en specs/026-universo-y-carga-historica/contracts/mercado.md):
 -- una caminata determinista, función de (símbolo, día) acumulada desde el ancla 2020-01-01.
 -- Así, las barras sembradas y las que carga el simulado coinciden y no hay saltos entre ellas.
--- Si cambias algo aquí, cámbialo también allá: simulado_test.ts y 02_universo_y_barras_test.sql
+-- Si cambias algo aquí, cámbialo también allá: simulado_test.ts y 04_universo_y_barras_test.sql
 -- comprueban los mismos valores conocidos.
 --
 -- Generador: x0 = (semilla·131 + día·7919 + 12345) mod 2147483647 y x(k+1) = 48271·x(k) mod

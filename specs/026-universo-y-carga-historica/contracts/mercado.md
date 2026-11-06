@@ -59,7 +59,7 @@ Función pura de `(símbolo, fecha)`: mismo resultado para el mismo par, sin imp
 - Precios redondeados a 4 decimales al final (sin redondear los intermedios).
 - `snapshots`: cierre del día hábil anterior a `ahora` más un paso determinista por minuto de sesión (09:30–16:00, hora de Nueva York); fuera de sesión, el último precio de la sesión anterior. `bid`/`ask` = precio ∓ 0,01.
 
-**Valores conocidos** (los comparten `simulado_test.ts` y `02_universo_y_barras_test.sql`; los dos algoritmos deben dar exactamente esto):
+**Valores conocidos** (los comparten `simulado_test.ts` y `04_universo_y_barras_test.sql`; los dos algoritmos deben dar exactamente esto):
 
 | Símbolo | Fecha | Apertura | Máximo | Mínimo | Cierre | Volumen |
 |---|---|---|---|---|---|---|
