@@ -13,7 +13,7 @@
 
 ## MVP corto
 
-Entra con **otro alcance** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)). Por D-67 ya no copia la interfaz de la v2: construye la identidad visual y el sistema de diseño de la app nueva con el plugin impeccable, tomando la v2 como referencia. Se conserva lo que funciona y se rehace lo que no: el calendario de la simulación, los avisos y notificaciones, y los patrones genéricos. Los criterios CA-1 a CA-3, que describían la copia, se retiran y los reemplazan CA-4 a CA-12.
+Entra con **otro alcance** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)). Por D-67 ya no copia la interfaz de la v2: construye con el plugin impeccable un diseño visual nuevo para la app. La v2 solo sirve como referencia de contenido (qué pantallas, datos y flujos había) y como antirreferencia visual: no se conservan su paleta, sus widgets ni la fuente Poppins. Los criterios CA-1 a CA-3, que describían la copia, se retiran y los reemplazan CA-4 a CA-12.
 
 ## Historia
 
@@ -53,7 +53,7 @@ Sin escenario propio en el catálogo de 15 §4.
 ## Tareas
 
 - [ ] Contexto de impeccable: `PRODUCT.md` desde `docs/01` a `docs/04`, y `.impeccable/config.json`.
-- [ ] Revisar la v2 como evidencia (fuera del repositorio) y proponer la dirección visual: paleta, tipografía, densidad, forma, movimiento y voz visual, con ejemplos de aviso, calendario, tarjeta de cotización y botones. Aprobación del equipo antes de construir.
+- [ ] Revisar la v2 como referencia de contenido y antirreferencia (fuera del repositorio) y proponer una dirección visual nueva: paleta, tipografía, densidad, forma, movimiento y voz visual, con ejemplos de aviso, calendario, tarjeta de cotización y botones. Aprobación del equipo antes de construir.
 - [ ] Tokens y tema en `lib/app/tema.dart`; fuentes en `assets/fonts/` registradas en `pubspec.yaml`.
 - [ ] Componentes en `lib/shared/widgets/`, con sus pruebas de widget. Reemplazar `MensajeDeError` si el sistema lo cubre, sin romper la traducción de errores.
 - [ ] Catálogo de componentes solo en debug o con `MODO_PRUEBAS`.

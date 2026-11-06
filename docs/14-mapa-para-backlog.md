@@ -41,7 +41,7 @@ terminado** común. Las historias están en `backlog/` y publicadas como issues
 | **E-10** | Cartera y reportes | Mi cupo; fondo (resumen y detalle); historial; exportación CSV; reporte diario al admin | [02 §13](02-logica-de-negocio.md#13-cifras-que-muestra-la-app) |
 | **E-11** | Administración | Pantallas del admin sobre las capacidades de las demás épicas | [03 §3](03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas) |
 | **E-12** | Seguridad, auditoría y cumplimiento | Bitácora con cadena de hash; pantalla de bitácora; suite RLS transversal; avisos (privacidad, "no es asesoría"); simulacro de restauración; lista de verificación de 11 §10 | [11](11-seguridad-y-auditoria.md) |
-| **E-13** | Transición desde la v2 | Copiar del repositorio v2 el motor ×2 y el exportador, con sus pruebas; construir la identidad visual y el sistema de diseño tomando la interfaz de la v2 como referencia (D-67) | [05 §11](05-arquitectura.md#11-código-reutilizable-del-repositorio-v2) |
+| **E-13** | Transición desde la v2 | Copiar del repositorio v2 el motor ×2 y el exportador, con sus pruebas; construir una identidad visual y un sistema de diseño nuevos; de la interfaz de la v2 solo se toma el contenido (D-67) | [05 §11](05-arquitectura.md#11-código-reutilizable-del-repositorio-v2) |
 | ~~E-14~~ | *Retirada* (era "paso a dinero real", fuera del alcance) | — | — |
 
 ---
@@ -165,9 +165,9 @@ ajusta a estas decisiones:
 - HU-099 solo registra y confirma aportes.
 - HU-006 y HU-097 muestran solo las pantallas del MVP corto, según la
   tabla de [03 §3](03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas).
-- HU-116 ya no copia la interfaz de la v2: construye la identidad visual y
-  el sistema de diseño (`PRODUCT.md`, `DESIGN.md`, el tema y los componentes
-  comunes), con la v2 como referencia (D-67). Las demás historias con
+- HU-116 ya no copia la interfaz de la v2: construye una identidad visual y
+  un sistema de diseño nuevos (`PRODUCT.md`, `DESIGN.md`, el tema y los
+  componentes comunes); de la v2 solo toma el contenido (D-67). Las demás historias con
   pantallas siguen [15 §12](15-calidad-pruebas-y-ci-cd.md#12-diseño-visual-de-las-pantallas-d-67).
 
 Cada una tiene en `backlog/` una sección **MVP corto** con lo que cambia.

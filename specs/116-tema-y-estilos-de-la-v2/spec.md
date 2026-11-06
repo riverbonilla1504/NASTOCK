@@ -8,7 +8,7 @@
 
 **Input**: Historia de usuario: "HU-116 · Identidad visual y sistema de diseño", en [`backlog/E-13-transicion-desde-la-v2/HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md`](../../backlog/E-13-transicion-desde-la-v2/HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md)
 
-> **Entra al MVP corto con otro alcance** (D-67, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): ya no copia la interfaz de la v2. Construye la identidad visual y el sistema de diseño con impeccable, tomando la v2 como referencia. El nombre de la rama y de la carpeta se conservan.
+> **Entra al MVP corto con otro alcance** (D-67, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): ya no copia la interfaz de la v2. Construye con impeccable un diseño visual nuevo; la v2 solo es referencia de contenido y antirreferencia visual. El nombre de la rama y de la carpeta se conservan.
 
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 
@@ -16,7 +16,7 @@
 
 **Como** Usuario, Analista o Administrador, **quiero** que la app tenga una identidad visual propia, **para** reconocer la plataforma y que todas las pantallas se vean consistentes.
 
-**Por qué esta prioridad (Why this priority)**: Pertenece a la entrega R1 · Ver el mercado en vivo y es la base visual de todas las pantallas del MVP corto. La interfaz de la v2 es referencia, no se copia (`docs/05` §11, D-67). Toda historia con pantallas usa este sistema (`docs/15` §12).
+**Por qué esta prioridad (Why this priority)**: Pertenece a la entrega R1 · Ver el mercado en vivo y es la base visual de todas las pantallas del MVP corto. La interfaz de la v2 no se copia: solo es referencia de contenido (`docs/05` §11, D-67). Toda historia con pantallas usa este sistema (`docs/15` §12).
 
 **Prueba independiente (Independent Test)**: Se demuestra sola con el catálogo de componentes (solo en debug o con `MODO_PRUEBAS`), sus pruebas de widget y las revisiones de impeccable en Chrome y en el emulador. No tiene escenario E2E propio.
 

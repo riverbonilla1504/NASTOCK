@@ -401,8 +401,8 @@ Las migraciones son **solo hacia adelante** y viven en
 
 El repositorio nuevo arranca vacío. Del repositorio anterior
 (`github.com/T0m4s1n/ritech-sas-inversiones`, app Flutter v2 sin backend) se
-pueden **copiar** estas piezas. La interfaz es la excepción: es
-**referencia**, no se copia (D-67).
+pueden **copiar** estas piezas. La interfaz no se copia: la app nueva tiene
+un diseño visual nuevo (D-67).
 
 | Código v2 | Uso en v3 |
 |---|---|
@@ -411,7 +411,7 @@ pueden **copiar** estas piezas. La interfaz es la excepción: es
 | `lib/services/recommendation_engine.dart` | Su regla (±2 % en 30 días) pasa a ser una métrica más (07 §4.1) |
 | `lib/controllers/alert_controller.dart` | Lógica de deduplicación (avisar una vez, rearmar), trasladada a SQL |
 | `lib/services/report_exporter.dart` y su prueba | Base de la exportación CSV |
-| `lib/widgets/*`, `lib/config/app_theme.dart`, `lib/config/app_styles.dart`, `assets/fonts/poppins/` | **Referencia** para la identidad visual (D-67): punto de partida y evidencia, no se copia tal cual. Se conserva lo que funciona y se rehace lo que no: el calendario de la simulación, los avisos y notificaciones, y los patrones genéricos. El resultado queda en `DESIGN.md` |
+| `lib/widgets/*`, `lib/config/app_theme.dart`, `lib/config/app_styles.dart`, `assets/fonts/poppins/` | **No se copia; solo referencia de contenido** (D-67): qué pantallas, datos y flujos había. Visualmente es antirreferencia: no se conservan su paleta, sus widgets ni la fuente Poppins. El diseño nuevo queda en `DESIGN.md` |
 | Lo demás (login con contraseña, 2FA de demo, controladores en memoria, bitácora en memoria) | **No se copia** |
 
 **Quién manda en qué (D-67).** `DESIGN.md`, en la raíz del repositorio y

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Objetivo | Reutilizar del repositorio v2 lo que ya funciona y está probado: el motor ×2 y el exportador. La interfaz es referencia para la identidad visual, no se copia (D-67). |
+| Objetivo | Reutilizar del repositorio v2 lo que ya funciona y está probado: el motor ×2 y el exportador. La interfaz no se copia: la app tiene un diseño visual nuevo y de la v2 solo se toma el contenido (D-67). |
 | Documentación fuente | docs/05 §11 |
 | Módulos (docs/17) | M-05, M-15, M-20 |
 | Depende de | — (en paralelo con E-01) |
@@ -15,7 +15,7 @@
 
 Tomadas de `docs/14` §2:
 
-- Copiar del repositorio v2 el motor ×2 y el exportador, con sus pruebas; construir la identidad visual y el sistema de diseño tomando la interfaz de la v2 como referencia (D-67)
+- Copiar del repositorio v2 el motor ×2 y el exportador, con sus pruebas; construir una identidad visual y un sistema de diseño nuevos; de la interfaz de la v2 solo se toma el contenido (D-67)
 
 ## Historias de usuario
 
