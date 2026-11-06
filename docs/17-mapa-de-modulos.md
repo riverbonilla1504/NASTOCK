@@ -71,10 +71,10 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-05 · Datos de mercado
 - **Qué hace**: universo NASDAQ-100 y ETFs, precios cada 15 s, barras, calendario y reloj, atributos de activos, estado del mercado, pantalla de mercado.
 - **Docs**: 09 §1–§2 · 10 §11–§12 · 02 §12 · 06 §5.2
-- **BD**: `lista_blanca`, `cotizaciones`, `barras_minuto`, `barras_diarias`, `calendario_mercado`; RPC `estado_mercado`; `private.publicar_cotizaciones`, `private.mercado_abierto`, `mercado_en_ventana`, `ventana_compras_abierta`
-- **Funciones**: `ingesta-mercado`, `calendario-mercado`, `cierre-diario`; `_shared/mercado/`
+- **BD**: `lista_blanca`, `cotizaciones`, `barras_minuto`, `barras_diarias`, `calendario_mercado`, tipo `bolsillo`; RPC `estado_mercado`; `private.publicar_cotizaciones`, `private.mercado_abierto`, `mercado_en_ventana`, `ventana_compras_abierta`, `private.simbolos_del_universo`, `simbolos_sin_historia`, `guardar_barras_diarias` · migraciones `supabase/migrations/*_lista_blanca_y_barras.sql` (tipo, tres tablas, RLS de lectura y semilla del universo) y `*_funciones_de_mercado.sql` · un año de barras de prueba en `supabase/seed.sql`
+- **Funciones**: `ingesta-mercado`, `calendario-mercado` (`index.ts`, `manejador.ts`, `carga_historica.ts`: carga inicial de dos años de barras diarias), `cierre-diario`; `_shared/mercado/` (`interfaz.ts`, `alpaca.ts`, `simulado.ts`, `mod.ts` con `crearProveedorDeMercado`, `tiempo.ts`, `fixtures/` con respuestas de Alpaca)
 - **App**: `lib/features/mercado/`
-- **Pruebas**: `supabase/functions/ingesta-mercado/*_test.ts` · E2E-03
+- **Pruebas**: `supabase/tests/database/02_universo_y_barras_test.sql`, `supabase/functions/_shared/mercado/*_test.ts`, `supabase/functions/calendario-mercado/*_test.ts`, `supabase/functions/ingesta-mercado/*_test.ts` · E2E-03
 - **Depende de**: M-19 · **Lo usan**: M-07, M-08, M-11
 
 ### M-06 · Noticias y contexto (DeepSeek)
@@ -198,7 +198,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Qué hace**: implementaciones simuladas de mercado, broker, noticias, DeepSeek, JEV y FCM; reloj controlable; esquema `pruebas`.
 - **Docs**: 10 §9 · 15 §3
 - **BD**: `private.ahora()` (migración `supabase/migrations/*_reloj_ahora.sql`; busca `pruebas.reloj` al llamarla y sin el esquema devuelve `now()`); esquema `pruebas`, que crea solo `supabase/seed.sql` (ninguna migración): `pruebas.reloj` con `pruebas.fijar_reloj(hora)`, `pruebas.escenarios` con `pruebas.elegir_escenario(proveedor, escenario)` y `pruebas.push_simulados`
-- **Funciones**: `_shared/proveedores.ts` (`elegirProveedor`, `leerConfiguracion`; rechaza simulados con `ENTORNO=mvp`), `_shared/*/simulado.ts` (cada uno lo crea la historia de su integración), `supabase/functions/.env.e2e` (`ENTORNO=ci` y `PROVEEDOR_*=simulado`, sin secretos)
+- **Funciones**: `_shared/proveedores.ts` (`elegirProveedor`, `leerConfiguracion`; rechaza simulados con `ENTORNO=mvp`), `_shared/*/simulado.ts` (cada uno lo crea la historia de su integración; el de mercado, `_shared/mercado/simulado.ts`, es de HU-026 y su algoritmo se repite en SQL en el bloque de barras de prueba de `supabase/seed.sql`), `supabase/functions/.env.e2e` (`ENTORNO=ci` y `PROVEEDOR_*=simulado`, sin secretos)
 - **App**: modo pruebas (ingreso con correo en CI)
 - **Pruebas**: `supabase/tests/database/01_reloj_y_pruebas_test.sql`, `supabase/functions/_shared/proveedores_test.ts`, búsqueda en `scripts/verificar.sh` (ninguna migración crea `pruebas`); todo el E2E depende de este módulo
 - **Depende de**: — · **Lo usan**: M-05, M-06, M-07, M-10, M-12, M-14
@@ -208,9 +208,9 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 15 completo · 16 completo · 05 §10–§12
 - **Planeación y specs**: `backlog/`, `specs/`, `.specify/`, `.claude/skills/`, `scripts/github/` (etiquetas, hitos, proyecto y publicación del backlog como issues)
 - **BD**: `supabase/config.toml`, `supabase/seed.sql`, esquema `private`, extensiones `pg_cron`, `pg_net` y `pgmq`, `public.ping()`, `latido` (06 §5.6), `private.despertar_funcion(nombre)` · migraciones `supabase/migrations/*_esquema_private_y_extensiones.sql`, `*_latido_y_ping.sql`, `*_despertar_funcion.sql`
-- **Funciones**: `supabase/functions/deno.json` (dependencias de todas las funciones), `_shared/auth.ts` (secreto interno, JWT y rol), `_shared/esquemas.ts` (validación con zod)
+- **Funciones**: `supabase/functions/deno.json` (dependencias de todas las funciones, con `postgres` fijado en versión exacta), `_shared/auth.ts` (secreto interno, JWT y rol), `_shared/esquemas.ts` (validación con zod), `_shared/bd.ts` (D-66: única puerta a Postgres; solo funciones `private`, por conexión directa con `SUPABASE_DB_URL`; el único archivo que importa el cliente de Postgres, vigilado por la búsqueda de `scripts/verificar.sh` y de CI) · `[functions.<nombre>]` en `supabase/config.toml` para las funciones que solo aceptan el secreto interno (`verify_jwt = false`)
 - **App**: esqueleto Flutter `com.ritech.inversiones` (Android y web): `pubspec.yaml`, `analysis_options.yaml`, `android/`, `web/`, `lib/main.dart`; `lib/app/` (`arranque.dart`, `aplicacion.dart`, `enrutador.dart`, `tema.dart`, `pagina_inicio.dart`); `lib/core/configuracion/entorno.dart` (`--dart-define`), `lib/core/supabase/cliente_supabase.dart`, `lib/core/errores/` (`codigos_de_error.dart`, `traduccion_de_errores.dart`), `lib/core/formato/` (`formato_dinero.dart`, `formato_fechas.dart`); `lib/shared/widgets/`; `lib/features/` (vacía hasta la primera historia); `integration_test/`, `test_driver/` (TT-06)
-- **Pruebas**: `scripts/verificar.sh`, `scripts/verificar_docs.py`, `supabase/tests/database/00_base_test.sql`, `supabase/functions/_shared/*_test.ts`, `test/` (espejo de `lib/`: errores, formato, entorno, app, widgets compartidos)
+- **Pruebas**: `scripts/verificar.sh`, `scripts/verificar_docs.py`, `supabase/tests/database/00_base_test.sql`, `supabase/functions/_shared/*_test.ts` (incluye `bd_test.ts`), `test/` (espejo de `lib/`: errores, formato, entorno, app, widgets compartidos)
 - **Depende de**: — · **Lo usan**: todos
 
 ---
