@@ -33,7 +33,7 @@ Toda acción sensible del catálogo de `docs/11` §4.1 queda en la tabla `audito
 | Principio o invariante | Cumple | Cómo |
 |---|---|---|
 | I · `docs/` es la fuente de verdad | Sí | Tabla, fórmula del hash, bloqueo, trigger y lectura salen de `docs/06` §5.6, §7 y §8.2, `docs/11` §4 y `docs/03` §4.3. Lo que `docs/` no escribe literalmente (genesis, formato de la fórmula, parámetros opcionales de `auditar`, `TRUNCATE`) va en [research.md](research.md) y no cambia ninguna regla. |
-| II · Documentación primero | Sí | Ninguna regla nueva ni cambio de una existente: solo se actualiza `docs/17` (rutas). Dos observaciones para decidir después (el hash no cubre `antes`, `despues`, `actor_rol` ni `origen`; la llamada de `docs/04` §6 pasa un `uuid` como id) van al informe, no a `docs/`. |
+| II · Documentación primero | Sí | Primero se aprobó y se cambió `docs/` (fórmula del hash en `docs/11` §4.3, ejemplo de `docs/04` §6, firma en `docs/06` §8.2, historial 3.13) y recién entonces el código; además `docs/17` (rutas). Dos cambios que Javier aprobó después de la primera entrega sí tocan `docs/`: la fórmula del hash cubre todos los campos (`docs/11` §4.3, CA-2) y el ejemplo de `docs/04` §6 pasa el id como texto; ambos con su fila en `docs/13` §4 (3.13) y la firma de `auditar` en `docs/06` §8.2. |
 | IV · Investigación acotada | Sí | Solo M-17 y, de M-02, la función `private.rol_actual()` por su firma. |
 | V · Errores conocidos | Sí | EC-010 (`search_path`); EC-012 (los denegados no se auditan en la misma transacción, `docs/11` §4.2). |
 | VI · Verificación de punta a punta | Sí | `scripts/verificar.sh` completo antes de terminar. Sin escenario E2E propio: se prueba con pgTAP (D-58). |

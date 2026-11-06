@@ -710,7 +710,7 @@ auditoria (
   detalle        jsonb,
   origen         text not null check (origen in ('app','sistema','cron','auth')),
   hash_anterior  text not null,
-  hash           text not null      -- sha256(hash_anterior || contenido): cadena a prueba de alteraciones
+  hash           text not null      -- sha256(hash_anterior || todos los campos del registro, 11 §4.3): cadena a prueba de alteraciones
 )
 
 latido (
@@ -893,7 +893,7 @@ Las Edge Functions las ejecutan por conexión directa a Postgres, con
 | `suspender_cuenta`, `reactivar_cuenta`, `dar_de_baja`, `reincorporar` | Parte de base de datos de la Edge Function `admin-usuarios`. |
 | `mercado_abierto()`, `mercado_en_ventana(margen)`, `ventana_compras_abierta()` | Horario (RN-41, RR-07). |
 | `despertar_funcion(nombre)` | `pg_net` hacia una Edge Function con el secreto interno, que envía en la cabecera `x-secreto-interno`. |
-| `auditar(actor, accion, entidad, id, detalle)` | Agrega a la bitácora encadenando el hash. |
+| `auditar(actor, accion, entidad, id, detalle, antes, despues, origen)` | Agrega a la bitácora encadenando el hash (11 §4.3). `id` es texto; `detalle`, `antes`, `despues` y `origen` son opcionales. El rol del actor lo lee de `perfiles`; sin origen, `sistema` si no hay actor y `app` si lo hay. |
 | `publicar_evento(topico, evento, carga)` | Envoltura de `realtime.send`. |
 
 ---

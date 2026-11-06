@@ -92,9 +92,16 @@ Google.
 2. Un trigger rechaza cualquier `UPDATE` o `DELETE`, incluso de la llave
    secreta.
 3. **Cadena de hash**: cada registro guarda
-   `hash = sha256(hash_anterior ‖ momento ‖ actor ‖ acción ‖ entidad ‖ id ‖ detalle)`.
-   `auditar()` toma un bloqueo para que dos inserciones simultáneas no usen
-   el mismo `hash_anterior`.
+   `hash = sha256(hash_anterior ‖ momento ‖ actor ‖ actor_rol ‖ acción ‖ entidad ‖ id ‖ antes ‖ después ‖ detalle ‖ origen)`:
+   todos los campos que guarda el registro, de modo que alterar cualquiera
+   de ellos rompe la cadena. El orden es fijo y la escritura de cada campo
+   también, para poder recalcular el hash desde cualquier sesión: los campos
+   se unen con el carácter de control `U+001F`; el momento va en UTC como
+   `AAAA-MM-DDTHH:MM:SS.ffffffZ`; `antes`, `después` y `detalle` van con el
+   texto canónico de `jsonb` (claves ordenadas); un campo nulo va vacío. El
+   primer registro lleva 64 ceros como `hash_anterior`. `auditar()` toma un
+   bloqueo para que dos inserciones simultáneas no usen el mismo
+   `hash_anterior`.
 4. Un trabajo semanal recalcula la cadena; si se rompe, alerta crítica.
 5. El reporte diario al admin incluye el último hash del día (ancla fuera de
    la base de datos): alterar el pasado obligaría a alterar también esos

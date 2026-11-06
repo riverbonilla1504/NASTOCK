@@ -1,6 +1,6 @@
 # Investigación (Fase 0): HU-107 · Bitácora inmutable con cadena de hash
 
-No quedó ninguna duda que obligue a cambiar `docs/`. Estas son las decisiones de diseño que `docs/` no escribe literalmente y cómo se resolvieron sin cambiar ninguna regla. Las dos últimas (D-10 y D-11) son observaciones para decidir después.
+No quedó ninguna duda que obligue a cambiar `docs/`. Estas son las decisiones de diseño que `docs/` no escribe literalmente y cómo se resolvieron sin cambiar ninguna regla. Las dos últimas (D-10 y D-11) eran observaciones que Javier resolvió después; cada una dice cómo.
 
 ## D-1 · `auditar` recibe más datos que los cinco de `docs/06` §8.2
 
@@ -12,7 +12,7 @@ No quedó ninguna duda que obligue a cambiar `docs/`. Estas son las decisiones d
 
 ## D-2 · Formato exacto de la fórmula del hash
 
-- **Decisión**: `hash = encode(sha256(convert_to(contenido, 'UTF8')), 'hex')`, donde el contenido es la unión, con el carácter de control `U+001F` (separador de unidad) entre campos, de: `hash_anterior`, `momento` en UTC con formato `YYYY-MM-DD"T"HH24:MI:SS.US"Z"`, `actor` (el `uuid` en texto, o vacío si es nulo), `accion`, `entidad`, `entidad_id` (vacío si es nulo) y `detalle` (`jsonb::text`, o vacío si es nulo). El cálculo vive en `private.hash_auditoria(...)`.
+- **Decisión**: `hash = encode(sha256(convert_to(contenido, 'UTF8')), 'hex')`, donde el contenido es la unión, con el carácter de control `U+001F` (separador de unidad) entre campos, de: `hash_anterior`, `momento` en UTC con formato `YYYY-MM-DD"T"HH24:MI:SS.US"Z"`, `actor` (el `uuid` en texto), `actor_rol`, `accion`, `entidad`, `entidad_id`, `antes`, `despues` (los dos con `jsonb::text`), `detalle` (`jsonb::text`) y `origen`; un campo nulo entra vacío. El orden y la escritura de cada campo están en `docs/11` §4.3. El cálculo vive en `private.hash_auditoria(...)`.
 - **Razón**: `docs/11` §4.3 y CA-2 dan los campos y el orden, no cómo se escriben. `momento::text` depende de la zona horaria de la sesión y concatenar sin separador permite mover un carácter entre dos campos sin cambiar el hash. El formato UTC fijo, el separador y el texto canónico de `jsonb` (ordena las claves) hacen el hash reproducible desde cualquier sesión. Una sola función para el cálculo evita que `auditar` y la verificación de HU-108 se desvíen.
 - **Alternativas**: `‖` como `||` sin separador (descartada: ambigua); `pgcrypto.digest` (descartada: `sha256()` ya viene en Postgres y no hace falta la extensión).
 
@@ -53,7 +53,7 @@ No quedó ninguna duda que obligue a cambiar `docs/`. Estas son las decisiones d
 | Criterio | Cómo |
 |---|---|
 | CA-1 | pgTAP `06_`: `auditar` guarda momento, actor, rol (leído de `perfiles`), acción, entidad, id, antes, después y origen, con un actor Administrador, con el sistema y con el origen explícito. El momento es el de `private.ahora()` con el reloj fijado. |
-| CA-2 | pgTAP `06_`: el primer registro tiene 64 ceros; cada `hash_anterior` es el `hash` del registro previo; el `hash` coincide con `sha256` de la fórmula escrita a mano en la prueba; el hash no cambia con la zona horaria de la sesión. Concurrencia: con `dblink`, una segunda conexión que llama a `auditar` queda bloqueada por la primera (`pg_blocking_pids`) y se cancela antes de confirmar nada; el índice único rechaza un segundo hijo del mismo hash. |
+| CA-2 | pgTAP `06_`: el primer registro tiene 64 ceros; cada `hash_anterior` es el `hash` del registro previo; el `hash` coincide con `sha256` de la fórmula de los once campos escrita a mano en la prueba; cambiar cualquiera de los once campos cambia el hash; el hash no cambia con la zona horaria de la sesión. Concurrencia: con `dblink`, una segunda conexión que llama a `auditar` queda bloqueada por la primera (`pg_blocking_pids`) y se cancela antes de confirmar nada; el índice único rechaza un segundo hijo del mismo hash. |
 | CA-3 | pgTAP `05_` y `07_`: `INSERT`, `UPDATE`, `DELETE` y `TRUNCATE` directos fallan con `42501` para `anon`, `authenticated` (cada rol) y `service_role`; el trigger rechaza `UPDATE`, `DELETE` y `TRUNCATE` incluso con el rol dueño; la función `auditar` no la ejecutan los roles de la API. |
 | CA-4 | pgTAP `06_`: con un token y un cuerpo de respuesta de Google en la sesión, `auditar` solo guarda lo que recibe; un barrido de todas las filas de la prueba no encuentra formas de llave, token ni claves `access_token`, `refresh_token`, `id_token`, `provider_token`. |
 | CA-5 | pgTAP `05_`: un Usuario, un Analista, una cuenta suspendida y una sesión sin perfil cuentan 0 filas; el Administrador las ve todas; `anon` recibe `42501`. |
@@ -66,14 +66,17 @@ No quedó ninguna duda que obligue a cambiar `docs/`. Estas son las decisiones d
 - `momento` no tiene `default now()`: lo pone siempre `auditar` con `private.ahora()` (así el reloj controlable de CI sirve también aquí).
 - Se agregan `check` de acción y entidad no vacías, `check` de formato hexadecimal de 64 caracteres para los dos hashes y el índice único de `hash_anterior` (D-4).
 
-## D-10 · Observación: el hash no cubre `antes`, `despues`, `actor_rol` ni `origen`
+## D-10 · Resuelta: el hash cubre todos los campos del registro
 
-- **Qué pasa**: la fórmula de `docs/11` §4.3 y de CA-2 solo incluye `hash_anterior`, `momento`, `actor`, `accion`, `entidad`, `id` y `detalle`. Cambiar `antes`, `despues`, `actor_rol` u `origen` de un registro no rompería la cadena.
-- **Decisión de esta historia**: se implementa la fórmula tal como está escrita, porque CA-2 la nombra literal. Mientras tanto el trigger impide el cambio por la API y por el dueño de la tabla.
-- **Pendiente para Javier**: decidir si la fórmula debe cubrir también esas columnas. Es un cambio de `docs/11` §4.3 (y de CA-2), no de esta historia.
+- **Qué pasaba**: la fórmula de `docs/11` §4.3 y de CA-2 solo incluía `hash_anterior`, `momento`, `actor`, `accion`, `entidad`, `id` y `detalle`. Cambiar `antes`, `despues`, `actor_rol` u `origen` de un registro no habría roto la cadena.
+- **Decisión (Javier, 2026-11-06)**: la fórmula incluye todos los campos que guarda el registro, en este orden fijo: `hash_anterior`, `momento`, `actor`, `actor_rol`, `accion`, `entidad`, `id`, `antes`, `despues`, `detalle` y `origen`. Se cambió `docs/11` §4.3 y CA-2 (historia, spec), con la fila 3.13 en el historial de `docs/13` §4. `private.hash_auditoria` recibe los once campos y `auditar` le pasa el rol y el origen que ya calculó.
+- **Razón**: la cadena detecta ahora la alteración de cualquier columna, no solo de las siete de la fórmula original.
 
-## D-11 · Observación: la llamada de `docs/04` §6 pasa un `uuid` como identificador
+## D-11 · Resuelta: la llamada de `docs/04` §6 pasaba un `uuid` como identificador
 
-- **Qué pasa**: `docs/04` §6 llama `private.auditar(new.id, 'cuenta.activada', 'perfiles', new.id, …)` con `uuid` en el cuarto argumento, pero `auditoria.entidad_id` es `text` (cualquier entidad: símbolos, claves de parámetros, números) y Postgres no convierte `uuid` a `text` solo al resolver una función.
-- **Decisión de esta historia**: `p_entidad_id text`. HU-002 escribirá `new.id::text`.
-- **Pendiente para Javier**: ajustar el ejemplo de `docs/04` §6 cuando se implemente HU-002.
+- **Qué pasaba**: `docs/04` §6 llamaba `private.auditar(new.id, 'cuenta.activada', 'perfiles', new.id, …)` con `uuid` en el cuarto argumento, pero `auditoria.entidad_id` es `text` (cualquier entidad: símbolos, claves de parámetros, números) y Postgres no convierte `uuid` a `text` solo al resolver una función.
+- **Decisión (Javier, 2026-11-06)**: `p_entidad_id text` y el ejemplo de `docs/04` §6 pasa `new.id::text`. Además `docs/06` §8.2 muestra la firma completa de `auditar`.
+
+## D-12 · Sin filtro de claves en `detalle`
+
+- **Decisión (Javier, 2026-11-06)**: no se agrega ningún filtro por nombre de clave. CA-4 se cumple porque `auditar` solo guarda lo que recibe (nada de la sesión) y las pruebas lo comprueban; quien llama no pasa llaves, tokens ni respuestas de Google (`docs/11` §4.1).

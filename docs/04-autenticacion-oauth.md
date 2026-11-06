@@ -271,7 +271,7 @@ begin
   end if;
 
   perform private.auditar(new.id, 'cuenta.activada',
-                          'perfiles', new.id, jsonb_build_object('rol', v_inv.rol));
+                          'perfiles', new.id::text, jsonb_build_object('rol', v_inv.rol));
   return new;
 end;
 $$;
