@@ -5,7 +5,7 @@
 -- Todo corre dentro de una transacción que se deshace.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(85);
+select plan(81);
 
 -- Tipo y tablas --------------------------------------------------------------------------------
 select has_type('public', 'bolsillo', 'existe el tipo bolsillo');
@@ -27,9 +27,8 @@ select is(
     where oid in ('public.lista_blanca'::regclass, 'public.barras_diarias'::regclass, 'public.barras_minuto'::regclass)
       and relrowsecurity),
   3, 'las tres tablas tienen RLS activo');
-select policies_are('public', 'lista_blanca', array['lista_blanca_lectura'], 'lista_blanca solo tiene su política de lectura');
-select policies_are('public', 'barras_diarias', array['barras_diarias_lectura'], 'barras_diarias solo tiene su política de lectura');
-select policies_are('public', 'barras_minuto', array['barras_minuto_lectura'], 'barras_minuto solo tiene su política de lectura');
+-- La política de lectura (private.rol_actual() is not null) llega con la migración posterior a HU-001
+-- y sus pruebas con ella. Aquí solo se exige que no exista ninguna política de escritura.
 select is(
   (select count(*)::int from pg_policies
     where schemaname = 'public' and tablename in ('lista_blanca', 'barras_diarias', 'barras_minuto')
@@ -53,11 +52,12 @@ select throws_ok($$select * from public.lista_blanca$$, '42501', null, 'anon no 
 select throws_ok($$select * from public.barras_diarias$$, '42501', null, 'anon no puede leer barras_diarias');
 reset role;
 
--- Una persona autenticada lee y no puede escribir directo
+-- Una persona autenticada no puede escribir directo (la lectura se prueba con la política de HU-001)
 set local role authenticated;
-select cmp_ok((select count(*)::int from public.lista_blanca), '>', 0, 'authenticated lee lista_blanca');
-select cmp_ok((select count(*)::int from public.barras_diarias), '>', 0, 'authenticated lee barras_diarias');
-select is((select count(*)::int from public.barras_minuto), 0, 'authenticated lee barras_minuto (vacía)');
+select is((select count(*)::int from public.lista_blanca), 0,
+          'sin política de lectura, authenticated no ve filas de lista_blanca (la lectura llega tras HU-001)');
+select is((select count(*)::int from public.barras_diarias), 0,
+          'sin política de lectura, authenticated no ve filas de barras_diarias');
 select throws_ok($$insert into public.lista_blanca (bolsillo, simbolo, nombre) values ('usuarios', 'ZZZ', 'Prueba')$$,
                  '42501', null, 'authenticated no puede insertar en lista_blanca');
 select throws_ok($$update public.lista_blanca set activo = false$$,

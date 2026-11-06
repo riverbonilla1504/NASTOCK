@@ -23,7 +23,7 @@ Fuente: `docs/06` §3 (enumeraciones) y §5.2 (mercado). Los nombres y tipos son
 | `fraccionable`, `negociable` | `boolean` | Nulos hasta que HU-027 los sincronice. |
 | `sincronizado_en` | `timestamptz` | Nulo hasta HU-027. |
 | `notas` | `text` | |
-| `actualizado_por` | `uuid` | Sin llave foránea a `perfiles` por ahora (ver plan, decisión 1). Nulo en la semilla. |
+| `actualizado_por` | `uuid` | Llave foránea a `perfiles`, que agrega la migración posterior a HU-001 (ver plan, decisión 1). Nulo en la semilla. |
 | `actualizado_en` | `timestamptz` | No nulo; por defecto `now()`. |
 
 Llave primaria `(bolsillo, simbolo)`.
@@ -58,7 +58,7 @@ Mismas columnas que `barras_diarias`, con `momento timestamptz` en lugar de `fec
 | Rol | Permiso |
 |---|---|
 | `anon` | Ninguno. |
-| `authenticated` | Solo `select`, con una política de lectura (ver plan, decisión 1: provisionalmente `using (true)`). Sin `insert`, `update` ni `delete`. |
+| `authenticated` | Solo `select`, con una política de lectura `using ((select private.rol_actual()) is not null)` que agrega la migración posterior a HU-001 (ver plan, decisión 1). Hasta entonces no hay política y no ve filas. Sin `insert`, `update` ni `delete`. |
 | Edge Functions | Solo a través de funciones `private` (D-66). |
 
 RLS activo en las tres. Sin políticas de escritura.

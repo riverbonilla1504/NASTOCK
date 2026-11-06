@@ -37,7 +37,7 @@ Se construye por capas, cada una con sus pruebas: **migración** (tablas, RLS, s
 | Principio / invariante | ¿Cumple? | Cómo |
 |---|---|---|
 | I · `docs/` es la fuente de verdad | Sí | Cada tabla y columna sale de `docs/06` §5.2. Las tres funciones `private` nuevas y `_shared/bd.ts` se agregan a `docs/06` §8.2, `docs/05` §6 y `docs/17`. |
-| II · Documentación primero | Sí | D-66 ya está en `docs/` (primer commit de la rama). Quedan **dos puntos por confirmar** (ver "Decisiones por confirmar"). |
+| II · Documentación primero | Sí | D-66 ya está en `docs/` (primer commit de la rama). Los dos puntos que faltaban se confirmaron con Javier (ver "Decisiones confirmadas"). |
 | III · Sincronía | Sí | No hay historias que citen supabase-js ni la llave secreta para escribir. Las que dicen "incluida la llave secreta" (HU-013, HU-107) hablan de un intento de escritura directa y siguen siendo válidas. |
 | IV · Investigación acotada | Sí | Módulos M-05, M-19 y M-20 (`docs/17`). |
 | V · Errores conocidos | Sí | Se busca en `docs/errores-conocidos.md` por módulo; se anota lo que cueste más de un intento. |
@@ -45,17 +45,15 @@ Se construye por capas, cada una con sus pruebas: **migración** (tablas, RLS, s
 | VII · Alcance y costo | Sí | `postgres` es de código abierto y gratuito; Alpaca paper es gratis; nada de dinero real. |
 | Inv. 1 · La IA no ejecuta | Sí | `calendario-mercado` no importa `_shared/broker/`. |
 | Inv. 4 · Escrituras de la app solo por RPC, RLS en `public` | Sí | RLS activo; `authenticated` solo `select`; ni la app ni la API escriben. |
-| Inv. 5 · La autorización lee `perfiles` | **A confirmar** | La política de lectura de "persona activa" necesita `private.rol_actual()` (HU-001), que todavía no está en `main`. |
+| Inv. 5 · La autorización lee `perfiles` | Sí, cuando entre HU-001 | Las políticas de lectura usan `(select private.rol_actual()) is not null` y la llave foránea de `actualizado_por` apunta a `perfiles`. Van en una migración posterior a HU-001 (HU-001 pasa a "Depende de" en la historia). Mientras tanto las tablas quedan cerradas: RLS activo y ninguna política. |
 | Inv. 6 · Ninguna llave | Sí | La función lee `ALPACA_*` del entorno solo con el proveedor real; los errores nunca copian llaves, URL de conexión ni contraseñas. |
 | Inv. 8 · Simulados solo en local y CI | Sí | `elegirProveedor("mercado", …)` de TT-05 se niega a simular con `ENTORNO=mvp`. |
 | Inv. 9 · Migraciones solo hacia adelante | Sí | Dos migraciones nuevas con `supabase migration new`. |
 
-### Decisiones por confirmar (con la sesión coordinadora)
+### Decisiones confirmadas (Javier, 2026-11-06)
 
-> Se preguntó a la sesión coordinadora y, mientras llega la respuesta, la implementación sigue las propuestas de abajo. Cada una es reversible: la política de lectura es una línea de la migración `*_lista_blanca_y_barras.sql` y la ubicación de la semilla son dos líneas de `docs/` (commit aparte).
-
-1. **Lectura de "persona activa" (CA-4).** `docs/03` §4.2–§4.3 la definen con `private.rol_actual()`, de HU-001 (hoy solo con plan, sin migraciones), y HU-026 no la lista en "Depende de". Lo mismo pasa con la llave foránea `lista_blanca.actualizado_por → perfiles`. Propuesta provisional: política `to authenticated using (true)` y `actualizado_por` sin llave foránea, que HU-001 y HU-036 endurecen después. Alternativa: esperar a HU-001 en `main`.
-2. **Dónde se siembra la lista blanca.** La historia pide una migración (así llega a la nube, que no aplica `seed.sql`); `docs/05` §12 y `docs/15` §3 la ubican en `seed.sql`. Propuesta: migración, y ajustar esas dos líneas de `docs/`.
+1. **Lectura de "persona activa" (CA-4): opción B, sin relajar.** Las políticas de `lista_blanca`, `barras_diarias` y `barras_minuto` usan `(select private.rol_actual()) is not null` (`docs/03` §4.2 y §4.3) y `lista_blanca.actualizado_por` lleva su llave foránea a `perfiles`. Como `private.rol_actual()` es de HU-001, que aún no está en `main`, HU-001 se agregó a "Depende de" de la historia y esas dos piezas van en una migración posterior (`*_lectura_del_mercado.sql`) que se agrega cuando HU-001 esté en `origin/main`. Hasta entonces las tablas no tienen ninguna política: nadie lee.
+2. **La semilla de la lista blanca va en una migración**, para que llegue a la nube. `docs/05` §12 y `docs/15` §3 ya no la ubican en `seed.sql` (13 §4, versión 3.11). Los parámetros por defecto y la configuración de decisión v1 siguen en `seed.sql`: los decide la historia que los crea.
 
 ## Estructura del proyecto (Project Structure)
 

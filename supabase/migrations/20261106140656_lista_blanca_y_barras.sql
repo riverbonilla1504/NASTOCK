@@ -77,8 +77,9 @@ comment on table public.barras_minuto is
   'Barras de un minuto (docs/06 §5.2). La ingesta de precios (HU-028) las llena y la limpieza diaria (HU-029) borra las de más de 5 días.';
 
 -- Seguridad ------------------------------------------------------------------------------------
--- RLS activo y sin políticas de escritura. Además se quitan los permisos de escritura: así un
--- INSERT, UPDATE o DELETE directo falla con "permiso denegado" y no se ignora en silencio.
+-- RLS activo y sin políticas de escritura (docs/06 §7, regla 1). Además se quitan los permisos de
+-- escritura: así un INSERT, UPDATE o DELETE directo falla con "permiso denegado" y no se ignora
+-- en silencio.
 -- anon no tiene acceso a nada (docs/06 §7, regla 2).
 
 alter table public.lista_blanca enable row level security;
@@ -93,13 +94,10 @@ grant select on table public.lista_blanca to authenticated;
 grant select on table public.barras_diarias to authenticated;
 grant select on table public.barras_minuto to authenticated;
 
--- Lectura para toda persona autenticada (docs/03 §4.3: ✅ en los tres roles).
-create policy lista_blanca_lectura on public.lista_blanca
-  for select to authenticated using (true);
-create policy barras_diarias_lectura on public.barras_diarias
-  for select to authenticated using (true);
-create policy barras_minuto_lectura on public.barras_minuto
-  for select to authenticated using (true);
+-- La lectura (una política de select por tabla) y la llave foránea de
+-- lista_blanca.actualizado_por a perfiles las agrega una migración posterior a HU-001, porque
+-- dependen de private.rol_actual() y de perfiles (docs/03 §4.2 y §4.3): "toda persona activa".
+-- Mientras tanto las tablas quedan cerradas: RLS activo y ninguna política, así que nadie lee.
 
 -- Semilla del universo (docs/06 §5.2, docs/10 §12, D-06, Q-13, Q-20) --------------------------
 -- Usuarios: QLD y QQQ. Arriesgadas: TQQQ y los componentes del NASDAQ-100 con su sector.

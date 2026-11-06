@@ -18,7 +18,7 @@ Cada punto lleva la decisión, por qué y qué alternativas se descartaron. Lo q
 
 - **Decisión**: en una **migración** (así llega a la nube, donde `seed.sql` no corre).
 - **Por qué**: CA-1 pide la lista "en la base recién creada" y `docs/10` §12 dice que la lista se siembra al iniciar el proyecto y después la mantiene el administrador. La tarea de la historia dice "Migración … y la semilla del universo con su sector".
-- **Pendiente de confirmar**: `docs/05` §12 y `docs/15` §3 nombran la lista blanca bajo `seed.sql`. Ver "Decisiones por confirmar" en `plan.md`.
+- **Confirmado**: `docs/05` §12 y `docs/15` §3 nombraban la lista blanca bajo `seed.sql`; se corrigieron (13 §4, versión 3.11).
 
 ## R4 · Qué símbolos componen el universo
 
@@ -67,7 +67,7 @@ Cada punto lleva la decisión, por qué y qué alternativas se descartaron. Lo q
 
 - **Decisión**: RLS activo; política de `select` para `authenticated`; sin políticas de escritura; además `revoke all … from anon, authenticated` y `grant select … to authenticated`, para que una escritura directa falle con "permiso denegado" y no se ignore en silencio.
 - **Por qué**: CA-4 pide que la base "lo rechace". Con solo RLS, un `UPDATE` o un `DELETE` termina sin error y sin tocar filas.
-- **Pendiente de confirmar**: la condición de "persona activa" (ver `plan.md`).
+- **Confirmado (opción B)**: la condición de "persona activa" es `(select private.rol_actual()) is not null` y va, con la llave foránea a `perfiles`, en una migración posterior a HU-001 (ver `plan.md`). Hasta entonces: RLS activo y ninguna política.
 
 ## R12 · Estado del servidor de funciones
 
