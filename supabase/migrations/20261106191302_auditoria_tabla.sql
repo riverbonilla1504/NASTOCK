@@ -51,7 +51,7 @@ comment on column public.auditoria.origen is
 comment on column public.auditoria.hash_anterior is
   'Hash del registro anterior; 64 ceros en el primero. Único: dos registros no cuelgan del mismo anterior.';
 comment on column public.auditoria.hash is
-  'sha256(hash_anterior ‖ momento ‖ actor ‖ acción ‖ entidad ‖ id ‖ detalle), calculado por private.hash_auditoria() (docs/11 §4.3).';
+  'sha256(hash_anterior ‖ momento ‖ actor ‖ actor_rol ‖ acción ‖ entidad ‖ id ‖ antes ‖ después ‖ detalle ‖ origen), calculado por private.hash_auditoria() (docs/11 §4.3).';
 
 -- Sin escritura para nadie por la API (docs/06 §7, regla 1; docs/11 §4.3, punto 1). Supabase concede
 -- por defecto todos los privilegios sobre las tablas nuevas de public a authenticated y a service_role,

@@ -5,22 +5,27 @@
 -- Las llaman otras funciones security definer, triggers y las Edge Functions por conexión directa
 -- (D-66). Ningún rol de la API puede ejecutarlas.
 
--- El hash de un registro: sha256(hash_anterior ‖ momento ‖ actor ‖ acción ‖ entidad ‖ id ‖ detalle).
+-- El hash de un registro: sha256(hash_anterior ‖ momento ‖ actor ‖ actor_rol ‖ acción ‖ entidad ‖ id ‖ antes ‖
+-- después ‖ detalle ‖ origen): todos los campos que guarda el registro, para que alterar cualquiera rompa la cadena.
 -- Vive en una función aparte para que private.auditar() y la verificación de la cadena (HU-108) usen
 -- exactamente la misma fórmula. Para que se pueda reproducir desde cualquier sesión:
 --   · los campos se unen con el carácter de control U+001F (separador de unidad), así no se puede
 --     mover un carácter de un campo al vecino sin cambiar el hash;
 --   · el momento se escribe en UTC con un formato fijo, sin depender de la zona horaria de la sesión;
---   · el detalle se escribe con el texto canónico de jsonb (claves ordenadas);
+--   · antes, después y detalle se escriben con el texto canónico de jsonb (claves ordenadas);
 --   · un campo nulo se escribe vacío.
 create function private.hash_auditoria(
   p_hash_anterior  text,
   p_momento        timestamptz,
   p_actor          uuid,
+  p_actor_rol      public.rol_app,
   p_accion         text,
   p_entidad        text,
   p_entidad_id     text,
-  p_detalle        jsonb
+  p_antes          jsonb,
+  p_despues        jsonb,
+  p_detalle        jsonb,
+  p_origen         text
 )
 returns text
 language sql
@@ -33,17 +38,21 @@ as $$
         coalesce(p_hash_anterior, ''),
         coalesce(to_char(p_momento at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"'), ''),
         coalesce(p_actor::text, ''),
+        coalesce(p_actor_rol::text, ''),
         coalesce(p_accion, ''),
         coalesce(p_entidad, ''),
         coalesce(p_entidad_id, ''),
-        coalesce(p_detalle::text, '')
+        coalesce(p_antes::text, ''),
+        coalesce(p_despues::text, ''),
+        coalesce(p_detalle::text, ''),
+        coalesce(p_origen, '')
       ),
       'UTF8')),
     'hex')
 $$;
 
-comment on function private.hash_auditoria(text, timestamptz, uuid, text, text, text, jsonb) is
-  'sha256 en hexadecimal de hash_anterior, momento (UTC), actor, acción, entidad, id y detalle, unidos con U+001F (docs/11 §4.3). Lo usan auditar() y la verificación de la cadena.';
+comment on function private.hash_auditoria(text, timestamptz, uuid, public.rol_app, text, text, text, jsonb, jsonb, jsonb, text) is
+  'sha256 en hexadecimal de hash_anterior, momento (UTC), actor, actor_rol, acción, entidad, id, antes, después, detalle y origen, unidos con U+001F (docs/11 §4.3). Lo usan auditar() y la verificación de la cadena.';
 
 -- Agrega un registro a la bitácora encadenándolo con el anterior. Devuelve su id.
 --   p_actor      quién actúa; NULL = el sistema. Su rol se lee de perfiles (no se puede declarar).
@@ -104,7 +113,8 @@ begin
   values (
     v_momento, p_actor, v_rol, p_accion, p_entidad, p_entidad_id,
     p_antes, p_despues, p_detalle, v_origen, v_anterior,
-    private.hash_auditoria(v_anterior, v_momento, p_actor, p_accion, p_entidad, p_entidad_id, p_detalle)
+    private.hash_auditoria(v_anterior, v_momento, p_actor, v_rol, p_accion, p_entidad, p_entidad_id,
+                           p_antes, p_despues, p_detalle, v_origen)
   )
   returning id into v_id;
 
@@ -115,7 +125,7 @@ $$;
 comment on function private.auditar(uuid, text, text, text, jsonb, jsonb, jsonb, text) is
   'Única puerta de escritura de la bitácora: agrega un registro encadenando el hash, con un bloqueo de tabla (docs/06 §8.2, docs/11 §4.3). Devuelve el id.';
 
-revoke all on function private.hash_auditoria(text, timestamptz, uuid, text, text, text, jsonb)
+revoke all on function private.hash_auditoria(text, timestamptz, uuid, public.rol_app, text, text, text, jsonb, jsonb, jsonb, text)
   from public, anon, authenticated, service_role;
 revoke all on function private.auditar(uuid, text, text, text, jsonb, jsonb, jsonb, text)
   from public, anon, authenticated, service_role;

@@ -99,34 +99,50 @@ select is(
   (select hash from public.auditoria where id = (select id from r where n = 1)),
   encode(sha256(convert_to(
     repeat('0', 64) || chr(31) || '2026-03-02T15:30:45.123456Z' || chr(31) || '00000000-0000-4000-8000-000000000003'
-    || chr(31) || 'parametro.cambiado' || chr(31) || 'parametros' || chr(31) || 'ia.umbral'
-    || chr(31) || '{"b": 1, "motivo": "ajuste"}', 'UTF8')), 'hex'),
-  'el hash es sha256(hash_anterior ‖ momento ‖ actor ‖ acción ‖ entidad ‖ id ‖ detalle), escrito a mano');
+    || chr(31) || 'administrador' || chr(31) || 'parametro.cambiado' || chr(31) || 'parametros' || chr(31) || 'ia.umbral'
+    || chr(31) || '{"valor": 1}' || chr(31) || '{"valor": 2}' || chr(31) || '{"b": 1, "motivo": "ajuste"}'
+    || chr(31) || 'app', 'UTF8')), 'hex'),
+  'el hash es sha256(hash_anterior ‖ momento ‖ actor ‖ actor_rol ‖ acción ‖ entidad ‖ id ‖ antes ‖ después ‖ detalle ‖ origen), escrito a mano');
 select is(
   (select hash from public.auditoria where id = (select id from r where n = 2)),
   encode(sha256(convert_to(
     (select hash from public.auditoria where id = (select id from r where n = 1))
-    || chr(31) || '2026-03-02T15:30:45.123456Z' || chr(31) || '' || chr(31) || 'integracion.caida'
-    || chr(31) || 'salud_integraciones' || chr(31) || 'alpaca_broker' || chr(31) || '', 'UTF8')), 'hex'),
-  'con actor, id y detalle nulos, esos campos entran vacíos y el hash anterior es el del primer registro');
+    || chr(31) || '2026-03-02T15:30:45.123456Z' || chr(31) || '' || chr(31) || '' || chr(31) || 'integracion.caida'
+    || chr(31) || 'salud_integraciones' || chr(31) || 'alpaca_broker' || chr(31) || '' || chr(31) || ''
+    || chr(31) || '' || chr(31) || 'sistema', 'UTF8')), 'hex'),
+  'con actor, rol, antes, después y detalle nulos, esos campos entran vacíos y el hash anterior es el del primer registro');
 select is(
   (select count(*)::int from public.auditoria a
-    where a.hash <> private.hash_auditoria(a.hash_anterior, a.momento, a.actor_id, a.accion, a.entidad, a.entidad_id, a.detalle)),
+    where a.hash <> private.hash_auditoria(a.hash_anterior, a.momento, a.actor_id, a.actor_rol, a.accion, a.entidad, a.entidad_id, a.antes, a.despues, a.detalle, a.origen)),
   0, 'la cadena completa se recalcula de punta a punta con private.hash_auditoria');
 set local timezone to 'Asia/Tokyo';
 select is(
-  (select private.hash_auditoria(a.hash_anterior, a.momento, a.actor_id, a.accion, a.entidad, a.entidad_id, a.detalle)
+  (select private.hash_auditoria(a.hash_anterior, a.momento, a.actor_id, a.actor_rol, a.accion, a.entidad, a.entidad_id, a.antes, a.despues, a.detalle, a.origen)
      from public.auditoria a where a.id = (select id from r where n = 1)),
   (select hash from public.auditoria where id = (select id from r where n = 1)),
   'el hash no depende de la zona horaria de la sesión');
 reset timezone;
+-- Cada campo que guarda el registro entra en el hash: con la base y un cambio en cada uno, los doce
+-- hashes son distintos.
+select is(
+  (select count(distinct h)::int from (values
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.y', 'tabla', '1', '{"k": 1}', '{"k": 2}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('b', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.y', 'tabla', '1', '{"k": 1}', '{"k": 2}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:46+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.y', 'tabla', '1', '{"k": 1}', '{"k": 2}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000002', 'administrador', 'x.y', 'tabla', '1', '{"k": 1}', '{"k": 2}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'analista', 'x.y', 'tabla', '1', '{"k": 1}', '{"k": 2}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.z', 'tabla', '1', '{"k": 1}', '{"k": 2}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.y', 'otra', '1', '{"k": 1}', '{"k": 2}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.y', 'tabla', '2', '{"k": 1}', '{"k": 2}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.y', 'tabla', '1', '{"k": 9}', '{"k": 2}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.y', 'tabla', '1', '{"k": 1}', '{"k": 9}', '{"k": 3}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.y', 'tabla', '1', '{"k": 1}', '{"k": 2}', '{"k": 9}', 'app')),
+     (private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', '00000000-0000-4000-8000-000000000003', 'administrador', 'x.y', 'tabla', '1', '{"k": 1}', '{"k": 2}', '{"k": 3}', 'cron'))
+   ) v(h)),
+  12, 'cambiar cualquiera de los once campos cambia el hash');
 select isnt(
-  private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', null, 'x.y', 'tabla', '1', '{"k": 1}'),
-  private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', null, 'x.y', 'tabla', '1', '{"k": 2}'),
-  'cambiar el detalle cambia el hash');
-select isnt(
-  private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', null, 'ab', 'c', null, null),
-  private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', null, 'a', 'bc', null, null),
+  private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', null, null, 'ab', 'c', null, null, null, null, 'app'),
+  private.hash_auditoria(repeat('a', 64), '2026-03-02 15:30:45+00', null, null, 'a', 'bc', null, null, null, null, 'app'),
   'mover un carácter de un campo al vecino cambia el hash');
 
 -- CA-2: concurrencia -----------------------------------------------------------------------------
@@ -230,7 +246,7 @@ select is(
   0, 'ni anon, ni authenticated, ni service_role ejecutan private.auditar');
 select is(
   (select count(*)::int from unnest(array['anon', 'authenticated', 'service_role']) rol
-    where has_function_privilege(rol, 'private.hash_auditoria(text, timestamptz, uuid, text, text, text, jsonb)', 'execute')),
+    where has_function_privilege(rol, 'private.hash_auditoria(text, timestamptz, uuid, public.rol_app, text, text, text, jsonb, jsonb, jsonb, text)', 'execute')),
   0, 'ni anon, ni authenticated, ni service_role ejecutan private.hash_auditoria');
 
 set local role anon;
@@ -248,7 +264,7 @@ select is(
   (select count(*)::int
      from (select a.hash_anterior, a.hash,
                   lag(a.hash) over (order by a.id) as previo,
-                  private.hash_auditoria(a.hash_anterior, a.momento, a.actor_id, a.accion, a.entidad, a.entidad_id, a.detalle) as recalculado
+                  private.hash_auditoria(a.hash_anterior, a.momento, a.actor_id, a.actor_rol, a.accion, a.entidad, a.entidad_id, a.antes, a.despues, a.detalle, a.origen) as recalculado
              from public.auditoria a) x
     where x.hash <> x.recalculado or (x.previo is not null and x.hash_anterior <> x.previo)),
   0, 'la cadena queda íntegra de punta a punta');

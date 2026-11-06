@@ -73,7 +73,7 @@ select is(
   (select count(*)::int
      from (select a.hash, a.hash_anterior,
                   lag(a.hash) over (order by a.id) as previo,
-                  private.hash_auditoria(a.hash_anterior, a.momento, a.actor_id, a.accion, a.entidad, a.entidad_id, a.detalle) as recalculado
+                  private.hash_auditoria(a.hash_anterior, a.momento, a.actor_id, a.actor_rol, a.accion, a.entidad, a.entidad_id, a.antes, a.despues, a.detalle, a.origen) as recalculado
              from public.auditoria a) x
     where x.hash <> x.recalculado or (x.previo is not null and x.hash_anterior <> x.previo)),
   0, 'la cadena sigue íntegra');
