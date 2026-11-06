@@ -67,10 +67,10 @@ No hay: las dependencias (TT-03 y HU-001) ya están en `main`.
 
 ## Fase 4: Cierre
 
-- [ ] T009 `git fetch origin && git rebase origin/main`; si `main` trae migraciones más nuevas que las de esta historia, renombrar las nuestras con la fecha y hora actuales.
-- [ ] T010 Correr `scripts/verificar.sh` completo con el candado tomado y dejarlo en verde.
-- [ ] T011 Actualizar `docs/17-mapa-de-modulos.md` (M-17: tabla `auditoria`, `private.hash_auditoria`, `private.auditar`, el trigger, rutas de migraciones y de pruebas, y "Depende de: M-02" por `private.rol_actual()`).
-- [ ] T012 Escribir el cuerpo del PR con `.github/pull_request_template.md` y "Closes #134" en `C:\Users\Javier\Desktop\pr-107-bitacora-inmutable.md` (fuera del repositorio).
+- [X] T009 `git fetch origin && git rebase origin/main`; si `main` trae migraciones más nuevas que las de esta historia, renombrar las nuestras con la fecha y hora actuales.
+- [X] T010 Correr `scripts/verificar.sh` completo con el candado tomado y dejarlo en verde.
+- [X] T011 Actualizar `docs/17-mapa-de-modulos.md` (M-17: tabla `auditoria`, `private.hash_auditoria`, `private.auditar`, el trigger, rutas de migraciones y de pruebas, y "Depende de: M-02" por `private.rol_actual()`).
+- [X] T012 Escribir el cuerpo del PR con `.github/pull_request_template.md` y "Closes #134" en `C:\Users\Javier\Desktop\pr-107-bitacora-inmutable.md` (fuera del repositorio).
 
 ---
 
