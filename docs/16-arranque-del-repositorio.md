@@ -123,7 +123,7 @@ curl -s -X POST https://api.typesafe.ai/v1/systemone \
 
 | Herramienta | Para qué |
 |---|---|
-| Flutter (canal estable) y Android Studio (SDK de Android, Java 17) | App |
+| Flutter (canal estable), SDK de Android y Java 17, con Android Studio o con VS Code y sus extensiones de Flutter y Dart | App |
 | Docker Desktop | Supabase local |
 | Supabase CLI | Base de datos, funciones, pruebas |
 | Deno 2 | Edge Functions y E2E de backend |
