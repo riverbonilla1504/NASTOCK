@@ -63,3 +63,6 @@ La historia agrega una entidad, definida en `docs/06` §5.1:
 - Depende de TT-03 · Base de Supabase: esquema private, extensiones, Vault y ping: usa el esquema `private` y el proyecto local.
 - Los datos de rol y estado que viajan en la sesión son solo para la interfaz: la autorización consulta el perfil en cada operación (`docs/03` §4.1).
 - En R1, CA-2 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
+- S4 de `docs/01` §5: hay decenas de usuarios, no miles. Las políticas se evalúan una vez por consulta (`docs/06` §7, regla 4) y no hace falta nada más para esa escala.
+- FR-020 se cumple aquí para `perfiles`, la única tabla de `public` que existe. Cada tabla nueva trae su política de lectura según la matriz de `docs/03` §4.3 en la historia que la crea.
+- `perfiles.invitacion_id` se crea sin llave foránea: la tabla `invitaciones` es de HU-002, que agrega la restricción (`docs/06` §5.1).
