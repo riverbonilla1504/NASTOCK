@@ -20,7 +20,7 @@
 | Capa | Herramienta | Qué cubre | Dónde vive | Tiempo objetivo |
 |---|---|---|---|---|
 | Documentación | `scripts/verificar_docs.py` | Enlaces, anclas e identificadores (`RN`, `RR`, `PM`, `CB`, `D`, `Q`, `RSG`, `E`, `M`, `EC`, `E2E`) de `docs/` | `scripts/` | < 5 s |
-| Arquitectura | `scripts/verificar.sh` (búsquedas) | `agente`, `contexto-ia` y `opinion-ia` no importan `_shared/broker/`; no hay llaves en el código; ningún archivo de la app usa la llave secreta | `scripts/` | < 5 s |
+| Arquitectura | `scripts/verificar.sh` (búsquedas) | `agente`, `contexto-ia` y `opinion-ia` no importan `_shared/broker/`; no hay llaves en el código; ningún archivo de la app usa la llave secreta; ningún archivo de `supabase/functions` fuera de `_shared/bd.ts` importa el cliente de Postgres (D-66) | `scripts/` | < 5 s |
 | Unitarias Dart | `flutter test` | Modelos, formato, motor ×2, lógica de presentación, providers con repositorios falsos | `test/` | < 1 min |
 | Base de datos | pgTAP (`supabase test db`) | RLS por tabla, RPC (rol, dueño, estado), invariantes del libro, máquinas de estado, motor de políticas, hooks de Auth | `supabase/tests/*.sql` | < 2 min |
 | Funciones | `deno test` | Adaptadores (con respuestas grabadas), indicadores, etiquetas, puntaje compuesto, validación de contexto, esquemas | `supabase/functions/**/*_test.ts` | < 1 min |
@@ -41,7 +41,7 @@ reales, del costo de las IAs ni del ingreso con Google. Por eso:
 | Reloj | `private.ahora()` es la única fuente de "ahora" para la lógica. En local y CI se puede adelantar con `pruebas.fijar_reloj(...)` para probar vencimientos, ventanas de mercado y cierres. En la nube no existe el esquema `pruebas` y `ahora()` es `now()`. |
 | Usuarios de prueba | Uno por rol (`admin@prueba.local`, `analista1@…`, `analista2@…`, `usuario1@…`, `usuario2@…`) con correo + contraseña, creados por `seed.sql`. Solo en local y CI (`auth.proveedores_permitidos` incluye `email` únicamente ahí). |
 | Ayudas de prueba | Esquema `pruebas` (fijar reloj, elegir escenario de un proveedor, leer push simulados) creado **solo por `seed.sql`**, que Supabase aplica en local y nunca en `db push` a la nube. |
-| Datos | `seed.sql`: parámetros por defecto, lista blanca (NASDAQ-100 + ETFs), un año de barras diarias de prueba, noticias y contextos pregrabados, configuración de decisión v1. |
+| Datos | `seed.sql`: parámetros por defecto, un año de barras diarias de prueba, noticias y contextos pregrabados, configuración de decisión v1. La lista blanca (NASDAQ-100 + ETFs) la siembra una **migración**, no `seed.sql`, porque también debe existir en la nube ([10 §12](10-integracion-bolsa.md#12-universo-del-nasdaq-100)). |
 | Variables | `supabase/functions/.env.e2e` (en el repositorio, sin secretos): `ENTORNO=ci` y todos los `PROVEEDOR_*=simulado`. |
 
 Regla: **nada de lo anterior puede llegar a la nube** (CB-91, CB-92). La

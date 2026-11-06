@@ -42,10 +42,11 @@ Son los del catálogo de `backlog/requisitos-funcionales/`, con su identificador
 
 ### Entidades clave (Key Entities) *(incluir si la funcionalidad maneja datos)*
 
-La historia agrega dos entidades, definidas en `docs/06` §5.2:
+La historia agrega tres entidades, definidas en `docs/06` §5.2:
 
 - **Lista blanca**: los símbolos que se pueden ver y operar en cada bolsillo. Atributos clave: bolsillo, símbolo, nombre, sector, si pertenece al NASDAQ-100 y si está activo.
 - **Barra diaria**: el resumen de un día de mercado de un símbolo: apertura, máximo, mínimo, cierre y volumen. Se guarda siempre.
+- **Barra de minuto**: lo mismo, por minuto. Aquí solo se crea la tabla; la llena la ingesta de precios (HU-028) y la limpia HU-029.
 
 ## Criterios de éxito (Success Criteria) *(obligatorio)*
 
@@ -60,8 +61,17 @@ La historia agrega dos entidades, definidas en `docs/06` §5.2:
 
 - Depende de TT-03 · Base de Supabase: esquema private, extensiones, Vault y ping: crea tablas y funciones sobre el proyecto base.
 - Depende de TT-05 · Base de proveedores simulados, reloj controlable y datos de prueba: el proveedor de mercado se elige con `_shared/proveedores.ts`.
+- Depende de HU-001 · Perfiles, rol actual y lecturas por rol: las políticas de lectura usan `private.rol_actual()` y `actualizado_por` apunta a `perfiles`.
 - QQQ se ingiere siempre, aunque no esté activo en ningún bolsillo: es la referencia del índice.
 - Alpaca no informa qué acciones componen el índice: la lista la mantiene el Administrador (HU-036).
+- **D-66** (`docs/13` §1): la Edge Function que hace la carga se conecta directo a Postgres y solo ejecuta funciones de `private`; no usa supabase-js ni la llave secreta para escribir.
+- **Universo** (`docs/06` §5.2, nota de la historia): son los símbolos activos de `lista_blanca` de cualquier bolsillo, más QQQ aunque no esté activo en ninguno. La semilla trae 104 símbolos: QLD y QQQ en Usuarios; TQQQ y 101 acciones del índice en Arriesgadas.
+- **Fuente de la lista**: la composición del índice a 2026-11-05 publicada por stockanalysis.com, contrastada con las posiciones de QQQ del mismo sitio (Alpaca no informa qué acciones lo forman, `docs/10` §12). Es una lista inicial: la mantiene el Administrador (HU-036) y el índice se reconstituye cada diciembre.
+- **Sector**: no está fijado en `docs/`; se usan los once sectores GICS en inglés, como el ejemplo de `docs/07` §4.2, y los ETF quedan sin sector. Los sectores de las acciones más nuevas están por confirmar.
+- **"Dos años"** (`docs/10` §12): barras diarias desde hace dos años hasta el día anterior, en hora de Nueva York y con `private.ahora()` como reloj. La barra del día en curso la guarda `cierre-diario` (HU-029).
+- **Barras sembradas**: `docs/15` §3 pide un año de barras de prueba en `seed.sql`. Es la ventana fija 2025-11-03 a 2026-10-30, generada con el mismo algoritmo del proveedor simulado; la carga inicial completa el resto sin duplicar.
+- **Quién ejecuta la carga**: esta historia entrega la función `calendario-mercado`; el trabajo diario que la dispara lo crea HU-027 (`docs/05` §7). Mientras tanto se llama con el secreto interno.
+- **Lectura** (CA-4): `docs/03` §4.2 define "persona activa" con `private.rol_actual()`, de HU-001. Por eso HU-001 es una dependencia de esta historia: las políticas de lectura y la llave foránea de `actualizado_por` a `perfiles` llegan en una migración posterior a HU-001. Confirmado por Javier el 2026-11-06.
 - **S6** (`docs/01` §5): El plan gratuito de Supabase alcanza para el MVP (límites y cómo se manejan en 05 §3.4). Si resulta falso: pasar a un plan pago requiere aprobación (D-45).
 - **Q-13** (`docs/13` §2, abierta): ¿El universo de Arriesgadas son los ~100 componentes del NASDAQ-100 completos o un subconjunto? Valor provisional: Los ~100 + TQQQ.
 - **Q-20** (`docs/13` §2, abierta): ¿El bolsillo de Usuarios también debe poder comprar acciones individuales del NASDAQ-100, o solo QLD y QQQ? Valor provisional: Solo QLD y QQQ.

@@ -57,6 +57,7 @@ Sin escenario propio en el catálogo de 15 §4.
 |---|---|---|
 | Depende de | [TT-03 · Base de Supabase: esquema private, extensiones, Vault y ping](../E-01-cimientos-y-calidad-continua/TT-03-base-de-supabase-esquema-private-extensiones-vault-y-ping.md) | Crea tablas y funciones sobre el proyecto base. |
 | Depende de | [TT-05 · Base de proveedores simulados, reloj controlable y datos de prueba](../E-01-cimientos-y-calidad-continua/TT-05-base-de-proveedores-simulados-reloj-controlable-y-datos-de-prueba.md) | El proveedor de mercado se elige con `_shared/proveedores.ts`. |
+| Depende de | [HU-001 · Perfiles, rol actual y lecturas por rol](../E-02-identidad-y-acceso/HU-001-perfiles-rol-actual-y-lecturas-por-rol.md) | Las políticas de lectura de `lista_blanca` y de las barras usan `private.rol_actual()` (03 §4.2 y §4.3), y `lista_blanca.actualizado_por` apunta a `perfiles`. |
 | Habilita | [HU-027 · Calendario, reloj y estado del mercado](HU-027-calendario-reloj-y-estado-del-mercado.md) | HU-027: sincroniza los atributos de los símbolos de la lista blanca. |
 | Habilita | [HU-028 · Ingesta de precios cada 15 segundos](HU-028-ingesta-de-precios-cada-15-segundos.md) | HU-028: consulta los símbolos del universo. |
 | Habilita | [HU-029 · Barra diaria tras el cierre y retención de barras de minuto](HU-029-barra-diaria-tras-el-cierre-y-retencion-de-barras-de-minuto.md) | HU-029: guarda las barras de los símbolos del universo. |
@@ -69,7 +70,10 @@ QQQ se ingiere siempre, aunque no esté activo en ningún bolsillo: es la refere
 
 ## Documentación a actualizar
 
-Ninguna.
+- `docs/06` §8.2: las tres funciones `private` nuevas (`simbolos_del_universo`, `simbolos_sin_historia` y `guardar_barras_diarias`).
+- `docs/05` §12 y `docs/15` §3: la lista blanca la siembra una migración, no `seed.sql` (13 §4, versión 3.11).
+- `docs/17`: M-05, M-19 y M-20 con las rutas nuevas.
+- D-66 (13 §1 y §4, versión 3.11): cómo llegan las Edge Functions a `private`; esta historia es la primera que lo usa.
 
 ## Definición de terminado
 

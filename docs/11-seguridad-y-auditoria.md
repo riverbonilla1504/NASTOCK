@@ -116,7 +116,8 @@ rango de fechas, y exportación CSV.
 | Llave de TypeSafe (o token de Cloudflare Workers AI) | Secretos de Edge Functions | agente, opinion-ia | Trimestral |
 | Clave de cifrado de respaldos | Secreto de GitHub Actions | flujo de mantenimiento | Anual (guardar copia fuera de GitHub) |
 | Cuenta de servicio de Firebase | Secretos de Edge Functions | notificador | Anual |
-| Llave secreta de Supabase | Automática en Edge Functions | Todas las funciones | Ante sospecha |
+| Llave secreta de Supabase | Automática en Edge Functions | Solo `admin-usuarios` (API de administración de Auth) | Ante sospecha |
+| Contraseña de la base de datos (va dentro de `SUPABASE_DB_URL`) | La da la plataforma a las Edge Functions; en GitHub, `SUPABASE_DB_PASSWORD` y `SUPABASE_DB_URL` | Todas las Edge Functions (conexión directa, D-66), despliegue y respaldo | Ante sospecha o si sale del equipo alguien con acceso a la base; después se actualizan los dos secretos de GitHub ([16 §4.1](16-arranque-del-repositorio.md#41-github-actions)) |
 | Secreto interno (cron → funciones) | Vault + secretos de Edge Functions | `pg_net` y todas las funciones internas | Semestral |
 | Secreto del cliente OAuth de Google | Configuración de Auth en Supabase | Supabase Auth | Ante sospecha |
 

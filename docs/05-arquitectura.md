@@ -69,7 +69,8 @@ flowchart TB
   NO --> FCM
   FCM -. push .-> APP
 
-  EF -- "llave secreta" --> PG
+  EF -- "conexión directa<br/>(SUPABASE_DB_URL)" --> PG
+  EF -- "supabase-js:<br/>sesión y administración" --> AUTH
   PG -- "broadcast desde la BD" --> RT
 ```
 
@@ -146,8 +147,9 @@ flowchart TB
 | App | Edge Functions `opinion-ia`, `agente` (modo análisis), `admin-usuarios` | HTTPS | JWT del usuario | Acciones que requieren un servicio externo |
 | App | FCM | SDK | Configuración pública de Firebase | Obtener el token de push |
 | `pg_cron` | Funciones SQL | Directo | — | Vencimientos, verificaciones "¿toca correr?" |
-| `pg_cron` / RPC | Edge Functions | `pg_net` HTTPS POST | **Secreto interno** leído de Vault | Despertar procesos |
-| Edge Functions | Postgres | supabase-js | **Llave secreta** de Supabase | Escribir resultados, llamar RPC internas |
+| `pg_cron` / RPC | Edge Functions | `pg_net` HTTPS POST | **Secreto interno** leído de Vault, en la cabecera `x-secreto-interno` | Despertar procesos |
+| Edge Functions | Postgres | Conexión directa (`SUPABASE_DB_URL`), solo funciones `private` | Cadena de conexión que da la plataforma | Escribir resultados y llamar las funciones internas. `private` no se expone por la API de datos (D-66) |
+| Edge Functions | Supabase Auth | supabase-js, HTTPS | JWT de quien llama; la **llave secreta** solo en `admin-usuarios` | Validar la sesión de quien llama; suspender, reactivar y dar de baja cuentas (API de administración de Auth) |
 | `ingesta-mercado`, `cierre-diario` | Alpaca Market Data | HTTPS REST | Llaves de Alpaca | Precios y barras |
 | `contexto-ia` | Alpaca News | HTTPS REST | Llaves de Alpaca | Noticias |
 | `contexto-ia` | DeepSeek | HTTPS | Llave de DeepSeek | Contexto |
@@ -231,9 +233,19 @@ _shared/
   decision.ts      puntaje compuesto y reglas (07 §6)
   esquemas.ts      validación zod
   auth.ts          secreto interno, JWT + rol
+  bd.ts            única puerta a Postgres: solo funciones private, por nombre validado y con parámetros enlazados (D-66)
   salud.ts         registro de salud de integraciones
   proveedores.ts   elige real/simulado por variable de entorno y se niega a simular en ENTORNO=mvp
 ```
+
+**`_shared/bd.ts`** (D-66) es el único archivo que importa el cliente de
+Postgres (lo verifica CI, [15 §2](15-calidad-pruebas-y-ci-cd.md#2-tipos-de-prueba)).
+Se conecta con `SUPABASE_DB_URL` y solo ejecuta funciones del esquema
+`private`: valida el nombre de la función y pasa los argumentos como
+parámetros enlazados, nunca SQL armado con texto. Las funciones validan por su
+cuenta lo que reciben ([06 §7](06-modelo-de-datos.md#7-seguridad-a-nivel-de-fila),
+regla 3). `private` sigue sin exponerse por la API de datos, que por eso no
+sirve a supabase-js para llamarlas.
 
 ---
 
@@ -358,6 +370,7 @@ ruta /riesgo/* y rol ≠ analista (el admin entra en modo lectura) → /inicio
 | Dónde | Qué |
 |---|---|
 | Secretos de Edge Functions (`supabase secrets set`, sincronizados por el despliegue) | `ENTORNO`, `PROVEEDOR_*`, `ALPACA_KEY_ID`, `ALPACA_SECRET_KEY`, `ALPACA_TRADING_URL`, `ALPACA_DATA_URL`, `DEEPSEEK_API_KEY`, `DEEPSEEK_BASE_URL`, `TYPESAFE_API_KEY` (o `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_API_TOKEN`), `JEV_PROVEEDOR`, `FCM_CUENTA_SERVICIO`, `SECRETO_INTERNO` |
+| Los da la plataforma a las Edge Functions (nadie los configura) | `SUPABASE_URL`, `SUPABASE_DB_URL` (conexión directa a Postgres, D-66) y la llave secreta de Supabase, que solo usa `admin-usuarios`. En local los entrega `supabase functions serve` |
 | Vault (para SQL) | `url_funciones`, `secreto_interno` |
 | Secretos y variables de GitHub Actions | Ver [16 §4](16-arranque-del-repositorio.md#4-secretos-y-variables) |
 | App (`--dart-define`, no son secretos) | `SUPABASE_URL`, llave publicable, IDs de clientes OAuth, configuración de Firebase, `MODO_PRUEBAS` (solo en CI) |
@@ -431,7 +444,7 @@ clientes OAuth de Android y los enlaces profundos).
 └─ supabase/                                                        (se crea en E-01)
    ├─ config.toml
    ├─ migrations/            AAAAMMDDHHMMSS_descripcion.sql
-   ├─ seed.sql               Solo local/CI: lista blanca, parámetros, usuarios y ayudas de prueba
+   ├─ seed.sql               Solo local/CI: parámetros, usuarios, barras diarias y ayudas de prueba (la lista blanca la siembra una migración)
    ├─ tests/                 pgTAP (RLS, RPC, libro, estados) + e2e/ (escenarios de punta a punta)
    └─ functions/             _shared/ + una carpeta por función (§6)
 ```

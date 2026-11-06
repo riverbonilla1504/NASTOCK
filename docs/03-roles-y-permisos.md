@@ -308,8 +308,10 @@ en español. Catálogo en [06 §9](06-modelo-de-datos.md#9-códigos-de-error).
   ejecutor) no aceptan tokens de usuarios: exigen un secreto interno. Ver
   [05 §6](05-arquitectura.md#6-catálogo-de-edge-functions).
 - Solo las Edge Functions tienen la llave secreta de Supabase (la que se
-  salta RLS), y solo la usan para lo que un usuario no puede hacer (p. ej.
-  bloquear una cuenta en Auth).
+  salta RLS), y solo `admin-usuarios` la usa, para lo que un usuario no puede
+  hacer en Auth (p. ej. bloquear una cuenta). Las demás escriben en la base
+  por conexión directa y solo con funciones `private` (D-66,
+  [05 §4](05-arquitectura.md#4-cómo-se-conecta-cada-cosa)).
 
 ### 4.6 Tiempo real
 

@@ -389,6 +389,11 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# calendario-mercado solo acepta el secreto interno (docs/05 §6); el gateway no debe pedir
+# un JWT antes. La autenticación la hace la propia función (_shared/auth.ts).
+[functions.calendario-mercado]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

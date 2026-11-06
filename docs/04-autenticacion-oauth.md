@@ -366,7 +366,7 @@ para operar sobre Auth:
 
 ```
 1. Verifica que quien llama es administrador activo y que no viola RN-50 / RN-51.
-2. En una transacción (rpc interna):
+2. En una transacción (función `private`, por conexión directa a Postgres, D-66):
      perfiles.estado = 'suspendido'  (o 'baja')
      invalida sus sugerencias vivas; anula sus primeras aprobaciones (RN-56)
      borra sus dispositivos de push

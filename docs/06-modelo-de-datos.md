@@ -814,8 +814,10 @@ Reglas generales:
    flujo diario que evita la pausa del proyecto gratuito
    ([15 §6](15-calidad-pruebas-y-ci-cd.md#6-flujos-de-github-actions)).
    `anon` no puede leer ni escribir la tabla `latido`.
-3. Las Edge Functions usan la llave secreta (se salta RLS) y **solo llaman
-   funciones `private`**, que tienen su propia validación.
+3. Las Edge Functions se conectan directo a Postgres (`SUPABASE_DB_URL`) y
+   **solo llaman funciones `private`**, que tienen su propia validación
+   (D-66). `private` no está en la API de datos, así que supabase-js no las
+   alcanza.
 4. Cada política usa `(select auth.uid())` y `(select private.rol_actual())`
    entre paréntesis para que Postgres evalúe una vez por consulta y no por
    fila.
@@ -859,6 +861,9 @@ Reglas generales:
 
 ### 8.2 Internas (`private`, solo Edge Functions o triggers)
 
+Las Edge Functions las ejecutan por conexión directa a Postgres, con
+`_shared/bd.ts` (D-66, [05 §6](05-arquitectura.md#6-catálogo-de-edge-functions)).
+
 | Función | Qué hace |
 |---|---|
 | `rol_actual()`, `es_supervisor()` | Autorización (03 §4.2). |
@@ -866,6 +871,9 @@ Reglas generales:
 | `registrar_movimiento(tipo, asientos, referencia, descripcion, parametros)` | Única escritura del libro (L1, L2). |
 | `crear_cupo(usuario, monto)` | Subcuenta de cupo + asignación inicial si alcanza. |
 | `publicar_cotizaciones(datos)` | Guarda precios, emite broadcast, evalúa protecciones virtuales, invalida sugerencias fuera de banda, detecta evento en QQQ. |
+| `simbolos_del_universo()` | Los símbolos que se ingieren: los activos de `lista_blanca` de cualquier bolsillo, más QQQ aunque no esté activo en ninguno (10 §12). |
+| `simbolos_sin_historia(desde)` | De los del universo, los que no tienen ninguna barra diaria hasta 7 días después de `desde`: los que falta cargar. |
+| `guardar_barras_diarias(datos)` | Guarda un arreglo de barras diarias sin duplicar ni reemplazar las que ya existen; devuelve cuántas quedaron nuevas. Es lo que usa la carga inicial de dos años (`calendario-mercado`, 10 §12). |
 | `registrar_ciclo(...)`, `cerrar_ciclo(...)` | Bitácora del agente y bloqueo contra ciclos simultáneos. |
 | `contexto_vigente(simbolo)` / `encolar_contexto(simbolos)` / `guardar_contexto(...)` | Vigencia del contexto, cola `contexto_por_generar` y guardado validado (07 §4.2). |
 | `guardar_noticias(datos)` | Inserta noticias sin duplicar por id del proveedor. |
@@ -884,7 +892,7 @@ Reglas generales:
 | `registrar_salud(integracion, ok, error)` | `salud_integraciones`. |
 | `suspender_cuenta`, `reactivar_cuenta`, `dar_de_baja`, `reincorporar` | Parte de base de datos de la Edge Function `admin-usuarios`. |
 | `mercado_abierto()`, `mercado_en_ventana(margen)`, `ventana_compras_abierta()` | Horario (RN-41, RR-07). |
-| `despertar_funcion(nombre)` | `pg_net` hacia una Edge Function con el secreto interno. |
+| `despertar_funcion(nombre)` | `pg_net` hacia una Edge Function con el secreto interno, que envía en la cabecera `x-secreto-interno`. |
 | `auditar(actor, accion, entidad, id, detalle)` | Agrega a la bitácora encadenando el hash. |
 | `publicar_evento(topico, evento, carga)` | Envoltura de `realtime.send`. |
 
