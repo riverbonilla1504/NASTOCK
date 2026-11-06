@@ -64,4 +64,5 @@ La historia agrega una entidad, definida en `docs/06` §5.6:
 - Depende de TT-03 · Base de Supabase: esquema private, extensiones, Vault y ping: usa el esquema `private`.
 - Depende de HU-001 · Perfiles, rol actual y lecturas por rol: usa el tipo `rol_app` y `private.rol_actual()` en su política de lectura.
 - `docs/14` §4 ubica la bitácora en R2, pero el alta de una cuenta (R1) ya la usa: por eso la base va en R1, y su pantalla y el E2E-14 van en R2 (HU-108).
+- Supuesto S4 de `docs/01` §5: pocos usuarios concurrentes (decenas, no miles). Por eso basta con serializar las escrituras de la bitácora con un bloqueo.
 - No se duplica lo que ya es un registro inmutable propio: sugerencias, órdenes, ciclos y asientos (`docs/11` §4.1).
