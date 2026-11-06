@@ -871,6 +871,9 @@ Las Edge Functions las ejecutan por conexión directa a Postgres, con
 | `registrar_movimiento(tipo, asientos, referencia, descripcion, parametros)` | Única escritura del libro (L1, L2). |
 | `crear_cupo(usuario, monto)` | Subcuenta de cupo + asignación inicial si alcanza. |
 | `publicar_cotizaciones(datos)` | Guarda precios, emite broadcast, evalúa protecciones virtuales, invalida sugerencias fuera de banda, detecta evento en QQQ. |
+| `simbolos_del_universo()` | Los símbolos que se ingieren: los activos de `lista_blanca` de cualquier bolsillo, más QQQ aunque no esté activo en ninguno (10 §12). |
+| `simbolos_sin_historia(desde)` | De los del universo, los que no tienen ninguna barra diaria hasta 7 días después de `desde`: los que falta cargar. |
+| `guardar_barras_diarias(datos)` | Guarda un arreglo de barras diarias sin duplicar ni reemplazar las que ya existen; devuelve cuántas quedaron nuevas. Es lo que usa la carga inicial de dos años (`calendario-mercado`, 10 §12). |
 | `registrar_ciclo(...)`, `cerrar_ciclo(...)` | Bitácora del agente y bloqueo contra ciclos simultáneos. |
 | `contexto_vigente(simbolo)` / `encolar_contexto(simbolos)` / `guardar_contexto(...)` | Vigencia del contexto, cola `contexto_por_generar` y guardado validado (07 §4.2). |
 | `guardar_noticias(datos)` | Inserta noticias sin duplicar por id del proveedor. |
