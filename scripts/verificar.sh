@@ -41,6 +41,11 @@ fi
 if git ls-files | grep -qE '(^|/)\.env$'; then
   echo "ERROR: hay un archivo .env versionado"; exit 1
 fi
+# El esquema pruebas (reloj, escenarios, push simulados) lo crea solo seed.sql: una
+# migración llegaría a la nube con `supabase db push` (docs/15 §3, CB-91).
+if [[ -d supabase/migrations ]] && grep -rniE 'create[[:space:]]+(or[[:space:]]+replace[[:space:]]+)?(schema|table|function|view|type|sequence)[[:space:]]+(if[[:space:]]+not[[:space:]]+exists[[:space:]]+)?"?pruebas([^[:alnum:]_]|$)' supabase/migrations; then
+  echo "ERROR: una migración crea objetos en el esquema pruebas (solo seed.sql los crea)"; exit 1
+fi
 ok "arquitectura"
 
 # 3. App Flutter --------------------------------------------------------------

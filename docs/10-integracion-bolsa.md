@@ -256,6 +256,12 @@ implementación simulada con la **misma interfaz**:
 - Se eligen por variable de entorno por proveedor (`PROVEEDOR_BROKER=simulado|alpaca`,
   `PROVEEDOR_MERCADO`, `PROVEEDOR_NOTICIAS`, `PROVEEDOR_CONTEXTO`,
   `PROVEEDOR_JEV`, `PROVEEDOR_PUSH`).
+- **`ENTORNO`** admite `local`, `ci`, `demo` y `mvp` (los entornos de
+  [05 §10](05-arquitectura.md#10-entornos)). Si no está definido cuenta como
+  `local`. Un valor desconocido es un error, para que una errata no deje sin
+  efecto la regla de `mvp`.
+- Un `PROVEEDOR_*` sin definir cuenta como `simulado`. Por eso, con
+  `ENTORNO=mvp`, una variable olvidada hace que la función no arranque.
 - **Local y CI**: todo simulado por defecto.
 - **Proyecto de demostración** (opcional, segundo proyecto gratuito de
   Supabase): todo simulado, para mostrar el sistema fuera del horario de

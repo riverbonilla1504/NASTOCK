@@ -72,6 +72,12 @@ jobs:
             echo "::error::Hay un archivo .env en el repositorio"
             exit 1
           fi
+      - name: Ninguna migración crea el esquema pruebas
+        run: |
+          if [ -d supabase/migrations ] && grep -rniE 'create[[:space:]]+(or[[:space:]]+replace[[:space:]]+)?(schema|table|function|view|type|sequence)[[:space:]]+(if[[:space:]]+not[[:space:]]+exists[[:space:]]+)?"?pruebas([^[:alnum:]_]|$)' supabase/migrations; then
+            echo "::error::Una migración crea objetos en el esquema pruebas (solo seed.sql los crea)"
+            exit 1
+          fi
 
   app:
     name: App Flutter

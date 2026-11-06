@@ -197,10 +197,10 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-19 · Proveedores simulados y reloj
 - **Qué hace**: implementaciones simuladas de mercado, broker, noticias, DeepSeek, JEV y FCM; reloj controlable; esquema `pruebas`.
 - **Docs**: 10 §9 · 15 §3
-- **BD**: `private.ahora()`; esquema `pruebas` (solo `seed.sql`)
-- **Funciones**: `_shared/*/simulado.ts`, `_shared/proveedores.ts`
+- **BD**: `private.ahora()` (migración `supabase/migrations/*_reloj_ahora.sql`; busca `pruebas.reloj` al llamarla y sin el esquema devuelve `now()`); esquema `pruebas`, que crea solo `supabase/seed.sql` (ninguna migración): `pruebas.reloj` con `pruebas.fijar_reloj(hora)`, `pruebas.escenarios` con `pruebas.elegir_escenario(proveedor, escenario)` y `pruebas.push_simulados`
+- **Funciones**: `_shared/proveedores.ts` (`elegirProveedor`, `leerConfiguracion`; rechaza simulados con `ENTORNO=mvp`), `_shared/*/simulado.ts` (cada uno lo crea la historia de su integración), `supabase/functions/.env.e2e` (`ENTORNO=ci` y `PROVEEDOR_*=simulado`, sin secretos)
 - **App**: modo pruebas (ingreso con correo en CI)
-- **Pruebas**: todo el E2E depende de este módulo
+- **Pruebas**: `supabase/tests/database/01_reloj_y_pruebas_test.sql`, `supabase/functions/_shared/proveedores_test.ts`, búsqueda en `scripts/verificar.sh` (ninguna migración crea `pruebas`); todo el E2E depende de este módulo
 - **Depende de**: — · **Lo usan**: M-05, M-06, M-07, M-10, M-12, M-14
 
 ### M-20 · Plataforma, CI/CD y calidad
