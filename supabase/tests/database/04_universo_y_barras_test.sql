@@ -1,11 +1,31 @@
 -- HU-026 · Universo del NASDAQ-100 y carga histórica de barras.
 -- Cubre CA-1 a CA-4 de backlog/E-04-datos-de-mercado/HU-026-*.md en la capa de base de datos:
--- tipo bolsillo, lista_blanca, barras_diarias y barras_minuto (RLS y permisos), la semilla del
--- universo, las barras sembradas por seed.sql y las funciones de private.
+-- tipo bolsillo, lista_blanca, barras_diarias y barras_minuto (RLS, permisos y lectura por cuenta
+-- activa con private.rol_actual() de HU-001), la semilla del universo, las barras sembradas por
+-- seed.sql y las funciones de private.
 -- Todo corre dentro de una transacción que se deshace.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(81);
+select plan(95);
+
+-- Cuentas de prueba (HU-001: perfiles y private.rol_actual()) ----------------------------------
+-- 0001 usuario · 0002 analista · 0003 administrador · 0004 suspendido · 0005 de baja.
+-- 0009 tiene sesión pero ninguna fila en perfiles.
+-- Los triggers se inhabilitan solo al crear las filas de auth.users, como en las pruebas de HU-001.
+set local session_replication_role = replica;
+insert into auth.users (id, email) values
+  ('00000000-0000-4000-8000-000000000001', 'usuario@prueba.test'),
+  ('00000000-0000-4000-8000-000000000002', 'analista@prueba.test'),
+  ('00000000-0000-4000-8000-000000000003', 'administrador@prueba.test'),
+  ('00000000-0000-4000-8000-000000000004', 'suspendido@prueba.test'),
+  ('00000000-0000-4000-8000-000000000005', 'baja@prueba.test');
+set local session_replication_role = origin;
+insert into public.perfiles (id, email, nombre, rol, estado, suspendido_en, baja_en) values
+  ('00000000-0000-4000-8000-000000000001', 'usuario@prueba.test', 'Usuario de prueba', 'usuario', 'activo', null, null),
+  ('00000000-0000-4000-8000-000000000002', 'analista@prueba.test', 'Analista de prueba', 'analista', 'activo', null, null),
+  ('00000000-0000-4000-8000-000000000003', 'administrador@prueba.test', 'Administrador de prueba', 'administrador', 'activo', null, null),
+  ('00000000-0000-4000-8000-000000000004', 'suspendido@prueba.test', 'Suspendido de prueba', 'usuario', 'suspendido', now(), null),
+  ('00000000-0000-4000-8000-000000000005', 'baja@prueba.test', 'De baja de prueba', 'usuario', 'baja', null, now());
 
 -- Tipo y tablas --------------------------------------------------------------------------------
 select has_type('public', 'bolsillo', 'existe el tipo bolsillo');
@@ -27,7 +47,13 @@ select is(
     where oid in ('public.lista_blanca'::regclass, 'public.barras_diarias'::regclass, 'public.barras_minuto'::regclass)
       and relrowsecurity),
   3, 'las tres tablas tienen RLS activo');
--- La política de lectura (private.rol_actual() is not null) llega con la migración posterior a HU-001
+select policies_are('public', 'lista_blanca', array['lista_blanca_lectura'], 'lista_blanca solo tiene su política de lectura');
+select policies_are('public', 'barras_diarias', array['barras_diarias_lectura'], 'barras_diarias solo tiene su política de lectura');
+select policies_are('public', 'barras_minuto', array['barras_minuto_lectura'], 'barras_minuto solo tiene su política de lectura');
+select fk_ok('public', 'lista_blanca', 'actualizado_por', 'public', 'perfiles', 'id',
+             'actualizado_por referencia a perfiles');
+-- Solo se exige que no exista ninguna política de escritura (la de lectura está arriba).
+-- (antes) -- La política de lectura (private.rol_actual() is not null) llega con la migración posterior a HU-001
 -- y sus pruebas con ella. Aquí solo se exige que no exista ninguna política de escritura.
 select is(
   (select count(*)::int from pg_policies
@@ -52,12 +78,29 @@ select throws_ok($$select * from public.lista_blanca$$, '42501', null, 'anon no 
 select throws_ok($$select * from public.barras_diarias$$, '42501', null, 'anon no puede leer barras_diarias');
 reset role;
 
--- Una persona autenticada no puede escribir directo (la lectura se prueba con la política de HU-001)
+-- CA-4: toda persona activa lee; una cuenta suspendida, de baja o sin perfil no ve nada
 set local role authenticated;
-select is((select count(*)::int from public.lista_blanca), 0,
-          'sin política de lectura, authenticated no ve filas de lista_blanca (la lectura llega tras HU-001)');
-select is((select count(*)::int from public.barras_diarias), 0,
-          'sin política de lectura, authenticated no ve filas de barras_diarias');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000001", "role": "authenticated"}';
+select is((select count(*)::int from public.lista_blanca), 104, 'un usuario activo lee lista_blanca');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000002", "role": "authenticated"}';
+select is((select count(*)::int from public.lista_blanca), 104, 'un analista activo lee lista_blanca');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000003", "role": "authenticated"}';
+select is((select count(*)::int from public.lista_blanca), 104, 'un administrador activo lee lista_blanca');
+select is((select count(*)::int from public.barras_diarias), 27040, 'una persona activa lee barras_diarias');
+select is((select count(*)::int from public.barras_minuto), 0, 'una persona activa lee barras_minuto (vacía)');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000004", "role": "authenticated", "app_rol": "administrador", "app_estado": "activo"}';
+select is((select count(*)::int from public.lista_blanca), 0, 'una cuenta suspendida no ve lista_blanca, aunque el token diga lo contrario');
+select is((select count(*)::int from public.barras_diarias), 0, 'una cuenta suspendida no ve barras_diarias');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000005", "role": "authenticated", "app_rol": "administrador", "app_estado": "activo"}';
+select is((select count(*)::int from public.lista_blanca), 0, 'una cuenta de baja no ve lista_blanca, aunque el token diga lo contrario');
+select is((select count(*)::int from public.barras_diarias), 0, 'una cuenta de baja no ve barras_diarias');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000009", "role": "authenticated", "app_rol": "administrador", "app_estado": "activo"}';
+select is((select count(*)::int from public.lista_blanca), 0, 'una cuenta sin perfil no ve lista_blanca, aunque el token diga lo contrario');
+select is((select count(*)::int from public.barras_diarias), 0, 'una cuenta sin perfil no ve barras_diarias');
+set local request.jwt.claims to '';
+select is((select count(*)::int from public.lista_blanca), 0, 'sin sesión no se ve lista_blanca');
+-- Una persona autenticada y activa tampoco puede escribir directo
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000003", "role": "authenticated"}';
 select throws_ok($$insert into public.lista_blanca (bolsillo, simbolo, nombre) values ('usuarios', 'ZZZ', 'Prueba')$$,
                  '42501', null, 'authenticated no puede insertar en lista_blanca');
 select throws_ok($$update public.lista_blanca set activo = false$$,
