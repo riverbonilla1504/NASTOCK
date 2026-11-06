@@ -1,13 +1,13 @@
 -- HU-027 · Calendario, reloj y estado del mercado.
--- Cubre CA-2 a CA-7 de backlog/E-04-datos-de-mercado/HU-027-*.md en la capa de base de datos:
+-- Cubre CA-1 a CA-7 de backlog/E-04-datos-de-mercado/HU-027-*.md en la capa de base de datos:
 -- la tabla calendario_mercado (RLS, permisos y lectura por cuenta activa con private.rol_actual()),
 -- las funciones de horario con el reloj fijado (día regular, feriado, media jornada, cambios de
--- horario de verano y ventana), la sincronización del calendario y de los atributos de los activos,
+-- horario de verano, ventana y ventana de compras), el estado del mercado, la sincronización del calendario y de los atributos de los activos,
 -- y el trabajo diario `calendario` de pg_cron.
 -- Todo corre dentro de una transacción que se deshace.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(100);
+select plan(154);
 
 -- Cuentas de prueba (HU-001: perfiles y private.rol_actual()) ----------------------------------
 -- 0001 usuario · 0002 analista · 0003 administrador · 0004 suspendido · 0005 de baja.
@@ -304,6 +304,123 @@ select is(
                     'private.sincronizar_activos(jsonb)'::regprocedure)
       and p.prosecdef and p.proconfig = array['search_path=""']),
   4, 'las cuatro son security definer con search_path vacío');
+
+-- Ventana de compras y estado del mercado (CA-1, CA-3) ------------------------------------------------------------
+-- Calendario del mes: un día regular (2026-11-05) y una media jornada (2026-11-27); el feriado
+-- (2026-11-26) no tiene fila.
+select is(
+  (select guardados from private.sincronizar_calendario('2026-11-01', '2026-11-30', $json$[
+     {"fecha":"2026-11-05","apertura":"2026-11-05T14:30:00Z","cierre":"2026-11-05T21:00:00Z","sesion":"regular"},
+     {"fecha":"2026-11-27","apertura":"2026-11-27T14:30:00Z","cierre":"2026-11-27T18:00:00Z","sesion":"media_jornada"}
+   ]$json$::jsonb)),
+  2, 'se vuelve a sincronizar noviembre: un día regular y una media jornada');
+
+create function pg_temp.compras_a(p_hora timestamptz) returns boolean language plpgsql as $$
+begin
+  perform pruebas.fijar_reloj(p_hora);
+  return private.ventana_compras_abierta();
+end;
+$$;
+create function pg_temp.estado_a(p_hora timestamptz) returns text language plpgsql as $$
+begin
+  perform pruebas.fijar_reloj(p_hora);
+  return (select e.estado from public.estado_mercado() e);
+end;
+$$;
+
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000001", "role": "authenticated"}';
+
+-- Márgenes: los defectos de docs/02 §10 (mercado.minutos_tras_apertura = 5, minutos_antes_cierre = 15)
+select is((select tras_apertura from private.margenes_de_compra()), 5, 'las compras empiezan 5 minutos tras la apertura (RR-07)');
+select is((select antes_cierre from private.margenes_de_compra()), 15, 'y terminan 15 minutos antes del cierre (RR-07)');
+
+-- private.ventana_compras_abierta(): apertura + 5 min a cierre − 15 min
+select is(pg_temp.compras_a('2026-11-05T14:29:59Z'), false, 'antes de abrir no se compra');
+select is(pg_temp.compras_a('2026-11-05T14:34:59Z'), false, 'en los primeros 5 minutos no se compra');
+select is(pg_temp.compras_a('2026-11-05T14:35:00Z'), true, 'a los 5 minutos de abrir se compra');
+select is(pg_temp.compras_a('2026-11-05T20:44:59Z'), true, 'hasta 15 minutos antes del cierre se compra');
+select is(pg_temp.compras_a('2026-11-05T20:45:00Z'), false, 'en los últimos 15 minutos no se compra');
+select is(pg_temp.compras_a('2026-11-26T17:00:00Z'), false, 'CA-2: en un feriado no se compra');
+-- CA-3 (CB-50): en la media jornada la ventana se calcula con el cierre de las 13:00 de Nueva York
+select is(pg_temp.compras_a('2026-11-27T14:35:00Z'), true, 'CA-3: en la media jornada se compra desde los 5 minutos');
+select is(pg_temp.compras_a('2026-11-27T17:44:59Z'), true, 'CA-3: hasta 15 minutos antes de las 13:00 se compra');
+select is(pg_temp.compras_a('2026-11-27T17:45:00Z'), false, 'CA-3: desde las 12:45 de Nueva York ya no se compra');
+select is(pg_temp.compras_a('2026-11-27T20:00:00Z'), false, 'CA-3: a la hora del cierre normal tampoco');
+
+-- public.estado_mercado(): los cinco estados de un día regular (docs/08 §6)
+select is(pg_temp.estado_a('2026-11-05T14:19:59Z'), 'cerrado', 'CA-1: más de 10 minutos antes de abrir está cerrado');
+select is(pg_temp.estado_a('2026-11-05T14:20:00Z'), 'pre_apertura', 'CA-1: 10 minutos antes de abrir empieza la preapertura');
+select is(pg_temp.estado_a('2026-11-05T14:29:59Z'), 'pre_apertura', 'CA-1: sigue en preapertura hasta abrir');
+select is(pg_temp.estado_a('2026-11-05T14:30:00Z'), 'abierto_sin_compras', 'CA-1: al abrir está abierto sin compras');
+select is(pg_temp.estado_a('2026-11-05T14:34:59Z'), 'abierto_sin_compras', 'CA-1: abierto sin compras los primeros 5 minutos');
+select is(pg_temp.estado_a('2026-11-05T14:35:00Z'), 'abierto', 'CA-1: a los 5 minutos está abierto');
+select is(pg_temp.estado_a('2026-11-05T20:44:59Z'), 'abierto', 'CA-1: abierto hasta 15 minutos antes del cierre');
+select is(pg_temp.estado_a('2026-11-05T20:45:00Z'), 'cierre_proximo', 'CA-1: los últimos 15 minutos son de cierre próximo');
+select is(pg_temp.estado_a('2026-11-05T20:59:59Z'), 'cierre_proximo', 'CA-1: cierre próximo hasta cerrar');
+select is(pg_temp.estado_a('2026-11-05T21:00:00Z'), 'cerrado', 'CA-1: al cierre está cerrado');
+-- Feriado y media jornada
+select is(pg_temp.estado_a('2026-11-26T15:00:00Z'), 'cerrado', 'CA-2: el feriado está cerrado a mediodía');
+select is(pg_temp.estado_a('2026-11-26T14:30:00Z'), 'cerrado', 'CA-2: y no hay preapertura ni apertura el feriado');
+select is(pg_temp.estado_a('2026-11-27T17:44:59Z'), 'abierto', 'CA-3: la media jornada sigue abierta hasta las 12:45 de Nueva York');
+select is(pg_temp.estado_a('2026-11-27T17:45:00Z'), 'cierre_proximo', 'CA-3: desde las 12:45 es cierre próximo');
+select is(pg_temp.estado_a('2026-11-27T18:00:00Z'), 'cerrado', 'CA-3: a las 13:00 de Nueva York cierra');
+
+-- Las demás columnas, a media sesión regular
+select pruebas.fijar_reloj('2026-11-05T16:00:00Z');
+select is((select abierto from public.estado_mercado()), true, 'CA-1: abierto');
+select is((select ahora from public.estado_mercado()), '2026-11-05T16:00:00Z'::timestamptz, 'CA-1: devuelve la hora del servidor (private.ahora())');
+select is((select proximo_cierre from public.estado_mercado()), '2026-11-05T21:00:00Z'::timestamptz, 'CA-1: próximo cierre');
+select is((select proxima_apertura from public.estado_mercado()), '2026-11-27T14:30:00Z'::timestamptz,
+          'CA-1: próxima apertura (el feriado se salta)');
+select is((select compras_desde from public.estado_mercado()), '2026-11-05T14:35:00Z'::timestamptz, 'CA-1: la ventana de compras empieza');
+select is((select compras_hasta from public.estado_mercado()), '2026-11-05T20:45:00Z'::timestamptz, 'CA-1: y termina');
+select is((select ventana_compras_abierta from public.estado_mercado()), true, 'CA-1: la ventana de compras está abierta');
+select is((select sesion from public.estado_mercado()), 'regular', 'CA-1: sesión regular');
+select is((select datos_actualizados_en from public.estado_mercado()), null::timestamptz,
+          'la frescura de los datos queda nula hasta que HU-028 cree cotizaciones');
+-- En la media jornada, la sesión y la ventana salen del cierre de las 13:00
+select pruebas.fijar_reloj('2026-11-27T16:00:00Z');
+select is((select sesion from public.estado_mercado()), 'media_jornada', 'CA-3: la sesión es media jornada');
+select is((select compras_hasta from public.estado_mercado()), '2026-11-27T17:45:00Z'::timestamptz,
+          'CA-3: la ventana de compras termina 15 minutos antes de las 13:00 de Nueva York');
+select is((select proximo_cierre from public.estado_mercado()), '2026-11-27T18:00:00Z'::timestamptz, 'CA-3: el cierre es a las 13:00 de Nueva York');
+-- Sin sesiones por delante: cerrado y sin próximas horas
+select pruebas.fijar_reloj('2026-11-28T15:00:00Z');
+select is((select estado from public.estado_mercado()), 'cerrado', 'sin más sesiones en el calendario está cerrado');
+select is((select proxima_apertura from public.estado_mercado()), null::timestamptz, 'y no hay próxima apertura');
+select is((select ventana_compras_abierta from public.estado_mercado()), false, 'ni ventana de compras');
+
+-- Quién la llama: toda persona activa; el resto, NO_AUTORIZADO; anon, nada
+select pruebas.fijar_reloj('2026-11-05T16:00:00Z');
+set local role authenticated;
+select is((select estado from public.estado_mercado()), 'abierto', 'un usuario activo consulta el estado del mercado');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000002", "role": "authenticated"}';
+select is((select estado from public.estado_mercado()), 'abierto', 'un analista activo lo consulta');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000003", "role": "authenticated"}';
+select is((select estado from public.estado_mercado()), 'abierto', 'un administrador activo lo consulta');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000004", "role": "authenticated", "app_rol": "administrador", "app_estado": "activo"}';
+select throws_ok($$select * from public.estado_mercado()$$, 'P0001', 'NO_AUTORIZADO', 'una cuenta suspendida recibe NO_AUTORIZADO');
+set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000009", "role": "authenticated", "app_rol": "administrador", "app_estado": "activo"}';
+select throws_ok($$select * from public.estado_mercado()$$, 'P0001', 'NO_AUTORIZADO', 'una cuenta sin perfil recibe NO_AUTORIZADO');
+set local request.jwt.claims to '';
+select throws_ok($$select * from public.estado_mercado()$$, 'P0001', 'NO_AUTORIZADO', 'sin sesión recibe NO_AUTORIZADO');
+reset role;
+set local role anon;
+select throws_ok($$select * from public.estado_mercado()$$, '42501', null, 'anon no puede llamar estado_mercado()');
+reset role;
+select ok(has_function_privilege('authenticated', 'public.estado_mercado()', 'execute'), 'authenticated puede ejecutar estado_mercado()');
+select ok(not has_function_privilege('anon', 'public.estado_mercado()', 'execute'), 'anon no puede ejecutar estado_mercado()');
+select is(
+  (select count(*)::int from pg_proc p
+    where p.oid in ('private.margenes_de_compra()'::regprocedure, 'private.ventana_compras_abierta()'::regprocedure)
+      and (has_function_privilege('anon', p.oid, 'execute') or has_function_privilege('authenticated', p.oid, 'execute'))),
+  0, 'la API no ejecuta las funciones internas de la ventana de compras');
+select is(
+  (select count(*)::int from pg_proc p
+    where p.oid in ('public.estado_mercado()'::regprocedure, 'private.margenes_de_compra()'::regprocedure,
+                    'private.ventana_compras_abierta()'::regprocedure)
+      and p.prosecdef and p.proconfig = array['search_path=""']),
+  3, 'las tres son security definer con search_path vacío');
 
 -- Trabajo diario `calendario` de pg_cron (docs/05 §7) --------------------------------------------------------------
 select is((select schedule from cron.job where jobname = 'calendario'), '0 10 * * *',
