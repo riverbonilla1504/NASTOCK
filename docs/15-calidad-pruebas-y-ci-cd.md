@@ -41,7 +41,7 @@ reales, del costo de las IAs ni del ingreso con Google. Por eso:
 | Reloj | `private.ahora()` es la única fuente de "ahora" para la lógica. En local y CI se puede adelantar con `pruebas.fijar_reloj(...)` para probar vencimientos, ventanas de mercado y cierres. En la nube no existe el esquema `pruebas` y `ahora()` es `now()`. |
 | Usuarios de prueba | Uno por rol (`admin@prueba.local`, `analista1@…`, `analista2@…`, `usuario1@…`, `usuario2@…`) con correo + contraseña, creados por `seed.sql`. Solo en local y CI (`auth.proveedores_permitidos` incluye `email` únicamente ahí). |
 | Ayudas de prueba | Esquema `pruebas` (fijar reloj, elegir escenario de un proveedor, leer push simulados) creado **solo por `seed.sql`**, que Supabase aplica en local y nunca en `db push` a la nube. |
-| Datos | `seed.sql`: parámetros por defecto, lista blanca (NASDAQ-100 + ETFs), un año de barras diarias de prueba, noticias y contextos pregrabados, configuración de decisión v1. |
+| Datos | `seed.sql`: parámetros por defecto, un año de barras diarias de prueba, noticias y contextos pregrabados, configuración de decisión v1. La lista blanca (NASDAQ-100 + ETFs) la siembra una **migración**, no `seed.sql`, porque también debe existir en la nube ([10 §12](10-integracion-bolsa.md#12-universo-del-nasdaq-100)). |
 | Variables | `supabase/functions/.env.e2e` (en el repositorio, sin secretos): `ENTORNO=ci` y todos los `PROVEEDOR_*=simulado`. |
 
 Regla: **nada de lo anterior puede llegar a la nube** (CB-91, CB-92). La

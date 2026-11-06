@@ -444,7 +444,7 @@ clientes OAuth de Android y los enlaces profundos).
 └─ supabase/                                                        (se crea en E-01)
    ├─ config.toml
    ├─ migrations/            AAAAMMDDHHMMSS_descripcion.sql
-   ├─ seed.sql               Solo local/CI: lista blanca, parámetros, usuarios y ayudas de prueba
+   ├─ seed.sql               Solo local/CI: parámetros, usuarios, barras diarias y ayudas de prueba (la lista blanca la siembra una migración)
    ├─ tests/                 pgTAP (RLS, RPC, libro, estados) + e2e/ (escenarios de punta a punta)
    └─ functions/             _shared/ + una carpeta por función (§6)
 ```
