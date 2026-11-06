@@ -52,6 +52,8 @@ Se construye por capas, cada una con sus pruebas: **migración** (tablas, RLS, s
 
 ### Decisiones por confirmar (con la sesión coordinadora)
 
+> Se preguntó a la sesión coordinadora y, mientras llega la respuesta, la implementación sigue las propuestas de abajo. Cada una es reversible: la política de lectura es una línea de la migración `*_lista_blanca_y_barras.sql` y la ubicación de la semilla son dos líneas de `docs/` (commit aparte).
+
 1. **Lectura de "persona activa" (CA-4).** `docs/03` §4.2–§4.3 la definen con `private.rol_actual()`, de HU-001 (hoy solo con plan, sin migraciones), y HU-026 no la lista en "Depende de". Lo mismo pasa con la llave foránea `lista_blanca.actualizado_por → perfiles`. Propuesta provisional: política `to authenticated using (true)` y `actualizado_por` sin llave foránea, que HU-001 y HU-036 endurecen después. Alternativa: esperar a HU-001 en `main`.
 2. **Dónde se siembra la lista blanca.** La historia pide una migración (así llega a la nube, que no aplica `seed.sql`); `docs/05` §12 y `docs/15` §3 la ubican en `seed.sql`. Propuesta: migración, y ajustar esas dos líneas de `docs/`.
 
