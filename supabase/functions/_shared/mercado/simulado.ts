@@ -19,7 +19,7 @@ import {
   type ProveedorDeMercado,
   type ResultadoDeBarras,
 } from "./interfaz.ts";
-import { horaDeNuevaYork } from "./tiempo.ts";
+import { horaDeNuevaYork, instanteDeNuevaYork } from "./tiempo.ts";
 
 /** Primer día de la caminata. Todas las series parten de aquí. */
 export const ANCLA = "2020-01-01";
@@ -174,22 +174,6 @@ export function generarBarras(
   return serieExacta(simbolo, ultimo)
     .filter((b) => b.indice >= primero)
     .map((b) => aBarra(simbolo, b));
-}
-
-// Hora de Nueva York ---------------------------------------------------------------------
-
-/** Instante UTC de una fecha y unos minutos (desde la medianoche) de Nueva York. */
-function instanteDeNuevaYork(fecha: string, minutos: number): Date {
-  const [anio, mes, dia] = fecha.split("-").map(Number);
-  for (const desfase of [4, 5]) {
-    const candidato = new Date(
-      Date.UTC(anio, mes - 1, dia, 0, minutos + desfase * 60),
-    );
-    const local = horaDeNuevaYork(candidato);
-    if (local.fecha === fecha && local.minutos === minutos) return candidato;
-  }
-  // Una hora que no existe (cambio de horario): se usa el desfase de invierno.
-  return new Date(Date.UTC(anio, mes - 1, dia, 0, minutos + 5 * 60));
 }
 
 /** Día hábil anterior (estrictamente) a un índice. */

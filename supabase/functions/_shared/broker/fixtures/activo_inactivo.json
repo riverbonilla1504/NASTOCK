@@ -1,0 +1,13 @@
+{
+  "id": "11111111-2222-3333-4444-555555555555",
+  "class": "us_equity",
+  "exchange": "NASDAQ",
+  "symbol": "SNDK",
+  "name": "Deslistado de prueba",
+  "status": "inactive",
+  "tradable": false,
+  "marginable": false,
+  "shortable": false,
+  "easy_to_borrow": false,
+  "fractionable": false
+}

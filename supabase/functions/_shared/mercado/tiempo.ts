@@ -32,6 +32,40 @@ export function fechaDeNuevaYork(instante: Date): string {
   return horaDeNuevaYork(instante).fecha;
 }
 
+/**
+ * Instante UTC de una fecha y unos minutos (desde la medianoche) de Nueva York. El horario de
+ * verano se resuelve probando los dos desfases posibles (UTC−4 y UTC−5): el que vuelve a dar la
+ * misma hora local es el correcto (CB-51).
+ */
+export function instanteDeNuevaYork(fecha: string, minutos: number): Date {
+  const [anio, mes, dia] = fecha.split("-").map(Number);
+  for (const desfase of [4, 5]) {
+    const candidato = new Date(
+      Date.UTC(anio, mes - 1, dia, 0, minutos + desfase * 60),
+    );
+    const local = horaDeNuevaYork(candidato);
+    if (local.fecha === fecha && local.minutos === minutos) return candidato;
+  }
+  // Una hora que no existe (cambio de horario): se usa el desfase de invierno.
+  return new Date(Date.UTC(anio, mes - 1, dia, 0, minutos + 5 * 60));
+}
+
+/** Minutos desde la medianoche de un texto "HH:MM"; null si no tiene esa forma. */
+export function minutosDeHora(hora: string): number | null {
+  const partes = /^(\d{2}):(\d{2})$/.exec(hora);
+  if (!partes) return null;
+  const horas = Number(partes[1]);
+  const minutos = Number(partes[2]);
+  return horas < 24 && minutos < 60 ? horas * 60 + minutos : null;
+}
+
+/** Instante UTC de una hora local de Nueva York ("HH:MM") en una fecha; null si no es válida. */
+export function aInstanteUtc(fecha: string, hora: string): Date | null {
+  const minutos = minutosDeHora(hora);
+  if (minutos === null || !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return null;
+  return instanteDeNuevaYork(fecha, minutos);
+}
+
 function aFecha(fecha: string): Date {
   const [anio, mes, dia] = fecha.split("-").map(Number);
   return new Date(Date.UTC(anio, mes - 1, dia));
