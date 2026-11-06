@@ -38,6 +38,9 @@ fi
 if [[ -d lib ]] && grep -rqiE "service_role|sb_secret_" lib; then
   echo "ERROR: la app menciona la llave secreta de Supabase"; exit 1
 fi
+if [[ -d lib ]] && grep -rqE "ALPACA_(KEY_ID|SECRET_KEY)|DEEPSEEK_API_KEY|TYPESAFE_API_KEY|CLOUDFLARE_API_TOKEN|FCM_CUENTA_SERVICIO|SECRETO_INTERNO" lib; then
+  echo "ERROR: la app menciona llaves de proveedores o el secreto interno"; exit 1
+fi
 if git ls-files | grep -qE '(^|/)\.env$'; then
   echo "ERROR: hay un archivo .env versionado"; exit 1
 fi

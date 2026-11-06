@@ -37,7 +37,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 04 completo · 03 §6 · 12 §1
 - **BD**: `invitaciones`, `parametros` (`auth.*`); `private.antes_de_crear_usuario`, `private.al_crear_usuario`, `private.token_personalizado`; RPC `invitar_usuario`, `revocar_invitacion`
 - **Funciones**: `admin-usuarios`
-- **App**: `lib/features/auth/`, `lib/app/` (enrutador y guardas)
+- **App**: `lib/features/auth/`, `lib/app/enrutador.dart` (enrutador y guardas; hoy solo la ruta `/inicio`)
 - **Pruebas**: `supabase/tests/auth_*.sql` · E2E-01, E2E-02
 - **Depende de**: M-02 · **Lo usan**: todos
 
@@ -209,8 +209,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Planeación y specs**: `backlog/`, `specs/`, `.specify/`, `.claude/skills/`, `scripts/github/` (etiquetas, hitos, proyecto y publicación del backlog como issues)
 - **BD**: `supabase/config.toml`, `supabase/seed.sql`, esquema `private`, extensiones `pg_cron`, `pg_net` y `pgmq`, `public.ping()`, `latido` (06 §5.6), `private.despertar_funcion(nombre)` · migraciones `supabase/migrations/*_esquema_private_y_extensiones.sql`, `*_latido_y_ping.sql`, `*_despertar_funcion.sql`
 - **Funciones**: `supabase/functions/deno.json` (dependencias de todas las funciones), `_shared/auth.ts` (secreto interno, JWT y rol), `_shared/esquemas.ts` (validación con zod)
-- **App**: `integration_test/`, `test_driver/`
-- **Pruebas**: `scripts/verificar.sh`, `scripts/verificar_docs.py`, `supabase/tests/database/00_base_test.sql`, `supabase/functions/_shared/*_test.ts`
+- **App**: esqueleto Flutter `com.ritech.inversiones` (Android y web): `pubspec.yaml`, `analysis_options.yaml`, `android/`, `web/`, `lib/main.dart`; `lib/app/` (`arranque.dart`, `aplicacion.dart`, `enrutador.dart`, `tema.dart`, `pagina_inicio.dart`); `lib/core/configuracion/entorno.dart` (`--dart-define`), `lib/core/supabase/cliente_supabase.dart`, `lib/core/errores/` (`codigos_de_error.dart`, `traduccion_de_errores.dart`), `lib/core/formato/` (`formato_dinero.dart`, `formato_fechas.dart`); `lib/shared/widgets/`; `lib/features/` (vacía hasta la primera historia); `integration_test/`, `test_driver/` (TT-06)
+- **Pruebas**: `scripts/verificar.sh`, `scripts/verificar_docs.py`, `supabase/tests/database/00_base_test.sql`, `supabase/functions/_shared/*_test.ts`, `test/` (espejo de `lib/`: errores, formato, entorno, app, widgets compartidos)
 - **Depende de**: — · **Lo usan**: todos
 
 ---
