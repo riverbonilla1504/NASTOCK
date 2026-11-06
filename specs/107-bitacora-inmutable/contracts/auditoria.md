@@ -57,9 +57,8 @@ private.auditar(
 ## Trigger de inmutabilidad
 
 ```text
-private.rechazar_cambio_auditoria() returns trigger   -- security definer, search_path = ''
-auditoria_inmutable_fila  before update or delete on public.auditoria for each row
-auditoria_inmutable_total before truncate         on public.auditoria for each statement
+private.rechazar_cambio_auditoria() returns trigger   -- search_path = ''
+auditoria_inmutable  before update or delete or truncate on public.auditoria for each statement
 ```
 
-Lanza `auditoria: la bitácora es inmutable (<operación> no permitido)`. Rechaza incluso al dueño de la tabla.
+Lanza `auditoria: la bitácora es inmutable (<operación> no permitido)`. Por sentencia: rechaza también un `UPDATE` o `DELETE` que no alcanzaría ninguna fila. Rechaza incluso al dueño de la tabla y a un rol al que se le hubieran concedido privilegios.

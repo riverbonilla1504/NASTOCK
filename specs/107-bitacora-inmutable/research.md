@@ -43,9 +43,9 @@ No quedó ninguna duda que obligue a cambiar `docs/`. Estas son las decisiones d
 
 ## D-7 · El trigger también rechaza `TRUNCATE`
 
-- **Decisión**: un trigger por fila `before update or delete` y uno por sentencia `before truncate`, ambos con la misma función, que lanza `auditoria: la bitácora es inmutable (…)`.
-- **Razón**: `docs/11` §4.3 pide rechazar `UPDATE` y `DELETE`, "incluso de la llave secreta". Un `TRUNCATE` borra todo sin pasar por el trigger de fila; dejarlo abierto vaciaría una bitácora "inmutable". Cierra el mismo hueco con la misma función, sin ninguna regla nueva.
-- **Alternativas**: solo `UPDATE` y `DELETE` (descartada: deja el borrado total).
+- **Decisión**: un solo trigger `auditoria_inmutable`, `before update or delete or truncate`, **por sentencia**, que lanza `auditoria: la bitácora es inmutable (<operación> no permitido)`.
+- **Razón**: `docs/11` §4.3 pide rechazar "cualquier `UPDATE` o `DELETE`", "incluso de la llave secreta". Un trigger por sentencia rechaza también un `UPDATE` o `DELETE` que no alcanzaría ninguna fila (uno por fila lo dejaría pasar en silencio), y cubre `TRUNCATE`, que no dispara triggers por fila y vaciaría de golpe una bitácora "inmutable". Cierra ese hueco con la misma función, sin ninguna regla nueva.
+- **Alternativas**: trigger por fila para `UPDATE` y `DELETE` (descartada: deja pasar las sentencias de cero filas y no cubre `TRUNCATE`); solo `UPDATE` y `DELETE` (descartada: deja el borrado total).
 - **Error**: texto libre `auditoria: …`, como el resto de las funciones de `private` ya existentes; no es un código de `docs/06` §9 porque ningún rol de la API llega al trigger (antes falla por privilegios).
 
 ## D-8 · Cómo se prueba cada criterio

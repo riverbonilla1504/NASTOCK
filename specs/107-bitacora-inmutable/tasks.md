@@ -56,12 +56,12 @@ No hay: las dependencias (TT-03 y HU-001) ya están en `main`.
 
 ### Capa 3 · Trigger de inmutabilidad (CA-3, FR-219)
 
-- [ ] T006 [US1] Crear la migración `supabase/migrations/<ts>_auditoria_inmutable.sql` con `private.rechazar_cambio_auditoria()` (`security definer`, `set search_path = ''`, lanza `auditoria: la bitácora es inmutable (<operación> no permitido)`), el trigger por fila `auditoria_inmutable_fila` (`before update or delete`) y el trigger por sentencia `auditoria_inmutable_total` (`before truncate`), ambos sobre `public.auditoria`; `revoke all` de la función a `public`, `anon`, `authenticated` y `service_role`.
-- [ ] T007 [US1] Crear `supabase/tests/database/07_auditoria_inmutable_test.sql`: con el rol dueño, `UPDATE` de cualquier columna, `DELETE` y `TRUNCATE` fallan con el mensaje del trigger y no cambian nada (`UPDATE` y `DELETE` con y sin `WHERE`, también sobre cero filas); "incluso de la llave secreta": dentro de la prueba se restituyen `update`, `delete` y `truncate` a `service_role` y, actuando como `service_role`, el trigger igual los rechaza; los dos triggers existen y están activos; un `INSERT` por `auditar` sigue funcionando; la cadena queda intacta tras los intentos (CA-3).
+- [X] T006 [US1] Crear la migración `supabase/migrations/<ts>_auditoria_inmutable.sql` con `private.rechazar_cambio_auditoria()` (`set search_path = ''`, lanza `auditoria: la bitácora es inmutable (<operación> no permitido)`) y el trigger por sentencia `auditoria_inmutable` (`before update or delete or truncate`) sobre `public.auditoria`; `revoke all` de la función a `public`, `anon`, `authenticated` y `service_role`.
+- [X] T007 [US1] Crear `supabase/tests/database/07_auditoria_inmutable_test.sql`: con el rol dueño, `UPDATE` de cualquier columna, `DELETE` y `TRUNCATE` fallan con el mensaje del trigger y no cambian nada (`UPDATE` y `DELETE` con y sin `WHERE`, también sobre cero filas); "incluso de la llave secreta": dentro de la prueba se restituyen `update`, `delete` y `truncate` a `service_role` y, actuando como `service_role`, el trigger igual los rechaza; el trigger existe, está activo y es por sentencia (`INSERT ... ON CONFLICT DO UPDATE` también se rechaza); un `INSERT` por `auditar` sigue funcionando; la cadena queda intacta tras los intentos (CA-3).
 
 ### Cierre de la capa
 
-- [ ] T008 [US1] Correr `supabase db reset` y `supabase test db` con el candado tomado y dejar en verde las cinco pruebas de la capa (incluidas las de TT-03, TT-05, HU-001 y HU-026), y `supabase db lint --level warning --fail-on warning`.
+- [X] T008 [US1] Correr `supabase db reset` y `supabase test db` con el candado tomado y dejar en verde las cinco pruebas de la capa (incluidas las de TT-03, TT-05, HU-001 y HU-026), y `supabase db lint --level warning --fail-on warning`.
 
 ---
 
