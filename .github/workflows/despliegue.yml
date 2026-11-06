@@ -32,7 +32,7 @@ jobs:
       humo: ${{ steps.d.outputs.humo }}
       configurado: ${{ steps.d.outputs.configurado }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ env.REF }}
       - id: d
@@ -57,7 +57,7 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ env.REF }}
       - uses: supabase/setup-cli@v1
@@ -104,7 +104,7 @@ jobs:
     if: ${{ !cancelled() && !failure() && needs.detectar.outputs.app == 'true' && needs.detectar.outputs.firebase == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ env.REF }}
       - uses: subosito/flutter-action@v2
@@ -130,7 +130,7 @@ jobs:
     if: ${{ !cancelled() && !failure() && needs.detectar.outputs.app == 'true' && needs.detectar.outputs.firebase == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ env.REF }}
       - uses: actions/setup-java@v4
@@ -179,7 +179,7 @@ jobs:
     if: ${{ !cancelled() && needs.supabase.result == 'success' && needs.detectar.outputs.humo == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ env.REF }}
       - uses: denoland/setup-deno@v2
