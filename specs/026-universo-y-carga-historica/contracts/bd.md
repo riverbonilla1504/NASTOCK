@@ -15,7 +15,7 @@ export interface Bd {
 
 export type Argumento =
   | string | number | boolean | null | Date
-  | readonly unknown[] | Record<string, unknown>; // objetos y arreglos viajan como JSON (jsonb)
+  | readonly unknown[] | Record<string, unknown>; // el cliente los serializa según el tipo del parámetro (jsonb)
 
 export function crearBd(opciones?: { url?: string }): Bd;   // url: SUPABASE_DB_URL por defecto
 export class ErrorDeBd extends Error {}                     // nombre inválido, sin URL, fallo de la base
@@ -32,6 +32,6 @@ export class ErrorDeBd extends Error {}                     // nombre inválido,
 ## Pruebas (`deno test`)
 
 - Nombres válidos pasan y generan `select * from private."nombre"($1, $2)`; nombres con `.`, `"`, `;`, espacios, mayúsculas o vacíos se rechazan sin llamar al ejecutor.
-- Los argumentos llegan enlazados y en orden; un objeto se serializa a JSON.
+- Los argumentos llegan enlazados y en orden; los objetos y arreglos se pasan tal cual (no como texto JSON: el cliente los serializa a `jsonb` según la firma de la función; la prueba servida contra la base real lo comprobó).
 - Sin URL: error que nombra `SUPABASE_DB_URL`.
 - Un fallo de conexión no filtra la URL ni la contraseña.

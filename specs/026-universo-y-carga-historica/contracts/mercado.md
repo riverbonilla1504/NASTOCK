@@ -19,11 +19,16 @@ export interface Cotizacion {
   momento: string;     // ISO 8601 UTC: hora del dato según el proveedor
 }
 
+export interface ResultadoDeBarras { barras: Barra[]; descartadas: number }
+
 export interface ProveedorDeMercado {
   /** Última cotización de cada símbolo. `ahora` sale de private.ahora(); el real lo ignora. */
   snapshots(simbolos: readonly string[], ahora: Date): Promise<Cotizacion[]>;
-  /** Barras diarias de [desde, hasta] (AAAA-MM-DD, ambos incluidos). Ordenadas por símbolo y fecha. */
-  barras(consulta: { simbolos: readonly string[]; desde: string; hasta: string }): Promise<Barra[]>;
+  /**
+   * Barras diarias de [desde, hasta] (AAAA-MM-DD, ambos incluidos), ordenadas por símbolo y
+   * fecha. Las incoherentes no se devuelven y se cuentan en `descartadas`.
+   */
+  barras(consulta: { simbolos: readonly string[]; desde: string; hasta: string }): Promise<ResultadoDeBarras>;
 }
 
 export class ErrorDeProveedor extends Error { readonly estado?: number }
@@ -54,7 +59,13 @@ Función pura de `(símbolo, fecha)`: mismo resultado para el mismo par, sin imp
 - Precios redondeados a 4 decimales al final (sin redondear los intermedios).
 - `snapshots`: cierre del día hábil anterior a `ahora` más un paso determinista por minuto de sesión (09:30–16:00, hora de Nueva York); fuera de sesión, el último precio de la sesión anterior. `bid`/`ask` = precio ∓ 0,01.
 
-> Valores conocidos para las pruebas (los comparten `simulado_test.ts` y `02_universo_y_barras_test.sql`): se calculan al implementar y se anotan aquí.
+**Valores conocidos** (los comparten `simulado_test.ts` y `02_universo_y_barras_test.sql`; los dos algoritmos deben dar exactamente esto):
+
+| Símbolo | Fecha | Apertura | Máximo | Mínimo | Cierre | Volumen |
+|---|---|---|---|---|---|---|
+| QQQ | 2026-06-01 | 389.8220 | 390.4826 | 387.4463 | 388.5635 | 1156260 |
+| AAPL | 2026-06-01 | 128.0763 | 129.3337 | 126.8377 | 127.0639 | 919189 |
+| TQQQ | 2025-11-03 | 62.3450 | 62.6551 | 60.4177 | 60.8589 | 1467833 |
 
 ## Pruebas
 
