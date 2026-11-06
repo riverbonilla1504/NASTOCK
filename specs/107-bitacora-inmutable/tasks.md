@@ -79,7 +79,7 @@ No hay: las dependencias (TT-03 y HU-001) ya están en `main`.
 - [X] T013 Hash con todos los campos: `docs/11` §4.3, CA-2 (historia y spec), `docs/06` §8.2 (firma de `auditar`), `private.hash_auditoria` con los once campos, `private.auditar` y las pruebas `06_` y `07_`; fila 3.13 en `docs/13` §4 (research D-10).
 - [X] T014 Ejemplo de `docs/04` §6 con `new.id::text` (research D-11).
 - [X] T015 `docs/errores-conocidos.md` en un commit aparte: quitar los retornos de carro literales de EC-019 y agregar EC-021 (`dblink` desde pgTAP).
-- [ ] T016 `scripts/verificar.sh` completo con el candado y cuerpo del PR actualizado (indica que cambian reglas de `docs/11` §4.3 y `docs/04` §6).
+- [X] T016 `scripts/verificar.sh` completo con el candado y cuerpo del PR actualizado (indica que cambian reglas de `docs/11` §4.3 y `docs/04` §6).
 
 ---
 
