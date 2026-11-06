@@ -60,6 +60,14 @@ jobs:
               exit 1
             fi
           done
+      - name: Solo _shared/bd.ts importa el cliente de Postgres
+        run: |
+          if [ -d supabase/functions ] \
+            && grep -rnE "(from|import)[[:space:]]*\(?[[:space:]]*[\"'](npm:|jsr:@db/|https://deno\.land/x/)?postgres([@/\"']|$)" \
+                 --include='*.ts' supabase/functions | grep -v '^supabase/functions/_shared/bd\.ts:'; then
+            echo "::error::Un archivo de supabase/functions, fuera de _shared/bd.ts, importa el cliente de Postgres (D-66)"
+            exit 1
+          fi
       - name: Sin llave secreta de Supabase en la app
         run: |
           if [ -d lib ] && grep -rqiE "service_role|sb_secret_" lib; then

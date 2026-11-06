@@ -35,6 +35,13 @@ if [[ -d supabase/functions ]]; then
     fi
   done
 fi
+# Solo _shared/bd.ts importa el cliente de Postgres (D-66): así toda llamada a la base
+# pasa por una sola puerta que solo ejecuta funciones de private.
+if [[ -d supabase/functions ]] \
+  && grep -rnE "(from|import)[[:space:]]*\(?[[:space:]]*[\"'](npm:|jsr:@db/|https://deno\.land/x/)?postgres([@/\"']|$)" \
+       --include='*.ts' supabase/functions | grep -v '^supabase/functions/_shared/bd\.ts:'; then
+  echo "ERROR: un archivo de supabase/functions, fuera de _shared/bd.ts, importa el cliente de Postgres (D-66)"; exit 1
+fi
 if [[ -d lib ]] && grep -rqiE "service_role|sb_secret_" lib; then
   echo "ERROR: la app menciona la llave secreta de Supabase"; exit 1
 fi
