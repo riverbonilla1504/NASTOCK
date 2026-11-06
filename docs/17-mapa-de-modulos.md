@@ -35,19 +35,19 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-01 · Identidad y acceso
 - **Qué hace**: ingreso con Google, invitaciones, hooks de Auth, sesión, bloqueo biométrico.
 - **Docs**: 04 completo · 03 §6 · 12 §1
-- **BD**: `invitaciones`, `parametros` (`auth.*`); `private.antes_de_crear_usuario`, `private.al_crear_usuario`, `private.token_personalizado`; RPC `invitar_usuario`, `revocar_invitacion`
+- **BD**: `invitaciones`, `parametros` (`auth.*`); `private.antes_de_crear_usuario`, `private.al_crear_usuario`, `private.token_personalizado` (migración `supabase/migrations/*_token_personalizado.sql`; se registra en `supabase/config.toml`, sección `[auth.hook.custom_access_token]`); RPC `invitar_usuario`, `revocar_invitacion`
 - **Funciones**: `admin-usuarios`
 - **App**: `lib/features/auth/`, `lib/app/enrutador.dart` (enrutador y guardas; hoy solo la ruta `/inicio`)
-- **Pruebas**: `supabase/tests/auth_*.sql` · E2E-01, E2E-02
+- **Pruebas**: `supabase/tests/auth_*.sql`, `supabase/tests/database/03_perfiles_roles_y_token_test.sql` (claims del token) · E2E-01, E2E-02
 - **Depende de**: M-02 · **Lo usan**: todos
 
 ### M-02 · Perfiles, roles y permisos
 - **Qué hace**: rol y estado de cada persona, funciones de autorización, RLS base, cambio de rol, suspensión, baja y reincorporación.
 - **Docs**: 03 completo · 08 §5 · 02 §11
-- **BD**: `perfiles`; `private.rol_actual`, `private.es_supervisor`; RPC `cambiar_rol`; `private.suspender_cuenta`, `reactivar_cuenta`, `dar_de_baja`, `reincorporar`
+- **BD**: `perfiles` y los tipos `rol_app` y `estado_cuenta` (migraciones `supabase/migrations/*_perfiles_tipos_y_tabla.sql` y `*_perfiles_politica_de_lectura.sql`; `perfiles.invitacion_id` sin llave foránea hasta HU-002); `private.rol_actual`, `private.es_supervisor` (`*_rol_actual_y_es_supervisor.sql`); RPC `cambiar_rol`; `private.suspender_cuenta`, `reactivar_cuenta`, `dar_de_baja`, `reincorporar`
 - **Funciones**: `admin-usuarios`
-- **App**: `lib/features/admin/usuarios/`, `lib/core/` (claims)
-- **Pruebas**: `supabase/tests/rls_*.sql`, `roles_*.sql` · E2E-05, E2E-16
+- **App**: `lib/features/admin/usuarios/`, `lib/core/` (claims y `perfilProvider`)
+- **Pruebas**: `supabase/tests/database/02_perfiles_rls_test.sql`, `supabase/tests/database/03_perfiles_roles_y_token_test.sql` (y las de roles de las historias siguientes, con el mismo prefijo `NN_` de `supabase/tests/database/`) · E2E-05, E2E-16
 - **Depende de**: M-01, M-17 · **Lo usan**: todos
 
 ### M-03 · Libro contable
