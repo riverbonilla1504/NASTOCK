@@ -328,7 +328,7 @@ Cada funcionalidad tiene tres capas: `data/` (repositorios: único lugar que
 conoce a Supabase), `domain/` (modelos inmutables), `presentation/`
 (páginas, widgets y *providers*).
 
-El diseño visual vive en `DESIGN.md`, en la raíz del repositorio (D-67): lo
+El diseño visual vive en [`DESIGN.md`](../DESIGN.md), en la raíz del repositorio (D-67): lo
 implementan el tema de `lib/app/tema.dart` y los componentes de
 `lib/shared/widgets/`, y toda pantalla los usa ([15 §12](15-calidad-pruebas-y-ci-cd.md#12-diseño-visual-de-las-pantallas-d-67)).
 
@@ -414,7 +414,7 @@ un diseño visual nuevo (D-67).
 | `lib/widgets/*`, `lib/config/app_theme.dart`, `lib/config/app_styles.dart`, `assets/fonts/poppins/` | **No se copia; solo referencia de contenido** (D-67): qué pantallas, datos y flujos había. Visualmente es antirreferencia: no se conservan su paleta, sus widgets ni la fuente Poppins. El diseño nuevo queda en `DESIGN.md` |
 | Lo demás (login con contraseña, 2FA de demo, controladores en memoria, bitácora en memoria) | **No se copia** |
 
-**Quién manda en qué (D-67).** `DESIGN.md`, en la raíz del repositorio y
+**Quién manda en qué (D-67).** [`DESIGN.md`](../DESIGN.md), en la raíz del repositorio y
 escrito con impeccable, manda en lo visual: tokens, color, tipografía,
 componentes, movimiento y tono visual. `docs/` sigue mandando en las reglas
 de negocio, los flujos, los permisos, los datos y los textos de error. Si

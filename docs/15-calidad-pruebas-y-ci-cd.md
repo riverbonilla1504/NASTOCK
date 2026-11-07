@@ -231,7 +231,7 @@ solo en PR y en `main`.
 
 ## 12. Diseño visual de las pantallas (D-67)
 
-`DESIGN.md`, en la raíz del repositorio, manda en lo visual: tokens, color,
+[`DESIGN.md`](../DESIGN.md), en la raíz del repositorio, manda en lo visual: tokens, color,
 tipografía, componentes, movimiento y tono visual. `docs/` sigue mandando en
 las reglas de negocio, los flujos, los permisos, los datos y los textos de
 error ([05 §11](05-arquitectura.md#11-código-reutilizable-del-repositorio-v2)).
