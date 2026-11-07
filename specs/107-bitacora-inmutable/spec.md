@@ -23,7 +23,7 @@
 **Escenarios de aceptación (Acceptance Scenarios)**:
 
 1. **CA-1** · **Dada** una acción del catálogo de 11 §4.1, **cuando** ocurre, **entonces** `private.auditar` agrega un registro con momento, actor, rol, acción, entidad, id, valores anterior y nuevo y origen.
-2. **CA-2** · **Dado** un registro nuevo, **cuando** se inserta, **entonces** su `hash` es `sha256(hash_anterior ‖ momento ‖ actor ‖ acción ‖ entidad ‖ id ‖ detalle)`, y dos inserciones simultáneas no usan el mismo `hash_anterior`.
+2. **CA-2** · **Dado** un registro nuevo, **cuando** se inserta, **entonces** su `hash` es `sha256(hash_anterior ‖ momento ‖ actor ‖ actor_rol ‖ acción ‖ entidad ‖ id ‖ antes ‖ después ‖ detalle ‖ origen)`, y dos inserciones simultáneas no usan el mismo `hash_anterior`.
 3. **CA-3** (permiso) · **Dado** cualquier rol de la API, incluida la llave secreta, **cuando** intenta un `INSERT`, un `UPDATE` o un `DELETE` directo sobre `auditoria`, **entonces** se rechaza.
 4. **CA-4** · **Dado** un registro, **cuando** se revisa, **entonces** no contiene llaves, tokens ni respuestas de Google.
 5. **CA-5** (aislamiento) · **Dado** un Usuario o un Analista, **cuando** consulta `auditoria`, **entonces** no recibe filas.
@@ -64,4 +64,5 @@ La historia agrega una entidad, definida en `docs/06` §5.6:
 - Depende de TT-03 · Base de Supabase: esquema private, extensiones, Vault y ping: usa el esquema `private`.
 - Depende de HU-001 · Perfiles, rol actual y lecturas por rol: usa el tipo `rol_app` y `private.rol_actual()` en su política de lectura.
 - `docs/14` §4 ubica la bitácora en R2, pero el alta de una cuenta (R1) ya la usa: por eso la base va en R1, y su pantalla y el E2E-14 van en R2 (HU-108).
+- Supuesto S4 de `docs/01` §5: pocos usuarios concurrentes (decenas, no miles). Por eso basta con serializar las escrituras de la bitácora con un bloqueo.
 - No se duplica lo que ya es un registro inmutable propio: sugerencias, órdenes, ciclos y asientos (`docs/11` §4.1).

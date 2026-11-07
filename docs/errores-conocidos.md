@@ -163,11 +163,8 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 ### EC-019 · `publicar-backlog.py` actualiza todas las issues aunque `backlog/` no cambió
 - Fecha: 2026-10-19 · Módulos: M-20 · Origen: implementación
 - Síntoma: al volver a correr el script en Windows, todas las issues salen como "actualizada".
-- Causa: el archivo temporal del cuerpo se escribía en modo texto con `
-`, GitHub guarda esos saltos tal cual y la comparación con el cuerpo generado (`
-`) nunca coincidía.
-- Solución: escribir el archivo con `newline="
-"` y comparar el cuerpo de GitHub sin ``.
+- Causa: el archivo temporal del cuerpo se escribía en modo texto con `\r\n`, GitHub guarda esos saltos tal cual y la comparación con el cuerpo generado (`\n`) nunca coincidía.
+- Solución: escribir el archivo con `newline="\n"` y comparar el cuerpo de GitHub sin `\r`.
 - Para no repetirlo: al pasar texto a `gh` con `--body-file` desde Python, fijar siempre `newline`.
 
 ### EC-020 · `gh` falla a mitad de una publicación larga con `TLS handshake timeout`
@@ -176,3 +173,10 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Causa: cortes de red o del servidor de GitHub durante cientos de llamadas seguidas; no es un error de la petición.
 - Solución: el script repite hasta 4 veces solo esos errores de transporte y solo en operaciones idempotentes; `issue create` no se repite (podría duplicar) y basta volver a correr el script, que reconoce las issues por el prefijo del título.
 - Para no repetirlo: no agregar reintentos a `issue create`; ante un corte, volver a correr el script.
+
+### EC-021 · `dblink` desde una prueba pgTAP falla con "password or GSSAPI delegated credentials required"
+- Fecha: 2026-11-06 · Módulos: M-17, M-20 · Origen: HU-107
+- Síntoma: `dblink_connect` con `host=127.0.0.1` falla con `password or GSSAPI delegated credentials required`; por un socket Unix falla con `could not translate host name "port=5432" to address`.
+- Causa: en Supabase `postgres` no es superusuario y `dblink` exige que el servidor le pida la clave, pero la conexión a `127.0.0.1` es de confianza y no la pide. Con un socket Unix `inet_server_addr()` es nulo y el texto de conexión queda `host= port=…`.
+- Solución: crear `dblink` dentro de la prueba (`create extension if not exists dblink with schema extensions`, se deshace con ella) y conectar a `inet_server_addr()` (TCP, como lo hace `supabase test db`) con `user=postgres password=postgres`. La consulta de la segunda conexión va en `begin; …; rollback;` y se cancela antes de terminar, para que no deje nada confirmado.
+- Para no repetirlo: `supabase/tests/database/06_auditoria_auditar_test.sql` es el ejemplo. Las pruebas que necesiten dos conexiones se corren con `supabase test db`, no por un socket Unix.

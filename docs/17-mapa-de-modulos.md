@@ -179,11 +179,11 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-17 · Auditoría
 - **Qué hace**: bitácora inmutable con cadena de hash, verificación, pantalla y exportación.
 - **Docs**: 11 §4
-- **BD**: `auditoria`; `private.auditar`
+- **BD**: `auditoria` con su política `auditoria_lectura` (solo el Administrador; ningún rol de la API escribe, tampoco `service_role`) · `private.hash_auditoria` (la fórmula del hash, que reutiliza la verificación de la cadena), `private.auditar` (único camino de escritura: toma el bloqueo y encadena el hash; el rol del actor lo lee de `perfiles`) · trigger `auditoria_inmutable` con `private.rechazar_cambio_auditoria` (rechaza `UPDATE`, `DELETE` y `TRUNCATE`) · migraciones `supabase/migrations/*_auditoria_tabla.sql`, `*_auditar.sql` y `*_auditoria_inmutable.sql`
 - **Funciones**: `cierre-diario` (ancla en el reporte diario)
 - **App**: `lib/features/admin/bitacora/`
-- **Pruebas**: `supabase/tests/auditoria_*.sql` · E2E-14
-- **Depende de**: — · **Lo usan**: casi todos
+- **Pruebas**: `supabase/tests/database/05_auditoria_tabla_y_lectura_test.sql`, `06_auditoria_auditar_test.sql` (encadenado y concurrencia con una segunda conexión de `dblink`), `07_auditoria_inmutable_test.sql` · E2E-14
+- **Depende de**: M-02 (`private.rol_actual`, tipo `rol_app`), M-19 (`private.ahora`) · **Lo usan**: casi todos
 
 ### M-18 · Salud, alertas e integraciones
 - **Qué hace**: estado de cada integración, alertas operativas, presupuesto de IA.

@@ -29,7 +29,7 @@
 ## Criterios de aceptación
 
 - **CA-1** Dada una acción del catálogo de 11 §4.1, cuando ocurre, entonces `private.auditar` agrega un registro con momento, actor, rol, acción, entidad, id, valores anterior y nuevo y origen.
-- **CA-2** Dado un registro nuevo, cuando se inserta, entonces su `hash` es `sha256(hash_anterior ‖ momento ‖ actor ‖ acción ‖ entidad ‖ id ‖ detalle)`, y dos inserciones simultáneas no usan el mismo `hash_anterior`.
+- **CA-2** Dado un registro nuevo, cuando se inserta, entonces su `hash` es `sha256(hash_anterior ‖ momento ‖ actor ‖ actor_rol ‖ acción ‖ entidad ‖ id ‖ antes ‖ después ‖ detalle ‖ origen)`, y dos inserciones simultáneas no usan el mismo `hash_anterior`.
 - **CA-3** (permiso) Dado cualquier rol de la API, incluida la llave secreta, cuando intenta un `INSERT`, un `UPDATE` o un `DELETE` directo sobre `auditoria`, entonces se rechaza.
 - **CA-4** Dado un registro, cuando se revisa, entonces no contiene llaves, tokens ni respuestas de Google.
 - **CA-5** (aislamiento) Dado un Usuario o un Analista, cuando consulta `auditoria`, entonces no recibe filas.
@@ -76,7 +76,10 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-14. En el MVP co
 
 ## Documentación a actualizar
 
-Ninguna.
+- 11 §4.3: la fórmula del hash incluye todos los campos del registro, con orden y formato fijos.
+- 04 §6: el ejemplo de `private.auditar` pasa el id como texto (`new.id::text`).
+- 06 §8.2: firma de `auditar` con `antes`, `despues` y `origen` opcionales.
+- 13 §4: fila 3.13 del historial.
 
 ## Definición de terminado
 
