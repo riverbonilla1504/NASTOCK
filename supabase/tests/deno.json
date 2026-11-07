@@ -1,0 +1,7 @@
+{
+  "nodeModulesDir": "none",
+  "imports": {
+    "postgres": "npm:postgres@3.4.9",
+    "@std/assert": "jsr:@std/assert@1.0.13"
+  }
+}
