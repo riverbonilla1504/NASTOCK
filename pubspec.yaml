@@ -27,3 +27,24 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # Archivo (OFL), instancias estáticas: assets/fonts/archivo/LEEME.md (HU-116).
+  fonts:
+    - family: Archivo
+      fonts:
+        - asset: assets/fonts/archivo/Archivo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/archivo/Archivo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/archivo/Archivo-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/archivo/Archivo-Bold.ttf
+          weight: 700
+    - family: ArchivoCondensado
+      fonts:
+        - asset: assets/fonts/archivo/ArchivoCondensado-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/archivo/ArchivoCondensado-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/archivo/ArchivoCondensado-ExtraBold.ttf
+          weight: 800
