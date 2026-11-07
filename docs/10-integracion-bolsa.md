@@ -287,6 +287,15 @@ implementación simulada con la **misma interfaz**:
   efecto la regla de `mvp`.
 - Un `PROVEEDOR_*` sin definir cuenta como `simulado`. Por eso, con
   `ENTORNO=mvp`, una variable olvidada hace que la función no arranque.
+- **Valores en `mvp`**: el nombre de cada proveedor real va en minúsculas
+  (`alpaca`, `typesafe`, `cloudflare`, `deepseek`, `fcm`…). En el MVP corto
+  `despliegue.yml` escribe `PROVEEDOR_MERCADO=alpaca`, `PROVEEDOR_BROKER=alpaca`
+  y `PROVEEDOR_JEV` con el proveedor de JEV en uso (`typesafe` o `cloudflare`).
+  Además, `PROVEEDOR_NOTICIAS=alpaca`, `PROVEEDOR_CONTEXTO=deepseek` y
+  `PROVEEDOR_PUSH=fcm`: sin DeepSeek ni noticias (D-59) ni push (D-62) ninguna
+  función los usa todavía, pero con `ENTORNO=mvp` ninguno puede ser `simulado`
+  (CB-91). Esos tres valores son **provisionales** hasta la historia que use
+  cada integración.
 - **Local y CI**: todo simulado por defecto.
 - **Proyecto de demostración** (opcional, segundo proyecto gratuito de
   Supabase): todo simulado, para mostrar el sistema fuera del horario de
