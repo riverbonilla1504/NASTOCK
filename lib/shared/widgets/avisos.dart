@@ -112,14 +112,22 @@ class AvisoEnLinea extends StatelessWidget {
                             color: titulo == null ? c.tinta : c.tintaSuave,
                           ),
                         ),
+                        if (accion != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: Espacio.x1),
+                            child: TextButton(
+                              onPressed: alAccionar,
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                alignment: Alignment.centerLeft,
+                              ),
+                              child: Text(accion!),
+                            ),
+                          ),
                       ],
                     ),
                   ),
                 ),
-                if (accion != null) ...[
-                  const SizedBox(width: Espacio.x2),
-                  TextButton(onPressed: alAccionar, child: Text(accion!)),
-                ],
               ],
             ),
           ),

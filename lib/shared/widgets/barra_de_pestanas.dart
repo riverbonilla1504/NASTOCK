@@ -49,18 +49,24 @@ class BarraDePestanas extends StatelessWidget {
             color: p.velo,
             border: Border(top: BorderSide(color: c.regla)),
           ),
-          child: NavigationBar(
-            backgroundColor: const Color(0x00000000),
-            selectedIndex: actual,
-            onDestinationSelected: alElegir,
-            destinations: [
-              for (final pestana in pestanas)
-                NavigationDestination(
-                  icon: Icon(pestana.icono),
-                  selectedIcon: Icon(pestana.iconoActivo ?? pestana.icono),
-                  label: pestana.etiqueta,
-                ),
-            ],
+          // Hasta 1,2×: con más, cuatro rótulos no caben en un teléfono de
+          // 360 dp. El ícono acompaña siempre y el lector de pantalla lee el
+          // nombre completo.
+          child: MediaQuery.withClampedTextScaling(
+            maxScaleFactor: 1.2,
+            child: NavigationBar(
+              backgroundColor: const Color(0x00000000),
+              selectedIndex: actual,
+              onDestinationSelected: alElegir,
+              destinations: [
+                for (final pestana in pestanas)
+                  NavigationDestination(
+                    icon: Icon(pestana.icono),
+                    selectedIcon: Icon(pestana.iconoActivo ?? pestana.icono),
+                    label: pestana.etiqueta,
+                  ),
+              ],
+            ),
           ),
         ),
       ),

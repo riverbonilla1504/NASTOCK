@@ -652,12 +652,16 @@ ThemeData _construir(
       height: 80,
       indicatorColor: c.moradoTenue,
       indicatorShape: const StadiumBorder(),
+      // Rótulos condensados: "Oportunidades" cabe en una línea con texto
+      // grande.
       labelTextStyle: WidgetStateProperty.resolveWith(
         (s) => textos.bodySmall!.copyWith(
+          fontFamily: Familias.condensada,
+          fontSize: 12,
           color: s.contains(WidgetState.selected) ? c.tinta : c.tintaSuave,
           fontWeight: s.contains(WidgetState.selected)
-              ? FontWeight.w600
-              : FontWeight.w400,
+              ? FontWeight.w700
+              : FontWeight.w600,
         ),
       ),
       iconTheme: WidgetStateProperty.resolveWith(

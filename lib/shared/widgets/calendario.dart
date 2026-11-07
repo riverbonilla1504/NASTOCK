@@ -118,7 +118,12 @@ class CalendarioDelMercado extends StatelessWidget {
     Widget celda(int indice) {
       final numero = indice - desfase + 1;
       if (numero < 1 || numero > diasDelMes) {
-        return const SizedBox(height: Espacio.objetivoTactil);
+        return Container(
+          height: Espacio.objetivoTactil,
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: c.regla)),
+          ),
+        );
       }
       final dia = DateTime(mes.year, mes.month, numero);
       final habilitado =
