@@ -94,12 +94,15 @@ jobs:
           [ -n "$ALPACA_SECRET_KEY" ] || falta ALPACA_SECRET_KEY
           [ -n "$SECRETO_INTERNO" ] || falta SECRETO_INTERNO
           # JEV: TypeSafe, o Cloudflare Workers AI mientras llega el acceso (docs/16 §3.6).
-          if [ -n "$TYPESAFE_API_KEY" ]; then
-            JEV=typesafe
-          elif [ -n "$CLOUDFLARE_ACCOUNT_ID" ] && [ -n "$CLOUDFLARE_API_TOKEN" ]; then
+          # Hasta que una historia use JEV (R3) las llaves son opcionales: TypeSafe tiene lista
+          # de espera y no debe bloquear el primer despliegue.
+          if [ -z "$TYPESAFE_API_KEY" ] && { [ -z "$CLOUDFLARE_ACCOUNT_ID" ] || [ -z "$CLOUDFLARE_API_TOKEN" ]; }; then
+            echo "::warning::Sin llaves de JEV (TYPESAFE_API_KEY o CLOUDFLARE_ACCOUNT_ID y CLOUDFLARE_API_TOKEN): se despliega sin ellas."
+          fi
+          if [ -z "$TYPESAFE_API_KEY" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ] && [ -n "$CLOUDFLARE_API_TOKEN" ]; then
             JEV=cloudflare
           else
-            falta "TYPESAFE_API_KEY (o CLOUDFLARE_ACCOUNT_ID y CLOUDFLARE_API_TOKEN)"
+            JEV=typesafe
           fi
           {
             echo "ENTORNO=mvp"
@@ -118,9 +121,10 @@ jobs:
             echo "ALPACA_TRADING_URL=https://paper-api.alpaca.markets"
             echo "ALPACA_DATA_URL=https://data.alpaca.markets"
             echo "JEV_PROVEEDOR=$JEV"
-            if [ "$JEV" = typesafe ]; then
+            if [ "$JEV" = typesafe ] && [ -n "$TYPESAFE_API_KEY" ]; then
               echo "TYPESAFE_API_KEY=$TYPESAFE_API_KEY"
-            else
+            fi
+            if [ "$JEV" = cloudflare ]; then
               echo "CLOUDFLARE_ACCOUNT_ID=$CLOUDFLARE_ACCOUNT_ID"
               echo "CLOUDFLARE_API_TOKEN=$CLOUDFLARE_API_TOKEN"
             fi
