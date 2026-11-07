@@ -1,0 +1,9 @@
+# Configuración del escáner de secretos de CI (docs/11 §5, docs/15 §6).
+title = "NASTOCK"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Datos falsos a propósito: la prueba comprueba que auditar() no guarda llaves ni tokens (HU-107, CA-4)"
+paths = ['''supabase/tests/database/06_auditoria_auditar_test\.sql''']

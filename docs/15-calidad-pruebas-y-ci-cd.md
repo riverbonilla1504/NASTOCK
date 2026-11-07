@@ -120,6 +120,8 @@ commit con solo documentación.
 | `detectar` | Qué partes del proyecto existen |
 | `documentacion` | `python scripts/verificar_docs.py docs` |
 | `arquitectura` | Reglas de §2 |
+| `secretos` | gitleaks (imagen oficial, gratuito) sobre el historial del PR, con `.gitleaks.toml` |
+| `dependencias` | OSV-Scanner (gratuito) sobre `pubspec.lock`: falla ante vulnerabilidades conocidas |
 | `app` | `flutter pub get` · `dart format` (verificación) · `flutter analyze` · `flutter test` |
 | `backend` | `supabase start` · `supabase db lint` · `supabase test db` · `deno fmt --check` · `deno lint` · `deno test` de funciones |
 | `e2e` | `supabase start` · `supabase db reset` · `supabase functions serve --env-file supabase/functions/.env.e2e` · E2E de backend · `chromedriver` + `flutter drive` en Chrome sin ventana |
