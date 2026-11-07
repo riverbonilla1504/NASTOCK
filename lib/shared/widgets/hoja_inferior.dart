@@ -45,7 +45,7 @@ class HojaConVelo extends StatelessWidget {
             sigmaY: ProfundidadAlmanaque.desenfoque,
           ),
           child: ColoredBox(
-            color: p.velo,
+            color: p.veloHoja,
             child: SafeArea(
               top: false,
               child: Column(

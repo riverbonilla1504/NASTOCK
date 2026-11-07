@@ -236,6 +236,7 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
     required this.sombraHoja,
     required this.degradadoGrafito,
     required this.velo,
+    required this.veloHoja,
     required this.veloGrafito,
   });
 
@@ -254,8 +255,11 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
   /// Barra superior: grafito un poco más claro arriba.
   final LinearGradient degradadoGrafito;
 
-  /// Hoja traslúcida para superficies con desenfoque.
+  /// Hoja traslúcida para superficies con desenfoque (barra de pestañas).
   final Color velo;
+
+  /// Hoja inferior: casi opaca, porque va sobre la cortina oscura del modal.
+  final Color veloHoja;
 
   /// Grafito traslúcido para el aviso temporal.
   final Color veloGrafito;
@@ -286,6 +290,7 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
       colors: [Color(0xFF35353A), Color(0xFF232326)],
     ),
     velo: Color(0xE6FFFFFF),
+    veloHoja: Color(0xF7FFFFFF),
     veloGrafito: Color(0xE027272A),
   );
 
@@ -315,6 +320,7 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
       colors: [Color(0xFF303035), Color(0xFF1E1E22)],
     ),
     velo: Color(0xE01C1C1F),
+    veloHoja: Color(0xF51C1C1F),
     veloGrafito: Color(0xEB3A3A40),
   );
 
@@ -325,6 +331,7 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
     List<BoxShadow>? sombraHoja,
     LinearGradient? degradadoGrafito,
     Color? velo,
+    Color? veloHoja,
     Color? veloGrafito,
   }) {
     return ProfundidadAlmanaque(
@@ -333,6 +340,7 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
       sombraHoja: sombraHoja ?? this.sombraHoja,
       degradadoGrafito: degradadoGrafito ?? this.degradadoGrafito,
       velo: velo ?? this.velo,
+      veloHoja: veloHoja ?? this.veloHoja,
       veloGrafito: veloGrafito ?? this.veloGrafito,
     );
   }
@@ -357,6 +365,7 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
         t,
       )!,
       velo: Color.lerp(velo, other.velo, t)!,
+      veloHoja: Color.lerp(veloHoja, other.veloHoja, t)!,
       veloGrafito: Color.lerp(veloGrafito, other.veloGrafito, t)!,
     );
   }

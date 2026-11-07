@@ -122,6 +122,16 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
                   const BotonSecundario(texto: 'Vender', alPresionar: null),
                 ],
               ),
+              const SizedBox(height: Espacio.x3),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: FloatingActionButton.extended(
+                  heroTag: null,
+                  onPressed: () {},
+                  icon: const Icon(Icons.add),
+                  label: const Text('Nueva orden'),
+                ),
+              ),
             ],
           ),
           _Seccion(

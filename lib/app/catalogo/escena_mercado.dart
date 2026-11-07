@@ -67,11 +67,9 @@ class _EscenaMercadoState extends State<EscenaMercado> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        icon: const Icon(Icons.add),
-        label: const Text('Nueva orden'),
-      ),
+      // Sin botón flotante: en una lista con cifras a la derecha taparía
+      // precios y marcas de dato desactualizado (DESIGN.md). La acción va en
+      // la tarjeta de detalle.
       bottomNavigationBar: BarraDePestanas(
         actual: _pestana,
         alElegir: (i) => setState(() => _pestana = i),
