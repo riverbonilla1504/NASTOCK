@@ -1,6 +1,8 @@
 # Despliegue al proyecto MVP tras CI en verde en main (docs/15 §6 y §9).
 # Orden: migraciones → secretos → funciones → web → APK → prueba de humo.
-# Secretos y variables necesarios: docs/16 §4.
+# Secretos y variables necesarios: docs/16 §4.1.
+# MVP corto (D-58): sin DeepSeek (D-59) ni push (D-62), así que no se piden
+# DEEPSEEK_API_KEY ni FCM_CUENTA_SERVICIO.
 name: Despliegue
 
 on:
@@ -19,6 +21,7 @@ permissions:
 
 env:
   REF: ${{ github.event.workflow_run.head_sha || github.sha }}
+  FIREBASE_TOOLS: firebase-tools@15.35.0
 
 jobs:
   detectar:
@@ -30,28 +33,39 @@ jobs:
       app: ${{ steps.d.outputs.app }}
       firebase: ${{ steps.d.outputs.firebase }}
       humo: ${{ steps.d.outputs.humo }}
-      configurado: ${{ steps.d.outputs.configurado }}
+      supabase_configurado: ${{ steps.d.outputs.supabase_configurado }}
+      firebase_configurado: ${{ steps.d.outputs.firebase_configurado }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.REF }}
       - id: d
         env:
-          PROYECTO: ${{ vars.SUPABASE_PROJECT_REF }}
+          PROYECTO_SUPABASE: ${{ vars.SUPABASE_PROJECT_REF }}
+          PROYECTO_FIREBASE: ${{ vars.FIREBASE_PROJECT_ID }}
         run: |
           existe() { if [ -e "$1" ]; then echo true; else echo false; fi; }
+          definida() { if [ -n "$1" ]; then echo true; else echo false; fi; }
           {
             echo "supabase=$(existe supabase/config.toml)"
             echo "app=$(existe pubspec.yaml)"
             echo "firebase=$(existe firebase.json)"
             echo "humo=$(existe supabase/tests/humo)"
-            if [ -n "$PROYECTO" ]; then echo "configurado=true"; else echo "configurado=false"; fi
+            echo "supabase_configurado=$(definida "$PROYECTO_SUPABASE")"
+            echo "firebase_configurado=$(definida "$PROYECTO_FIREBASE")"
           } >> "$GITHUB_OUTPUT"
+          # Mientras no existan las cuentas (TT-02) no hay a dónde desplegar: se avisa, no se falla.
+          if [ -z "$PROYECTO_SUPABASE" ]; then
+            echo "::notice::Falta la variable SUPABASE_PROJECT_REF: se omiten Supabase y la prueba de humo (docs/16 §4.1)."
+          fi
+          if [ -z "$PROYECTO_FIREBASE" ]; then
+            echo "::notice::Falta la variable FIREBASE_PROJECT_ID: se omiten la web y el APK (docs/16 §4.1)."
+          fi
 
   supabase:
     name: Supabase (migraciones, secretos, funciones)
     needs: detectar
-    if: needs.detectar.outputs.supabase == 'true' && needs.detectar.outputs.configurado == 'true'
+    if: needs.detectar.outputs.supabase == 'true' && needs.detectar.outputs.supabase_configurado == 'true'
     runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -69,29 +83,47 @@ jobs:
         env:
           ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          FCM_CUENTA_SERVICIO: ${{ secrets.FCM_CUENTA_SERVICIO }}
           SECRETO_INTERNO: ${{ secrets.SECRETO_INTERNO }}
         run: |
           umask 077
-          if [ -n "$TYPESAFE_API_KEY" ]; then JEV=typesafe; else JEV=cloudflare; fi
+          falta() { echo "::error::Falta el secreto $1 (docs/16 §4.1)"; exit 1; }
+          [ -n "$ALPACA_KEY_ID" ] || falta ALPACA_KEY_ID
+          [ -n "$ALPACA_SECRET_KEY" ] || falta ALPACA_SECRET_KEY
+          [ -n "$SECRETO_INTERNO" ] || falta SECRETO_INTERNO
+          # JEV: TypeSafe, o Cloudflare Workers AI mientras llega el acceso (docs/16 §3.6).
+          if [ -n "$TYPESAFE_API_KEY" ]; then
+            JEV=typesafe
+          elif [ -n "$CLOUDFLARE_ACCOUNT_ID" ] && [ -n "$CLOUDFLARE_API_TOKEN" ]; then
+            JEV=cloudflare
+          else
+            falta "TYPESAFE_API_KEY (o CLOUDFLARE_ACCOUNT_ID y CLOUDFLARE_API_TOKEN)"
+          fi
           {
             echo "ENTORNO=mvp"
-            for p in MERCADO BROKER NOTICIAS CONTEXTO JEV PUSH; do echo "PROVEEDOR_$p=real"; done
+            # Con ENTORNO=mvp ninguno puede ser "simulado" (CB-91). Mercado y broker son Alpaca.
+            echo "PROVEEDOR_MERCADO=alpaca"
+            echo "PROVEEDOR_BROKER=alpaca"
+            echo "PROVEEDOR_JEV=$JEV"
+            # SIN DECIDIR (informe de TT-08): en el MVP corto no hay proveedor real de noticias,
+            # contexto (D-59) ni push (D-62), pero CB-91 les prohíbe ser "simulado". Nombres
+            # provisionales; ninguna función los usa todavía.
+            echo "PROVEEDOR_NOTICIAS=alpaca"
+            echo "PROVEEDOR_CONTEXTO=deepseek"
+            echo "PROVEEDOR_PUSH=fcm"
             echo "ALPACA_KEY_ID=$ALPACA_KEY_ID"
             echo "ALPACA_SECRET_KEY=$ALPACA_SECRET_KEY"
             echo "ALPACA_TRADING_URL=https://paper-api.alpaca.markets"
             echo "ALPACA_DATA_URL=https://data.alpaca.markets"
-            echo "DEEPSEEK_API_KEY=$DEEPSEEK_API_KEY"
-            echo "DEEPSEEK_BASE_URL=https://api.deepseek.com"
             echo "JEV_PROVEEDOR=$JEV"
-            echo "TYPESAFE_API_KEY=$TYPESAFE_API_KEY"
-            echo "CLOUDFLARE_ACCOUNT_ID=$CLOUDFLARE_ACCOUNT_ID"
-            echo "CLOUDFLARE_API_TOKEN=$CLOUDFLARE_API_TOKEN"
-            echo "FCM_CUENTA_SERVICIO='$(printf '%s' "$FCM_CUENTA_SERVICIO" | jq -c .)'"
+            if [ "$JEV" = typesafe ]; then
+              echo "TYPESAFE_API_KEY=$TYPESAFE_API_KEY"
+            else
+              echo "CLOUDFLARE_ACCOUNT_ID=$CLOUDFLARE_ACCOUNT_ID"
+              echo "CLOUDFLARE_API_TOKEN=$CLOUDFLARE_API_TOKEN"
+            fi
             echo "SECRETO_INTERNO=$SECRETO_INTERNO"
           } > secretos.env
           supabase secrets set --env-file secretos.env
@@ -101,7 +133,7 @@ jobs:
   web:
     name: Web (Firebase Hosting)
     needs: [detectar, supabase]
-    if: ${{ !cancelled() && !failure() && needs.detectar.outputs.app == 'true' && needs.detectar.outputs.firebase == 'true' }}
+    if: ${{ !cancelled() && !failure() && needs.detectar.outputs.app == 'true' && needs.detectar.outputs.firebase == 'true' && needs.detectar.outputs.firebase_configurado == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -112,22 +144,32 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: >
-          flutter build web --release
-          --dart-define=SUPABASE_URL=${{ vars.SUPABASE_URL }}
-          --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ vars.SUPABASE_PUBLISHABLE_KEY }}
-          --dart-define=GOOGLE_WEB_CLIENT_ID=${{ vars.GOOGLE_WEB_CLIENT_ID }}
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
-          channelId: live
+      - name: Compilar la web
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+          GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
+        run: |
+          flutter build web --release \
+            --dart-define=SUPABASE_URL="$SUPABASE_URL" \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY="$SUPABASE_PUBLISHABLE_KEY" \
+            --dart-define=GOOGLE_WEB_CLIENT_ID="$GOOGLE_WEB_CLIENT_ID"
+      - name: Publicar en Firebase Hosting
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+        run: |
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase.json"
+          npx --yes "$FIREBASE_TOOLS" deploy --only hosting \
+            --project "$FIREBASE_PROJECT_ID" --non-interactive
+          rm -f "$RUNNER_TEMP/firebase.json"
 
   android:
     name: Android (Firebase App Distribution)
     needs: [detectar, supabase]
-    if: ${{ !cancelled() && !failure() && needs.detectar.outputs.app == 'true' && needs.detectar.outputs.firebase == 'true' }}
+    if: ${{ !cancelled() && !failure() && needs.detectar.outputs.app == 'true' && needs.detectar.outputs.firebase == 'true' && needs.detectar.outputs.firebase_configurado == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -148,6 +190,11 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
+          umask 077
+          # Sin llave el build firmaría con la de debug y App Distribution lo aceptaría: se falla.
+          for v in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            [ -n "${!v}" ] || { echo "::error::Falta el secreto $v (docs/16 §4.1)"; exit 1; }
+          done
           echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
           {
             echo "storeFile=upload-keystore.jks"
@@ -156,26 +203,37 @@ jobs:
             echo "keyPassword=$ANDROID_KEY_PASSWORD"
           } > android/key.properties
       - run: flutter pub get
-      - run: >
-          flutter build apk --release
-          --dart-define=SUPABASE_URL=${{ vars.SUPABASE_URL }}
-          --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ vars.SUPABASE_PUBLISHABLE_KEY }}
-          --dart-define=GOOGLE_WEB_CLIENT_ID=${{ vars.GOOGLE_WEB_CLIENT_ID }}
+      - name: Compilar el APK firmado
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+          GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
+        run: |
+          # --build-number: cada despliegue sube el código de versión, para que el equipo
+          # reciba la actualización en App Distribution.
+          flutter build apk --release \
+            --build-number="$GITHUB_RUN_NUMBER" \
+            --dart-define=SUPABASE_URL="$SUPABASE_URL" \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY="$SUPABASE_PUBLISHABLE_KEY" \
+            --dart-define=GOOGLE_WEB_CLIENT_ID="$GOOGLE_WEB_CLIENT_ID"
       - name: Distribuir al equipo
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_ANDROID_APP_ID: ${{ vars.FIREBASE_ANDROID_APP_ID }}
         run: |
+          umask 077
           printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase.json"
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase.json"
-          npx --yes firebase-tools appdistribution:distribute \
+          npx --yes "$FIREBASE_TOOLS" appdistribution:distribute \
             build/app/outputs/flutter-apk/app-release.apk \
-            --app "${{ vars.FIREBASE_ANDROID_APP_ID }}" \
+            --app "$FIREBASE_ANDROID_APP_ID" \
             --groups "ritech-equipo" \
-            --release-notes "Commit ${GITHUB_SHA::7}"
+            --release-notes "Commit ${REF::7}"
+          rm -f "$RUNNER_TEMP/firebase.json"
 
   humo:
     name: Prueba de humo
-    needs: [detectar, supabase, web]
+    needs: [detectar, supabase, web, android]
     if: ${{ !cancelled() && needs.supabase.result == 'success' && needs.detectar.outputs.humo == 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -189,4 +247,11 @@ jobs:
         env:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
-        run: deno test --allow-all --config supabase/tests/deno.json supabase/tests/humo
+        run: >
+          deno test --config supabase/tests/deno.json
+          --allow-net --allow-env --allow-read supabase/tests/humo
+      - name: Avisar
+        if: failure()
+        run: >
+          echo "::error title=Prueba de humo fallida::El despliegue quedó con fallas.
+          El admin apaga trading_activo hasta corregir (docs/15 §9)."
