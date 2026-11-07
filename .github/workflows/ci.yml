@@ -155,13 +155,17 @@ jobs:
       - run: supabase db reset
       - name: Servir funciones con proveedores simulados
         run: |
-          supabase functions serve --env-file supabase/functions/.env.e2e > funciones.log 2>&1 &
-          sleep 15
+          # .env.e2e no lleva secretos (docs/15 §3): se le suma el secreto interno de prueba
+          # que siembra supabase/seed.sql en Vault (solo CI). El propio E2E espera a que las
+          # funciones respondan, así que no hay espera fija.
+          mkdir -p supabase/.temp
+          { cat supabase/functions/.env.e2e; printf '\nSECRETO_INTERNO=solo-local-no-es-secreto\n'; } > supabase/.temp/env.e2e
+          supabase functions serve --env-file supabase/.temp/env.e2e > funciones.log 2>&1 &
       - name: Variables del stack local
         run: supabase status -o env | sed 's/"//g' >> "$GITHUB_ENV"
       - name: E2E de backend
         if: needs.detectar.outputs.e2e_backend == 'true'
-        run: deno test --allow-all supabase/tests/e2e
+        run: deno test --allow-all --config supabase/tests/deno.json supabase/tests/e2e
       - name: E2E de la app (Chrome sin ventana)
         if: needs.detectar.outputs.e2e_app == 'true'
         run: |

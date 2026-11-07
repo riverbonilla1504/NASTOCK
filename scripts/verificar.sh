@@ -15,7 +15,10 @@ RAPIDO=false
 cd "$(dirname "$0")/.."
 RAIZ="$(pwd)"
 PIDS=()
-limpiar() { for p in "${PIDS[@]:-}"; do [[ -n "$p" ]] && kill "$p" 2>/dev/null || true; done; }
+limpiar() {
+  for p in "${PIDS[@]:-}"; do [[ -n "$p" ]] && kill "$p" 2>/dev/null || true; done
+  rm -f "$RAIZ/supabase/.temp/env.e2e"  # copia temporal de .env.e2e con el secreto interno de prueba
+}
 trap limpiar EXIT
 
 paso() { printf '\n\033[1m▶ %s\033[0m\n' "$1"; }
@@ -88,16 +91,19 @@ if [[ -f supabase/config.toml ]]; then
   # 5. E2E de backend -----------------------------------------------------------
   if [[ -d supabase/tests/e2e ]]; then
     paso "E2E de backend (proveedores simulados)"
-    supabase functions serve --env-file supabase/functions/.env.e2e >/tmp/funciones-e2e.log 2>&1 &
+    # .env.e2e no lleva secretos (docs/15 §3). Para que las funciones acepten la llamada del
+    # E2E se le suma el SECRETO_INTERNO de prueba, el mismo que siembra supabase/seed.sql en
+    # Vault (solo local y CI), en un archivo temporal que git ignora.
+    export SECRETO_INTERNO="solo-local-no-es-secreto"
+    mkdir -p supabase/.temp
+    { cat supabase/functions/.env.e2e; printf '\nSECRETO_INTERNO=%s\n' "$SECRETO_INTERNO"; } \
+      > supabase/.temp/env.e2e
+    supabase functions serve --env-file supabase/.temp/env.e2e >/tmp/funciones-e2e.log 2>&1 &
     PIDS+=($!)
-    # Espera a que el servidor de funciones responda. E-01 debe reemplazar esta
-    # espera genérica por una consulta a una función de salud con respuesta 200.
-    for _ in $(seq 1 60); do
-      grep -q "Serving functions" /tmp/funciones-e2e.log 2>/dev/null && break
-      sleep 1
-    done
     eval "$(supabase status -o env | sed 's/^/export /')"
-    deno test --allow-all supabase/tests/e2e
+    # No hace falta esperar aquí: el propio E2E espera (esperarFunciones) a que las funciones
+    # respondan antes de usarlas.
+    deno test --allow-all --config supabase/tests/deno.json supabase/tests/e2e
     ok "E2E de backend"
   fi
 fi
