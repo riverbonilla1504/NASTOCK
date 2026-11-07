@@ -1,5 +1,7 @@
 import { assert, assertEquals } from "@std/assert";
 import { type Argumento, type Bd, ErrorDeBd } from "../_shared/bd.ts";
+import type { Broker } from "../_shared/broker/interfaz.ts";
+import { BrokerSimulado } from "../_shared/broker/simulado.ts";
 import {
   ErrorDeProveedor,
   type ProveedorDeMercado,
@@ -11,8 +13,21 @@ const SECRETO = "secreto-de-prueba";
 const AHORA = new Date("2026-11-05T15:00:00Z");
 
 /** Base falsa: universo fijo, guarda lo que recibe. */
-function bdFalsa(opciones: { falla?: Error; universo?: string[] } = {}) {
-  const estado = { cerrada: false, guardadas: 0 };
+function bdFalsa(
+  opciones: {
+    falla?: Error;
+    universo?: string[];
+    /** Símbolos que `sincronizar_activos` dice haber desactivado. */
+    desactivados?: string[];
+    mercadoAbierto?: boolean;
+  } = {},
+) {
+  const estado = {
+    cerrada: false,
+    guardadas: 0,
+    calendario: [] as unknown[],
+    activos: [] as unknown[],
+  };
   const bd: Bd = {
     llamar<T = Record<string, unknown>>(
       funcion: string,
@@ -28,6 +43,34 @@ function bdFalsa(opciones: { falla?: Error; universo?: string[] } = {}) {
               simbolo,
             })) as T[],
           );
+        case "sincronizar_calendario": {
+          const dias = argumentos[2] as unknown[];
+          estado.calendario = dias;
+          return Promise.resolve(
+            [{ guardados: dias.length, eliminados: 1 }] as T[],
+          );
+        }
+        case "mercado_abierto":
+          return Promise.resolve(
+            [{ mercado_abierto: opciones.mercadoAbierto ?? false }] as T[],
+          );
+        case "simbolos_del_universo":
+          return Promise.resolve(
+            (opciones.universo ?? ["QQQ", "QLD"]).map((simbolo) => ({
+              simbolo,
+            })) as T[],
+          );
+        case "sincronizar_activos": {
+          const activos = argumentos[0] as { simbolo: string }[];
+          estado.activos = activos;
+          return Promise.resolve(
+            activos.map((a) => ({
+              bolsillo: "usuarios",
+              simbolo: a.simbolo,
+              desactivado: (opciones.desactivados ?? []).includes(a.simbolo),
+            })) as T[],
+          );
+        }
         case "guardar_barras_diarias": {
           const barras = argumentos[0] as unknown[];
           estado.guardadas += barras.length;
@@ -52,14 +95,18 @@ function bdFalsa(opciones: { falla?: Error; universo?: string[] } = {}) {
 function manejadorCon(
   opciones: {
     mercado?: ProveedorDeMercado;
+    broker?: Broker;
     bd?: Bd;
     secreto?: string;
     abrirBd?: () => Bd;
+    reloj?: () => number;
   } = {},
 ) {
   const aperturas = { cuantas: 0 };
   const manejador = crearManejador({
     mercado: opciones.mercado ?? new MercadoSimulado(),
+    broker: opciones.broker ?? new BrokerSimulado(),
+    reloj: opciones.reloj,
     abrirBd: opciones.abrirBd ?? (() => {
       aperturas.cuantas++;
       return opciones.bd ?? bdFalsa().bd;
@@ -211,4 +258,137 @@ Deno.test("un error al cerrar la base no cambia la respuesta", async () => {
   const respuesta = await manejador(post(CON_SECRETO));
   assertEquals(respuesta.status, 200);
   await respuesta.body?.cancel();
+});
+
+// HU-027: calendario, reloj y atributos de los activos --------------------------------------
+
+Deno.test("200: sincroniza el calendario, contrasta el reloj y sincroniza los activos (CA-6, CA-7)", async () => {
+  const { bd, estado } = bdFalsa({ mercadoAbierto: true });
+  // siempre_abierto: el broker y la base (falsa) coinciden en que el mercado está abierto.
+  const { manejador } = manejadorCon({
+    bd,
+    broker: new BrokerSimulado({ modo: "siempre_abierto" }),
+  });
+
+  const respuesta = await manejador(post(CON_SECRETO));
+  const cuerpo = await respuesta.json();
+
+  assertEquals(respuesta.status, 200);
+  // Lo de HU-026 sigue en la raíz.
+  assertEquals(cuerpo.simbolos_consultados, 2);
+  // Calendario: de hoy (2026-11-05) a 60 días después, solo lunes a viernes.
+  assertEquals(cuerpo.calendario.desde, "2026-11-05");
+  assertEquals(cuerpo.calendario.hasta, "2027-01-04");
+  assertEquals(cuerpo.calendario.dias_recibidos, estado.calendario.length);
+  assertEquals(cuerpo.calendario.dias_guardados, estado.calendario.length);
+  assertEquals(cuerpo.calendario.dias_eliminados, 1);
+  assert(estado.calendario.length > 30);
+  // Reloj.
+  assertEquals(cuerpo.reloj, {
+    abierto_broker: true,
+    abierto_bd: true,
+    coincide: true,
+  });
+  // Activos: los dos símbolos del universo, con sus atributos.
+  assertEquals(cuerpo.activos, {
+    consultados: 2,
+    actualizados: 2,
+    desactivados: [],
+  });
+  assertEquals(estado.activos, [
+    { simbolo: "QQQ", negociable: true, fraccionable: true },
+    { simbolo: "QLD", negociable: true, fraccionable: true },
+  ]);
+  assertEquals(estado.cerrada, true);
+});
+
+Deno.test("un símbolo que deja de ser negociable queda en `desactivados` (CA-5)", async () => {
+  const { bd } = bdFalsa({ desactivados: ["QLD"] });
+  const { manejador } = manejadorCon({
+    bd,
+    broker: new BrokerSimulado({ noNegociables: ["QLD"] }),
+  });
+  const cuerpo = await (await manejador(post(CON_SECRETO))).json();
+  assertEquals(cuerpo.activos.desactivados, ["QLD"]);
+});
+
+Deno.test("si el reloj del broker y el calendario no coinciden lo informa y responde 200", async () => {
+  const { bd } = bdFalsa({ mercadoAbierto: false });
+  const { manejador } = manejadorCon({
+    bd,
+    broker: new BrokerSimulado({ modo: "siempre_abierto" }),
+  });
+  const respuesta = await manejador(post(CON_SECRETO));
+  const cuerpo = await respuesta.json();
+  assertEquals(respuesta.status, 200);
+  assertEquals(cuerpo.reloj.coincide, false);
+});
+
+Deno.test("si el broker falla responde 502, pero la historia de barras igual se carga", async () => {
+  const { bd, estado } = bdFalsa();
+  const caido = (ruta: string) =>
+    Promise.reject(
+      new ErrorDeProveedor(`Alpaca respondió 503 en ${ruta}`, 503),
+    );
+  const broker: Broker = {
+    calendario: () => caido("/v2/calendar"),
+    reloj: () => caido("/v2/clock"),
+    activos: () => caido("/v2/assets"),
+  };
+  const { manejador } = manejadorCon({ bd, broker });
+
+  const respuesta = await manejador(post(CON_SECRETO));
+  const cuerpo = await respuesta.json();
+
+  assertEquals(respuesta.status, 502);
+  assertEquals(cuerpo.codigo, "INTEGRACION_CAIDA");
+  assertEquals(cuerpo.calendario, {
+    error: "Alpaca respondió 503 en /v2/calendar",
+  });
+  assertEquals(cuerpo.reloj, { error: "Alpaca respondió 503 en /v2/clock" });
+  assertEquals(cuerpo.activos, {
+    error: "Alpaca respondió 503 en /v2/assets",
+  });
+  assert(cuerpo.detalle.includes("/v2/calendar"));
+  // La historia se cargó aunque el broker cayó.
+  assert(cuerpo.barras_nuevas > 1000);
+  assertEquals(cuerpo.barras_nuevas, estado.guardadas);
+  assertEquals(estado.cerrada, true);
+});
+
+Deno.test("si cae el mercado y el broker sigue, el calendario queda sincronizado", async () => {
+  const { bd, estado } = bdFalsa();
+  const mercado: ProveedorDeMercado = {
+    snapshots: () => Promise.resolve([]),
+    barras: () =>
+      Promise.reject(new ErrorDeProveedor("Alpaca respondió 429", 429)),
+  };
+  const { manejador } = manejadorCon({ bd, mercado });
+  const respuesta = await manejador(post(CON_SECRETO));
+  const cuerpo = await respuesta.json();
+  assertEquals(respuesta.status, 502);
+  assert(cuerpo.calendario.dias_guardados > 30);
+  assertEquals(cuerpo.calendario.dias_guardados, estado.calendario.length);
+  assertEquals(cuerpo.activos.consultados, 2);
+});
+
+Deno.test("la historia de barras recibe lo que queda del presupuesto de tiempo", async () => {
+  const { bd } = bdFalsa();
+  // El reloj avanza 150 s en cada lectura: al llegar a la historia ya no queda presupuesto.
+  let ahora = 0;
+  const reloj = () => (ahora += 150_000);
+  const { manejador } = manejadorCon({ bd, reloj });
+  const cuerpo = await (await manejador(post(CON_SECRETO))).json();
+  assertEquals(cuerpo.pendientes, ["QQQ", "QLD"]);
+  assertEquals(cuerpo.barras_nuevas, 0);
+});
+
+Deno.test("un error que no es del proveedor en el calendario responde 500", async () => {
+  const { bd } = bdFalsa();
+  const roto = () => Promise.reject(new TypeError("falla interna"));
+  const broker: Broker = { calendario: roto, reloj: roto, activos: roto };
+  const { manejador } = manejadorCon({ bd, broker });
+  const respuesta = await manejador(post(CON_SECRETO));
+  assertEquals(respuesta.status, 500);
+  assertEquals(await respuesta.json(), { error: "interno" });
 });

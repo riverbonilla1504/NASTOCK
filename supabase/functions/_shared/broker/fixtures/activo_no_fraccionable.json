@@ -1,0 +1,13 @@
+{
+  "id": "66666666-7777-8888-9999-000000000000",
+  "class": "us_equity",
+  "exchange": "NASDAQ",
+  "symbol": "ASML",
+  "name": "No fraccionable de prueba",
+  "status": "active",
+  "tradable": true,
+  "marginable": true,
+  "shortable": false,
+  "easy_to_borrow": false,
+  "fractionable": false
+}
