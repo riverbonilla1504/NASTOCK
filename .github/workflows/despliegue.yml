@@ -107,9 +107,9 @@ jobs:
             echo "PROVEEDOR_MERCADO=alpaca"
             echo "PROVEEDOR_BROKER=alpaca"
             echo "PROVEEDOR_JEV=$JEV"
-            # SIN DECIDIR (informe de TT-08): en el MVP corto no hay proveedor real de noticias,
-            # contexto (D-59) ni push (D-62), pero CB-91 les prohíbe ser "simulado". Nombres
-            # provisionales; ninguna función los usa todavía.
+            # En el MVP corto no hay proveedor real de noticias, contexto (D-59) ni push (D-62),
+            # pero CB-91 les prohíbe ser "simulado". Valores provisionales hasta la historia que
+            # use cada uno (docs/10 §9); ninguna función los usa todavía.
             echo "PROVEEDOR_NOTICIAS=alpaca"
             echo "PROVEEDOR_CONTEXTO=deepseek"
             echo "PROVEEDOR_PUSH=fcm"
