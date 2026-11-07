@@ -47,8 +47,8 @@ description: "Tareas de HU-027 · Calendario, reloj y estado del mercado"
 ## Fase 5: Cierre
 
 - [x] T014 Actualizar `docs/17-mapa-de-modulos.md` (M-05): tabla, funciones, RPC, `_shared/broker/`, pruebas.
-- [ ] T015 Con el candado, `scripts/verificar.sh` completo en verde.
-- [ ] T016 Commits en español con `(#46)`, cuerpo del PR en `C:\Users\Javier\Desktop\pr-027-calendario-y-estado-del-mercado.md` e informe final.
+- [x] T015 Con el candado, `scripts/verificar.sh` completo en verde.
+- [x] T016 Commits en español con `(#46)`, cuerpo del PR en `C:\Users\Javier\Desktop\pr-027-calendario-y-estado-del-mercado.md` e informe final.
 
 ## Dependencias
 
