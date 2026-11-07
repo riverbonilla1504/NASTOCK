@@ -372,19 +372,23 @@ extension ColoresDelContexto on BuildContext {
       ProfundidadAlmanaque.claro;
 }
 
-/// Tema claro (el de uso diurno, durante la jornada).
-ThemeData crearTema() => _construir(
+// Construir un ThemeData es caro y el resultado no cambia: se arma una vez.
+final ThemeData _temaClaro = _construir(
   ColoresAlmanaque.claro,
   ProfundidadAlmanaque.claro,
   Brightness.light,
 );
-
-/// Tema oscuro, con los mismos roles.
-ThemeData crearTemaOscuro() => _construir(
+final ThemeData _temaOscuro = _construir(
   ColoresAlmanaque.oscuro,
   ProfundidadAlmanaque.oscuro,
   Brightness.dark,
 );
+
+/// Tema claro (el de uso diurno, durante la jornada).
+ThemeData crearTema() => _temaClaro;
+
+/// Tema oscuro, con los mismos roles.
+ThemeData crearTemaOscuro() => _temaOscuro;
 
 TextStyle _estilo(
   double tamano,

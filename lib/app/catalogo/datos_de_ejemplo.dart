@@ -5,6 +5,7 @@ library;
 typedef FilaDeEjemplo = ({
   String simbolo,
   String nombre,
+  String? factor,
   double precio,
   double variacion,
   Duration antiguedad,
@@ -16,6 +17,12 @@ abstract final class Ejemplo {
   static final DateTime apertura = DateTime.utc(2026, 11, 6, 14, 30);
   static final DateTime cierre = DateTime.utc(2026, 11, 6, 21);
   static final DateTime ahora = DateTime.utc(2026, 11, 6, 16, 46);
+
+  /// Media jornada: cierra a las 13:00 de Bogotá.
+  static final DateTime cierreMediaJornada = DateTime.utc(2026, 11, 6, 18);
+
+  /// 19:20 en Bogotá, con la jornada ya cerrada.
+  static final DateTime despuesDelCierre = DateTime.utc(2026, 11, 7, 0, 20);
 
   /// Posición de "ahora" en la jornada (136 de 390 minutos).
   static const double fraccionAhora = 136 / 390;
@@ -55,7 +62,8 @@ abstract final class Ejemplo {
   static const List<FilaDeEjemplo> filas = [
     (
       simbolo: 'QQQ',
-      nombre: 'Invesco QQQ Trust · ×1',
+      nombre: 'Invesco QQQ Trust',
+      factor: '×1',
       precio: 512.36,
       variacion: 1.24,
       antiguedad: Duration(seconds: 8),
@@ -63,7 +71,8 @@ abstract final class Ejemplo {
     ),
     (
       simbolo: 'TQQQ',
-      nombre: 'ProShares UltraPro QQQ · ×3',
+      nombre: 'ProShares UltraPro QQQ',
+      factor: '×3',
       precio: 71.02,
       variacion: 3.69,
       antiguedad: Duration(seconds: 8),
@@ -72,6 +81,7 @@ abstract final class Ejemplo {
     (
       simbolo: 'AAPL',
       nombre: 'Apple',
+      factor: null,
       precio: 231.08,
       variacion: -0.82,
       antiguedad: Duration(minutes: 2),
@@ -80,6 +90,7 @@ abstract final class Ejemplo {
     (
       simbolo: 'MSFT',
       nombre: 'Microsoft',
+      factor: null,
       precio: 452.10,
       variacion: 0.31,
       antiguedad: Duration(seconds: 9),
@@ -88,6 +99,7 @@ abstract final class Ejemplo {
     (
       simbolo: 'NVDA',
       nombre: 'NVIDIA',
+      factor: null,
       precio: 141.77,
       variacion: -1.15,
       antiguedad: Duration(seconds: 9),

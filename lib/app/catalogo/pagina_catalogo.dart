@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/configuracion/entorno.dart';
+import '../../shared/widgets/barra_superior.dart';
 import '../tema.dart';
 import 'escena_mercado.dart';
 import 'pagina_componentes.dart';
@@ -101,9 +102,9 @@ class PaginaCatalogo extends StatelessWidget {
     final textos = Theme.of(context).textTheme;
     final c = context.colores;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Catálogo de componentes'),
-        actions: const [InterruptorDeTema()],
+      appBar: const BarraSuperior(
+        titulo: 'Catálogo de componentes',
+        acciones: [InterruptorDeTema()],
       ),
       body: ListView(
         padding: const EdgeInsets.all(Espacio.x4),

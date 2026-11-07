@@ -19,6 +19,7 @@ class FilaDeCotizacion extends StatelessWidget {
     required this.precio,
     required this.variacion,
     required this.antiguedad,
+    this.factor,
     this.desactualizado = false,
     this.alTocar,
     super.key,
@@ -26,6 +27,10 @@ class FilaDeCotizacion extends StatelessWidget {
 
   final String simbolo;
   final String nombre;
+
+  /// Apalancamiento del instrumento (p. ej. `×2`). Va en un texto propio que
+  /// nunca se corta: es un dato, no un adorno.
+  final String? factor;
   final num precio;
   final num variacion;
   final Duration antiguedad;
@@ -51,7 +56,11 @@ class FilaDeCotizacion extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(simbolo, style: textos.titleMedium),
+                    _SimboloConFactor(
+                      simbolo: simbolo,
+                      factor: factor,
+                      estilo: textos.titleMedium!,
+                    ),
                     Text(
                       nombre,
                       style: textos.bodySmall,
@@ -62,7 +71,7 @@ class FilaDeCotizacion extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: Espacio.x3),
-              Flexible(
+              Expanded(
                 flex: 3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -99,6 +108,7 @@ class TarjetaDeCotizacion extends StatelessWidget {
     required this.precio,
     required this.variacion,
     required this.antiguedad,
+    this.factor,
     this.desactualizado = false,
     this.curva,
     this.ahora,
@@ -110,6 +120,9 @@ class TarjetaDeCotizacion extends StatelessWidget {
   final String simbolo;
   final String nombre;
   final num precio;
+
+  /// Apalancamiento del instrumento (p. ej. `×2`), en un texto que no se corta.
+  final String? factor;
 
   /// Variación porcentual del día.
   final num variacion;
@@ -143,9 +156,10 @@ class TarjetaDeCotizacion extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      simbolo,
-                      style: textos.titleLarge!.copyWith(
+                    _SimboloConFactor(
+                      simbolo: simbolo,
+                      factor: factor,
+                      estilo: textos.titleLarge!.copyWith(
                         fontFamily: Familias.texto,
                         fontWeight: FontWeight.w700,
                       ),
@@ -215,6 +229,43 @@ class TarjetaDeCotizacion extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// Símbolo con su factor de apalancamiento al lado, que nunca se corta.
+class _SimboloConFactor extends StatelessWidget {
+  const _SimboloConFactor({
+    required this.simbolo,
+    required this.factor,
+    required this.estilo,
+  });
+
+  final String simbolo;
+  final String? factor;
+  final TextStyle estilo;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(text: simbolo),
+          if (factor != null)
+            TextSpan(
+              text: '  $factor',
+              style: estilo.copyWith(
+                fontFamily: Familias.condensada,
+                fontWeight: FontWeight.w700,
+                color: c.tintaSuave,
+                fontSize: (estilo.fontSize ?? 16) * 0.8,
+              ),
+            ),
+        ],
+      ),
+      style: estilo,
+      softWrap: false,
     );
   }
 }

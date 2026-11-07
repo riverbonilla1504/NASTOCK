@@ -118,9 +118,32 @@ class _Contenido extends StatelessWidget {
           ],
         ),
         const SizedBox(height: Espacio.x3),
+        Tarjeta(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              for (final (i, f) in Ejemplo.filas.indexed) ...[
+                if (i > 0) const Divider(),
+                FilaDeCotizacion(
+                  simbolo: f.simbolo,
+                  nombre: f.nombre,
+                  factor: f.factor,
+                  precio: f.precio,
+                  variacion: f.variacion,
+                  antiguedad: f.antiguedad,
+                  desactualizado: f.desactualizado,
+                ),
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(height: Espacio.x6),
+        Text('Detalle', style: textos.titleLarge),
+        const SizedBox(height: Espacio.x3),
         TarjetaDeCotizacion(
           simbolo: 'QLD',
-          nombre: 'ProShares Ultra QQQ · ×2',
+          nombre: 'ProShares Ultra QQQ',
+          factor: '×2',
           precio: 98.14,
           variacion: 2.47,
           antiguedad: const Duration(seconds: 8),
@@ -131,25 +154,6 @@ class _Contenido extends StatelessWidget {
             BotonPrimario(texto: 'Comprar', alPresionar: () {}),
             BotonSecundario(texto: 'Vender', alPresionar: () {}),
           ],
-        ),
-        const SizedBox(height: Espacio.x3),
-        Tarjeta(
-          padding: EdgeInsets.zero,
-          child: Column(
-            children: [
-              for (final (i, f) in Ejemplo.filas.indexed) ...[
-                if (i > 0) const Divider(),
-                FilaDeCotizacion(
-                  simbolo: f.simbolo,
-                  nombre: f.nombre,
-                  precio: f.precio,
-                  variacion: f.variacion,
-                  antiguedad: f.antiguedad,
-                  desactualizado: f.desactualizado,
-                ),
-              ],
-            ],
-          ),
         ),
         const SizedBox(height: Espacio.x4),
         Align(

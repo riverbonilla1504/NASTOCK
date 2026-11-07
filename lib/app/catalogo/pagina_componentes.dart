@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/errores/traduccion_de_errores.dart';
 import '../../shared/widgets/avisos.dart';
+import '../../shared/widgets/barra_superior.dart';
 import '../../shared/widgets/botones.dart';
 import '../../shared/widgets/calendario.dart';
 import '../../shared/widgets/campo.dart';
@@ -39,15 +40,24 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
     end: DateTime(2026, 11, 20),
   );
   bool _enviando = false;
+  final TextEditingController _fueraDeRango = TextEditingController(
+    text: '900',
+  );
+
+  @override
+  void dispose() {
+    _fueraDeRango.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
     final textos = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Componentes'),
-        actions: const [InterruptorDeTema()],
+      appBar: const BarraSuperior(
+        titulo: 'Componentes',
+        acciones: [InterruptorDeTema()],
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
@@ -124,9 +134,13 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
                 ayuda: 'Disponible en tu cupo: USD 1.240,00',
               ),
               const SizedBox(height: Espacio.x3),
-              const Campo(
-                etiqueta: 'Pérdida diaria máxima (%)',
-                error: 'El valor está fuera del rango permitido (mín.–máx.).',
+              const _CampoConFoco(),
+              const SizedBox(height: Espacio.x3),
+              Campo(
+                etiqueta: 'Antigüedad máxima de una cotización (s)',
+                controlador: _fueraDeRango,
+                teclado: TextInputType.number,
+                error: 'El valor está fuera del rango permitido (15–600).',
               ),
               const SizedBox(height: Espacio.x3),
               CampoDePeriodo(
@@ -297,10 +311,32 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(Espacio.x4),
-                  child: FranjaDeLaJornada(
-                    apertura: Ejemplo.apertura,
-                    cierre: Ejemplo.cierre,
-                    ahora: Ejemplo.ahora,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const _RotuloSobreGrafito('Abierta · ahora 11:46'),
+                      FranjaDeLaJornada(
+                        apertura: Ejemplo.apertura,
+                        cierre: Ejemplo.cierre,
+                        ahora: Ejemplo.ahora,
+                      ),
+                      const SizedBox(height: Espacio.x4),
+                      const _RotuloSobreGrafito(
+                        'Media jornada · cierra a las 13:00',
+                      ),
+                      FranjaDeLaJornada(
+                        apertura: Ejemplo.apertura,
+                        cierre: Ejemplo.cierreMediaJornada,
+                        ahora: Ejemplo.ahora,
+                      ),
+                      const SizedBox(height: Espacio.x4),
+                      const _RotuloSobreGrafito('Cerrada · después del cierre'),
+                      FranjaDeLaJornada(
+                        apertura: Ejemplo.apertura,
+                        cierre: Ejemplo.cierre,
+                        ahora: Ejemplo.despuesDelCierre,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -321,7 +357,7 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
               ),
             ],
           ),
-          const _Seccion(
+          _Seccion(
             titulo: 'Estados',
             children: [
               Tarjeta(
@@ -330,12 +366,19 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
                   mensaje:
                       'Cuando compres, aparecen aquí con su resultado en '
                       'vivo.',
+                  accion: BotonSecundario(
+                    texto: 'Nueva orden',
+                    alPresionar: () {},
+                  ),
                 ),
               ),
-              SizedBox(height: Espacio.x3),
-              Tarjeta(child: EstadoCargando()),
-              SizedBox(height: Espacio.x3),
-              EstadoDeError(error: ErrorDeNegocio('INTEGRACION_CAIDA')),
+              const SizedBox(height: Espacio.x3),
+              const Tarjeta(child: EstadoCargando()),
+              const SizedBox(height: Espacio.x3),
+              EstadoDeError(
+                error: const ErrorDeNegocio('INTEGRACION_CAIDA'),
+                alReintentar: () {},
+              ),
             ],
           ),
         ],
@@ -437,6 +480,51 @@ class _Serie extends StatelessWidget {
         const SizedBox(width: Espacio.x2),
         Text(nombre, style: Theme.of(context).textTheme.bodySmall),
       ],
+    );
+  }
+}
+
+/// Campo en su estado de foco, para verlo sin abrir el teclado.
+class _CampoConFoco extends StatelessWidget {
+  const _CampoConFoco();
+
+  @override
+  Widget build(BuildContext context) {
+    final textos = Theme.of(context).textTheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Monto (USD), con foco',
+          style: textos.titleSmall!.copyWith(fontSize: 13),
+        ),
+        const SizedBox(height: Espacio.x1 + 2),
+        InputDecorator(
+          isFocused: true,
+          decoration: const InputDecoration(),
+          child: Text('USD 250,00', style: textos.bodyLarge),
+        ),
+      ],
+    );
+  }
+}
+
+/// Rótulo sobre grafito para los estados de la franja.
+class _RotuloSobreGrafito extends StatelessWidget {
+  const _RotuloSobreGrafito(this.texto);
+
+  final String texto;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Espacio.x1),
+      child: Text(
+        texto,
+        style: Theme.of(context).textTheme.bodySmall!
+            .copyWith(color: c.sobreGrafitoSuave),
+      ),
     );
   }
 }

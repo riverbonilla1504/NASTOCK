@@ -16,6 +16,7 @@ Future<T?> mostrarHojaInferior<T>(
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
+    useSafeArea: true,
     showDragHandle: false,
     elevation: 0,
     backgroundColor: const Color(0x00000000),
@@ -62,7 +63,7 @@ class HojaConVelo extends StatelessWidget {
                       ),
                     ),
                   ),
-                  child,
+                  Flexible(child: SingleChildScrollView(child: child)),
                 ],
               ),
             ),
