@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/app/tema.dart';
 import 'package:inversiones/shared/widgets/barra_de_pestanas.dart';
@@ -96,31 +97,187 @@ void main() {
     });
   });
 
-  group('barra de pestañas', () {
-    testWidgets('muestra sus destinos sobre un velo con desenfoque', (
-      tester,
-    ) async {
-      final elegidos = <int>[];
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: crearTema(),
-          home: Scaffold(
-            bottomNavigationBar: BarraDePestanas(
-              actual: 0,
-              alElegir: elegidos.add,
-              pestanas: const [
-                Pestana(etiqueta: 'Mercado', icono: Icons.show_chart),
-                Pestana(etiqueta: 'Alertas', icono: Icons.notifications_none),
-              ],
+  group('isla de navegación', () {
+    const destinos = [
+      Pestana(etiqueta: 'Mercado', icono: Icons.show_chart),
+      Pestana(etiqueta: 'Oportunidades', icono: Icons.query_stats),
+      Pestana(
+        etiqueta: 'Mi cupo',
+        icono: Icons.account_balance_wallet_outlined,
+      ),
+      Pestana(etiqueta: 'Alertas', icono: Icons.notifications_none),
+    ];
+
+    Widget isla({
+      int actual = 0,
+      ValueChanged<int>? alElegir,
+      double textoEscala = 1,
+      bool sinAnimaciones = false,
+    }) {
+      return MaterialApp(
+        theme: crearTema(),
+        home: Builder(
+          builder: (context) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(textoEscala),
+              disableAnimations: sinAnimaciones,
+            ),
+            child: Scaffold(
+              extendBody: true,
+              bottomNavigationBar: BarraDePestanas(
+                actual: actual,
+                alElegir: alElegir ?? (_) {},
+                pestanas: destinos,
+              ),
             ),
           ),
         ),
       );
+    }
+
+    // Teléfono de 360 × 640 dp.
+    setUp(() {
+      final binding = TestWidgetsFlutterBinding.ensureInitialized();
+      binding.platformDispatcher.views.first
+        ..physicalSize = const Size(360, 640)
+        ..devicePixelRatio = 1;
+    });
+    tearDown(() {
+      final binding = TestWidgetsFlutterBinding.ensureInitialized();
+      binding.platformDispatcher.views.first
+        ..resetPhysicalSize()
+        ..resetDevicePixelRatio();
+    });
+
+    testWidgets('es una cápsula flotante con velo y desenfoque', (
+      tester,
+    ) async {
+      await tester.pumpWidget(isla());
 
       expect(find.byType(BackdropFilter), findsOneWidget);
-      await tester.tap(find.text('Alertas'));
-      expect(elegidos, [1]);
+      final caja = tester.getRect(find.byType(BackdropFilter));
+      expect(caja.left, greaterThanOrEqualTo(16));
+      expect(caja.right, lessThanOrEqualTo(360 - 16));
+      expect(caja.bottom, lessThanOrEqualTo(640 - 16));
+      expect(caja.center.dx, closeTo(180, 0.5));
     });
+
+    testWidgets('solo la pestaña actual muestra su rótulo', (tester) async {
+      await tester.pumpWidget(isla(actual: 1));
+
+      expect(find.text('Oportunidades'), findsOneWidget);
+      expect(find.text('Mercado'), findsNothing);
+      expect(find.text('Mi cupo'), findsNothing);
+      expect(find.text('Alertas'), findsNothing);
+    });
+
+    testWidgets('todos los destinos conservan su nombre para el lector', (
+      tester,
+    ) async {
+      final semantica = tester.ensureSemantics();
+      await tester.pumpWidget(isla(actual: 2));
+
+      for (final d in destinos) {
+        expect(
+          tester.getSemantics(find.bySemanticsLabel(d.etiqueta)),
+          matchesSemantics(
+            label: d.etiqueta,
+            isButton: true,
+            hasSelectedState: true,
+            isSelected: d.etiqueta == 'Mi cupo',
+            hasTapAction: true,
+            hasEnabledState: false,
+          ),
+          reason: d.etiqueta,
+        );
+      }
+      semantica.dispose();
+    });
+
+    testWidgets('cada destino mide al menos 48 dp', (tester) async {
+      await tester.pumpWidget(isla());
+
+      for (final d in destinos) {
+        final tamano = tester.getSize(
+          find.ancestor(
+            of: find.byIcon(d.icono),
+            matching: find.byType(InkWell),
+          ),
+        );
+        expect(tamano.width, greaterThanOrEqualTo(48), reason: d.etiqueta);
+        expect(tamano.height, greaterThanOrEqualTo(48), reason: d.etiqueta);
+      }
+    });
+
+    testWidgets('elegir un destino llama a alElegir con su posición', (
+      tester,
+    ) async {
+      final elegidos = <int>[];
+      await tester.pumpWidget(isla(alElegir: elegidos.add));
+
+      await tester.tap(find.byIcon(Icons.notifications_none));
+      await tester.tap(find.byIcon(Icons.query_stats));
+      expect(elegidos, [3, 1]);
+    });
+
+    testWidgets('el destino enfocado con el teclado se distingue', (
+      tester,
+    ) async {
+      await tester.pumpWidget(isla());
+
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+
+      final foco = find.byWidgetPredicate(
+        (w) =>
+            w is AnimatedContainer &&
+            w.decoration is ShapeDecoration &&
+            ((w.decoration! as ShapeDecoration).shape as StadiumBorder)
+                    .side
+                    .width ==
+                2,
+      );
+      expect(foco, findsOneWidget);
+    });
+
+    testWidgets('anima el cambio de pestaña y no lo hace sin animaciones', (
+      tester,
+    ) async {
+      final ancho = find.byType(BackdropFilter);
+
+      await tester.pumpWidget(isla());
+      final antes = tester.getSize(ancho).width;
+      await tester.pumpWidget(isla(actual: 1));
+      await tester.pump(const Duration(milliseconds: 20));
+      expect(find.text('Oportunidades'), findsOneWidget);
+      await tester.pumpAndSettle();
+      // ignore: avoid_print
+      print(
+        'DESPUES ${tester.getSize(ancho).width} ${tester.getSize(find.text('Oportunidades'))}',
+      );
+      expect(tester.getSize(ancho).width, isNot(closeTo(antes, 0.01)));
+
+      await tester.pumpWidget(isla(sinAnimaciones: true));
+      await tester.pumpWidget(isla(actual: 3, sinAnimaciones: true));
+      // Sin animación, el estado final llega en el primer cuadro.
+      expect(tester.hasRunningAnimations, isFalse);
+      expect(find.text('Alertas'), findsOneWidget);
+    });
+
+    for (final escala in [1.0, 1.4, 2.0, 3.0]) {
+      testWidgets('a 360 dp con texto ×$escala no se desborda', (tester) async {
+        for (var i = 0; i < destinos.length; i++) {
+          await tester.pumpWidget(isla(actual: i, textoEscala: escala));
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull, reason: destinos[i].etiqueta);
+          final caja = tester.getRect(find.byType(BackdropFilter));
+          expect(caja.left, greaterThanOrEqualTo(16));
+          expect(caja.right, lessThanOrEqualTo(360 - 16));
+        }
+      });
+    }
   });
 
   testWidgets('cada forma de borde se dibuja sin fallar', (tester) async {

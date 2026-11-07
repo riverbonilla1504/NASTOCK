@@ -279,7 +279,7 @@ Grises fríos casi neutros con un único acento morado que solo aparece donde ha
 - **Grafito** (`grafito`): barra superior (con su degradado gris), aviso temporal y descripciones emergentes.
 - **Sobre grafito** (`sobre-grafito`) y **sobre grafito suave** (`sobre-grafito-suave`): texto, íconos, horas y marcas de la franja sobre la barra.
 - **Tinta** (`tinta`): texto, botón primario, botón flotante, bordes fuertes, marcas de aviso y texto de error.
-- **Tinta suave** (`tinta-suave`): texto secundario, rótulos, pestañas no actuales.
+- **Tinta suave** (`tinta-suave`): texto secundario, rótulos, pestañas no actuales de la isla.
 - **Tinta tenue** (`tinta-tenue`): fines de semana del calendario, texto deshabilitado, pistas de campo y la línea de referencia de una gráfica.
 - **Papel** (`papel`): fondo de pantalla.
 - **Hoja** (`hoja`): listas, tarjetas, campos, avisos, hojas y diálogos.
@@ -313,13 +313,13 @@ Grises fríos casi neutros con un único acento morado que solo aparece donde ha
 ### Named Rules
 **La regla de las cifras tabulares.** Todos los estilos llevan `tnum` (`cifrasTabulares`): las columnas de dinero se alinean. Dinero siempre en USD con dos decimales.
 
-**La regla del rótulo condensado.** Los rótulos de la barra de pestañas van en Archivo condensada 12 px (600, 700 en la actual) con la escala de texto limitada a 1,2: cuatro rótulos caben en 360 dp; el ícono acompaña siempre y el lector de pantalla lee el nombre completo. Fuera de esa barra, el texto escala sin límite.
+**La regla del rótulo condensado.** El rótulo de la pestaña actual en la isla va en Archivo condensada 12 px (700) con la escala de texto limitada a 1,4: así la píldora cabe en 360 dp junto a tres íconos; si aun así no cabe, el rótulo se recorta con puntos suspensivos, el ícono acompaña siempre y el lector de pantalla y la descripción emergente dan el nombre completo. Fuera de la isla, el texto escala sin límite.
 
 ## Layout
 
 Una sola columna para el teléfono, con el mismo sistema en la web. Todo se mide en múltiplos de 4 dp (`Espacio`: 4, 8, 12, 16, 20, 24, 32). El margen lateral de pantalla y el relleno de tarjeta son de 16 dp; las filas de cotización usan 12 dp horizontales y 8 dp verticales, con un alto mínimo de 60 dp. Ningún control interactivo baja de 48 dp de alto (objetivo táctil, WCAG 2.2 AA).
 
-La pantalla de mercado se lee de arriba abajo: barra grafito (título, estado de la jornada, franja, tiempo al cierre), luego la lista en una hoja blanca sobre papel, y la barra de pestañas de 80 dp abajo (la pantalla usa `extendBody` para que el contenido pase por detrás del velo). En una fila de cotización, símbolo y nombre ocupan la izquierda (2 partes) y precio, variación y antigüedad la derecha (3 partes).
+La pantalla de mercado se lee de arriba abajo: barra grafito (título, estado de la jornada, franja, tiempo al cierre), luego la lista en una hoja blanca sobre papel, y la isla de navegación flotando abajo (la pantalla usa `extendBody` para que el contenido pase por detrás y deja al final de la lista el relleno inferior de la isla). En una fila de cotización, símbolo y nombre ocupan la izquierda (2 partes) y precio, variación y antigüedad la derecha (3 partes).
 
 Con texto grande, la barra superior va arriba del cuerpo y crece con su contenido; la franja de la jornada escala su alto con el texto.
 
@@ -338,7 +338,7 @@ Sistema híbrido y discreto: tonos (papel, hoja, grafito) para separar planos, s
 - El **área bajo la línea morada** de una gráfica: degradado vertical del morado al 24 % a transparente.
 - El **degradado gris de la barra grafito**: de `grafito-degradado-arriba` a `grafito-degradado-abajo` (más clara arriba); conserva 4,5:1 con el texto en todo su recorrido.
 - El **difuminado de lo transcurrido** en la franja de la jornada: gris `sobre-grafito` de 0 % a 16 % hacia "ahora", bajo el trazo grueso de 4 px.
-- El **desenfoque detrás de lo que flota**: barra de pestañas (`velo`), aviso temporal (`velo-grafito`) y hoja inferior (`velo-hoja`, casi opaca porque va sobre la cortina del modal).
+- El **desenfoque detrás de lo que flota**: isla de navegación (`velo`), aviso temporal (`velo-grafito`) y hoja inferior (`velo-hoja`, casi opaca porque va sobre la cortina del modal).
 - Las **sombras suaves hacia abajo** del vocabulario de arriba.
 - El **brillo gris de carga**: líneas en el lugar del dato con una banda `tinta` al 4 % que recorre `regla` cada 1,4 s y se detiene con "quitar animaciones".
 
@@ -355,7 +355,7 @@ Sistema híbrido y discreto: tonos (papel, hoja, grafito) para separar planos, s
 
 ## Shapes
 
-Esquinas apenas suavizadas: 4 dp (`Radios.control`) en botones, campos, chips, tarjetas, avisos y descripciones emergentes; 8 dp (`Radios.hoja`) en el botón flotante, la parte superior de la hoja inferior y los diálogos. La única forma de píldora es el indicador de la pestaña actual (Material 3).
+Esquinas apenas suavizadas: 4 dp (`Radios.control`) en botones, campos, chips, tarjetas, avisos y descripciones emergentes; 8 dp (`Radios.hoja`) en el botón flotante, la parte superior de la hoja inferior y los diálogos. Las únicas formas de píldora son la isla de navegación y la pestaña actual dentro de ella.
 
 Los bordes son reglas de 1 px (`regla` en tarjetas, `regla-fuerte` en campos y chips). La forma de la línea es un lenguaje propio (`FormaDeLinea`): **fina** (información), **sólida** (en vivo, hecho), **discontinua** (pendiente, advertencia), **punteada** (desactualizado), **doble** (error) y **tachada** (deshabilitado). Un precio desactualizado se subraya punteado y se atenúa.
 
@@ -388,7 +388,7 @@ Los bordes son reglas de 1 px (`regla` en tarjetas, `regla-fuerte` en campos y c
 
 ### Navigation
 - **Barra superior:** grafito con su degradado gris, título condensado de 24 px en `sobre-grafito`, íconos de la barra en `sobre-grafito` y barra de estado clara.
-- **Barra de pestañas:** 80 dp sobre el velo con desenfoque y una regla superior; indicador de píldora en `morado-tenue`; ícono y rótulo en tinta en la pestaña actual y en `tinta-suave` en las demás. En ventanas anchas, riel de navegación con los mismos roles.
+- **Isla de navegación** (teléfono; componente `BarraDePestanas`): cápsula flotante de 56 dp de alto, centrada abajo, a 16 dp de los bordes y del área segura, esquinas totalmente redondeadas, sobre el velo con desenfoque y sombra Flotante; sin regla superior. La pestaña actual lleva ícono y rótulo en tinta dentro de una píldora `morado-tenue`; las demás, solo el ícono en `tinta-suave`. Al cambiar de pestaña la píldora se mueve y la cápsula se estira o encoge en 200 ms (`Duracion.transicion`, curva de salida suave); sin animación si el sistema pide quitar animaciones. Cada destino mide al menos 48 dp, tiene foco de teclado con borde morado de 2 px y conserva su nombre completo para el lector de pantalla y la descripción emergente. En ventanas anchas se usa el riel de navegación con los mismos roles, sin la isla.
 
 ### Avisos
 Siempre en hoja con texto en tinta; cada tipo se reconoce por la forma de su marca (30 dp) y de su borde, nunca por el color:
@@ -426,7 +426,7 @@ Solo cambian estados: 150 ms (`Duracion.estado`) y 200 ms (`Duracion.transicion`
 - **Do** distingue estados y avisos por la forma de la línea y de la marca (círculo, círculo lleno, rombo, cuadrado lleno, círculo punteado; fino, sólido, discontinuo, doble, punteado).
 - **Do** pon el área bajo la línea morada de una gráfica en degradado del morado a transparente: es dato.
 - **Do** usa el degradado gris de la barra grafito (más clara arriba) y el difuminado gris de lo transcurrido en la franja de la jornada.
-- **Do** pon desenfoque detrás de lo que flota sobre el contenido (barra de pestañas, aviso temporal, hoja inferior).
+- **Do** pon desenfoque detrás de lo que flota sobre el contenido (isla de navegación, aviso temporal, hoja inferior).
 - **Do** usa sombras suaves siempre desplazadas hacia abajo en tarjetas, flotantes y hojas.
 - **Do** muestra la carga con el brillo gris en el lugar del dato y detenlo con "quitar animaciones".
 - **Do** usa esquinas de 4 dp en controles, tarjetas y avisos, y de 8 dp en el botón flotante y las hojas; mide en múltiplos de 4 dp con objetivos táctiles de 48 dp.

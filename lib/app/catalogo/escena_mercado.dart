@@ -97,11 +97,13 @@ class _Contenido extends StatelessWidget {
     final textos = Theme.of(context).textTheme;
     final c = context.colores;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(
+      // Relleno inferior: lo que ocupa la isla (MediaQuery, por `extendBody`)
+      // más aire, para que la última fila no quede tapada.
+      padding: EdgeInsets.fromLTRB(
         Espacio.x4,
         Espacio.x4,
         Espacio.x4,
-        160,
+        MediaQuery.paddingOf(context).bottom + Espacio.x4,
       ),
       children: [
         Row(
