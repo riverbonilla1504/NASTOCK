@@ -789,7 +789,7 @@ no mezcla el latido con las reglas de otra tabla.
 | `resumen_fondo()` | RPC `security definer` | Por bolsillo: efectivo, valor de posiciones, patrimonio, peso actual, peso objetivo. **Solo agregados.** | Todos (PM-30) |
 | `mi_cupo()` | RPC | Efectivo, retenido, disponible, patrimonio, resultado realizado y no realizado, rendimiento TWR del cupo | Usuario |
 | `bandeja_riesgo()` | RPC | Sugerencias vivas que decide un analista, con marca de "espera tu segunda aprobación" | Analista, Admin (lectura) |
-| `estado_mercado()` | RPC | Abierto / cerrado, próxima apertura o cierre, ventana de compras, frescura de datos | Todos |
+| `estado_mercado()` | RPC | Abierto / cerrado, próxima apertura o cierre, ventana de compras, frescura de datos (`datos_actualizados_en`, nula hasta que HU-028 tenga `cotizaciones`) | Todos |
 | `desempeno_ia(desde, hasta)` | RPC | Tasa de aprobación, rendimiento de aprobadas vs rechazadas, calibración de la confianza de JEV, valor del contexto, costo; por versión de configuración | Analista, Admin |
 | `oportunidades(bolsillo)` | RPC | Candidatas del último ciclo con puntaje, confianza, aportes, advertencias y resumen del contexto. El Usuario solo ve el bolsillo de Usuarios. | Todos |
 
@@ -892,6 +892,8 @@ Las Edge Functions las ejecutan por conexión directa a Postgres, con
 | `registrar_salud(integracion, ok, error)` | `salud_integraciones`. |
 | `suspender_cuenta`, `reactivar_cuenta`, `dar_de_baja`, `reincorporar` | Parte de base de datos de la Edge Function `admin-usuarios`. |
 | `mercado_abierto()`, `mercado_en_ventana(margen)`, `ventana_compras_abierta()` | Horario (RN-41, RR-07). |
+| `margenes_de_compra()` | Minutos tras la apertura y antes del cierre en que no se compra (RR-07). Devuelve 5 y 15 (02 §10) hasta que la tabla `parametros` exista; HU-033 cambia su cuerpo para leer `mercado.minutos_tras_apertura` y `mercado.minutos_antes_cierre`. |
+| `sincronizar_calendario(desde, hasta, datos)`, `sincronizar_activos(datos)` | Las llama `calendario-mercado`: guardan el calendario del broker (borrando lo que ya no lista dentro del rango) y los atributos `fraccionable` y `negociable` de la lista blanca, y desactivan el símbolo que deja de ser negociable (10 §1, §10 y §12). |
 | `despertar_funcion(nombre)` | `pg_net` hacia una Edge Function con el secreto interno, que envía en la cabecera `x-secreto-interno`. |
 | `auditar(actor, accion, entidad, id, detalle, antes, despues, origen)` | Agrega a la bitácora encadenando el hash (11 §4.3). `id` es texto; `detalle`, `antes`, `despues` y `origen` son opcionales. El rol del actor lo lee de `perfiles`; sin origen, `sistema` si no hay actor y `app` si lo hay. |
 | `publicar_evento(topico, evento, carga)` | Envoltura de `realtime.send`. |

@@ -49,7 +49,7 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-03.
 
 - [ ] Funciones: `_shared/broker/` con la operación `calendario` (interfaz, `alpaca.ts` y `simulado.ts` con reloj de mercado configurable: siempre abierto, cerrado o a 10 minutos del cierre).
 - [ ] Migración: tabla `calendario_mercado` (06 §5.2) con RLS de lectura.
-- [ ] Migración: `private.mercado_abierto()`, `private.mercado_en_ventana(margen)` y `private.ventana_compras_abierta()` sobre `private.ahora()`, y parámetros `mercado.minutos_tras_apertura` y `mercado.minutos_antes_cierre`.
+- [ ] Migración: `private.mercado_abierto()`, `private.mercado_en_ventana(margen)` y `private.ventana_compras_abierta()` sobre `private.ahora()`, y `private.margenes_de_compra()` con los 5 y 15 minutos de 02 §10. Los parámetros `mercado.minutos_tras_apertura` y `mercado.minutos_antes_cierre` no se crean aquí: la tabla `parametros` la crea [HU-002](../E-02-identidad-y-acceso/HU-002-alta-solo-con-invitacion-vigente.md) y [HU-033](../E-05-motor-de-politicas-y-configuracion/HU-033-parametros-configurables-con-rango-e-historial.md) cambia `margenes_de_compra()` para leerlos.
 - [ ] RPC `estado_mercado()`.
 - [ ] Función `calendario-mercado`: sincroniza calendario, reloj y los atributos `fraccionable` y `negociable` de la lista blanca; trabajo `calendario` de `pg_cron` (diario, 10:00 UTC).
 - [ ] Pruebas: pgTAP de las funciones de horario con el reloj fijado (feriado, media jornada y ventana) y `deno test` de `calendario-mercado`.
@@ -64,17 +64,18 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-03.
 | Habilita | [HU-015 · Confirmar el aporte por conciliación y repartirlo 50/25/25](../E-03-fondo-y-libro-contable/HU-015-confirmar-el-aporte-por-conciliacion-y-repartirlo-50-25-25.md) | HU-015: reutiliza el adaptador del broker y el horario de mercado. |
 | Habilita | [HU-028 · Ingesta de precios cada 15 segundos](HU-028-ingesta-de-precios-cada-15-segundos.md) | HU-028: solo consulta con el mercado en ventana. |
 | Habilita | [HU-029 · Barra diaria tras el cierre y retención de barras de minuto](HU-029-barra-diaria-tras-el-cierre-y-retencion-de-barras-de-minuto.md) | HU-029: sabe si el mercado ya cerró por el calendario. |
+| Habilita | [HU-033 · Parámetros configurables con rango e historial](../E-05-motor-de-politicas-y-configuracion/HU-033-parametros-configurables-con-rango-e-historial.md) | HU-033: cambia `private.margenes_de_compra()` para que lea los parámetros `mercado.*`. |
 | Habilita | [HU-043 · Vigencia y regeneración del contexto](../E-06-ia-contexto-y-decision/HU-043-vigencia-y-regeneracion-del-contexto.md) | HU-043: la preapertura se calcula con el calendario. |
 | Habilita | [HU-046 · Ciclo del agente: programación, uno a la vez y omisiones](../E-06-ia-contexto-y-decision/HU-046-ciclo-del-agente-programacion-uno-a-la-vez-y-omisiones.md) | HU-046: solo corre en la ventana de compras. |
 | Habilita | [HU-085 · Alertas del sistema por audiencia](../E-09-tiempo-real-y-notificaciones/HU-085-alertas-del-sistema-por-audiencia.md) | HU-085: conecta la alerta de símbolo no negociable. |
 
 ## Notas técnicas
 
-El estado del mercado se calcula, no se guarda (08 §6). El calendario nunca se programa a mano (RN-41). La alerta al Administrador por un símbolo que deja de ser negociable se conecta en [HU-085](../E-09-tiempo-real-y-notificaciones/HU-085-alertas-del-sistema-por-audiencia.md).
+El estado del mercado se calcula, no se guarda (08 §6). El calendario nunca se programa a mano (RN-41). `estado_mercado()` devuelve `datos_actualizados_en` nula hasta que [HU-028](HU-028-ingesta-de-precios-cada-15-segundos.md) tenga `cotizaciones`. La alerta al Administrador por un símbolo que deja de ser negociable se conecta en [HU-085](../E-09-tiempo-real-y-notificaciones/HU-085-alertas-del-sistema-por-audiencia.md).
 
 ## Documentación a actualizar
 
-Ninguna.
+`docs/10` §1 (operaciones `reloj` y `activos` del broker, y las tres precisiones del calendario), `docs/06` §6 y §8.2 y el historial de `docs/13` §4 (3.12).
 
 ## Definición de terminado
 

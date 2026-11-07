@@ -18,9 +18,14 @@
 
 El código habla con Alpaca a través de **adaptadores** con interfaz propia
 (`_shared/broker/`: `enviarOrden`, `consultarOrden`, `cancelarOrden`,
-`posiciones`, `cuenta`, `calendario`; `_shared/mercado/`: `snapshots`,
+`posiciones`, `cuenta`, `calendario`, `reloj`, `activos`; `_shared/mercado/`: `snapshots`,
 `barras`; `_shared/noticias/`: `noticias`). Cada adaptador tiene una
 implementación **simulada** para pruebas y demostraciones (§9).
+
+`calendario` y `reloj` leen `/v2/calendar` y `/v2/clock`; `activos` lee el
+activo de la API de trading (`/v2/assets/{símbolo}`) y entrega si es
+**negociable** (`status = active` y `tradable`) y **fraccionable**. Un símbolo
+que Alpaca no conoce (404) cuenta como no negociable ni fraccionable.
 
 ### URLs y llaves
 
@@ -31,6 +36,26 @@ implementación **simulada** para pruebas y demostraciones (§9).
 
 Cada proyecto en la nube que opere contra Alpaca tiene **su propia cuenta
 paper** y sus propias llaves.
+
+### Calendario y reloj del mercado
+
+`calendario-mercado` sincroniza el calendario cada día (trabajo `calendario`,
+10:00 UTC, [05 §7](05-arquitectura.md#7-trabajos-programados-pg_cron)) y
+nunca se programa a mano (RN-41). Se guardan la apertura y el cierre de cada
+día **en UTC**, con el horario de verano de Nueva York ya resuelto, así que
+ese cambio no exige ninguna intervención (CB-51). Lo que `docs/` no dejaba
+dicho:
+
+- **Media jornada.** Un día es `media_jornada` si su cierre es **antes de las
+  16:00 de Nueva York** (RN-41: 13:00); si no, es `regular`. La ventana de
+  compras y los vencimientos usan ese cierre real (CB-50).
+- **Rango.** Cada ejecución sincroniza **de hoy a 60 días** (hoy, en hora de
+  Nueva York). Lo que ya estaba guardado dentro de ese rango y el broker ya
+  no lista se borra; los días pasados no se tocan. Un feriado o un fin de
+  semana no tiene fila: el mercado está cerrado todo el día (CB-49).
+- **Reloj.** El reloj de Alpaca (`/v2/clock`) solo se **contrasta** con el
+  calendario guardado: si no coinciden se informa en la respuesta y en el
+  registro, y no se actúa.
 
 ---
 

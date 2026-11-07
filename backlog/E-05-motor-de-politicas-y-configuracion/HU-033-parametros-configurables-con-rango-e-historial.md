@@ -48,6 +48,7 @@ Sin escenario propio en el catálogo de 15 §4.
 - [ ] Migración: catálogo completo de 02 §10 en `parametros` con tipo, mínimo, máximo y descripción, y tabla `parametros_historial` con RLS solo para el Administrador.
 - [ ] RPC `actualizar_parametro(clave, valor, motivo)`: valida rango y tipo, guarda el historial, audita y publica `parametro` en el canal `admin`.
 - [ ] Cambio conjunto de los tres `reparto.pct_*` con la validación de que suman 100.
+- [ ] Migración: cambiar `private.margenes_de_compra()` (HU-027) para que lea `mercado.minutos_tras_apertura` y `mercado.minutos_antes_cierre` de `parametros`, en lugar de los 5 y 15 minutos fijos.
 - [ ] Pruebas pgTAP `politicas_*`: rango, suma 100, historial, lectura y permisos.
 - [ ] Verificación: `scripts/verificar.sh` completo en verde.
 
@@ -58,6 +59,7 @@ Sin escenario propio en el catálogo de 15 §4.
 | Depende de | [HU-002 · Alta solo con invitación vigente](../E-02-identidad-y-acceso/HU-002-alta-solo-con-invitacion-vigente.md) | La tabla `parametros` nace con el hook de alta. |
 | Depende de | [HU-107 · Bitácora inmutable con cadena de hash](../E-12-seguridad-auditoria-y-cumplimiento/HU-107-bitacora-inmutable-con-cadena-de-hash.md) | Registra `parametro.cambiado`. |
 | Depende de | [HU-083 · Canales privados de tiempo real](../E-09-tiempo-real-y-notificaciones/HU-083-canales-privados-de-tiempo-real.md) | Publica `parametro` en el canal `admin`. |
+| Depende de | [HU-027 · Calendario, reloj y estado del mercado](../E-04-datos-de-mercado/HU-027-calendario-reloj-y-estado-del-mercado.md) | HU-027: cambia `private.margenes_de_compra()` para que lea `parametros`. |
 | Habilita | [HU-037 · Motor de políticas: reglas de la propuesta](HU-037-motor-de-politicas-reglas-de-la-propuesta.md) | HU-037: lee los límites del catálogo de parámetros. |
 | Habilita | [HU-046 · Ciclo del agente: programación, uno a la vez y omisiones](../E-06-ia-contexto-y-decision/HU-046-ciclo-del-agente-programacion-uno-a-la-vez-y-omisiones.md) | HU-046: lee la frecuencia y los umbrales del catálogo. |
 | Habilita | [HU-054 · Versiones del prompt de contexto y de la configuración de decisión](../E-06-ia-contexto-y-decision/HU-054-versiones-del-prompt-de-contexto-y-de-la-configuracion-de-decision.md) | HU-054: los modelos se cambian como parámetros. |

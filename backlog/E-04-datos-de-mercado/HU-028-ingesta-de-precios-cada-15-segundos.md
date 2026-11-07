@@ -48,6 +48,7 @@ Sin escenario propio en el catálogo de 15 §4. Lo ejercita E2E-03.
 
 - [ ] Migración: tabla `cotizaciones` (06 §5.2) con RLS de lectura.
 - [ ] Migración: `private.publicar_cotizaciones(datos)`: guarda cotizaciones y barras de minuto y emite el broadcast `cotizaciones`.
+- [ ] Migración: llenar `datos_actualizados_en` de `public.estado_mercado()` (HU-027 la deja nula) con la antigüedad de la última cotización (`cotizaciones.recibido_en`, 09 §2). HU-032 la usa para el aviso de dato desactualizado.
 - [ ] Función `ingesta-mercado`: `snapshots` del universo y los ETFs (feed IEX), validación con zod y llamada a `publicar_cotizaciones`; autenticación con el secreto interno.
 - [ ] Migración: trabajo `ingesta_mercado` de `pg_cron` cada 15 segundos, condicionado a `private.mercado_en_ventana(interval '10 minutes')`.
 - [ ] Pruebas `deno test` de `ingesta-mercado` (precio inválido y fallo del proveedor) y pgTAP de `publicar_cotizaciones`.

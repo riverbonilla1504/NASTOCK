@@ -1,6 +1,6 @@
 # Investigación (Research): HU-027 · Calendario, reloj y estado del mercado
 
-Cada decisión indica de dónde sale. Lo que `docs/` no fija se marca como **propuesta** y se confirma en el informe.
+Cada decisión indica de dónde sale. Las que `docs/` no fijaba (D3, D4, D5 y D6) las aprobó Javier el 2026-11-06 y quedaron escritas en `docs/10` §1 (13 §4, versión 3.12).
 
 ## D1 · Las horas del calendario se guardan en UTC y el horario de verano se resuelve al convertir
 

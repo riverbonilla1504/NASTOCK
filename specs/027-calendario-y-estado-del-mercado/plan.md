@@ -34,8 +34,8 @@ Se construye por capas, cada una con sus pruebas: **migración** (tabla y RLS) �
 
 | Principio / invariante | ¿Cumple? | Cómo |
 |---|---|---|
-| I · `docs/` es la fuente de verdad | Sí, con tres puntos a confirmar | Cada tabla, función y estado sale de `docs/06` §5.2, §6 y §8, `docs/08` §6, `docs/02` §12, `docs/10`. Los puntos que `docs/` no fija se listan en "Puntos abiertos". |
-| II · Documentación primero | Pendiente de 2 confirmaciones | (1) Los márgenes de compra dependen de `parametros` (no existe aún). (2) `docs/10` §1 no lista una operación de activos en el broker, pero FR-065 la exige. Ver "Puntos abiertos". |
+| I · `docs/` es la fuente de verdad | Sí | Cada tabla, función y estado sale de `docs/06` §5.2, §6 y §8, `docs/08` §6, `docs/02` §12, `docs/10`. Los puntos que `docs/` no fija se listan en "Puntos abiertos". |
+| II · Documentación primero | Sí | Los tres puntos que `docs/` no fijaba se aprobaron y se escribieron (13 §4, 3.12): márgenes de compra, operaciones `reloj` y `activos` del broker, y la frescura de los datos. Ver "Puntos abiertos". |
 | III · Sincronía | Sí | No hay historias que citen algo que este plan cambie; se actualiza `docs/17`. |
 | IV · Investigación acotada | Sí | Módulo M-05 (`docs/17`); toca M-19 solo por `private.ahora()` y `despertar_funcion`. |
 | V · Errores conocidos | Sí | Se busca por módulo; se anota lo que cueste más de un intento. |
@@ -48,11 +48,11 @@ Se construye por capas, cada una con sus pruebas: **migración** (tabla y RLS) �
 | Inv. 8 · Simulados solo en local y CI | Sí | `elegirProveedor("broker", …)` se niega con `ENTORNO=mvp`. |
 | Inv. 9 · Migraciones solo hacia adelante | Sí | Tres migraciones nuevas con `supabase migration new`. |
 
-### Puntos abiertos (a confirmar en el informe, sin inventar reglas)
+### Puntos que `docs/` no fijaba (aprobados y escritos en `docs/`)
 
 1. **Márgenes de compra. Aprobado por Javier el 2026-11-06 ("Sí, la propuesta").** `mercado.minutos_tras_apertura` y `minutos_antes_cierre` (5 y 15, `docs/02` §10) viven en `parametros`, que aún no existe (la crea HU-002; HU-033 completa el catálogo). `private.margenes_de_compra()` devuelve 5 y 15; `ventana_compras_abierta()` y `estado_mercado()` los leen de ahí; HU-033 solo cambia el cuerpo de esa función para leer `parametros`. A anotar fuera de esta historia: la línea que falta en la tarea de HU-033 y la dependencia que falta en el issue #46.
-2. **Atributos de los activos en el broker.** `docs/10` §1 lista las operaciones del adaptador del broker sin una de activos, pero FR-065 pide sincronizar `fraccionable` y `negociable` de Alpaca (endpoint de activos de la API de trading, la misma de `/v2/calendar` y `/v2/clock`). Se agrega la operación de solo lectura `activos(simbolos)` a la misma interfaz. Propuesta: sumarla a la lista de `docs/10` §1.
-3. **Frescura de los datos** en `estado_mercado()`. `docs/06` §6 la nombra sin definirla; el insumo natural es `cotizaciones` (HU-028, aún no existe) y `mercado.max_antiguedad_cotizacion_seg` (RR-11, en `parametros`). **Pendiente de Javier.** Mientras tanto la columna `datos_actualizados_en` existe y sale nula; es lo único que habría que cambiar (una expresión en `estado_mercado()`).
+2. **Atributos de los activos en el broker. Aprobado por Javier el 2026-11-06 y escrito en `docs/10` §1 (13 §4, versión 3.12).** `docs/10` §1 lista las operaciones del adaptador del broker sin una de activos, pero FR-065 pide sincronizar `fraccionable` y `negociable` de Alpaca (endpoint de activos de la API de trading, la misma de `/v2/calendar` y `/v2/clock`). Se agrega la operación de solo lectura `activos(simbolos)` a la misma interfaz (y `reloj`, que `docs/05` §6 ya nombraba).
+3. **Frescura de los datos** en `estado_mercado()`. `docs/06` §6 la nombra sin definirla; el insumo natural es `cotizaciones` (HU-028, aún no existe) y `mercado.max_antiguedad_cotizacion_seg` (RR-11, en `parametros`). **Aprobado por Javier el 2026-11-06:** `datos_actualizados_en` sale nula hasta que HU-028 tenga `cotizaciones`; HU-028 recibió la tarea de llenarla y HU-032 la usa para el aviso.
 
 ## Estructura del proyecto (Project Structure)
 
