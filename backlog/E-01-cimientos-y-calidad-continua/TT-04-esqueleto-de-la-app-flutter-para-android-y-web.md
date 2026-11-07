@@ -49,5 +49,5 @@ Crear el proyecto Flutter `com.ritech.inversiones` para Android y web con la est
 | Habilita | [HU-005 · Ingresar con Google en Android y web](../E-02-identidad-y-acceso/HU-005-ingresar-con-google-en-android-y-web.md) | HU-005: la pantalla se construye sobre el esqueleto de la app. |
 | Habilita | [HU-084 · Gestor de tiempo real en la app](../E-09-tiempo-real-y-notificaciones/HU-084-gestor-de-tiempo-real-en-la-app.md) | HU-084: vive en `lib/core/` de la app. |
 | Habilita | [HU-115 · Motor ×2 teórico de la v2 con sus pruebas](../E-13-transicion-desde-la-v2/HU-115-motor-x2-teorico-de-la-v2-con-sus-pruebas.md) | HU-115: se copia dentro del esqueleto de la app. |
-| Habilita | [HU-116 · Tema, estilos, widgets y fuentes de la v2](../E-13-transicion-desde-la-v2/HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md) | HU-116: se copia dentro del esqueleto de la app. |
+| Habilita | [HU-116 · Identidad visual y sistema de diseño](../E-13-transicion-desde-la-v2/HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md) | HU-116: se construye dentro del esqueleto de la app. |
 | Habilita | [HU-117 · Exportador de reportes de la v2 con sus pruebas](../E-13-transicion-desde-la-v2/HU-117-exportador-de-reportes-de-la-v2-con-sus-pruebas.md) | HU-117: se copia dentro del esqueleto de la app. |

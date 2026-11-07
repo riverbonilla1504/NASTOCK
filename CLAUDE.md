@@ -12,9 +12,11 @@ si el enfoque funciona.
 
 ## Reglas de oro
 
-1. **`docs/` es la fuente de verdad de toda la aplicación.** Lo que no está
-   en `docs/` no está decidido. Nunca implementes una regla de negocio "de
-   memoria" o "porque parece razonable": búscala en `docs/`.
+1. **`docs/` es la fuente de verdad de toda la aplicación**, salvo el diseño
+   visual, que vive en `DESIGN.md` (D-67). Lo que no está en `docs/` no está
+   decidido. Nunca implementes una regla de negocio "de memoria" o "porque
+   parece razonable": búscala en `docs/`. Si `DESIGN.md` y `docs/` chocan en
+   algo que no es visual, manda `docs/`.
 
 2. **Documentación primero.** Si lo que te piden no está contemplado en
    `docs/` o lo contradice:
@@ -88,6 +90,10 @@ si el enfoque funciona.
      /speckit-analyze → consistencia entre los tres
 5. Implementar por capas (/speckit-implement), cada una con sus pruebas:
      migración (tablas, RLS) → RPC / funciones private → Edge Functions → app
+   Si la historia tiene pantallas (docs/15 §12, D-67):
+     /impeccable shape antes de construir
+     → solo tokens de lib/app/tema.dart y componentes de lib/shared/widgets/
+     → /impeccable audit + /impeccable polish, revisando en Chrome y en el emulador
 6. Escenario E2E nuevo o actualizado
 7. scripts/verificar.sh  (completo, en verde)
 8. Actualizar: docs/ (si cambió una regla) · docs/17 (si cambiaron rutas)
@@ -157,10 +163,10 @@ specify version · specify self check   # línea de comandos de spec-kit (versi�
 ## Estado del proyecto
 
 - Especificación v3.8 completa en `docs/`.
-- **Alcance: MVP corto** (D-58, `docs/14` §4.1): primero se construyen 55
-  ítems de R1 a R4, con siete simplificaciones (D-59 a D-65). Lo demás queda
-  para la fase siguiente. Antes de tomar una historia, revisa que esté en
-  `docs/14` §4.1.
+- **Alcance: MVP corto** (D-58, `docs/14` §4.1): primero se construyen 56
+  ítems de R1 a R4 (HU-116 entró por D-67), con siete simplificaciones
+  (D-59 a D-65). Lo demás queda para la fase siguiente. Antes de tomar una
+  historia, revisa que esté en `docs/14` §4.1.
 - Backlog completo en `backlog/` (227 requisitos, 13 épicas, 117 historias y
   9 tareas técnicas), publicado como issues y en el proyecto de GitHub
   "RiTech SAS · MVP" con `scripts/github/publicar-backlog.py` (`docs/16` §6).

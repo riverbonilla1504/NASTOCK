@@ -4,8 +4,10 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../core/configuracion/entorno.dart';
+import 'catalogo/pagina_catalogo.dart';
 
 class PaginaInicio extends ConsumerWidget {
   const PaginaInicio({super.key});
@@ -57,6 +59,13 @@ class PaginaInicio extends ConsumerWidget {
                       color: tema.colorScheme.error,
                     ),
                     textAlign: TextAlign.center,
+                  ),
+                ],
+                if (ref.watch(catalogoDisponibleProvider)) ...[
+                  const SizedBox(height: 24),
+                  TextButton(
+                    onPressed: () => context.push(RutasCatalogo.inicio),
+                    child: const Text('Catálogo de componentes'),
                   ),
                 ],
               ],

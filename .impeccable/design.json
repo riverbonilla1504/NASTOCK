@@ -1,0 +1,854 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-07T13:11:58+00:00",
+  "title": "Design System: RiTech Inversiones",
+  "extensions": {
+    "colorMeta": {
+      "grafito": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "canonical": "#27272A",
+        "tonalRamp": [
+          "#252527",
+          "#424245",
+          "#5E5E64",
+          "#797982",
+          "#97979E",
+          "#B6B6BA",
+          "#D4D4D6",
+          "#F2F2F3"
+        ]
+      },
+      "sobre-grafito": {
+        "role": "neutral",
+        "displayName": "Sobre grafito",
+        "canonical": "#F4F4F5",
+        "tonalRamp": [
+          "#252527",
+          "#414146",
+          "#5D5D64",
+          "#787883",
+          "#96969F",
+          "#B5B5BB",
+          "#D4D4D7",
+          "#F2F2F3"
+        ]
+      },
+      "sobre-grafito-suave": {
+        "role": "neutral",
+        "displayName": "Sobre grafito suave",
+        "canonical": "#B4B4BC",
+        "tonalRamp": [
+          "#252528",
+          "#414146",
+          "#5C5C65",
+          "#777784",
+          "#9595A0",
+          "#B5B5BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "morado-sobre-grafito": {
+        "role": "primary",
+        "displayName": "Morado sobre grafito",
+        "canonical": "#C2B3FF",
+        "tonalRamp": [
+          "#170E3F",
+          "#251175",
+          "#2F0FB2",
+          "#3606F5",
+          "#613CFA",
+          "#947CF4",
+          "#C2B6F4",
+          "#EDEAFA"
+        ]
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "#18181B",
+        "tonalRamp": [
+          "#252528",
+          "#404046",
+          "#5C5C65",
+          "#777785",
+          "#9595A0",
+          "#B4B4BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "tinta-suave": {
+        "role": "neutral",
+        "displayName": "Tinta suave",
+        "canonical": "#52525B",
+        "tonalRamp": [
+          "#252528",
+          "#414146",
+          "#5C5C65",
+          "#777784",
+          "#9696A0",
+          "#B5B5BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "tinta-tenue": {
+        "role": "neutral",
+        "displayName": "Tinta tenue",
+        "canonical": "#6B6B74",
+        "tonalRamp": [
+          "#252527",
+          "#414145",
+          "#5D5D64",
+          "#797982",
+          "#97979F",
+          "#B6B6BA",
+          "#D4D4D6",
+          "#F2F2F3"
+        ]
+      },
+      "papel": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "canonical": "#F2F2F3",
+        "tonalRamp": [
+          "#252527",
+          "#414145",
+          "#5D5D64",
+          "#797982",
+          "#97979F",
+          "#B6B6BA",
+          "#D4D4D6",
+          "#F2F2F3"
+        ]
+      },
+      "hoja": {
+        "role": "neutral",
+        "displayName": "Hoja",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7E7E7E",
+          "#9B9B9B",
+          "#B8B8B8",
+          "#D5D5D5",
+          "#F2F2F2"
+        ]
+      },
+      "regla": {
+        "role": "neutral",
+        "displayName": "Regla",
+        "canonical": "#18181B1F",
+        "tonalRamp": [
+          "#252528",
+          "#404046",
+          "#5C5C65",
+          "#777785",
+          "#9595A0",
+          "#B4B4BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "regla-fuerte": {
+        "role": "neutral",
+        "displayName": "Regla fuerte",
+        "canonical": "#18181B4D",
+        "tonalRamp": [
+          "#252528",
+          "#404046",
+          "#5C5C65",
+          "#777785",
+          "#9595A0",
+          "#B4B4BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "morado": {
+        "role": "primary",
+        "displayName": "Morado de lo vigente",
+        "canonical": "#6A45E0",
+        "tonalRamp": [
+          "#1D1538",
+          "#312067",
+          "#42269B",
+          "#5129D3",
+          "#7757DF",
+          "#A28DE3",
+          "#C9BFEB",
+          "#EFECF8"
+        ]
+      },
+      "morado-tenue": {
+        "role": "primary",
+        "displayName": "Morado tenue",
+        "canonical": "#ECE8FD",
+        "tonalRamp": [
+          "#1A123B",
+          "#29196D",
+          "#361CA5",
+          "#401AE2",
+          "#694BEB",
+          "#9986EA",
+          "#C5BBEF",
+          "#EEEBF9"
+        ]
+      },
+      "sobre-morado": {
+        "role": "neutral",
+        "displayName": "Sobre morado",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7E7E7E",
+          "#9B9B9B",
+          "#B8B8B8",
+          "#D5D5D5",
+          "#F2F2F2"
+        ]
+      },
+      "alza": {
+        "role": "secondary",
+        "displayName": "Alza verde apagado",
+        "canonical": "#2D6A4F",
+        "tonalRamp": [
+          "#1C3027",
+          "#2F5846",
+          "#408264",
+          "#4EAE83",
+          "#74C19F",
+          "#A0D0BB",
+          "#C9E2D7",
+          "#EFF6F3"
+        ]
+      },
+      "baja": {
+        "role": "secondary",
+        "displayName": "Baja rojo apagado",
+        "canonical": "#A3383C",
+        "tonalRamp": [
+          "#321A1B",
+          "#5C2B2D",
+          "#88393C",
+          "#B84348",
+          "#C96C70",
+          "#D59B9D",
+          "#E4C6C7",
+          "#F6EEEF"
+        ]
+      },
+      "grafito-degradado-arriba": {
+        "role": "neutral",
+        "displayName": "Degradado grafito, arriba",
+        "canonical": "#35353A",
+        "tonalRamp": [
+          "#252527",
+          "#414146",
+          "#5D5D64",
+          "#787883",
+          "#97979F",
+          "#B5B5BB",
+          "#D4D4D7",
+          "#F2F2F3"
+        ]
+      },
+      "grafito-degradado-abajo": {
+        "role": "neutral",
+        "displayName": "Degradado grafito, abajo",
+        "canonical": "#232326",
+        "tonalRamp": [
+          "#252527",
+          "#414145",
+          "#5D5D64",
+          "#797983",
+          "#97979F",
+          "#B5B5BA",
+          "#D4D4D6",
+          "#F2F2F3"
+        ]
+      },
+      "velo": {
+        "role": "neutral",
+        "displayName": "Velo",
+        "canonical": "#FFFFFFE6",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7E7E7E",
+          "#9B9B9B",
+          "#B8B8B8",
+          "#D5D5D5",
+          "#F2F2F2"
+        ]
+      },
+      "velo-hoja": {
+        "role": "neutral",
+        "displayName": "Velo de hoja",
+        "canonical": "#FFFFFFF7",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7E7E7E",
+          "#9B9B9B",
+          "#B8B8B8",
+          "#D5D5D5",
+          "#F2F2F2"
+        ]
+      },
+      "velo-grafito": {
+        "role": "neutral",
+        "displayName": "Velo grafito",
+        "canonical": "#27272AE0",
+        "tonalRamp": [
+          "#252527",
+          "#424245",
+          "#5E5E64",
+          "#797982",
+          "#97979E",
+          "#B6B6BA",
+          "#D4D4D6",
+          "#F2F2F3"
+        ]
+      },
+      "grafito-oscuro": {
+        "role": "neutral",
+        "displayName": "Grafito (oscuro)",
+        "canonical": "#26262A",
+        "tonalRamp": [
+          "#252527",
+          "#414146",
+          "#5C5C65",
+          "#787884",
+          "#9696A0",
+          "#B5B5BB",
+          "#D4D4D7",
+          "#F2F2F3"
+        ]
+      },
+      "sobre-grafito-suave-oscuro": {
+        "role": "neutral",
+        "displayName": "Sobre grafito suave (oscuro)",
+        "canonical": "#A9A9B2",
+        "tonalRamp": [
+          "#252528",
+          "#414146",
+          "#5C5C65",
+          "#777784",
+          "#9696A0",
+          "#B5B5BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "tinta-oscuro": {
+        "role": "neutral",
+        "displayName": "Tinta (oscuro)",
+        "canonical": "#EDEDEF",
+        "tonalRamp": [
+          "#252528",
+          "#404046",
+          "#5C5C65",
+          "#777785",
+          "#9595A0",
+          "#B4B4BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "tinta-suave-oscuro": {
+        "role": "neutral",
+        "displayName": "Tinta suave (oscuro)",
+        "canonical": "#A1A1AA",
+        "tonalRamp": [
+          "#252527",
+          "#414146",
+          "#5C5C65",
+          "#787884",
+          "#9696A0",
+          "#B5B5BB",
+          "#D4D4D7",
+          "#F2F2F3"
+        ]
+      },
+      "tinta-tenue-oscuro": {
+        "role": "neutral",
+        "displayName": "Tinta tenue (oscuro)",
+        "canonical": "#8B8B94",
+        "tonalRamp": [
+          "#252527",
+          "#414145",
+          "#5D5D64",
+          "#797982",
+          "#97979F",
+          "#B6B6BA",
+          "#D4D4D6",
+          "#F2F2F3"
+        ]
+      },
+      "papel-oscuro": {
+        "role": "neutral",
+        "displayName": "Papel (oscuro)",
+        "canonical": "#111113",
+        "tonalRamp": [
+          "#252528",
+          "#414146",
+          "#5C5C65",
+          "#777784",
+          "#9696A0",
+          "#B5B5BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "hoja-oscuro": {
+        "role": "neutral",
+        "displayName": "Hoja (oscuro)",
+        "canonical": "#1C1C1F",
+        "tonalRamp": [
+          "#252527",
+          "#414146",
+          "#5C5C65",
+          "#787884",
+          "#9696A0",
+          "#B5B5BB",
+          "#D4D4D7",
+          "#F2F2F3"
+        ]
+      },
+      "regla-oscuro": {
+        "role": "neutral",
+        "displayName": "Regla (oscuro)",
+        "canonical": "#EDEDEF1F",
+        "tonalRamp": [
+          "#252528",
+          "#404046",
+          "#5C5C65",
+          "#777785",
+          "#9595A0",
+          "#B4B4BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "regla-fuerte-oscuro": {
+        "role": "neutral",
+        "displayName": "Regla fuerte (oscuro)",
+        "canonical": "#EDEDEF4D",
+        "tonalRamp": [
+          "#252528",
+          "#404046",
+          "#5C5C65",
+          "#777785",
+          "#9595A0",
+          "#B4B4BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "morado-oscuro": {
+        "role": "primary",
+        "displayName": "Morado de lo vigente (oscuro)",
+        "canonical": "#B3A1FF",
+        "tonalRamp": [
+          "#170E3F",
+          "#251175",
+          "#2E0FB2",
+          "#3406F5",
+          "#603CFA",
+          "#937CF4",
+          "#C2B6F4",
+          "#EDEAFA"
+        ]
+      },
+      "morado-tenue-oscuro": {
+        "role": "primary",
+        "displayName": "Morado tenue (oscuro)",
+        "canonical": "#2E2850",
+        "tonalRamp": [
+          "#211E2E",
+          "#383354",
+          "#4D457C",
+          "#6256A5",
+          "#857BBA",
+          "#AAA4CC",
+          "#CECBDF",
+          "#F0F0F5"
+        ]
+      },
+      "sobre-morado-oscuro": {
+        "role": "neutral",
+        "displayName": "Sobre morado (oscuro)",
+        "canonical": "#18181B",
+        "tonalRamp": [
+          "#252528",
+          "#404046",
+          "#5C5C65",
+          "#777785",
+          "#9595A0",
+          "#B4B4BB",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "alza-oscuro": {
+        "role": "secondary",
+        "displayName": "Alza verde apagado (oscuro)",
+        "canonical": "#7FC9A0",
+        "tonalRamp": [
+          "#1C3025",
+          "#2F5841",
+          "#3F825D",
+          "#4DAE78",
+          "#74C197",
+          "#A0D0B5",
+          "#C8E2D4",
+          "#EFF6F2"
+        ]
+      },
+      "baja-oscuro": {
+        "role": "secondary",
+        "displayName": "Baja rojo apagado (oscuro)",
+        "canonical": "#F0908F",
+        "tonalRamp": [
+          "#391414",
+          "#6A1E1D",
+          "#9F2322",
+          "#D92523",
+          "#E35452",
+          "#E68B8A",
+          "#EDBEBD",
+          "#F8ECEC"
+        ]
+      },
+      "grafito-degradado-arriba-oscuro": {
+        "role": "neutral",
+        "displayName": "Degradado grafito, arriba (oscuro)",
+        "canonical": "#303035",
+        "tonalRamp": [
+          "#252527",
+          "#414146",
+          "#5C5C65",
+          "#787884",
+          "#9696A0",
+          "#B5B5BB",
+          "#D4D4D7",
+          "#F2F2F3"
+        ]
+      },
+      "grafito-degradado-abajo-oscuro": {
+        "role": "neutral",
+        "displayName": "Degradado grafito, abajo (oscuro)",
+        "canonical": "#1E1E22",
+        "tonalRamp": [
+          "#252528",
+          "#404047",
+          "#5B5B66",
+          "#767685",
+          "#9595A1",
+          "#B4B4BC",
+          "#D3D3D7",
+          "#F2F2F3"
+        ]
+      },
+      "velo-oscuro": {
+        "role": "neutral",
+        "displayName": "Velo (oscuro)",
+        "canonical": "#1C1C1FE0",
+        "tonalRamp": [
+          "#252527",
+          "#414146",
+          "#5C5C65",
+          "#787884",
+          "#9696A0",
+          "#B5B5BB",
+          "#D4D4D7",
+          "#F2F2F3"
+        ]
+      },
+      "velo-hoja-oscuro": {
+        "role": "neutral",
+        "displayName": "Velo de hoja (oscuro)",
+        "canonical": "#1C1C1FF5",
+        "tonalRamp": [
+          "#252527",
+          "#414146",
+          "#5C5C65",
+          "#787884",
+          "#9696A0",
+          "#B5B5BB",
+          "#D4D4D7",
+          "#F2F2F3"
+        ]
+      },
+      "velo-grafito-oscuro": {
+        "role": "neutral",
+        "displayName": "Velo grafito (oscuro)",
+        "canonical": "#3A3A40EB",
+        "tonalRamp": [
+          "#252527",
+          "#414146",
+          "#5D5D65",
+          "#787884",
+          "#96969F",
+          "#B5B5BB",
+          "#D4D4D7",
+          "#F2F2F3"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Máxima jerarquía; uso excepcional."
+      },
+      "cifra-grande": {
+        "displayName": "Cifra grande",
+        "purpose": "Monto principal de una pantalla."
+      },
+      "headline-small": {
+        "displayName": "Título de barra",
+        "purpose": "Título de la barra superior."
+      },
+      "title": {
+        "displayName": "Título",
+        "purpose": "Diálogos y bloques."
+      },
+      "body": {
+        "displayName": "Cuerpo",
+        "purpose": "Texto de campo y cuerpo."
+      },
+      "label": {
+        "displayName": "Botón",
+        "purpose": "Texto de botones."
+      },
+      "label-medium": {
+        "displayName": "Rótulo de estado",
+        "purpose": "Chips y estados en mayúsculas; encabezados de días."
+      },
+      "rotulo-pestana": {
+        "displayName": "Rótulo de pestaña",
+        "purpose": "Barra de pestañas, escala de texto limitada a 1,2."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sombra-tarjeta",
+        "value": "0 1px 2px rgba(24,24,27,0.06), 0 6px 16px rgba(24,24,27,0.05)",
+        "purpose": "Tarjetas sobre papel (claro). Oscuro: 0 1px 2px rgba(0,0,0,0.40), 0 8px 20px rgba(0,0,0,0.30)."
+      },
+      {
+        "name": "sombra-flotante",
+        "value": "0 2px 4px rgba(24,24,27,0.12), 0 10px 24px rgba(24,24,27,0.14)",
+        "purpose": "Botón flotante y aviso temporal (claro). Oscuro: 0 2px 6px rgba(0,0,0,0.50), 0 12px 28px rgba(0,0,0,0.40)."
+      },
+      {
+        "name": "sombra-hoja",
+        "value": "0 -4px 28px rgba(24,24,27,0.14)",
+        "purpose": "Hoja inferior (claro). Oscuro: 0 -6px 32px rgba(0,0,0,0.60)."
+      },
+      {
+        "name": "desenfoque",
+        "value": "blur(18px)",
+        "purpose": "Solo detrás de lo que flota: barra de pestañas, aviso temporal, hoja inferior."
+      },
+      {
+        "name": "degradado-grafito",
+        "value": "linear-gradient(#35353A, #232326)",
+        "purpose": "Barra superior (claro). Oscuro: linear-gradient(#303035, #1E1E22)."
+      },
+      {
+        "name": "area-de-grafica",
+        "value": "linear-gradient(rgba(106,69,224,0.24), rgba(106,69,224,0))",
+        "purpose": "Área bajo la línea morada de una gráfica; el único degradado de color."
+      }
+    ],
+    "motion": [
+      {
+        "name": "estado",
+        "value": "150ms",
+        "purpose": "Cambios de estado."
+      },
+      {
+        "name": "transicion",
+        "value": "200ms",
+        "purpose": "Transiciones entre estados."
+      },
+      {
+        "name": "brillo-de-carga",
+        "value": "1400ms linear infinite",
+        "purpose": "Brillo gris de carga; se detiene con quitar animaciones."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "telefono-minimo",
+        "value": "360px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "boton-primario",
+      "description": "Acción principal: tinta llena, 48 dp, esquinas de 4 dp.",
+      "html": "<button class=\"ds-btn-primario\">Nueva orden</button>",
+      "css": ".ds-btn-primario { font-family: 'Archivo', sans-serif; font-feature-settings: 'tnum'; background: #18181B; color: #F2F2F3; font-size: 15px; font-weight: 600; min-height: 48px; min-width: 64px; padding: 0 20px; border: none; border-radius: 4px; cursor: pointer; transition: box-shadow 150ms; } .ds-btn-primario:hover { box-shadow: inset 0 0 0 999px rgba(242,242,243,0.10); } .ds-btn-primario:focus-visible { outline: 2px solid #6A45E0; outline-offset: 2px; } .ds-btn-primario:disabled { background: rgba(24,24,27,0.12); color: #6B6B74; }"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "boton-secundario",
+      "description": "Contorno de 1 px en tinta.",
+      "html": "<button class=\"ds-btn-secundario\">Cancelar</button>",
+      "css": ".ds-btn-secundario { font-family: 'Archivo', sans-serif; font-feature-settings: 'tnum'; background: transparent; color: #18181B; font-size: 15px; font-weight: 600; min-height: 48px; padding: 0 20px; border: 1px solid #18181B; border-radius: 4px; cursor: pointer; transition: background 150ms; } .ds-btn-secundario:hover { background: rgba(24,24,27,0.12); } .ds-btn-secundario:focus-visible { outline: 2px solid #6A45E0; outline-offset: 2px; }"
+    },
+    {
+      "name": "Botón de texto",
+      "kind": "button",
+      "refersTo": "boton-texto",
+      "description": "Texto en tinta subrayado.",
+      "html": "<button class=\"ds-btn-texto\">Ver detalle</button>",
+      "css": ".ds-btn-texto { font-family: 'Archivo', sans-serif; font-feature-settings: 'tnum'; background: transparent; color: #18181B; font-size: 15px; font-weight: 600; min-height: 48px; padding: 0 12px; border: none; border-radius: 4px; text-decoration: underline; text-decoration-thickness: 1.5px; cursor: pointer; transition: background 150ms; } .ds-btn-texto:hover { background: rgba(24,24,27,0.12); } .ds-btn-texto:focus-visible { outline: 2px solid #6A45E0; }"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "campo",
+      "description": "Etiqueta encima; foco con borde morado de 2 px.",
+      "html": "<label class=\"ds-campo\"><span class=\"ds-campo-etiqueta\">Monto en USD</span><input class=\"ds-campo-entrada\" placeholder=\"0,00\"><span class=\"ds-campo-ayuda\">Disponible en tu cupo</span></label>",
+      "css": ".ds-campo { font-family: 'Archivo', sans-serif; font-feature-settings: 'tnum'; display: flex; flex-direction: column; gap: 6px; color: #18181B; } .ds-campo-etiqueta { font-size: 13px; font-weight: 600; } .ds-campo-entrada { font-family: 'Archivo', sans-serif; font-feature-settings: 'tnum'; font-size: 16px; background: #FFFFFF; color: #18181B; border: 1px solid rgba(24,24,27,0.30); border-radius: 4px; padding: 14px 12px; outline: none; transition: border-color 150ms; } .ds-campo-entrada::placeholder { color: #6B6B74; } .ds-campo-entrada:focus-visible { border-color: #6A45E0; box-shadow: inset 0 0 0 1px #6A45E0; caret-color: #6A45E0; } .ds-campo-ayuda { font-size: 12px; color: #52525B; }"
+    },
+    {
+      "name": "Chip de estado",
+      "kind": "chip",
+      "refersTo": "chip-de-estado",
+      "description": "La forma de la línea dice el estado.",
+      "html": "<span class=\"ds-chip\"><i class=\"ds-chip-trazo\"></i>EN VIVO</span> <span class=\"ds-chip\"><i class=\"ds-chip-trazo ds-discontinua\"></i>PENDIENTE</span> <span class=\"ds-chip\"><i class=\"ds-chip-trazo ds-punteada\"></i>DESACTUALIZADO</span> <span class=\"ds-chip ds-chip-destacado\"><i class=\"ds-chip-trazo\"></i>ABIERTO · HOY</span>",
+      "css": ".ds-chip { font-family: 'ArchivoCondensado', 'Archivo', sans-serif; font-stretch: 78%; font-feature-settings: 'tnum'; display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; background: #FFFFFF; color: #18181B; border: 1px solid rgba(24,24,27,0.30); border-radius: 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.6px; } .ds-chip-trazo { width: 16px; border-top: 2px solid currentColor; } .ds-discontinua { border-top-style: dashed; } .ds-punteada { border-top-style: dotted; } .ds-chip-destacado { background: #ECE8FD; border-color: transparent; } .ds-chip-destacado .ds-chip-trazo { border-top-color: #6A45E0; }"
+    },
+    {
+      "name": "Tarjeta",
+      "kind": "card",
+      "refersTo": "tarjeta",
+      "description": "Hoja blanca, regla de 1 px, sombra que cae.",
+      "html": "<div class=\"ds-tarjeta\"><div class=\"ds-tarjeta-fila\"><b>QQQ</b><b>USD 512,36</b></div><div class=\"ds-tarjeta-fila ds-suave\"><span>Invesco QQQ Trust</span><span class=\"ds-alza\">↑ +1,24 %</span></div></div>",
+      "css": ".ds-tarjeta { font-family: 'Archivo', sans-serif; font-feature-settings: 'tnum'; background: #FFFFFF; color: #18181B; border: 1px solid rgba(24,24,27,0.12); border-radius: 4px; padding: 16px; box-shadow: 0 1px 2px rgba(24,24,27,0.06), 0 6px 16px rgba(24,24,27,0.05); } .ds-tarjeta-fila { display: flex; justify-content: space-between; font-size: 16px; } .ds-suave { font-size: 12px; color: #52525B; margin-top: 4px; } .ds-alza { color: #2D6A4F; font-size: 14px; font-weight: 600; }"
+    },
+    {
+      "name": "Aviso de error",
+      "kind": "custom",
+      "refersTo": "aviso-en-linea",
+      "description": "Hoja con texto en tinta, borde doble y marca de cuadrado lleno; sin rojo.",
+      "html": "<div class=\"ds-aviso\" role=\"alert\"><span class=\"ds-aviso-marca\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"#FFFFFF\" stroke-width=\"2.5\"/></svg></span><span>No tienes disponible suficiente.</span></div>",
+      "css": ".ds-aviso { font-family: 'Archivo', sans-serif; font-feature-settings: 'tnum'; display: flex; gap: 12px; align-items: flex-start; background: #FFFFFF; color: #18181B; border: 4px double #18181B; border-radius: 4px; padding: 12px 12px 12px 14px; font-size: 14px; line-height: 1.45; } .ds-aviso-marca { flex: none; width: 30px; height: 30px; background: #18181B; border-radius: 3px; display: grid; place-items: center; }"
+    },
+    {
+      "name": "Barra superior con la franja de la jornada",
+      "kind": "nav",
+      "refersTo": "barra-superior",
+      "description": "Firma del Almanaque: grafito con degradado gris, transcurrido en trazo grueso y aguja morada.",
+      "html": "<header class=\"ds-barra\"><h1 class=\"ds-barra-titulo\">Mercado</h1><div class=\"ds-franja\"><div class=\"ds-franja-pasado\"></div><div class=\"ds-franja-aguja\"><span>11:46</span></div></div><div class=\"ds-franja-horas\"><span>09:30</span><span>16:00</span></div></header>",
+      "css": ".ds-barra { font-family: 'Archivo', sans-serif; font-feature-settings: 'tnum'; background: linear-gradient(#35353A, #232326); color: #F4F4F5; padding: 12px 16px; } .ds-barra-titulo { font-family: 'ArchivoCondensado', 'Archivo', sans-serif; font-stretch: 78%; font-feature-settings: 'tnum'; font-size: 24px; font-weight: 800; margin: 0 0 16px; } .ds-franja { position: relative; height: 16px; border-bottom: 1px solid #B4B4BC; margin-top: 16px; } .ds-franja-pasado { position: absolute; left: 0; bottom: -2px; width: 35%; height: 16px; background: linear-gradient(90deg, rgba(244,244,245,0), rgba(244,244,245,0.16)); border-bottom: 4px solid #F4F4F5; box-sizing: border-box; } .ds-franja-aguja { position: absolute; left: 35%; bottom: -6px; height: 20px; border-left: 2.5px solid #C2B3FF; } .ds-franja-aguja span { position: absolute; left: 5px; top: -16px; font-size: 12px; font-weight: 700; color: #C2B3FF; } .ds-franja-horas { display: flex; justify-content: space-between; font-size: 12px; color: #B4B4BC; margin-top: 8px; }"
+    },
+    {
+      "name": "Barra de pestañas",
+      "kind": "nav",
+      "refersTo": "barra-de-pestanas",
+      "description": "Velo con desenfoque; pestaña actual con píldora morado tenue.",
+      "html": "<nav class=\"ds-pestanas\"><a class=\"ds-pestana ds-actual\" href=\"#\"><i></i>Mercado</a><a class=\"ds-pestana\" href=\"#\"><i></i>Oportunidades</a><a class=\"ds-pestana\" href=\"#\"><i></i>Mi cupo</a><a class=\"ds-pestana\" href=\"#\"><i></i>Alertas</a></nav>",
+      "css": ".ds-pestanas { font-family: 'ArchivoCondensado', 'Archivo', sans-serif; font-stretch: 78%; font-feature-settings: 'tnum'; display: flex; height: 80px; background: rgba(255,255,255,0.90); backdrop-filter: blur(18px); border-top: 1px solid rgba(24,24,27,0.12); } .ds-pestana { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 600; color: #52525B; text-decoration: none; } .ds-pestana i { width: 64px; height: 32px; border-radius: 16px; } .ds-actual { color: #18181B; font-weight: 700; } .ds-actual i { background: #ECE8FD; } .ds-pestana:focus-visible { outline: 2px solid #6A45E0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Almanaque",
+    "overview": "El mercado es cuestión de horas: la jornada, el día y el mes son la estructura visible de la app, y cada cifra dice de cuándo es. La interfaz es un almanaque impreso en grises: papel gris claro, hojas blancas, tinta casi negra, reglas de 1 px y una barra superior en grafito que lleva la firma del sistema, la **franja de la jornada** (09:30–16:00 en hora de Bogotá, lo transcurrido en trazo grueso con un difuminado gris y la aguja de \"ahora\" en morado).\n\nEl color no decora: lleva datos. El morado marca lo vigente (la línea de una gráfica, la aguja de ahora, hoy en el calendario, el foco de un campo y, en tono tenue, lo seleccionado). El verde y el rojo apagados solo dicen hacia dónde se movió un precio, y nunca solos: siempre con flecha y signo. Los estados se leen por la **forma de la línea**, no por el color, así que la app funciona igual para quien no distingue colores. La densidad es la de una lista de precios para el teléfono, con cifras tabulares alineadas en columna.\n\nEl sistema rechaza el tablero de trading en negro con verde neón, el estilo \"panel de IA\" con degradados morados y brillos, y la alerta genérica de caja roja con ícono rojo.",
+    "keyCharacteristics": [
+      "Interfaz gris; el color solo en los datos.",
+      "Firma: la franja de la jornada sobre la barra grafito.",
+      "El estado lo dice la forma de la línea (sólida, discontinua, punteada, doble, tachada).",
+      "Archivo normal para texto y cifras; Archivo condensada para títulos y rótulos; cifras tabulares en todo.",
+      "Esquinas de 4 dp y 8 dp, módulo de 4 dp, objetivo táctil de 48 dp.",
+      "Profundidad suave: sombras siempre hacia abajo y desenfoque solo en lo que flota.",
+      "Claro y oscuro con los mismos roles; WCAG 2.2 AA medido."
+    ],
+    "rules": [
+      {
+        "name": "La regla del color que es dato",
+        "body": "El color solo lleva datos. Si un elemento morado, verde o rojo no muestra un dato vigente ni una dirección de precio, se vuelve gris.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del error sin rojo",
+        "body": "El error no usa rojo: va en tinta, con borde doble y marca de cuadrado lleno. `baja` es una dirección de precio, nunca un estado de error.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de la flecha y el signo",
+        "body": "`alza` y `baja` nunca van sin flecha y sin signo; el color confirma, no informa.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de las cifras tabulares",
+        "body": "Todos los estilos llevan `tnum` (`cifrasTabulares`): las columnas de dinero se alinean. Dinero siempre en USD con dos decimales.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla del rótulo condensado",
+        "body": "Los rótulos de la barra de pestañas van en Archivo condensada 12 px (600, 700 en la actual) con la escala de texto limitada a 1,2: cuatro rótulos caben en 360 dp; el ícono acompaña siempre y el lector de pantalla lee el nombre completo. Fuera de esa barra, el texto escala sin límite.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla de la columna de cifras libre",
+        "body": "El botón flotante no va sobre listas con cifras a la derecha: taparía precios y la marca de desactualizado. En esas pantallas la acción va en la tarjeta de detalle.",
+        "section": "layout"
+      },
+      {
+        "name": "La regla de la sombra que cae",
+        "body": "Toda sombra es gris o negra, suave y desplazada hacia abajo (la de la hoja, hacia arriba desde el borde inferior). Sin sombras centradas, duras ni de color.",
+        "section": "elevation"
+      },
+      {
+        "name": "La regla del velo en lo que flota",
+        "body": "El desenfoque solo va detrás de lo que flota sobre el contenido. El contenido mismo (tarjetas, listas, avisos en línea) es opaco.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** usa solo los tokens de `lib/app/tema.dart` y los componentes de `lib/shared/widgets/`; ninguna pantalla define colores, tamaños ni fuentes sueltos.",
+      "**Do** reserva el morado para la línea de una gráfica, la aguja de ahora, hoy en el calendario, el foco de un campo y, en tono tenue, lo seleccionado.",
+      "**Do** acompaña cada variación de precio con flecha y signo; `alza` y `baja` solo para esa dirección.",
+      "**Do** distingue estados y avisos por la forma de la línea y de la marca (círculo, círculo lleno, rombo, cuadrado lleno, círculo punteado; fino, sólido, discontinuo, doble, punteado).",
+      "**Do** pon el área bajo la línea morada de una gráfica en degradado del morado a transparente: es dato.",
+      "**Do** usa el degradado gris de la barra grafito (más clara arriba) y el difuminado gris de lo transcurrido en la franja de la jornada.",
+      "**Do** pon desenfoque detrás de lo que flota sobre el contenido (barra de pestañas, aviso temporal, hoja inferior).",
+      "**Do** usa sombras suaves siempre desplazadas hacia abajo en tarjetas, flotantes y hojas.",
+      "**Do** muestra la carga con el brillo gris en el lugar del dato y detenlo con \"quitar animaciones\".",
+      "**Do** usa esquinas de 4 dp en controles, tarjetas y avisos, y de 8 dp en el botón flotante y las hojas; mide en múltiplos de 4 dp con objetivos táctiles de 48 dp.",
+      "**Do** mantén el movimiento entre 150 y 200 ms y solo para cambios de estado.",
+      "**Do** pon la acción en la tarjeta de detalle cuando la pantalla es una lista con cifras a la derecha.",
+      "**Do** mantén cada par de texto en ≥ 4,5:1 en claro y oscuro (WCAG 2.2 AA; lo mide `test/app/tema_test.dart`) y agrega el par nuevo a esa prueba.",
+      "**Do** toma los textos de error de `docs/06` §9 y `docs/04` §11 vía `traducirError`; nunca el texto crudo de una excepción."
+    ],
+    "donts": [
+      "**Don't** uses degradados morados decorativos o de fondo, ni morado fuera de los datos.",
+      "**Don't** uses brillos, destellos o halos, ni el estilo \"panel de IA\".",
+      "**Don't** uses texto con degradado.",
+      "**Don't** pongas vidrio o desenfoque en tarjetas de contenido.",
+      "**Don't** uses sombras sin desplazamiento o de color.",
+      "**Don't** uses la caja tintada roja con ícono rojo para un error ni para ningún aviso.",
+      "**Don't** uses verde neón sobre negro ni la estética de tablero de trading.",
+      "**Don't** pongas el botón flotante sobre listas con cifras a la derecha.",
+      "**Don't** dejes que el color sea la única señal de un estado o una variación."
+    ]
+  }
+}

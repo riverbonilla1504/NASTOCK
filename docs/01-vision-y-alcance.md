@@ -180,4 +180,6 @@ fórmula ×2 sobre un simulador del índice; recomienda con una regla fija
   responsabilidades distintas (ver [03](03-roles-y-permisos.md)).
 
 Detalle de qué código se copia del repositorio v2 en
-[05 §11](05-arquitectura.md#11-código-reutilizable-del-repositorio-v2).
+[05 §11](05-arquitectura.md#11-código-reutilizable-del-repositorio-v2). La
+interfaz no se copia: la app nueva tiene un diseño visual nuevo (D-67), y la
+v2 solo sirve como referencia de contenido.

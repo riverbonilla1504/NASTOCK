@@ -41,7 +41,7 @@ terminado** común. Las historias están en `backlog/` y publicadas como issues
 | **E-10** | Cartera y reportes | Mi cupo; fondo (resumen y detalle); historial; exportación CSV; reporte diario al admin | [02 §13](02-logica-de-negocio.md#13-cifras-que-muestra-la-app) |
 | **E-11** | Administración | Pantallas del admin sobre las capacidades de las demás épicas | [03 §3](03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas) |
 | **E-12** | Seguridad, auditoría y cumplimiento | Bitácora con cadena de hash; pantalla de bitácora; suite RLS transversal; avisos (privacidad, "no es asesoría"); simulacro de restauración; lista de verificación de 11 §10 | [11](11-seguridad-y-auditoria.md) |
-| **E-13** | Transición desde la v2 | Copiar del repositorio v2 el motor ×2, widgets, tema, fuentes y exportador, con sus pruebas | [05 §11](05-arquitectura.md#11-código-reutilizable-del-repositorio-v2) |
+| **E-13** | Transición desde la v2 | Copiar del repositorio v2 el motor ×2 y el exportador, con sus pruebas; construir una identidad visual y un sistema de diseño nuevos; de la interfaz de la v2 solo se toma el contenido (D-67) | [05 §11](05-arquitectura.md#11-código-reutilizable-del-repositorio-v2) |
 | ~~E-14~~ | *Retirada* (era "paso a dinero real", fuera del alcance) | — | — |
 
 ---
@@ -105,8 +105,8 @@ no toca dinero real.
 y se les sumaron todas sus dependencias, según la sección "Relaciones" de
 cada historia. Por ejemplo, comprar necesita el cupo de la persona, el cupo
 necesita el libro contable y el libro necesita los perfiles. Con las seis
-simplificaciones de abajo quedan **55 de los 125 ítems abiertos** (TT-01 ya
-está hecha).
+simplificaciones de abajo quedaban **55 de los 125 ítems abiertos** (TT-01 ya
+está hecha). Con HU-116, que entra por D-67, son **56**.
 
 **Qué entra.**
 
@@ -118,17 +118,18 @@ está hecha).
 | Fondo y cupos (sin ellos no hay con qué comprar) | HU-013, HU-014, HU-015, HU-017, HU-018, HU-019, HU-023, HU-033, HU-034, HU-099, HU-100, HU-101 |
 | IA | HU-035, HU-037, HU-044, HU-045, HU-046, HU-047, HU-048 |
 | Compra y venta con órdenes manuales | HU-072 a HU-077, HU-091 |
+| Identidad visual y sistema de diseño (D-67) | HU-116 |
 
 **Entregas del MVP corto.** Mandan sobre la tabla de §4 mientras dure el
 MVP corto.
 
 | Entrega | Qué puede hacer alguien al final | Qué cambia respecto de §4 | E2E |
 |---|---|---|---|
-| **R1 · Ver el mercado en vivo** | Entrar con Google por invitación y ver el NASDAQ-100 moverse | Sin la comparación QQQ / QLD / ×2 (HU-031), sin "Ver mi perfil" (HU-008) y sin las piezas de la v2 (HU-115, HU-116, HU-117) | E2E-01, E2E-02, E2E-03 |
+| **R1 · Ver el mercado en vivo** | Entrar con Google por invitación y ver el NASDAQ-100 moverse | Sin la comparación QQQ / QLD / ×2 (HU-031), sin "Ver mi perfil" (HU-008) y sin el motor ×2 ni el exportador de la v2 (HU-115, HU-117). Entra HU-116 con otro alcance: identidad visual y sistema de diseño (D-67) | E2E-01, E2E-02, E2E-03 |
 | **R2 · El fondo existe** | El admin carga el capital, reparte cupos y maneja usuarios; cada empleado ve su cupo | La pantalla de capital (HU-099) solo registra y confirma aportes. Salen retiros (HU-016), ajustes (HU-022), resumen del fondo (HU-020), foto diaria (HU-021), pantalla de bitácora (HU-108), suite de aislamiento (HU-109) y la confirmación biométrica (HU-009, D-61) | E2E-04, E2E-05 |
 | **R3 · La IA analiza** | Ver en **Oportunidades** qué acciones evalúa la IA, con puntaje, confianza y explicación | Sin noticias ni contexto de DeepSeek (D-59). Salen las alertas de contradicción (HU-049), el presupuesto de IA (HU-050), el análisis bajo demanda (HU-051), la lista blanca editable (HU-036, HU-102), la pantalla de salud (HU-103) y la bandeja de notificaciones (HU-086, D-62) | E2E-06 (siempre "sin contexto"), E2E-07 |
 | **R4 · Decidir y operar en paper** | Ver en Oportunidades qué recomienda la IA, crear órdenes manuales de compra y de venta en su cupo, y verlas ejecutadas y protegidas en Alpaca paper | Sin sugerencias de la IA (D-65): salen la bandeja, aprobar, rechazar, el vencimiento y el reparto de señales en cupos (HU-058, HU-059, HU-061, HU-062, HU-063, HU-066). Solo opera el bolsillo de Usuarios (D-64), sin opinión de la IA en la orden manual (D-60) y solo acciones enteras (D-63). Se vende con una orden manual o al tocar el stop-loss o el objetivo | E2E-08 (desde una orden manual), E2E-11 (sin opinión) |
-| **Después del MVP corto** | — | R5 y R6 completas y los ítems que salen de R1 a R4: 70 en total | E2E-09, E2E-10, E2E-12 a E2E-16 |
+| **Después del MVP corto** | — | R5 y R6 completas y los ítems que salen de R1 a R4: 69 en total | E2E-09, E2E-10, E2E-12 a E2E-16 |
 
 **Las siete simplificaciones.** Cada una está anotada donde se define su
 regla. La especificación completa se conserva para la fase siguiente.
@@ -164,6 +165,10 @@ ajusta a estas decisiones:
 - HU-099 solo registra y confirma aportes.
 - HU-006 y HU-097 muestran solo las pantallas del MVP corto, según la
   tabla de [03 §3](03-roles-y-permisos.md#3-qué-ve-cada-rol-pantallas).
+- HU-116 ya no copia la interfaz de la v2: construye una identidad visual y
+  un sistema de diseño nuevos (`PRODUCT.md`, `DESIGN.md`, el tema y los
+  componentes comunes); de la v2 solo toma el contenido (D-67). Las demás historias con
+  pantallas siguen [15 §12](15-calidad-pruebas-y-ci-cd.md#12-diseño-visual-de-las-pantallas-d-67).
 
 Cada una tiene en `backlog/` una sección **MVP corto** con lo que cambia.
 Las dependencias que no aplican están marcadas en su tabla de relaciones

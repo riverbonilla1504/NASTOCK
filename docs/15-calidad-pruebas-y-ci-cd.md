@@ -226,3 +226,21 @@ solo en PR y en `main`.
 | Cuenta de Alpaca paper accesible (solo lectura) | OK |
 | Salud de integraciones sin `caido` | OK o alerta |
 | Configuración de decisión y prompt de contexto activos | Exactamente uno de cada uno |
+
+---
+
+## 12. Diseño visual de las pantallas (D-67)
+
+[`DESIGN.md`](../DESIGN.md), en la raíz del repositorio, manda en lo visual: tokens, color,
+tipografía, componentes, movimiento y tono visual. `docs/` sigue mandando en
+las reglas de negocio, los flujos, los permisos, los datos y los textos de
+error ([05 §11](05-arquitectura.md#11-código-reutilizable-del-repositorio-v2)).
+
+Toda historia que crea o cambia una pantalla sigue tres pasos con el plugin
+impeccable:
+
+| Momento | Qué se hace |
+|---|---|
+| Antes de construir | `/impeccable shape` de la pantalla, a partir de la historia y de `DESIGN.md` |
+| Al construir | Solo los tokens de `lib/app/tema.dart` y los componentes de `lib/shared/widgets/`. Si falta un componente, se agrega al sistema (con su prueba de widget y su entrada en `DESIGN.md`), no se dibuja suelto en la pantalla |
+| Al terminar | `/impeccable audit` y `/impeccable polish`, revisando la pantalla en Chrome y en el emulador de Android. Lo que encuentran se corrige en el mismo PR |

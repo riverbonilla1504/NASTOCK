@@ -2,20 +2,20 @@
 
 | Campo | Valor |
 |---|---|
-| Objetivo | Reutilizar del repositorio v2 lo que ya funciona y está probado: el motor ×2, la interfaz y el exportador. |
+| Objetivo | Reutilizar del repositorio v2 lo que ya funciona y está probado: el motor ×2 y el exportador. La interfaz no se copia: la app tiene un diseño visual nuevo y de la v2 solo se toma el contenido (D-67). |
 | Documentación fuente | docs/05 §11 |
 | Módulos (docs/17) | M-05, M-15, M-20 |
 | Depende de | — (en paralelo con E-01) |
 | Entregas en las que avanza | R1 |
 | Etiquetas | `epica` · `E-13` |
 
-> **MVP corto** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): entran 0 de los 3 ítems de esta épica. Los marcados *fuera del MVP corto* quedan para la fase siguiente; las relaciones de abajo son las del plan completo.
+> **MVP corto** ([docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): entra 1 de los 3 ítems de esta épica: HU-116, con otro alcance (D-67). Los marcados *fuera del MVP corto* quedan para la fase siguiente; las relaciones de abajo son las del plan completo.
 
 ## Capacidades
 
 Tomadas de `docs/14` §2:
 
-- Copiar del repositorio v2 el motor ×2, widgets, tema, fuentes y exportador, con sus pruebas
+- Copiar del repositorio v2 el motor ×2 y el exportador, con sus pruebas; construir una identidad visual y un sistema de diseño nuevos; de la interfaz de la v2 solo se toma el contenido (D-67)
 
 ## Historias de usuario
 
@@ -24,7 +24,7 @@ Cada historia tiene su narrativa, sus criterios de aceptación, sus tareas y sus
 | ID | Historia | Rol | Entrega | Prioridad | Depende de |
 |---|---|---|---|---|---|
 | [HU-115](HU-115-motor-x2-teorico-de-la-v2-con-sus-pruebas.md) | Motor ×2 teórico de la v2 con sus pruebas · *fuera del MVP corto* | Usuario | R1 | Media | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
-| [HU-116](HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md) | Tema, estilos, widgets y fuentes de la v2 · *fuera del MVP corto* | Usuario | R1 | Baja | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
+| [HU-116](HU-116-tema-estilos-widgets-y-fuentes-de-la-v2.md) | Identidad visual y sistema de diseño | Usuario | R1 | Baja | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
 | [HU-117](HU-117-exportador-de-reportes-de-la-v2-con-sus-pruebas.md) | Exportador de reportes de la v2 con sus pruebas · *fuera del MVP corto* | Administrador | R1 | Baja | [TT-04](../E-01-cimientos-y-calidad-continua/TT-04-esqueleto-de-la-app-flutter-para-android-y-web.md) |
 
 ## Relaciones
@@ -34,7 +34,7 @@ Una flecha `A --> B` significa que B depende de A. Los nodos con borde punteado 
 ```mermaid
 flowchart LR
   HU115["HU-115<br/>Motor ×2 teórico de la v2 con sus…"]
-  HU116["HU-116<br/>Tema, estilos, widgets y fuentes…"]
+  HU116["HU-116<br/>Identidad visual y sistema de…"]
   HU117["HU-117<br/>Exportador de reportes de la v2…"]
   TT04(["TT-04"]):::externa
   TT04 --> HU115

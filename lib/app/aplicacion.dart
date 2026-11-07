@@ -1,4 +1,4 @@
-/// Raíz de la app: tema base y enrutador.
+/// Raíz de la app: temas claro y oscuro (HU-116) y enrutador.
 library;
 
 import 'package:flutter/material.dart';
@@ -15,6 +15,8 @@ class Aplicacion extends ConsumerWidget {
     return MaterialApp.router(
       title: 'RiTech Inversiones',
       theme: crearTema(),
+      darkTheme: crearTemaOscuro(),
+      themeMode: ThemeMode.system,
       routerConfig: ref.watch(enrutadorProvider),
     );
   }
