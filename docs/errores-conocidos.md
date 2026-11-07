@@ -180,3 +180,17 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Causa: en Supabase `postgres` no es superusuario y `dblink` exige que el servidor le pida la clave, pero la conexión a `127.0.0.1` es de confianza y no la pide. Con un socket Unix `inet_server_addr()` es nulo y el texto de conexión queda `host= port=…`.
 - Solución: crear `dblink` dentro de la prueba (`create extension if not exists dblink with schema extensions`, se deshace con ella) y conectar a `inet_server_addr()` (TCP, como lo hace `supabase test db`) con `user=postgres password=postgres`. La consulta de la segunda conexión va en `begin; …; rollback;` y se cancela antes de terminar, para que no deje nada confirmado.
 - Para no repetirlo: `supabase/tests/database/06_auditoria_auditar_test.sql` es el ejemplo. Las pruebas que necesiten dos conexiones se corren con `supabase test db`, no por un socket Unix.
+
+### EC-022 · `deno test` del E2E falla con "Could not find a matching package for 'npm:postgres…' in the node_modules directory"
+- Fecha: 2026-11-07 · Módulos: M-20 · Origen: TT-06
+- Síntoma: `deno test --allow-all supabase/tests/e2e` termina con `Import "postgres" not a dependency` (sin configuración) o con `Could not find a matching package … in the node_modules directory` (con `npm:` en el import).
+- Causa: Deno no descubre el `deno.json` de la carpeta de las pruebas; hay que indicárselo con `--config`. Además, si en una carpeta superior del equipo hay un `package.json` (por ejemplo `C:\Users\<usuario>\package.json`), Deno exige `node_modules` y rechaza los paquetes `npm:`.
+- Solución: `supabase/tests/deno.json` (con `"nodeModulesDir": "none"` y las dependencias de las pruebas) y siempre `deno test --allow-all --config supabase/tests/deno.json supabase/tests/e2e` (y `…/humo`), en `scripts/verificar.sh`, `ci.yml` y `despliegue.yml`.
+- Para no repetirlo: ejecutar las pruebas de `supabase/tests/` solo con `--config supabase/tests/deno.json`; sin eso fallan en equipos con un `package.json` en una carpeta superior aunque en CI pasen.
+
+### EC-023 · `flutter drive` falla con "session not created: This version of ChromeDriver only supports Chrome version N"
+- Fecha: 2026-11-07 · Módulos: M-20 · Origen: TT-06
+- Síntoma: el E2E de la app termina con `SessionNotCreatedException (500): … only supports Chrome version 157` y `Current browser version is 156…`.
+- Causa: la versión mayor de `chromedriver` y la de Chrome tienen que coincidir. En CI coinciden (`$CHROMEWEBDRIVER` viene con el Chrome del ejecutor); en un equipo local Chrome se actualiza solo y `chromedriver` (instalado con Scoop) no.
+- Solución: poner `chromedriver` en la misma versión mayor que Chrome (`chrome://version` y `chromedriver --version`), actualizando uno u otro.
+- Para no repetirlo: al actualizar Chrome en el equipo de desarrollo, actualizar también `chromedriver`.
