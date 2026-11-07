@@ -15,7 +15,10 @@ RAPIDO=false
 cd "$(dirname "$0")/.."
 RAIZ="$(pwd)"
 PIDS=()
-limpiar() { for p in "${PIDS[@]:-}"; do [[ -n "$p" ]] && kill "$p" 2>/dev/null || true; done; }
+limpiar() {
+  for p in "${PIDS[@]:-}"; do [[ -n "$p" ]] && kill "$p" 2>/dev/null || true; done
+  rm -f "$RAIZ/supabase/.temp/env.e2e"  # copia temporal de .env.e2e con el secreto interno de prueba
+}
 trap limpiar EXIT
 
 paso() { printf '\n\033[1m▶ %s\033[0m\n' "$1"; }

@@ -42,7 +42,7 @@ reales, del costo de las IAs ni del ingreso con Google. Por eso:
 | Usuarios de prueba | Uno por rol (`admin@prueba.local`, `analista1@…`, `analista2@…`, `usuario1@…`, `usuario2@…`) con correo + contraseña, creados por `seed.sql`. Solo en local y CI (`auth.proveedores_permitidos` incluye `email` únicamente ahí). |
 | Ayudas de prueba | Esquema `pruebas` (fijar reloj, elegir escenario de un proveedor, leer push simulados) creado **solo por `seed.sql`**, que Supabase aplica en local y nunca en `db push` a la nube. |
 | Datos | `seed.sql`: parámetros por defecto, un año de barras diarias de prueba, noticias y contextos pregrabados, configuración de decisión v1. La lista blanca (NASDAQ-100 + ETFs) la siembra una **migración**, no `seed.sql`, porque también debe existir en la nube ([10 §12](10-integracion-bolsa.md#12-universo-del-nasdaq-100)). |
-| Variables | `supabase/functions/.env.e2e` (en el repositorio, sin secretos): `ENTORNO=ci` y todos los `PROVEEDOR_*=simulado`. |
+| Variables | `supabase/functions/.env.e2e` (en el repositorio, sin secretos): `ENTORNO=ci` y todos los `PROVEEDOR_*=simulado`. El E2E también necesita el secreto interno para llamar a las funciones: `scripts/verificar.sh` y CI lo suman a una copia temporal de ese archivo con el valor de prueba que `seed.sql` pone en Vault (no es un secreto real y solo existe en local y CI). |
 
 Regla: **nada de lo anterior puede llegar a la nube** (CB-91, CB-92). La
 prueba de humo lo verifica en cada despliegue.
