@@ -48,15 +48,15 @@ E2E-02 (nuevo)
 
 ## Tareas
 
-- [ ] Migración: tipo `estado_invitacion` y tabla `invitaciones` (06 §5.1) con el índice único de una invitación pendiente por correo y RLS de lectura solo para el Administrador.
-- [ ] Migración: tabla `parametros` (06 §5.6) con RLS de lectura y las claves `auth.dominios_permitidos` y `auth.proveedores_permitidos`.
-- [ ] Migración: `private.error_auth` y hook `private.antes_de_crear_usuario` con sus permisos para `supabase_auth_admin`.
-- [ ] Migración: trigger `private.al_crear_usuario` (perfil activo, invitación aceptada y auditoría); el cupo lo agrega [HU-017](../E-03-fondo-y-libro-contable/HU-017-cupo-al-aceptar-la-invitacion.md).
-- [ ] Migración: trigger que sincroniza `perfiles.email` cuando cambia en `auth.users` y lo audita.
-- [ ] `seed.sql`: un usuario de prueba por rol con correo y contraseña, y `email` agregado a `auth.proveedores_permitidos` solo en la semilla.
-- [ ] Pruebas pgTAP `auth_*`: hook con y sin invitación, dominio, proveedor y vencimiento.
-- [ ] E2E-02 de backend: el invitado entra; el no invitado y el proveedor no permitido son rechazados con su mensaje.
-- [ ] Verificación: `scripts/verificar.sh` completo en verde.
+- [x] Migración: tipo `estado_invitacion` y tabla `invitaciones` (06 §5.1) con el índice único de una invitación pendiente por correo y RLS de lectura solo para el Administrador.
+- [x] Migración: tabla `parametros` (06 §5.6) con RLS de lectura y las claves `auth.dominios_permitidos` y `auth.proveedores_permitidos`.
+- [x] Migración: `private.error_auth` y hook `private.antes_de_crear_usuario` con sus permisos para `supabase_auth_admin`.
+- [x] Migración: trigger `private.al_crear_usuario` (perfil activo, invitación aceptada y auditoría); el cupo lo agrega [HU-017](../E-03-fondo-y-libro-contable/HU-017-cupo-al-aceptar-la-invitacion.md).
+- [x] Migración: trigger que sincroniza `perfiles.email` cuando cambia en `auth.users` y lo audita.
+- [x] `seed.sql`: un usuario de prueba por rol con correo y contraseña, y `email` agregado a `auth.proveedores_permitidos` solo en la semilla.
+- [x] Pruebas pgTAP `auth_*`: hook con y sin invitación, dominio, proveedor y vencimiento.
+- [x] E2E-02 de backend: el invitado entra; el no invitado y el proveedor no permitido son rechazados con su mensaje.
+- [x] Verificación: `scripts/verificar.sh` completo en verde.
 
 ## Relaciones
 

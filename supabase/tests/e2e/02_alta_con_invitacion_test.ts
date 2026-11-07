@@ -8,7 +8,12 @@
 
 import { assert, assertEquals, assertStringIncludes } from "@std/assert";
 import { esperarFunciones } from "./utilidades/funciones.ts";
-import { conBd, fijarReloj, restablecer, type Sql } from "./utilidades/pruebas.ts";
+import {
+  conBd,
+  fijarReloj,
+  restablecer,
+  type Sql,
+} from "./utilidades/pruebas.ts";
 import { iniciarSesion, sesionAnonima } from "./utilidades/sesion.ts";
 import { entorno } from "./utilidades/entorno.ts";
 

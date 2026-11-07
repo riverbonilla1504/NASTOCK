@@ -4,7 +4,7 @@
 -- docs/12 CB-01, CB-02, CB-05, CB-92. CA-7 (ingreso de prueba) lo cubre el E2E-02.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(41);
+select plan(39);
 
 -- Configuración como en la nube: solo Google y un dominio ----------------------------------------
 update public.parametros set valor = '["google"]'::jsonb where clave = 'auth.proveedores_permitidos';
@@ -62,15 +62,22 @@ set local request.jwt.claims to '{"sub": "00000000-0000-4000-8000-000000000009",
 select is((select count(*)::int from public.parametros), 0, 'quien no tiene perfil no lee los parámetros');
 reset role;
 
--- Hook antes de crear usuario, ejecutado como supabase_auth_admin (EC-009) ------------------------
+-- Hook antes de crear usuario (EC-009). No se puede asumir supabase_auth_admin desde la prueba (solo un
+-- superusuario puede otorgar su rol): se comprueban sus permisos y el hook se ejecuta como postgres; el E2E-02
+-- lo ejercita con el servicio de Auth real ------------------------
 select ok(has_function_privilege('supabase_auth_admin', 'private.antes_de_crear_usuario(jsonb)', 'execute'),
           'supabase_auth_admin ejecuta el hook');
 select ok(not has_function_privilege('authenticated', 'private.antes_de_crear_usuario(jsonb)', 'execute'),
           'authenticated no ejecuta el hook');
 select ok(not has_function_privilege('anon', 'private.antes_de_crear_usuario(jsonb)', 'execute'),
           'anon no ejecuta el hook');
+select ok(has_table_privilege('supabase_auth_admin', 'public.invitaciones', 'select')
+          and has_table_privilege('supabase_auth_admin', 'public.parametros', 'select'),
+          'supabase_auth_admin puede leer invitaciones y parametros');
+select is((select count(*)::int from pg_policies
+            where tablename in ('invitaciones', 'parametros') and roles = '{supabase_auth_admin}'), 2,
+          'y tiene una política de lectura en cada una');
 
-set local role supabase_auth_admin;
 
 select is(private.antes_de_crear_usuario('{"user": {"email": "vigente@ritech.test", "app_metadata": {"provider": "google"}}}'),
           '{}'::jsonb, 'CA-1: invitación pendiente y vigente, dominio y proveedor permitidos: acepta');
@@ -97,16 +104,13 @@ select is(private.antes_de_crear_usuario('{"user": {"email": "vigente@ritech.tes
 select is(private.antes_de_crear_usuario('{"user": {"email": "vigente@ritech.test", "app_metadata": {}}}') -> 'error' ->> 'http_code',
           '403', 'sin proveedor informado, rechaza');
 
-reset role;
 
 -- La invitación se vence con el reloj (private.ahora) -------------------------------------------
 select pruebas.fijar_reloj(now() + interval '8 days');
-set local role supabase_auth_admin;
 select is(private.antes_de_crear_usuario('{"user": {"email": "vigente@ritech.test", "app_metadata": {"provider": "google"}}}')
             -> 'error' ->> 'message',
           'Tu correo no tiene una invitación vigente. Pídele una al administrador.',
           'CB-02: pasados 7 días la invitación pendiente deja de servir');
-reset role;
 select pruebas.fijar_reloj(null);
 
 -- Trigger de alta (CA-1) ------------------------------------------------------------------------
