@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/tema.dart';
 import 'botones.dart';
+import 'campo.dart';
 import 'hoja_inferior.dart';
 
 const List<String> _meses = [
@@ -606,7 +607,7 @@ class CampoDePeriodo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(etiqueta, style: textos.titleSmall!.copyWith(fontSize: 13)),
+        EtiquetaDeCampo(etiqueta),
         const SizedBox(height: Espacio.x1 + 2),
         Semantics(
           button: true,

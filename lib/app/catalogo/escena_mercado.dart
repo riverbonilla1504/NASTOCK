@@ -75,7 +75,7 @@ class _EscenaMercadoState extends State<EscenaMercado> {
         alElegir: (i) => setState(() => _pestana = i),
         pestanas: const [
           Pestana(etiqueta: 'Mercado', icono: Icons.show_chart),
-          Pestana(etiqueta: 'Oportunidades', icono: Icons.insights_outlined),
+          Pestana(etiqueta: 'Oportunidades', icono: Icons.query_stats),
           Pestana(
             etiqueta: 'Mi cupo',
             icono: Icons.account_balance_wallet_outlined,

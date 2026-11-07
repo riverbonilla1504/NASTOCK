@@ -504,10 +504,7 @@ class _CampoConFoco extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Monto (USD), con foco',
-          style: textos.titleSmall!.copyWith(fontSize: 13),
-        ),
+        const EtiquetaDeCampo('Monto (USD), con foco'),
         const SizedBox(height: Espacio.x1 + 2),
         InputDecorator(
           isFocused: true,

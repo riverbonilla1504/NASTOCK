@@ -46,7 +46,7 @@ class Campo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(etiqueta, style: textos.titleSmall!.copyWith(fontSize: 13)),
+        EtiquetaDeCampo(etiqueta),
         const SizedBox(height: Espacio.x1 + 2),
         TextField(
           controller: controlador,
@@ -78,6 +78,21 @@ class Campo extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Rótulo que va encima de un campo (lo usan `Campo` y `CampoDePeriodo`).
+class EtiquetaDeCampo extends StatelessWidget {
+  const EtiquetaDeCampo(this.texto, {super.key});
+
+  final String texto;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      texto,
+      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 13),
     );
   }
 }
