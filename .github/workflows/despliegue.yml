@@ -189,4 +189,4 @@ jobs:
         env:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
-        run: deno test --allow-all supabase/tests/humo
+        run: deno test --allow-all --config supabase/tests/deno.json supabase/tests/humo
