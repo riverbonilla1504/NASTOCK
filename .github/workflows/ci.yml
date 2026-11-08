@@ -26,7 +26,7 @@ jobs:
       e2e_backend: ${{ steps.d.outputs.e2e_backend }}
       e2e_app: ${{ steps.d.outputs.e2e_app }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - id: d
         run: |
           existe() { if [ -e "$1" ]; then echo true; else echo false; fi; }
@@ -41,8 +41,8 @@ jobs:
     name: Documentación
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: python scripts/verificar_docs.py docs
@@ -51,7 +51,7 @@ jobs:
     name: Reglas de arquitectura
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: La IA no importa el broker
         run: |
           for f in agente contexto-ia opinion-ia; do
@@ -107,7 +107,7 @@ jobs:
     name: Escáner de secretos
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       # gitleaks en su imagen oficial (gratuito, sin cuenta ni licencia). Revisa el
@@ -121,7 +121,7 @@ jobs:
     name: Escáner de dependencias
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # OSV-Scanner (Google, gratuito) lee pubspec.lock y falla si alguna dependencia
       # tiene una vulnerabilidad conocida.
       - name: osv-scanner
@@ -135,7 +135,7 @@ jobs:
     if: needs.detectar.outputs.app == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -151,8 +151,8 @@ jobs:
     if: needs.detectar.outputs.supabase == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v3
         with:
           version: 2.122.0  # la misma que se usa en local
       - uses: denoland/setup-deno@v2
@@ -175,8 +175,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v3
         with:
           version: 2.122.0  # la misma que se usa en local
       - uses: denoland/setup-deno@v2

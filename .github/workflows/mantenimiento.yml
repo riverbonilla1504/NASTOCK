@@ -42,7 +42,7 @@ jobs:
     if: vars.SUPABASE_URL != ''
     runs-on: ubuntu-latest
     steps:
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v3
         with:
           version: 2.122.0 # la misma que se usa en local (EC-024)
       - name: Volcado y cifrado
@@ -62,7 +62,7 @@ jobs:
             --symmetric --cipher-algo AES256 \
             -o "respaldo-$(date -u +%Y%m%d).tar.gz.gpg" respaldo.tar.gz
           rm -f esquema.sql datos.sql respaldo.tar.gz
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: respaldo-${{ github.run_id }}
           path: respaldo-*.gpg
