@@ -16,12 +16,9 @@ import '../features/auth/presentation/pagina_de_ingreso.dart';
 import '../features/auth/presentation/sesion_provider.dart';
 import 'catalogo/pagina_catalogo.dart';
 import 'pagina_inicio.dart';
+import 'rutas.dart';
 
-/// Rutas de la app. Cada historia agrega las suyas aquí.
-abstract final class Rutas {
-  static const String ingreso = '/ingreso';
-  static const String inicio = '/inicio';
-}
+export 'rutas.dart';
 
 /// La ruta a la que hay que ir según la sesión, o `null` si se queda donde está.
 ///
