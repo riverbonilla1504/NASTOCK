@@ -23,6 +23,18 @@ void main() {
       expect(sinLlave.supabaseConfigurado, isFalse);
     });
 
+    test('Google está configurado solo con el ID del cliente Web', () {
+      const sin = Entorno(supabaseUrl: '', supabaseLlavePublicable: '');
+      const con = Entorno(
+        supabaseUrl: '',
+        supabaseLlavePublicable: '',
+        googleWebClientId: 'cliente-web-de-prueba.apps.googleusercontent.com',
+      );
+
+      expect(sin.googleConfigurado, isFalse);
+      expect(con.googleConfigurado, isTrue);
+    });
+
     test('el modo de pruebas viene apagado', () {
       const entorno = Entorno(supabaseUrl: '', supabaseLlavePublicable: '');
       expect(entorno.modoPruebas, isFalse);

@@ -5,12 +5,17 @@
 /// únicos que hablan con Supabase.
 library;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../configuracion/entorno.dart';
+import 'almacenamiento_seguro.dart';
 
 /// Inicia Supabase con la URL y la llave publicable de [entorno].
+///
+/// En móvil la sesión se guarda en el almacenamiento seguro del sistema
+/// (docs/04 §8); en web, en el del navegador.
 ///
 /// Devuelve `false` sin hacer nada si el entorno no está configurado, para que
 /// la app abra igual (y avise) cuando se la ejecuta sin `--dart-define`.
@@ -19,6 +24,9 @@ Future<bool> iniciarSupabase([Entorno entorno = Entorno.actual]) async {
   await Supabase.initialize(
     url: entorno.supabaseUrl,
     publishableKey: entorno.supabaseLlavePublicable,
+    authOptions: FlutterAuthClientOptions(
+      localStorage: kIsWeb ? null : AlmacenamientoSeguroDeSesion(),
+    ),
   );
   return true;
 }

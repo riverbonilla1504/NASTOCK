@@ -9,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException;
 
 import '../formato/formato_fechas.dart';
 import 'codigos_de_error.dart';
+import 'fallo_de_ingreso.dart';
 
 /// Un código con la forma de los del catálogo: mayúsculas, dígitos y guiones
 /// bajos (`NO_AUTORIZADO`, `REGLA_RR_05`).
@@ -54,11 +55,13 @@ String traducirCodigo(String? codigo, {String? detalle}) {
 
 /// Mensaje en español para cualquier error capturado.
 ///
-/// Reconoce [ErrorDeNegocio] y la [PostgrestException] que devuelve una RPC
+/// Reconoce [ErrorDeNegocio], la [PostgrestException] que devuelve una RPC
 /// cuando la base lanza `raise exception '<CODIGO>'` (el código viaja en
-/// `message`). Todo lo demás —red, Auth, excepciones desconocidas— muestra el
-/// mensaje genérico, nunca su texto.
+/// `message`) y el [FalloDeIngreso] ya clasificado por el repositorio de
+/// ingreso (docs/04 §11). Todo lo demás —red, Auth sin clasificar,
+/// excepciones desconocidas— muestra el mensaje genérico, nunca su texto.
 String traducirError(Object? error) {
+  if (error is FalloDeIngreso) return error.mensaje;
   final negocio = _comoErrorDeNegocio(error);
   if (negocio == null) return mensajeGenerico;
   return traducirCodigo(negocio.codigo, detalle: negocio.detalle);

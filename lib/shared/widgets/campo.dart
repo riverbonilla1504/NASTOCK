@@ -18,6 +18,7 @@ class Campo extends StatelessWidget {
     this.soloLectura = false,
     this.alTocar,
     this.pista,
+    this.oculto = false,
     super.key,
   });
 
@@ -38,6 +39,9 @@ class Campo extends StatelessWidget {
   /// Texto de ejemplo dentro del campo vacío.
   final String? pista;
 
+  /// Oculta lo escrito (contraseña) y apaga las sugerencias y la corrección.
+  final bool oculto;
+
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
@@ -52,6 +56,9 @@ class Campo extends StatelessWidget {
           controller: controlador,
           keyboardType: teclado,
           readOnly: soloLectura,
+          obscureText: oculto,
+          enableSuggestions: !oculto,
+          autocorrect: !oculto,
           onTap: alTocar,
           onChanged: alCambiar,
           style: textos.bodyLarge,
