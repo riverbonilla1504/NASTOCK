@@ -81,14 +81,23 @@ void main() {
       expect(rutas.first, Rutas.inicio);
     });
 
-    test('solo Mercado tiene pantalla propia; el resto, marcador', () {
-      for (final destino in destinosDelMvp) {
-        expect(
-          destino.pantalla == null,
-          destino.ruta != Rutas.inicio,
-          reason: destino.ruta,
-        );
-      }
+    test(
+      'Mercado y Administración tienen pantalla propia; el resto, marcador',
+      () {
+        const conPantalla = {Rutas.inicio, Rutas.admin};
+        for (final destino in destinosDelMvp) {
+          expect(
+            destino.pantalla == null,
+            !conPantalla.contains(destino.ruta),
+            reason: destino.ruta,
+          );
+        }
+      },
+    );
+
+    test('Administración trae la subruta de invitaciones (HU-003)', () {
+      final admin = destinosDelMvp.firstWhere((d) => d.ruta == Rutas.admin);
+      expect(admin.subrutas.map((r) => r.path), ['usuarios']);
     });
   });
 

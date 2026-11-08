@@ -11,6 +11,7 @@ import 'package:inversiones/app/pagina_inicio.dart';
 import 'package:inversiones/app/pagina_marcador.dart';
 import 'package:inversiones/app/tema.dart';
 import 'package:inversiones/core/configuracion/entorno.dart';
+import 'package:inversiones/features/admin/presentation/pagina_administracion.dart';
 import 'package:inversiones/features/auth/data/ingreso_repositorio.dart';
 import 'package:inversiones/features/auth/presentation/acceso_de_sesion_provider.dart';
 import 'package:inversiones/features/auth/presentation/pagina_cuenta_suspendida.dart';
@@ -185,7 +186,7 @@ void main() {
       await _ir(tester, enrutador, '/admin');
 
       expect(_ruta(enrutador), '/admin');
-      expect(find.byType(PaginaMarcador), findsOneWidget);
+      expect(find.byType(PaginaAdministracion), findsOneWidget);
       expect(find.text('Administración'), findsWidgets);
     });
   });

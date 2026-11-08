@@ -28,6 +28,7 @@ import 'package:inversiones/app/cascaron_de_navegacion.dart';
 import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
 import 'package:inversiones/app/pagina_marcador.dart';
+import 'package:inversiones/features/admin/presentation/pagina_administracion.dart';
 import 'package:inversiones/features/auth/presentation/pagina_cuenta_suspendida.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
 import 'package:inversiones/main.dart' as app;
@@ -180,7 +181,8 @@ void main() {
           enrutador.go(Rutas.admin);
           await tester.pumpAndSettle();
           expect(_ruta(enrutador), Rutas.admin);
-          expect(find.byType(PaginaMarcador), findsOneWidget);
+          expect(find.byType(PaginaAdministracion), findsOneWidget);
+          expect(find.byKey(claveDeEntradaAInvitaciones), findsOneWidget);
         }
 
         // Cerrar la sesión (desde la prueba: la interfaz es de HU-007) lleva de

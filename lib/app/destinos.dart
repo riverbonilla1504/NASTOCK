@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/perfil/perfil.dart';
+import '../features/admin/presentation/pagina_administracion.dart';
+import '../features/admin/usuarios/presentation/pagina_invitaciones.dart';
 import 'pagina_inicio.dart';
 import 'rutas.dart';
 
@@ -81,6 +83,13 @@ final List<Destino> destinosDelMvp = [
     etiqueta: 'Administración',
     icono: Icons.admin_panel_settings_outlined,
     roles: {RolApp.administrador},
+    pantalla: (_) => const PaginaAdministracion(),
+    subrutas: [
+      GoRoute(
+        path: 'usuarios',
+        builder: (context, state) => const PaginaInvitaciones(),
+      ),
+    ],
   ),
 ];
 
