@@ -31,7 +31,7 @@ Una sola historia de usuario (US1). Cada fase es una capa con sus pruebas y term
 
 ## Fase 5 · Sesión y pantalla de ingreso (commit 5)
 
-- [ ] T010 [US1] `/impeccable shape` de la pantalla de ingreso (a partir de la historia y de `DESIGN.md`); el brief queda en el relevo
+- [x] T010 [US1] `/impeccable shape` de la pantalla de ingreso (a partir de la historia y de `DESIGN.md`); el brief quedó en [forma-de-la-pantalla.md](forma-de-la-pantalla.md)
 - [ ] T011 [US1] `lib/features/auth/presentation/sesion_provider.dart`: `sesionProvider` sobre `onAuthStateChange` (con la sesión inicial; sin Supabase configurado, sin sesión); `test/features/auth/presentation/sesion_provider_test.dart`
 - [ ] T012 [US1] `lib/features/auth/presentation/ingreso_controlador.dart`: estados inactivo, ingresando y fallo; cancelar vuelve a inactivo sin mensaje; los fallos del repositorio y los de regreso pasan por `traducirError`; `test/features/auth/presentation/ingreso_controlador_test.dart`
 - [ ] T013 [US1] `lib/features/auth/presentation/pagina_de_ingreso.dart`: pantalla con "Entrar con Google" (botón primario), aviso de error en línea, aviso de configuración que falta, formulario de correo y contraseña **solo** con `MODO_PRUEBAS`; solo tokens de `lib/app/tema.dart` y componentes de `lib/shared/widgets/`; `test/features/auth/presentation/pagina_de_ingreso_test.dart` (inactivo, ingresando, cada fallo con su texto exacto, cancelado sin mensaje, sin configuración, correo oculto sin `MODO_PRUEBAS`, escala de texto grande, claro y oscuro)
