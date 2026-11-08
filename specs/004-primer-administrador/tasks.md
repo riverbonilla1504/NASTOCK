@@ -15,4 +15,4 @@ description: "Tareas de HU-004 · Primer administrador por configuración de des
 - [x] T007 Ensayo del camino de la nube en local (`db push --db-url` con la variable) y nota en el relevo
 - [x] T008 `scripts/verificar.sh`, `ci.yml` y `docs/15` §2: CA-4, sin `admin@admin.com` ni inserciones con contraseña en migraciones, funciones, app ni flujos
 - [x] T009 `.env.example`: aviso de que `ADMIN_INICIAL_EMAIL` es un secreto de GitHub y no va en `.env`
-- [ ] T010 `docs/17` (M-01) actualizado; `scripts/verificar.sh` completo en verde
+- [x] T010 `docs/17` (M-01) actualizado; `scripts/verificar.sh` completo en verde
