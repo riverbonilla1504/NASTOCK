@@ -6,8 +6,20 @@ import 'package:inversiones/app/destinos.dart';
 import 'package:inversiones/app/rutas.dart';
 import 'package:inversiones/app/tema.dart';
 import 'package:inversiones/core/perfil/perfil.dart';
+import 'package:inversiones/core/realtime/estado_conexion.dart';
+import 'package:inversiones/core/realtime/tiempo_real_provider.dart';
 import 'package:inversiones/features/auth/presentation/acceso_de_sesion_provider.dart';
+import 'package:inversiones/shared/widgets/barra_de_conexion.dart';
 import 'package:inversiones/shared/widgets/barra_de_pestanas.dart';
+
+/// La conexión en vivo fija en un estado, sin gestor ni sesión real.
+class _ConexionFija extends ConexionNotifier {
+  _ConexionFija(this._estado);
+  final EstadoConexion _estado;
+
+  @override
+  EstadoConexion build() => _estado;
+}
 
 AccesoDeSesion _acceso(RolApp? rol) => AccesoDeSesion(
   haySesion: true,
@@ -21,6 +33,7 @@ Future<List<String>> _abrir(
   String ruta = Rutas.inicio,
   bool oscuro = false,
   double textoEscala = 1,
+  EstadoConexion conexion = EstadoConexion.conectado,
 }) async {
   tester.view.physicalSize = Size(ancho, 800);
   tester.view.devicePixelRatio = 1;
@@ -28,7 +41,10 @@ Future<List<String>> _abrir(
   final elegidas = <String>[];
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [accesoDeSesionProvider.overrideWithValue(_acceso(rol))],
+      overrides: [
+        accesoDeSesionProvider.overrideWithValue(_acceso(rol)),
+        conexionProvider.overrideWith(() => _ConexionFija(conexion)),
+      ],
       child: MaterialApp(
         theme: oscuro ? crearTemaOscuro() : crearTema(),
         builder: (context, hijo) => MediaQuery(
@@ -180,6 +196,44 @@ void main() {
       await tester.pump();
 
       expect(elegidas, isEmpty);
+    });
+  });
+
+  group('conexión en vivo (FR-189)', () {
+    for (final ancho in [360.0, 1280.0]) {
+      testWidgets('a ${ancho.toInt()} dp reconectando muestra la barra', (
+        tester,
+      ) async {
+        await _abrir(
+          tester,
+          rol: RolApp.usuario,
+          ancho: ancho,
+          conexion: EstadoConexion.reconectando,
+        );
+
+        expect(find.text('Reconectando…'), findsOneWidget);
+        expect(find.text('Contenido del destino'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+    }
+
+    testWidgets('sin conexión muestra la barra de sin conexión', (
+      tester,
+    ) async {
+      await _abrir(
+        tester,
+        rol: RolApp.usuario,
+        ancho: 360,
+        conexion: EstadoConexion.sinConexion,
+      );
+
+      expect(find.text('Sin conexión'), findsOneWidget);
+    });
+
+    testWidgets('conectado no muestra ninguna barra', (tester) async {
+      await _abrir(tester, rol: RolApp.usuario, ancho: 360);
+
+      expect(find.byKey(ContenidoConConexion.claveDeLaBarra), findsNothing);
     });
   });
 
