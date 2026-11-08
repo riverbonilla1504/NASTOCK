@@ -1,0 +1,207 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:inversiones/app/cascaron_de_navegacion.dart';
+import 'package:inversiones/app/destinos.dart';
+import 'package:inversiones/app/rutas.dart';
+import 'package:inversiones/app/tema.dart';
+import 'package:inversiones/core/perfil/perfil.dart';
+import 'package:inversiones/features/auth/presentation/acceso_de_sesion_provider.dart';
+import 'package:inversiones/shared/widgets/barra_de_pestanas.dart';
+
+AccesoDeSesion _acceso(RolApp? rol) => AccesoDeSesion(
+  haySesion: true,
+  claims: ClaimsDeSesion(rol: rol, estado: EstadoCuenta.activo),
+);
+
+Future<List<String>> _abrir(
+  WidgetTester tester, {
+  required RolApp? rol,
+  required double ancho,
+  String ruta = Rutas.inicio,
+  bool oscuro = false,
+  double textoEscala = 1,
+}) async {
+  tester.view.physicalSize = Size(ancho, 800);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+  final elegidas = <String>[];
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [accesoDeSesionProvider.overrideWithValue(_acceso(rol))],
+      child: MaterialApp(
+        theme: oscuro ? crearTemaOscuro() : crearTema(),
+        builder: (context, hijo) => MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: TextScaler.linear(textoEscala)),
+          child: hijo!,
+        ),
+        home: CascaronDeNavegacion(
+          rutaActual: ruta,
+          hijo: const Center(child: Text('Contenido del destino')),
+          alElegirRuta: elegidas.add,
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+  return elegidas;
+}
+
+/// Las rutas de todos los destinos del MVP corto que están en pantalla.
+List<String> _visibles(WidgetTester tester) => [
+  for (final d in destinosDelMvp)
+    if (find.byKey(claveDeDestino(d.ruta)).evaluate().isNotEmpty) d.ruta,
+];
+
+List<String> _menuDe(RolApp rol) =>
+    destinosDeRol(rol).map((d) => d.ruta).toList();
+
+void main() {
+  for (final rol in RolApp.values) {
+    group('menú de ${rol.name}', () {
+      testWidgets('CA-1: en teléfono ve su isla y solo sus destinos', (
+        tester,
+      ) async {
+        await _abrir(tester, rol: rol, ancho: 360);
+
+        expect(find.byType(BarraDePestanas), findsOneWidget);
+        expect(find.byType(NavigationRail), findsNothing);
+        expect(_visibles(tester), _menuDe(rol));
+        expect(find.text('Contenido del destino'), findsOneWidget);
+      });
+
+      testWidgets('CA-1: en ventana ancha ve el riel con los mismos destinos', (
+        tester,
+      ) async {
+        await _abrir(tester, rol: rol, ancho: 1280);
+
+        expect(find.byType(NavigationRail), findsOneWidget);
+        expect(find.byType(BarraDePestanas), findsNothing);
+        expect(_visibles(tester), _menuDe(rol));
+        for (final d in destinosDeRol(rol)) {
+          expect(find.text(d.etiqueta), findsOneWidget, reason: d.etiqueta);
+        }
+        expect(find.text('Contenido del destino'), findsOneWidget);
+      });
+    });
+  }
+
+  testWidgets('el Usuario ve Mi cupo y el Analista y el Administrador no', (
+    tester,
+  ) async {
+    await _abrir(tester, rol: RolApp.usuario, ancho: 360);
+    expect(find.byKey(claveDeDestino(Rutas.cupo)), findsOneWidget);
+    expect(find.byKey(claveDeDestino(Rutas.admin)), findsNothing);
+
+    await _abrir(tester, rol: RolApp.analista, ancho: 360);
+    expect(find.byKey(claveDeDestino(Rutas.cupo)), findsNothing);
+    expect(find.byKey(claveDeDestino(Rutas.admin)), findsNothing);
+
+    await _abrir(tester, rol: RolApp.administrador, ancho: 360);
+    expect(find.byKey(claveDeDestino(Rutas.cupo)), findsNothing);
+    expect(find.byKey(claveDeDestino(Rutas.admin)), findsOneWidget);
+  });
+
+  testWidgets('sin rol solo queda Mercado', (tester) async {
+    await _abrir(tester, rol: null, ancho: 360);
+
+    expect(_visibles(tester), [Rutas.inicio]);
+  });
+
+  group('destino actual', () {
+    testWidgets('la isla marca el destino de la ruta', (tester) async {
+      await _abrir(
+        tester,
+        rol: RolApp.administrador,
+        ancho: 360,
+        ruta: Rutas.alertas,
+      );
+
+      expect(
+        tester.widget<BarraDePestanas>(find.byType(BarraDePestanas)).actual,
+        2,
+      );
+    });
+
+    testWidgets('una subruta marca el destino de su ruta base', (tester) async {
+      await _abrir(
+        tester,
+        rol: RolApp.administrador,
+        ancho: 360,
+        ruta: '/admin/usuarios',
+      );
+
+      expect(
+        tester.widget<BarraDePestanas>(find.byType(BarraDePestanas)).actual,
+        3,
+      );
+    });
+
+    testWidgets('el riel marca el destino de la ruta', (tester) async {
+      await _abrir(tester, rol: RolApp.usuario, ancho: 1280, ruta: Rutas.cupo);
+
+      expect(
+        tester
+            .widget<NavigationRail>(find.byType(NavigationRail))
+            .selectedIndex,
+        2,
+      );
+    });
+  });
+
+  group('elegir un destino', () {
+    testWidgets('en la isla avisa la ruta elegida', (tester) async {
+      final elegidas = await _abrir(tester, rol: RolApp.usuario, ancho: 360);
+
+      await tester.tap(find.byKey(claveDeDestino(Rutas.cupo)));
+      await tester.pump();
+
+      expect(elegidas, [Rutas.cupo]);
+    });
+
+    testWidgets('en el riel avisa la ruta elegida', (tester) async {
+      final elegidas = await _abrir(
+        tester,
+        rol: RolApp.administrador,
+        ancho: 1280,
+      );
+
+      await tester.tap(find.byKey(claveDeDestino(Rutas.admin)));
+      await tester.pump();
+
+      expect(elegidas, [Rutas.admin]);
+    });
+
+    testWidgets('tocar el destino actual no navega', (tester) async {
+      final elegidas = await _abrir(tester, rol: RolApp.usuario, ancho: 360);
+
+      await tester.tap(find.byKey(claveDeDestino(Rutas.inicio)));
+      await tester.pump();
+
+      expect(elegidas, isEmpty);
+    });
+  });
+
+  group('se ve bien', () {
+    for (final oscuro in [false, true]) {
+      for (final ancho in [360.0, 1280.0]) {
+        testWidgets(
+          '${oscuro ? 'oscuro' : 'claro'} a ${ancho.toInt()} dp con el texto al doble',
+          (tester) async {
+            await _abrir(
+              tester,
+              rol: RolApp.administrador,
+              ancho: ancho,
+              oscuro: oscuro,
+              textoEscala: 2,
+            );
+
+            expect(tester.takeException(), isNull);
+            expect(_visibles(tester), _menuDe(RolApp.administrador));
+          },
+        );
+      }
+    }
+  });
+}
