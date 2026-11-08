@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-10
 
-**Status**: Draft
+**Status**: Draft (ajustada el 2026-11-08 por la decisión de Javier sobre Google Workspace; ver "Ajustes por la decisión del 2026-11-08")
 
 **Input**: Historia de usuario: "HU-005 · Ingresar con Google en Android y web", en [`backlog/E-02-identidad-y-acceso/HU-005-ingresar-con-google-en-android-y-web.md`](../../backlog/E-02-identidad-y-acceso/HU-005-ingresar-con-google-en-android-y-web.md)
 
@@ -29,6 +29,16 @@
 5. **CA-5** (caso borde CB-01) · **Dado** un correo del dominio sin una invitación vigente, **cuando** intenta ingresar, **entonces** ve "Tu correo no tiene una invitación vigente. Pídele una al administrador."
 6. **CA-6** · **Dado** un error inesperado al iniciar sesión, **cuando** ocurre, **entonces** ve "No pudimos iniciar tu sesión. Inténtalo de nuevo." y el detalle queda en el registro técnico, no en la pantalla.
 7. **CA-7** · **Dada** una cuenta de Google de fuera del Workspace de RiTech (por ejemplo, una personal de Gmail), **cuando** intenta ingresar, **entonces** Google la rechaza.
+
+### Ajustes por la decisión del 2026-11-08 *(Javier, en el chat del coordinador)*
+
+RiTech **no** tiene Google Workspace: el equipo entra con **Gmail personal**, la pantalla de consentimiento de Google es **Externa en modo de prueba** y el dominio permitido de `auth.dominios_permitidos` será `gmail.com`. Los textos de `docs/04` §1, §5 y §11, D-12, Q-08, Q-22 y `docs/11` los cambia la historia **HU-004**; esta historia no edita esas secciones. Para HU-005 la decisión significa:
+
+- **CA-2**: la web usa `signInWithOAuth` con PKCE y `prompt=select_account`, **sin el parámetro `hd`** (limita a un dominio de Workspace y dejaría fuera a todo el equipo). La cuenta se elige en el selector de Google; no se "preselecciona" ninguna.
+- **CA-5**: el rechazo "Tu correo no tiene una invitación vigente…" se da a toda cuenta de Google sin invitación vigente, no solo a las "del dominio".
+- **CA-7**: una cuenta de Google que no está en la lista de usuarios de prueba de Google Cloud la rechaza Google ("acceso bloqueado"); ya no es "de fuera del Workspace de RiTech".
+- **Textos**: ninguna pantalla habla de "cuenta corporativa" ni "de RiTech". Los mensajes del hook pasan a "Solo se admiten cuentas de Google invitadas." (dominio no permitido) y "Solo puedes ingresar con tu cuenta de Google." (proveedor no permitido). La app muestra **su propio texto** según el tipo de fallo y reconoce tanto los textos nuevos como los viejos del hook, porque la migración con el cambio de texto no es de esta historia.
+- Pendiente de propagar fuera de esta historia: `backlog/…/HU-005-*.md` y el issue #22 (CA-2, CA-5, CA-7 y la tarea con `hd`), que corresponden al coordinador.
 
 ---
 
@@ -70,7 +80,8 @@ La historia no agrega entidades. Usa estas dos, ya definidas en `docs/06` §5.1:
 - El ingreso nativo en Android se construye con la guía oficial vigente de Supabase en el momento de implementarlo, porque la API del componente de ingreso de Google cambió en su versión 7 (`docs/04` §4.4).
 - El ingreso con Google no se puede automatizar (`docs/04` §1): las pruebas automáticas usan el ingreso con correo del modo pruebas, que existe solo en local y en CI.
 - En R1, CA-3 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
-- **S1** (`docs/01` §5): RiTech usa Google Workspace con dominio propio. Si resulta falso: pantalla de consentimiento Externa en modo prueba (04 §1); el resto no cambia.
+- **S1** (`docs/01` §5): RiTech usa Google Workspace con dominio propio. **Resultó falso** (decisión del 2026-11-08): pantalla de consentimiento Externa en modo prueba (04 §1) y Gmail personal; el resto no cambia.
 - **S2** (`docs/01` §5): La app sigue siendo Flutter (Android + web). Si resulta falso: la arquitectura de backend no cambia; cambia solo el cliente.
-- **Q-22** (`docs/13` §2, abierta): ¿RiTech tiene organización de Google Workspace, o se usa la pantalla Externa en modo prueba? Valor provisional: Workspace.
-- **Q-08** (`docs/13` §2, abierta): Dominio de Google Workspace y correo del primer administrador. Sin valor provisional en `docs/13`. A esta historia le aplica el dominio, que es el que se usa para preseleccionar la cuenta corporativa en la web (CA-2).
+- **Q-22** (`docs/13` §2): ¿RiTech tiene organización de Google Workspace, o se usa la pantalla Externa en modo prueba? **Respondida el 2026-11-08: Externa en modo prueba** (la fila de `docs/13` la actualiza HU-004). El valor provisional de `docs/13` (Workspace) ya no aplica.
+- **Q-08** (`docs/13` §2): Dominio permitido y correo del primer administrador. **Dominio permitido: `gmail.com`** (decisión del 2026-11-08). A esta historia ya no le sirve para nada en la web: sin `hd` no se preselecciona dominio alguno.
+- **Textos de la pantalla de ingreso**: los de `docs/04` §11 con los ajustes de arriba; los títulos y la ayuda de la pantalla no están en `docs/` y salen de la fase de forma (`/impeccable shape`), dentro de `DESIGN.md`.
