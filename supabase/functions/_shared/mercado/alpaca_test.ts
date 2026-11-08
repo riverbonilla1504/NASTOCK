@@ -323,6 +323,14 @@ Deno.test("snapshots: toma precio, bid, ask, cierre anterior y volumen", async (
       cierreAnterior: 222.91,
       volumenDia: 300000,
       momento: "2024-11-06T15:00:01.123Z",
+      barraMinuto: {
+        momento: "2024-11-06T15:00:00.000Z",
+        apertura: 225.45,
+        maximo: 225.6,
+        minimo: 225.4,
+        cierre: 225.5,
+        volumen: 1500,
+      },
     },
     {
       simbolo: "MSFT",

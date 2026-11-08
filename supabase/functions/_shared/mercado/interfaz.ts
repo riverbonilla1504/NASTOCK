@@ -16,6 +16,17 @@ export interface Barra {
   volumen: number;
 }
 
+/** Barra de un minuto (docs/06 §5.2, `barras_minuto`). */
+export interface BarraDeMinuto {
+  /** Inicio del minuto, ISO 8601 en UTC. */
+  momento: string;
+  apertura: number;
+  maximo: number;
+  minimo: number;
+  cierre: number;
+  volumen: number;
+}
+
 /** Último precio conocido de un símbolo. */
 export interface Cotizacion {
   simbolo: string;
@@ -26,6 +37,8 @@ export interface Cotizacion {
   volumenDia: number | null;
   /** Hora del dato según el proveedor, ISO 8601 en UTC. */
   momento: string;
+  /** Barra del último minuto, si el proveedor la entrega. */
+  barraMinuto?: BarraDeMinuto;
 }
 
 /** Qué se pide al proveedor al buscar barras diarias. */

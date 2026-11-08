@@ -226,6 +226,19 @@ export class MercadoSimulado implements ProveedorDeMercado {
           cierreAnterior: anterior ? redondear4(anterior.cierre) : null,
           volumenDia: Math.floor(dia.volumen * (minutos / MINUTOS_DE_SESION)),
           momento: momento.toISOString(),
+          // Solo en sesión: una barra de un minuto plana en el precio.
+          ...(enSesion
+            ? {
+              barraMinuto: {
+                momento: momento.toISOString(),
+                apertura: redondear4(precio),
+                maximo: redondear4(precio),
+                minimo: redondear4(precio),
+                cierre: redondear4(precio),
+                volumen: Math.floor(dia.volumen / MINUTOS_DE_SESION),
+              },
+            }
+            : {}),
         };
       },
     );
