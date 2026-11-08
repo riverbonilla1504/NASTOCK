@@ -70,3 +70,4 @@ La historia no agrega entidades. Usa una, definida en `docs/06` §5.1:
 - El cupo inicial es solo una intención hasta que la persona acepta (`docs/02` §11).
 - La pantalla completa de cuentas llega con HU-098.
 - En R1, CA-7 se prueba con una cuenta de prueba ya suspendida, porque suspender una cuenta llega con HU-010 (R2).
+- RiTech no tiene Google Workspace: las invitaciones son a cuentas de Google (Gmail), no a un dominio corporativo. Cada persona invitada también debe estar en la lista de *Test users* de Google Cloud, y el dominio permitido al entrar lo controla el hook (`docs/13`, historial 3.20, que llega a `main` con HU-004; Q-08 y Q-22).
