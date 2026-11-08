@@ -45,10 +45,10 @@ Una sola historia de usuario (US1). Cada fase es una capa con sus pruebas y term
 
 ## Fase 8 · Cierre (commit 7)
 
-- [ ] T015 [US1] `/impeccable audit` y `/impeccable polish` de las pantallas revisándolas en Chrome (y en el emulador de Android si la memoria lo permite): menú de los tres roles, teléfono y ventana ancha, claro y oscuro, escala de texto grande; lo hallado se corrige aquí
+- [x] T015 [US1] `/impeccable audit` y `/impeccable polish` de las pantallas revisándolas en Chrome (y en el emulador de Android si la memoria lo permite): menú de los tres roles, teléfono y ventana ancha, claro y oscuro, escala de texto grande; lo hallado se corrige aquí
 - [x] T016 [P] `DESIGN.md` (cascarón, marcador, cuenta suspendida), `lib/app/catalogo/pagina_componentes.dart` si se agrega un componente de sistema, y `docs/17` (M-01: rutas, `destinos.dart`, `acceso_por_rol.dart`, pruebas, E2E-01); sin tocar las secciones de reglas de `docs/` (salvo T014 si se aprobó)
-- [ ] T017 Tras `git fetch origin && git rebase origin/main` (conservar las dos cosas si HU-003 tocó el enrutador), `scripts/verificar.sh` completo en verde con el candado de Supabase local
-- [ ] T018 Cuerpo del PR (`.github/pull_request_template.md`, "Closes #23", título "HU-006 · Navegación y guardas según el rol") en `C:\Users\Javier\Desktop\Nastock.md\pr-006-navegacion-segun-el-rol.md` y relevo en `relevos\006-navegacion-segun-el-rol.md`
+- [x] T017 Tras `git fetch origin && git rebase origin/main` (conservar las dos cosas si HU-003 tocó el enrutador), `scripts/verificar.sh` completo en verde con el candado de Supabase local
+- [x] T018 Cuerpo del PR (`.github/pull_request_template.md`, "Closes #23", título "HU-006 · Navegación y guardas según el rol") en `C:\Users\Javier\Desktop\Nastock.md\pr-006-navegacion-segun-el-rol.md` y relevo en `relevos\006-navegacion-segun-el-rol.md`
 
 ## Dependencias
 
