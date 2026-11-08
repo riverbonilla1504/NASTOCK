@@ -145,15 +145,15 @@ suspendida. Comunícate con el administrador."*
 
 ### 4.3 Web (panel de administración y uso desde navegador)
 
-Flujo OAuth estándar con **PKCE** (`signInWithOAuth`). El parámetro
-`hd=<dominio>` se envía solo como **pista** para que Google preseleccione la
-cuenta de Google; la seguridad real la dan la lista de Test users, la
-invitación y el hook.
+Flujo OAuth estándar con **PKCE** (`signInWithOAuth`). Se envía
+`prompt=select_account` para que Google deje elegir la cuenta. No se envía
+`hd`: las cuentas son de Gmail personal y no tienen dominio propio. La
+seguridad real la dan la lista de Test users, la invitación y el hook.
 
 ```dart
 await supabase.auth.signInWithOAuth(
   OAuthProvider.google,
-  queryParams: {'hd': 'gmail.com', 'prompt': 'select_account'}, // dominio permitido (Q-08)
+  queryParams: {'prompt': 'select_account'},
 );
 ```
 

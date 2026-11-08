@@ -12,7 +12,7 @@ Usuario, Analista y Administrador
 
 ## Descripción
 
-El sistema debe permitir iniciar sesión únicamente con una cuenta de Google del dominio permitido: con ingreso nativo en Android y con redirección OAuth con PKCE en web.
+El sistema debe permitir iniciar sesión únicamente con una cuenta de Google (Gmail) del dominio permitido: con ingreso nativo en Android y con redirección OAuth con PKCE en web.
 
 ## Fuente
 

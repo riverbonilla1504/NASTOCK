@@ -42,7 +42,7 @@ Sin escenario propio en el catálogo de 15 §4.
 ## Tareas
 
 - [ ] App: pantalla Perfil (parte de "Perfil y notificaciones" de 03 §3) con los datos de `perfilProvider`.
-- [ ] App: texto que indica que el nombre se corrige en Google Workspace (11 §6).
+- [ ] App: texto que indica que el nombre se corrige en su cuenta de Google (11 §6).
 - [ ] Pruebas de widget de la pantalla.
 - [ ] Verificación: `scripts/verificar.sh` completo en verde.
 

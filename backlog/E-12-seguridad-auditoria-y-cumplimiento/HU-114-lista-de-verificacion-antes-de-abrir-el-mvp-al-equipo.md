@@ -28,7 +28,7 @@
 
 ## Criterios de aceptación
 
-- **CA-1** Dada la lista de 11 §10, cuando se revisa, entonces cada punto tiene su evidencia: consentimiento de Google en modo Interna, verificación en dos pasos, MFA en las consolas, RLS activo en todas las tablas, JWT de 15 minutos y secretos por entorno.
+- **CA-1** Dada la lista de 11 §10, cuando se revisa, entonces cada punto tiene su evidencia: consentimiento de Google Externa en modo prueba con cada persona como *Test user*, verificación en dos pasos recomendada a cada persona, MFA en las consolas, RLS activo en todas las tablas, JWT de 15 minutos y secretos por entorno.
 - **CA-2** Dado el proyecto MVP, cuando corre la prueba de humo, entonces confirma los proveedores reales y el correo con contraseña deshabilitado (CB-91 y CB-92).
 - **CA-3** Dado el estado del fondo, cuando se revisa, entonces los interruptores están apagados hasta el primer aporte confirmado y la conciliación está en `ok`.
 - **CA-4** Dados los avisos y el simulacro, cuando se revisa, entonces el aviso de privacidad y el de no asesoría están aprobados y el simulacro de restauración está hecho.

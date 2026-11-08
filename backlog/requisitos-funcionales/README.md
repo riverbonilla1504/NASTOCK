@@ -2,7 +2,7 @@
 
 Catálogo de los **227 requisitos funcionales** del MVP. Cada archivo de esta carpeta es un requisito y se llama con su identificador y su nombre corto (`FR-001-inicio-de-sesion-con-google.md`). Dentro lleva:
 
-- **Rol o actor**: quién interactúa con el sistema en esa función. Puede ser una persona (Usuario, Analista o Administrador) o un actor no humano de `docs/01` §3 (IA principal, DeepSeek, JEV, broker, datos de mercado, Google Workspace o Firebase).
+- **Rol o actor**: quién interactúa con el sistema en esa función. Puede ser una persona (Usuario, Analista o Administrador) o un actor no humano de `docs/01` §3 (IA principal, DeepSeek, JEV, broker, datos de mercado, Google o Firebase).
 - **Descripción**: lo que el sistema debe hacer, con un verbo de acción y un resultado que se puede comprobar.
 - **Fuente**: la regla, el permiso, el caso borde o la sección de `docs/` de donde sale. Los números remiten a los documentos de [`docs/`](../../docs/README.md): `04 §5` es la sección 5 de `docs/04-autenticacion-oauth.md`.
 - **Historias que lo implementan**: las historias o tareas técnicas del backlog que lo cubren.
@@ -32,7 +32,7 @@ Están agrupados por la épica a la que pertenecen. El identificador no se reuti
 | ID | Nombre | Rol o actor | Lo implementan |
 |---|---|---|---|
 | [FR-012](FR-012-inicio-de-sesion-con-google.md) | Inicio de sesión con Google | Usuario, Analista y Administrador | [HU-005](../E-02-identidad-y-acceso/HU-005-ingresar-con-google-en-android-y-web.md) |
-| [FR-013](FR-013-alta-solo-con-invitacion-vigente.md) | Alta solo con invitación vigente | Google Workspace y Sistema (hook de alta) | [HU-002](../E-02-identidad-y-acceso/HU-002-alta-solo-con-invitacion-vigente.md) |
+| [FR-013](FR-013-alta-solo-con-invitacion-vigente.md) | Alta solo con invitación vigente | Google y Sistema (hook de alta) | [HU-002](../E-02-identidad-y-acceso/HU-002-alta-solo-con-invitacion-vigente.md) |
 | [FR-014](FR-014-perfil-activo-al-aceptar-la-invitacion.md) | Perfil activo al aceptar la invitación | Sistema | [HU-002](../E-02-identidad-y-acceso/HU-002-alta-solo-con-invitacion-vigente.md) |
 | [FR-015](FR-015-invitacion-de-una-persona.md) | Invitación de una persona | Administrador | [HU-003](../E-02-identidad-y-acceso/HU-003-invitar-a-una-persona-y-revocar-invitaciones.md) |
 | [FR-016](FR-016-revocacion-y-vencimiento-de-invitaciones.md) | Revocación y vencimiento de invitaciones | Administrador | [HU-003](../E-02-identidad-y-acceso/HU-003-invitar-a-una-persona-y-revocar-invitaciones.md) |
@@ -44,7 +44,7 @@ Están agrupados por la épica a la que pertenecen. El identificador no se reuti
 | [FR-022](FR-022-mensajes-de-error-de-ingreso.md) | Mensajes de error de ingreso | Usuario, Analista y Administrador | [HU-005](../E-02-identidad-y-acceso/HU-005-ingresar-con-google-en-android-y-web.md) |
 | [FR-023](FR-023-cierre-de-sesion.md) | Cierre de sesión | Usuario, Analista y Administrador | [HU-007](../E-02-identidad-y-acceso/HU-007-cerrar-sesion.md), [HU-087](../E-09-tiempo-real-y-notificaciones/HU-087-registrar-mi-dispositivo-para-push.md) |
 | [FR-024](FR-024-consulta-del-perfil-propio.md) | Consulta del perfil propio | Usuario, Analista y Administrador | [HU-008](../E-02-identidad-y-acceso/HU-008-ver-mi-perfil.md) |
-| [FR-025](FR-025-sincronizacion-del-correo-cambiado-en-workspace.md) | Sincronización del correo cambiado en Workspace | Google Workspace y Sistema | [HU-002](../E-02-identidad-y-acceso/HU-002-alta-solo-con-invitacion-vigente.md) |
+| [FR-025](FR-025-sincronizacion-del-correo-cambiado-en-workspace.md) | Sincronización del correo cambiado en la cuenta de Google | Google y Sistema | [HU-002](../E-02-identidad-y-acceso/HU-002-alta-solo-con-invitacion-vigente.md) |
 | [FR-026](FR-026-sesion-en-almacenamiento-seguro.md) | Sesión en almacenamiento seguro | Usuario, Analista y Administrador | [HU-009](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) |
 | [FR-027](FR-027-bloqueo-biometrico-de-la-app.md) | Bloqueo biométrico de la app | Usuario, Analista y Administrador | [HU-009](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) |
 | [FR-028](FR-028-confirmacion-de-acciones-sensibles.md) | Confirmación de acciones sensibles | Usuario, Analista y Administrador | [HU-009](../E-02-identidad-y-acceso/HU-009-sesion-segura-bloqueo-biometrico-y-confirmacion-de-acciones-sensibles.md) |

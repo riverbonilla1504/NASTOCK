@@ -1,14 +1,14 @@
-# FR-025 · Sincronización del correo cambiado en Workspace
+# FR-025 · Sincronización del correo cambiado en la cuenta de Google
 
 | Campo | Valor |
 |---|---|
 | Identificador | FR-025 |
-| Nombre | Sincronización del correo cambiado en Workspace |
+| Nombre | Sincronización del correo cambiado en la cuenta de Google |
 | Épica | [E-02 · Identidad y acceso](../E-02-identidad-y-acceso/README.md) |
 
 ## Rol o actor
 
-Google Workspace y Sistema
+Google y Sistema
 
 ## Descripción
 

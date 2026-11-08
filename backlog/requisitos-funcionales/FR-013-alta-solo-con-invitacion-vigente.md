@@ -8,7 +8,7 @@
 
 ## Rol o actor
 
-Google Workspace y Sistema (hook de alta)
+Google y Sistema (hook de alta)
 
 ## Descripción
 
