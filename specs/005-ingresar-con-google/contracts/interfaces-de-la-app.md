@@ -39,7 +39,8 @@ sesionProvider                : StreamProvider<Session?>
 ingresoControladorProvider    : NotifierProvider<IngresoControlador, EstadoDeIngreso>
   IngresoControlador.ingresarConGoogle() / ingresarConCorreo(correo, contrasena)
 
-FalloDeIngreso implements Exception { TipoDeFalloDeIngreso tipo; String get mensaje; }
+FalloDeIngreso implements Exception { TipoDeFalloDeIngreso tipo; String? textoDelServidor; String get mensaje; }
+  // mensaje = textoDelServidor si el fallo es un rechazo reconocido del hook y lo trae; si no, el texto propio del tipo
 traducirError(Object?)        // FalloDeIngreso → su mensaje; el resto, como hasta ahora
 ```
 

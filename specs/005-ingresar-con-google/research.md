@@ -18,9 +18,9 @@ Sin "NEEDS CLARIFICATION" abiertos. Las decisiones de fondo vienen de `docs/04` 
 
 ## R-3 · Cómo reconocer cada fallo
 
-- **Hook "antes de crear usuario"** (HU-002): responde HTTP 403 con el mensaje en el cuerpo y **sin código de error propio** (el E2E-02 comprueba el estado y el texto). La app no puede distinguir los tres rechazos por código: reconoce el mensaje por prefijo y muestra su propio texto.
+- **Hook "antes de crear usuario"** (HU-002): responde HTTP 403 con el mensaje en el cuerpo y **sin código de error propio** (el E2E-02 comprueba el estado y el texto). La app no puede distinguir los tres rechazos por código: reconoce el mensaje por prefijo y, por pedido del coordinador (HU-004 está cambiando esos textos), **muestra el texto que llega del servidor**; la última columna es el respaldo si el servidor no trae mensaje.
 
-  | Rechazo | Texto viejo del hook (en `main`) | Texto nuevo (decisión) | Prefijo que reconoce la app | Texto que muestra la app |
+  | Rechazo | Texto viejo del hook (en `main`) | Texto nuevo (decisión) | Prefijo que reconoce la app | Respaldo propio de la app |
   |---|---|---|---|---|
   | Sin invitación vigente | "Tu correo no tiene una invitación vigente. Pídele una al administrador." | igual | `Tu correo no tiene una invitación vigente` | el mismo |
   | Dominio no permitido | "Solo se admiten cuentas corporativas de RiTech." | "Solo se admiten cuentas de Google invitadas." | `Solo se admiten cuentas` | "Solo se admiten cuentas de Google invitadas." |
