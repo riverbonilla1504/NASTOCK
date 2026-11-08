@@ -385,6 +385,7 @@ Los bordes son reglas de 1 px (`regla` en tarjetas, `regla-fuerte` en campos y c
 - **Style:** etiqueta encima (title small, 13 px), campo con fondo hoja, borde `regla-fuerte` de 1 px, esquinas de 4 dp, relleno 12 × 14 dp, ayuda en body small.
 - **Focus:** borde morado de 2 px y cursor morado.
 - **Error:** borde doble en tinta (2 dp; 2,5 dp con foco) y mensaje en tinta con su marca; el texto sale de `traducirError` (`docs/06` §9, `docs/04` §11). **Deshabilitado:** borde `regla`.
+- **Contraseña:** con `oculto`, lo escrito se esconde y se apagan las sugerencias y la corrección; el resto es igual a un campo normal.
 
 ### Navigation
 - **Barra superior:** grafito con su degradado gris, título condensado de 24 px en `sobre-grafito`, íconos de la barra en `sobre-grafito` y barra de estado clara.
@@ -399,6 +400,19 @@ Siempre en hoja con texto en tinta; cada tipo se reconoce por la forma de su mar
 - **Desactualizado:** círculo punteado con reloj, borde punteado.
 
 El **aviso temporal** va sobre `velo-grafito` con desenfoque, sombra flotante, esquinas de 4 dp y alto mínimo de 48 dp; lo que exige decidir va en un diálogo (D-61), no aquí.
+
+### Diálogo de confirmación
+Componente común (`DialogoDeConfirmacion` y `confirmarAccion`) de lo que toca dinero: aprobar una sugerencia, crear una orden manual, registrar un movimiento. Es el diálogo de D-61, sin biometría, en móvil y en web.
+- **Forma:** diálogo de 8 dp sobre `hoja`, título de diálogo (title), una línea opcional de detalle en `tinta-suave` y dos filas, **símbolo** y **monto**, con el rótulo a la izquierda y el valor a la derecha (el monto en `CifraUsd`). Con texto grande el valor baja a su línea en vez de desbordar.
+- **Acciones:** "Cancelar" (botón de texto) y la acción (botón primario, con el verbo de la operación: "Comprar", no "Aceptar").
+- **Estados** (`docs/08` §9.3): confirmando, enviando, hecho, cancelado y error. Enviando: el botón dice "Procesando…" con su indicador y "Cancelar" se deshabilita; no se puede cerrar el diálogo. Error: aviso de error en línea (borde doble, sin rojo) con el texto de `traducirError`; el botón queda activo para reintentar. Hecho y cancelado cierran el diálogo.
+- **Nunca** actualización optimista de dinero: el diálogo solo cierra en "hecho" cuando la acción respondió.
+
+### Pantalla de ingreso
+Barra grafito con "RiTech Inversiones" y una hoja blanca sobre papel (máximo 420 dp, alineada arriba): título "Entra con tu cuenta de Google" (headline small), ayuda en `tinta-suave` ("Solo pueden entrar las personas que invitó el administrador. Usa la cuenta de Google con la que te invitaron."), el aviso en línea si hay fallo, un único botón primario de ancho completo "Entrar con Google" y, fuera de la hoja, "MVP en paper trading: una persona siempre aprueba." en `tinta-tenue`. Sin logotipo, sin ilustración y sin morado (el morado es de los datos); el error va con borde doble, sin rojo.
+- **Solo con `MODO_PRUEBAS`** (CI y local): bajo una regla y el rótulo "SOLO PRUEBAS", los campos "Correo" y "Contraseña" y un botón secundario "Entrar con correo". Sin `MODO_PRUEBAS` ese bloque no existe en el árbol.
+- **Falta configuración** (solo desarrollo): aviso de advertencia (rombo, borde discontinuo) y el botón deshabilitado.
+- Los textos de los fallos son los de `docs/04` §11; los de arriba (título, ayuda, pie, rótulos) no están en `docs/` y son decisión de tono de esta pantalla. Ninguno habla de "cuenta corporativa" ni "de RiTech": el equipo entra con su cuenta de Google personal.
 
 ### Cifras
 - **Dinero:** USD con dos decimales en cifras tabulares; desactualizado, subrayado punteado y `tinta-suave`.

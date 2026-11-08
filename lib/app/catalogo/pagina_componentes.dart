@@ -11,6 +11,7 @@ import '../../shared/widgets/calendario.dart';
 import '../../shared/widgets/campo.dart';
 import '../../shared/widgets/chip_de_estado.dart';
 import '../../shared/widgets/cifras.dart';
+import '../../shared/widgets/dialogo_de_confirmacion.dart';
 import '../../shared/widgets/estados.dart';
 import '../../shared/widgets/forma_de_linea.dart';
 import '../../shared/widgets/franja_de_la_jornada.dart';
@@ -152,6 +153,8 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
                 teclado: TextInputType.number,
                 error: 'El valor está fuera del rango permitido (15–600).',
               ),
+              const SizedBox(height: Espacio.x3),
+              const Campo(etiqueta: 'Contraseña', oculto: true),
               const SizedBox(height: Espacio.x3),
               CampoDePeriodo(
                 etiqueta: 'Periodo',
@@ -348,6 +351,24 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
                       ),
                     ],
                   ),
+                ),
+              ),
+            ],
+          ),
+          _Seccion(
+            titulo: 'Confirmación',
+            children: [
+              BotonSecundario(
+                texto: 'Abrir la confirmación',
+                alPresionar: () => confirmarAccion(
+                  context,
+                  titulo: 'Confirmar compra',
+                  detalle: 'Compra a mercado',
+                  simbolo: 'QLD',
+                  monto: 250,
+                  textoConfirmar: 'Comprar',
+                  alConfirmar: () =>
+                      Future<void>.delayed(const Duration(milliseconds: 800)),
                 ),
               ),
             ],
