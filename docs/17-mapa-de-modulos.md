@@ -143,10 +143,10 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-13 · Tiempo real
 - **Qué hace**: canales privados, eventos desde la base de datos, gestor de conexión en la app, patrón foto + eventos.
 - **Docs**: 09 §3–§4, §7 · 08 §9
-- **BD**: políticas sobre `realtime.messages`; `private.publicar_evento`; triggers por entidad
+- **BD**: política `canales_permitidos` sobre `realtime.messages`; `private.publicar_evento`, `private.carga_evento`; triggers por entidad
 - **Funciones**: —
 - **App**: `lib/core/realtime/`
-- **Pruebas**: `supabase/tests/realtime_*.sql` · E2E-03, E2E-08
+- **Pruebas**: `supabase/tests/database/08_realtime_canales_test.sql` · E2E-03, E2E-08
 - **Depende de**: M-02 · **Lo usan**: todas las pantallas en vivo
 
 ### M-14 · Notificaciones y push
