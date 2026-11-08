@@ -12,4 +12,4 @@ Desde la sección "Tareas" de la historia (`backlog/E-04-datos-de-mercado/HU-028
 - [x] T008 `deno test` de `ingesta-mercado`: precio inválido, fallo del proveedor, mercado cerrado, sin secreto
 - [x] T009 Escenario E2E-03 de backend — `01_mercado_en_vivo_test.ts`
 - [x] T010 `docs/17` actualizado
-- [ ] T011 `scripts/verificar.sh` completo en verde
+- [x] T011 `scripts/verificar.sh` completo en verde

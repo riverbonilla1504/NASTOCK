@@ -24,6 +24,7 @@ Todo sale de `docs/09` §1, §2 y §4, `docs/05` §6 y §7, `docs/06` §5.2 y §
 4. Descarte "registrado": `publicar_cotizaciones` devuelve `descartes` (símbolo y motivo) y la función los escribe en el registro y en su respuesta. El registro en `salud_integraciones` es de HU-035.
 5. Fuera de ventana la función responde `200 {omitida: true}` aunque la llamen a mano.
 6. Fallo del proveedor: `502 INTEGRACION_CAIDA`, sin tocar `cotizaciones`; la app sigue con el último precio y su antigüedad.
+7. La parte de la app de CA-3 y CA-4 (mostrar el cierre anterior, o el último precio con su antigüedad) no se construye aquí: esta historia deja los datos (`cotizaciones` conserva el último precio y `estado_mercado().datos_actualizados_en` su antigüedad) y la pantalla y el aviso son de HU-030 y HU-032.
 
 ## Estructura
 
