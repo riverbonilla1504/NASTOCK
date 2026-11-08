@@ -18,6 +18,10 @@ abstract final class Rutas {
   /// Administración y sus subrutas (`/admin/usuarios`, HU-003).
   static const String admin = '/admin';
 
+  /// Invitaciones del Administrador (HU-003); la pantalla "Usuarios e
+  /// invitaciones" de HU-098 vive en la misma ruta.
+  static const String adminUsuarios = '/admin/usuarios';
+
   /// Bandeja de riesgo: no existe en el MVP corto, pero su regla de acceso sí
   /// (Analista permitido, Administrador en solo lectura).
   static const String riesgo = '/riesgo';

@@ -374,6 +374,13 @@ Los bordes son reglas de 1 px (`regla` en tarjetas, `regla-fuerte` en campos y c
 - **Style:** 32 dp de alto, fondo hoja, borde `regla-fuerte`, un trazo corto de la forma del estado y el rótulo en mayúsculas (label medium).
 - **State:** en vivo (línea sólida), pendiente (discontinua), desactualizado (punteada), deshabilitado (texto tachado y tenue). El **destacado** (lo vigente, p. ej. "Abierto · hoy") va en `morado-tenue` sin borde y con el trazo en morado.
 
+### Opciones excluyentes
+- **Uso:** elegir una entre dos y cuatro opciones que caben a la vez (por ejemplo, el rol de una invitación). Con más opciones o con texto largo se usa otro componente.
+- **Style:** rótulo encima como el de un campo, y debajo las opciones en línea; si no caben pasan a la línea siguiente. Cada una mide al menos 48 dp de alto y 64 dp de ancho, con relleno lateral de 16 dp, hoja de fondo, borde `regla-fuerte` de 1 px y esquinas de 4 dp.
+- **Elegida:** borde sólido de 2 px en tinta, un visto de 18 dp y el fondo `morado-tenue` de lo seleccionado. La forma del borde y el visto la distinguen aunque no se vea el color.
+- **Deshabilitadas:** borde `regla` y texto `tinta-tenue`; no responden al toque.
+- **Presión y foco:** superficie `regla` con onda de tinta, como los botones. El lector de pantalla las lee como opciones de un grupo excluyente, con su estado de elegida.
+
 ### Cards / Containers
 - **Corner Style:** 4 dp.
 - **Background:** hoja sobre papel.
