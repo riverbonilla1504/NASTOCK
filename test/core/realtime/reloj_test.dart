@@ -84,9 +84,7 @@ void main() {
     setUp(() {
       // El teléfono va 7 minutos atrasado y no se mueve en la prueba.
       ahoraDelTelefono = DateTime.utc(2026, 11, 8, 14, 0);
-      servidor = RelojRepositorioFalso(
-        () => DateTime.utc(2026, 11, 8, 14, 7),
-      );
+      servidor = RelojRepositorioFalso(() => DateTime.utc(2026, 11, 8, 14, 7));
       fuente = FuenteFalsa();
       gestor = GestorDeTiempoReal(fuente, ['mercado']);
       contenedor = ProviderContainer(
@@ -139,7 +137,10 @@ void main() {
 
       await contenedor.read(relojProvider.notifier).medir();
 
-      expect(contenedor.read(relojProvider).desfase, const Duration(minutes: 7));
+      expect(
+        contenedor.read(relojProvider).desfase,
+        const Duration(minutes: 7),
+      );
     });
 
     test('al reconectar vuelve a medir', () async {
@@ -155,7 +156,10 @@ void main() {
       await Future<void>.delayed(Duration.zero);
 
       expect(servidor.consultas, 2);
-      expect(contenedor.read(relojProvider).desfase, const Duration(minutes: 9));
+      expect(
+        contenedor.read(relojProvider).desfase,
+        const Duration(minutes: 9),
+      );
     });
   });
 }

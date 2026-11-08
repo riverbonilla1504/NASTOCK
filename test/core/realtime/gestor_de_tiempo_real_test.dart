@@ -1,4 +1,3 @@
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/core/realtime/estado_conexion.dart';
 import 'package:inversiones/core/realtime/gestor_de_tiempo_real.dart';
@@ -45,25 +44,31 @@ void main() {
       expect(avisos, 0);
     });
 
-    test('al perder la conexión pasa a reconectando y al volver pide fotos', () async {
-      final estados = <EstadoConexion>[];
-      var avisos = 0;
-      gestor.estados.listen(estados.add);
-      gestor.reconexiones.listen((_) => avisos++);
-      fuente.suscribirTodos();
+    test(
+      'al perder la conexión pasa a reconectando y al volver pide fotos',
+      () async {
+        final estados = <EstadoConexion>[];
+        var avisos = 0;
+        gestor.estados.listen(estados.add);
+        gestor.reconexiones.listen((_) => avisos++);
+        fuente.suscribirTodos();
 
-      fuente.senal(const SocketCerrado());
-      await Future<void>.delayed(Duration.zero);
-      expect(gestor.estado, EstadoConexion.reconectando);
-      expect(avisos, 0);
+        fuente.senal(const SocketCerrado());
+        await Future<void>.delayed(Duration.zero);
+        expect(gestor.estado, EstadoConexion.reconectando);
+        expect(avisos, 0);
 
-      fuente.senal(const SocketAbierto());
-      fuente.suscribirTodos();
-      await Future<void>.delayed(Duration.zero);
+        fuente.senal(const SocketAbierto());
+        fuente.suscribirTodos();
+        await Future<void>.delayed(Duration.zero);
 
-      expect(estados, [EstadoConexion.reconectando, EstadoConexion.conectado]);
-      expect(avisos, 1);
-    });
+        expect(estados, [
+          EstadoConexion.reconectando,
+          EstadoConexion.conectado,
+        ]);
+        expect(avisos, 1);
+      },
+    );
 
     test('un intento fallido pasa a sin conexión', () async {
       fuente.suscribirTodos();
