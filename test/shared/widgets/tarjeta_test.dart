@@ -32,10 +32,7 @@ void main() {
   testWidgets('lleva la sombra suave del tema', (tester) async {
     await montar(tester, const Tarjeta(child: Text('Cupo')));
 
-    expect(
-      _decoracion(tester).boxShadow,
-      ProfundidadTema.claro.sombraTarjeta,
-    );
+    expect(_decoracion(tester).boxShadow, ProfundidadTema.claro.sombraTarjeta);
   });
 
   testWidgets('sin elevación no lleva sombra', (tester) async {

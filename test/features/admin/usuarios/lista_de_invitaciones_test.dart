@@ -114,11 +114,11 @@ void main() {
       RepositorioFalso(invitaciones: _unaDeCadaEstado()),
     );
 
-    expect(find.text('PENDIENTE'), findsOneWidget);
-    expect(find.text('ACEPTADA'), findsOneWidget);
-    expect(find.text('REVOCADA'), findsOneWidget);
+    expect(find.text('Pendiente'), findsOneWidget);
+    expect(find.text('Aceptada'), findsOneWidget);
+    expect(find.text('Revocada'), findsOneWidget);
     // La pendiente con la fecha pasada y la guardada como vencida.
-    expect(find.text('VENCIDA'), findsNWidgets(2));
+    expect(find.text('Vencida'), findsNWidgets(2));
   });
 
   testWidgets('el cupo inicial solo se muestra en un Usuario', (tester) async {
@@ -194,7 +194,7 @@ void main() {
 
     expect(find.text('¿Revocar la invitación?'), findsNothing);
     expect(repositorio.revocadas, isEmpty);
-    expect(find.text('PENDIENTE'), findsOneWidget);
+    expect(find.text('Pendiente'), findsOneWidget);
   });
 
   testWidgets('confirmar revoca por la RPC, avisa y actualiza la lista', (
@@ -220,8 +220,8 @@ void main() {
       find.text('Invitación revocada. ana@prueba.test ya no puede entrar.'),
       findsOneWidget,
     );
-    expect(find.text('REVOCADA'), findsOneWidget);
-    expect(find.text('PENDIENTE'), findsNothing);
+    expect(find.text('Revocada'), findsOneWidget);
+    expect(find.text('Pendiente'), findsNothing);
     expect(find.text('Revocar'), findsNothing);
   });
 

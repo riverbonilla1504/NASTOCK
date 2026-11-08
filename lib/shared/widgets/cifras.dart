@@ -93,10 +93,8 @@ class Variacion extends StatelessWidget {
             child: Text(
               texto,
               style: estiloDeCifra(
-                Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.w600,
-                ),
+                Theme.of(context).textTheme.bodyMedium!
+                    .copyWith(color: color, fontWeight: FontWeight.w600),
               ),
             ),
           ),

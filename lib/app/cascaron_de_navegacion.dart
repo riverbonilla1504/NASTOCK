@@ -82,9 +82,9 @@ class CascaronDeNavegacion extends ConsumerWidget {
     }
 
     return Scaffold(
-      // El contenido pasa por detrás de la isla (DESIGN.md): las pantallas
-      // dejan al final de sus listas el relleno inferior de `MediaQuery`.
-      extendBody: true,
+      // El contenido termina donde empieza la isla (D-69): nada con scroll
+      // queda tapado, ni siquiera el último botón de una lista.
+      extendBody: false,
       body: hijo,
       bottomNavigationBar: BarraDePestanas(
         actual: actual,

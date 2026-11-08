@@ -97,9 +97,6 @@ class EtiquetaDeCampo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      texto,
-      style: Theme.of(context).textTheme.titleSmall,
-    );
+    return Text(texto, style: Theme.of(context).textTheme.titleSmall);
   }
 }

@@ -36,8 +36,9 @@ void main() {
       });
 
       test('el botón principal va en el acento y la tarjeta tiene 8 dp', () {
-        final fondo = tema.filledButtonTheme.style!.backgroundColor!
-            .resolve(<WidgetState>{});
+        final fondo = tema.filledButtonTheme.style!.backgroundColor!.resolve(
+          <WidgetState>{},
+        );
         expect(fondo, colores.morado);
         final forma = tema.cardTheme.shape! as RoundedRectangleBorder;
         expect(forma.borderRadius, BorderRadius.circular(Radios.hoja));

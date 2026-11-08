@@ -85,9 +85,7 @@ class GraficaDeLinea extends StatelessWidget {
             colores: context.colores,
             estilo: estilo,
             // La gráfica es dibujo: el texto de sus ejes escala hasta 1,3.
-            escala: MediaQuery.textScalerOf(
-              context,
-            ).clamp(maxScaleFactor: 1.3),
+            escala: MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3),
           ),
         ),
       ),

@@ -21,6 +21,7 @@ Future<List<String>> _abrir(
   String ruta = Rutas.inicio,
   bool oscuro = false,
   double textoEscala = 1,
+  Widget hijo = const Center(child: Text('Contenido del destino')),
 }) async {
   tester.view.physicalSize = Size(ancho, 800);
   tester.view.devicePixelRatio = 1;
@@ -38,7 +39,7 @@ Future<List<String>> _abrir(
         ),
         home: CascaronDeNavegacion(
           rutaActual: ruta,
-          hijo: const Center(child: Text('Contenido del destino')),
+          hijo: hijo,
           alElegirRuta: elegidas.add,
         ),
       ),
@@ -203,5 +204,60 @@ void main() {
         );
       }
     }
+  });
+
+  group('la isla no tapa el contenido (D-69)', () {
+    const claveDelUltimo = Key('ultimo-boton');
+    final pagina = Scaffold(
+      body: ListView(
+        padding: const EdgeInsets.all(Espacio.x4),
+        children: [
+          for (var i = 0; i < 30; i++)
+            SizedBox(height: 56, child: Text('Fila $i')),
+          const FilledButton(
+            key: claveDelUltimo,
+            onPressed: null,
+            child: Text('Invitar'),
+          ),
+        ],
+      ),
+    );
+
+    for (final oscuro in [false, true]) {
+      testWidgets('el último botón de una lista con scroll queda sobre la isla '
+          '(${oscuro ? 'oscuro' : 'claro'})', (tester) async {
+        await _abrir(
+          tester,
+          rol: RolApp.administrador,
+          ancho: 360,
+          oscuro: oscuro,
+          hijo: pagina,
+        );
+        await tester.scrollUntilVisible(
+          find.byKey(claveDelUltimo),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.drag(find.byType(ListView), const Offset(0, -2000));
+        await tester.pumpAndSettle();
+
+        final techoDeLaIsla = tester.getTopLeft(find.byType(BarraDePestanas));
+        final boton = tester.getRect(find.byKey(claveDelUltimo));
+        expect(boton.bottom, lessThanOrEqualTo(techoDeLaIsla.dy));
+      });
+    }
+
+    testWidgets('el cuerpo termina donde empieza la isla', (tester) async {
+      await _abrir(
+        tester,
+        rol: RolApp.usuario,
+        ancho: 412,
+        hijo: const SizedBox.expand(key: Key('cuerpo')),
+      );
+
+      final cuerpo = tester.getRect(find.byKey(const Key('cuerpo')));
+      final techoDeLaIsla = tester.getTopLeft(find.byType(BarraDePestanas));
+      expect(cuerpo.bottom, lessThanOrEqualTo(techoDeLaIsla.dy));
+    });
   });
 }

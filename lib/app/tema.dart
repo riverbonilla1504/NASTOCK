@@ -54,10 +54,8 @@ const List<FontFeature> cifrasTabulares = [FontFeature.tabularFigures()];
 
 /// Pasa un estilo a las cifras del sistema: JetBrains Mono tabular. Todo
 /// monto, cantidad, hora y eje de gráfica lo usa (D-69).
-TextStyle estiloDeCifra(TextStyle base) => base.copyWith(
-  fontFamily: Familias.cifras,
-  fontFeatures: cifrasTabulares,
-);
+TextStyle estiloDeCifra(TextStyle base) =>
+    base.copyWith(fontFamily: Familias.cifras, fontFeatures: cifrasTabulares);
 
 /// Colores con nombre del sistema, en claro y en oscuro.
 @immutable
@@ -272,11 +270,7 @@ class ProfundidadTema extends ThemeExtension<ProfundidadTema> {
     ],
     sombraFlotante: [
       BoxShadow(color: Color(0x1A18181B), offset: Offset(0, 2), blurRadius: 4),
-      BoxShadow(
-        color: Color(0x1F18181B),
-        offset: Offset(0, 8),
-        blurRadius: 20,
-      ),
+      BoxShadow(color: Color(0x1F18181B), offset: Offset(0, 8), blurRadius: 20),
     ],
     sombraHoja: [
       BoxShadow(
@@ -357,8 +351,7 @@ extension ColoresDelContexto on BuildContext {
       Theme.of(this).extension<ColoresTema>() ?? ColoresTema.claro;
 
   ProfundidadTema get profundidad =>
-      Theme.of(this).extension<ProfundidadTema>() ??
-      ProfundidadTema.claro;
+      Theme.of(this).extension<ProfundidadTema>() ?? ProfundidadTema.claro;
 }
 
 // Construir un ThemeData es caro y el resultado no cambia: se arma una vez.
@@ -403,7 +396,9 @@ TextTheme _textos(ColoresTema c) {
     displayLarge: _estilo(40, FontWeight.w700, c.tinta, alto: 1.1),
     displayMedium: _estilo(32, FontWeight.w700, c.tinta, alto: 1.15),
     // Cifra grande: el valor principal de una pantalla, en monoespaciada.
-    displaySmall: estiloDeCifra(_estilo(30, FontWeight.w600, c.tinta, alto: 1.15)),
+    displaySmall: estiloDeCifra(
+      _estilo(30, FontWeight.w600, c.tinta, alto: 1.15),
+    ),
     headlineLarge: _estilo(28, FontWeight.w700, c.tinta, alto: 1.15),
     headlineMedium: _estilo(24, FontWeight.w600, c.tinta, alto: 1.2),
     headlineSmall: _estilo(20, FontWeight.w600, c.tinta, alto: 1.25),
@@ -431,11 +426,7 @@ TextTheme _textos(ColoresTema c) {
   );
 }
 
-ThemeData _construir(
-  ColoresTema c,
-  ProfundidadTema p,
-  Brightness brillo,
-) {
+ThemeData _construir(ColoresTema c, ProfundidadTema p, Brightness brillo) {
   final textos = _textos(c);
   final esquina = BorderRadius.circular(Radios.control);
   final esquinaTarjeta = BorderRadius.circular(Radios.hoja);
@@ -530,22 +521,23 @@ ThemeData _construir(
     dividerTheme: DividerThemeData(color: c.regla, thickness: 1, space: 1),
     // Primario: sólido en el acento. Deshabilitado: gris con borde.
     filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        backgroundColor: c.morado,
-        foregroundColor: c.sobreMorado,
-        disabledBackgroundColor: c.relleno,
-        disabledForegroundColor: c.tintaTenue,
-        minimumSize: alturaBoton,
-        padding: rellenoBoton,
-        shape: RoundedRectangleBorder(borderRadius: esquina),
-        textStyle: textos.labelLarge,
-      ).copyWith(
-        side: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.disabled)
-              ? BorderSide(color: c.regla)
-              : null,
-        ),
-      ),
+      style:
+          FilledButton.styleFrom(
+            backgroundColor: c.morado,
+            foregroundColor: c.sobreMorado,
+            disabledBackgroundColor: c.relleno,
+            disabledForegroundColor: c.tintaTenue,
+            minimumSize: alturaBoton,
+            padding: rellenoBoton,
+            shape: RoundedRectangleBorder(borderRadius: esquina),
+            textStyle: textos.labelLarge,
+          ).copyWith(
+            side: WidgetStateProperty.resolveWith(
+              (s) => s.contains(WidgetState.disabled)
+                  ? BorderSide(color: c.regla)
+                  : null,
+            ),
+          ),
     ),
     // Secundario: fondo gris claro, sin contorno.
     outlinedButtonTheme: OutlinedButtonThemeData(

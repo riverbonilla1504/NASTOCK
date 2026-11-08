@@ -60,41 +60,42 @@ void main() {
   });
 
   group('barra superior', () {
-    testWidgets('lleva el título, su contenido y es blanca con borde inferior fino', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: crearTema(),
-          home: const Scaffold(
-            appBar: BarraSuperior(
-              titulo: 'Mercado',
-              alturaInferior: 40,
-              inferior: Text('Cierra en 4 h 14 min'),
+    testWidgets(
+      'lleva el título, su contenido y es blanca con borde inferior fino',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: crearTema(),
+            home: const Scaffold(
+              appBar: BarraSuperior(
+                titulo: 'Mercado',
+                alturaInferior: 40,
+                inferior: Text('Cierra en 4 h 14 min'),
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('Mercado'), findsOneWidget);
-      expect(find.text('Cierra en 4 h 14 min'), findsOneWidget);
-      final caja = tester.widget<DecoratedBox>(
-        find
-            .descendant(
-              of: find.byType(BarraSuperior),
-              matching: find.byType(DecoratedBox),
-            )
-            .first,
-      );
-      final decoracion = caja.decoration as BoxDecoration;
-      expect(decoracion.gradient, isNull);
-      expect(decoracion.color, ColoresTema.claro.hoja);
-      expect(decoracion.border, isNotNull);
-      expect(
-        const BarraSuperior(titulo: 'x', alturaInferior: 40).preferredSize,
-        const Size.fromHeight(kToolbarHeight + 40),
-      );
-    });
+        expect(find.text('Mercado'), findsOneWidget);
+        expect(find.text('Cierra en 4 h 14 min'), findsOneWidget);
+        final caja = tester.widget<DecoratedBox>(
+          find
+              .descendant(
+                of: find.byType(BarraSuperior),
+                matching: find.byType(DecoratedBox),
+              )
+              .first,
+        );
+        final decoracion = caja.decoration as BoxDecoration;
+        expect(decoracion.gradient, isNull);
+        expect(decoracion.color, ColoresTema.claro.hoja);
+        expect(decoracion.border, isNotNull);
+        expect(
+          const BarraSuperior(titulo: 'x', alturaInferior: 40).preferredSize,
+          const Size.fromHeight(kToolbarHeight + 40),
+        );
+      },
+    );
   });
 
   group('isla de navegación', () {
