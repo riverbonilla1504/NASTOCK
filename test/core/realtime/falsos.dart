@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/misc.dart';
 import 'package:inversiones/core/realtime/estado_conexion.dart';
 import 'package:inversiones/core/realtime/evento_de_tiempo_real.dart';
 import 'package:inversiones/core/realtime/fuente_de_tiempo_real.dart';
@@ -77,3 +78,13 @@ class RelojRepositorioFalso implements RelojRepositorio {
     return servidor();
   }
 }
+
+/// Lo que una prueba de la app entera necesita para no abrir un socket real:
+/// una fuente en memoria y un servidor de reloj que responde la hora del
+/// teléfono.
+List<Override> tiempoRealEnMemoria({FuenteFalsa? fuente}) => [
+  fuenteDeTiempoRealProvider.overrideWithValue(fuente ?? FuenteFalsa()),
+  relojRepositorioProvider.overrideWithValue(
+    RelojRepositorioFalso(() => DateTime.now().toUtc()),
+  ),
+];
