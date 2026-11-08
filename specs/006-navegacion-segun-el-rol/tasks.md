@@ -41,7 +41,7 @@ Una sola historia de usuario (US1). Cada fase es una capa con sus pruebas y term
 
 ## Fase 7 · Cuenta de prueba suspendida (condicionada)
 
-- [ ] T014 [US1] **Solo si el coordinador aprueba la precisión de `docs/15` §3**: `supabase/seed.sql` con `suspendido@prueba.local` (perfil `suspendido`, invitación aceptada, sin bloqueo en Auth, misma contraseña de la semilla), `docs/15` §3 (fila "Usuarios de prueba") y el historial de `docs/13` §4; ajustar las pruebas pgTAP que cuentan perfiles de la semilla; agregar al E2E de la app el escenario "la cuenta suspendida entra y llega a `/cuenta-suspendida`, sin poder abrir otra ruta" (CA-3). Sin aprobación, no se hace y el informe lo dice
+- [x] T014 [US1] **Solo si el coordinador aprueba la precisión de `docs/15` §3**: `supabase/seed.sql` con `suspendido@prueba.local` (perfil `suspendido`, invitación aceptada, sin bloqueo en Auth, misma contraseña de la semilla), `docs/15` §3 (fila "Usuarios de prueba") y el historial de `docs/13` §4; ajustar las pruebas pgTAP que cuentan perfiles de la semilla; agregar al E2E de la app el escenario "la cuenta suspendida entra y llega a `/cuenta-suspendida`, sin poder abrir otra ruta" (CA-3). Sin aprobación, no se hace y el informe lo dice
 
 ## Fase 8 · Cierre (commit 7)
 

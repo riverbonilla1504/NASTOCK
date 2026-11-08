@@ -28,6 +28,7 @@ import 'package:inversiones/app/cascaron_de_navegacion.dart';
 import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
 import 'package:inversiones/app/pagina_marcador.dart';
+import 'package:inversiones/features/auth/presentation/pagina_cuenta_suspendida.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
 import 'package:inversiones/main.dart' as app;
 import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
@@ -188,6 +189,47 @@ void main() {
         await _esperarA(tester, find.byType(PaginaDeIngreso));
         expect(find.byType(PaginaDeIngreso), findsOneWidget, reason: nombre);
       }
+
+      // E2E-01 · CA-3: la cuenta suspendida de la semilla (perfil suspendido, sin
+      // bloqueo en Auth: un token vigente cuyo estado ya cambió) llega a
+      // /cuenta-suspendida, sin menú y sin poder abrir otra ruta.
+      await tester.enterText(
+        find.descendant(
+          of: find.byKey(PaginaDeIngreso.claveDelCorreo),
+          matching: find.byType(TextField),
+        ),
+        'suspendido@prueba.local',
+      );
+      await tester.enterText(
+        find.descendant(
+          of: find.byKey(PaginaDeIngreso.claveDeLaContrasena),
+          matching: find.byType(TextField),
+        ),
+        _contrasenaDeLaSemilla,
+      );
+      await tester.ensureVisible(
+        find.byKey(PaginaDeIngreso.claveDelBotonDeCorreo),
+      );
+      await tester.tap(find.byKey(PaginaDeIngreso.claveDelBotonDeCorreo));
+      await _esperarA(tester, find.byType(PaginaCuentaSuspendida));
+
+      expect(find.byType(PaginaCuentaSuspendida), findsOneWidget);
+      expect(find.text(textoDeCuentaSuspendida), findsOneWidget);
+      expect(_pestanasVisibles(), isEmpty);
+      final enrutador = _enrutador(tester);
+      expect(_ruta(enrutador), Rutas.cuentaSuspendida);
+      for (final ruta in [Rutas.inicio, '/admin']) {
+        enrutador.go(ruta);
+        await tester.pumpAndSettle();
+        expect(_ruta(enrutador), Rutas.cuentaSuspendida, reason: ruta);
+      }
+
+      // Su única salida es cerrar la sesión: vuelve al ingreso.
+      await tester.tap(
+        find.byKey(PaginaCuentaSuspendida.claveDelBotonDeCierre),
+      );
+      await _esperarA(tester, find.byType(PaginaDeIngreso));
+      expect(find.byType(PaginaDeIngreso), findsOneWidget);
     },
   );
 }

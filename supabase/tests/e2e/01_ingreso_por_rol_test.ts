@@ -45,12 +45,27 @@ Deno.test("E2E-01: el token de cada usuario de la semilla trae su rol y su estad
   }
 });
 
+Deno.test("E2E-01: la cuenta suspendida de la semilla trae suspendido en su token", async () => {
+  const sesion = await iniciarSesion(
+    "suspendido@prueba.local",
+    CONTRASENA_DE_LA_SEMILLA,
+  );
+  const claims = claimsDe(sesion);
+
+  assertEquals(claims.app_rol, "usuario");
+  assertEquals(claims.app_estado, "suspendido");
+  // La RLS, que es la seguridad real, no le entrega ni su propio perfil.
+  const propio = await sesion.leer("perfiles", "select=email");
+  assertEquals(propio.cuerpo, []);
+});
+
 Deno.test("E2E-01: la RLS de perfiles coincide con la navegación de cada rol", async () => {
   const consulta = "select=email&email=like.*@prueba.local&order=email";
   const todos = [
     "admin@prueba.local",
     "analista1@prueba.local",
     "analista2@prueba.local",
+    "suspendido@prueba.local",
     "usuario1@prueba.local",
     "usuario2@prueba.local",
   ];

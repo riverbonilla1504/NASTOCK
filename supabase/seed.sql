@@ -211,15 +211,19 @@ update public.parametros set valor = '["google","email"]'::jsonb where clave = '
 -- prueba con altas reales).
 set session_replication_role = replica;
 
-with u(n, correo, rol, nombre) as (values
-  (1, 'admin@prueba.local',    'administrador', 'Administrador de prueba'),
-  (2, 'analista1@prueba.local', 'analista',      'Analista 1 de prueba'),
-  (3, 'analista2@prueba.local', 'analista',      'Analista 2 de prueba'),
-  (4, 'usuario1@prueba.local',  'usuario',       'Usuario 1 de prueba'),
-  (5, 'usuario2@prueba.local',  'usuario',       'Usuario 2 de prueba')
+with u(n, correo, rol, nombre, estado) as (values
+  (1, 'admin@prueba.local',    'administrador', 'Administrador de prueba',  'activo'),
+  (2, 'analista1@prueba.local', 'analista',      'Analista 1 de prueba',     'activo'),
+  (3, 'analista2@prueba.local', 'analista',      'Analista 2 de prueba',     'activo'),
+  (4, 'usuario1@prueba.local',  'usuario',       'Usuario 1 de prueba',      'activo'),
+  (5, 'usuario2@prueba.local',  'usuario',       'Usuario 2 de prueba',      'activo'),
+  -- Perfil suspendido y sin bloqueo en Auth: es el caso real de una persona con un token vigente cuyo
+  -- estado ya cambió. Prueba la pantalla de cuenta suspendida (HU-006, E2E-01); no se puede suspender
+  -- desde la app hasta HU-010.
+  (6, 'suspendido@prueba.local', 'usuario',      'Cuenta suspendida de prueba', 'suspendido')
 ),
 ids as (
-  select n, correo, rol::public.rol_app as rol, nombre,
+  select n, correo, rol::public.rol_app as rol, nombre, estado::public.estado_cuenta as estado,
          ('00000000-0000-4000-8000-0000000a00' || lpad(n::text, 2, '0'))::uuid as id,
          ('00000000-0000-4000-8000-0000000b00' || lpad(n::text, 2, '0'))::uuid as inv_id
   from u
@@ -245,7 +249,7 @@ identidades as (
 ),
 perfiles_sembrados as (
   insert into public.perfiles (id, email, nombre, rol, estado, invitacion_id)
-  select id, correo, nombre, rol, 'activo', inv_id from ids
+  select id, correo, nombre, rol, estado, inv_id from ids
   returning id
 )
 insert into public.invitaciones (id, email, rol, estado, expira_en, usuario_id, aceptada_en)
