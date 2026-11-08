@@ -9,6 +9,9 @@ import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
 import 'package:inversiones/app/tema.dart';
 import 'package:inversiones/core/configuracion/entorno.dart';
+import 'package:inversiones/features/auth/data/ingreso_repositorio.dart';
+
+import '../features/auth/falsos.dart';
 
 const _entorno = Entorno(
   supabaseUrl: 'http://127.0.0.1:54321',
@@ -26,7 +29,12 @@ Future<GoRouter> _abrir(
   addTearDown(enrutador.dispose);
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [entornoProvider.overrideWithValue(_entorno)],
+      overrides: [
+        entornoProvider.overrideWithValue(_entorno),
+        // El cascarón de navegación lee la sesión: sin Supabase iniciado se
+        // le da un repositorio sin sesión.
+        ingresoRepositorioProvider.overrideWithValue(IngresoRepositorioFalso()),
+      ],
       child: MaterialApp.router(theme: crearTema(), routerConfig: enrutador),
     ),
   );
@@ -63,7 +71,9 @@ void main() {
     enrutador.go(RutasCatalogo.inicio);
     await tester.pumpAndSettle();
     expect(find.byType(PaginaCatalogo), findsNothing);
-    expect(find.byType(PaginaInicio), findsNothing);
+    // Una ruta que no existe lleva al inicio (HU-006, docs/03 §3); antes caía
+    // en la página de error de go_router, que tampoco era el catálogo.
+    expect(find.byType(PaginaInicio), findsOneWidget);
   });
 
   testWidgets('el catálogo cambia entre claro y oscuro', (tester) async {

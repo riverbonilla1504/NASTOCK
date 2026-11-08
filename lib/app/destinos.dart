@@ -11,6 +11,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../core/perfil/perfil.dart';
 import 'pagina_inicio.dart';
@@ -23,6 +24,7 @@ class Destino {
     required this.icono,
     required this.roles,
     this.pantalla,
+    this.subrutas = const [],
   });
 
   /// Ruta base. Las subrutas (`/admin/usuarios`) son del mismo destino.
@@ -38,6 +40,11 @@ class Destino {
   /// La pantalla del destino; `null` mientras su historia no la construye (el
   /// enrutador monta un marcador con [etiqueta]).
   final WidgetBuilder? pantalla;
+
+  /// Subrutas del destino, con la ruta relativa (`GoRoute(path: 'usuarios')`
+  /// bajo `/admin`). La guarda de la ruta base ya las cubre: las historias
+  /// posteriores solo las agregan aquí.
+  final List<GoRoute> subrutas;
 }
 
 final Set<RolApp> _todos = RolApp.values.toSet();
