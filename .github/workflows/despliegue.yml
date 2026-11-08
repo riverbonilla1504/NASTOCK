@@ -78,7 +78,21 @@ jobs:
         with:
           version: 2.122.0 # la misma que se usa en local; la 3 apunta db push al stack local (EC-024)
       - run: supabase link --project-ref "${{ vars.SUPABASE_PROJECT_REF }}"
+      # El correo del primer administrador (docs/04 §9). La migración de arranque corre una sola vez:
+      # sin el secreto se gastaría sin crear la invitación, así que el despliegue falla antes.
+      - name: Correo del primer administrador
+        env:
+          ADMIN_INICIAL_EMAIL: ${{ secrets.ADMIN_INICIAL_EMAIL }}
+        run: |
+          if [ -z "$ADMIN_INICIAL_EMAIL" ]; then
+            echo "::error::Falta el secreto ADMIN_INICIAL_EMAIL (docs/16 §4.1)"
+            exit 1
+          fi
+      # `db push` sube a Vault lo que supabase/config.toml declara en [db.vault] antes de aplicar las
+      # migraciones pendientes.
       - run: supabase db push
+        env:
+          ADMIN_INICIAL_EMAIL: ${{ secrets.ADMIN_INICIAL_EMAIL }}
       - name: Secretos de las Edge Functions (proveedores reales, nunca simulados)
         env:
           ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
