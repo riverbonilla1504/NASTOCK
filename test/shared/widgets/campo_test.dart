@@ -62,4 +62,23 @@ void main() {
     expect(toques, 1);
     expect(tester.widget<TextField>(find.byType(TextField)).readOnly, isTrue);
   });
+
+  testWidgets('oculto esconde lo escrito y apaga las sugerencias', (
+    tester,
+  ) async {
+    await montar(tester, const Campo(etiqueta: 'Contraseña', oculto: true));
+
+    final campo = tester.widget<TextField>(find.byType(TextField));
+    expect(campo.obscureText, isTrue);
+    expect(campo.enableSuggestions, isFalse);
+    expect(campo.autocorrect, isFalse);
+  });
+
+  testWidgets('por omisión muestra lo escrito', (tester) async {
+    await montar(tester, const Campo(etiqueta: 'Correo'));
+
+    final campo = tester.widget<TextField>(find.byType(TextField));
+    expect(campo.obscureText, isFalse);
+    expect(campo.enableSuggestions, isTrue);
+  });
 }
