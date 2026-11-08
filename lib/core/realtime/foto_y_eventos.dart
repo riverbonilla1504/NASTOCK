@@ -56,8 +56,7 @@ abstract class FotoYEventosNotifier<T> extends AsyncNotifier<List<T>> {
   /// Si [evento] afecta a esta lista. Por defecto, los de entidad de [tabla].
   /// Una pantalla que escucha un canal con eventos de otra forma (por ejemplo
   /// `resumen_cambio`, sin identificador) lo sobrescribe.
-  bool aceptaEvento(EventoDeTiempoReal evento) =>
-      evento.entidad.tabla == tabla;
+  bool aceptaEvento(EventoDeTiempoReal evento) => evento.entidad.tabla == tabla;
 
   /// Deja la lista en el orden que muestra la pantalla. Por defecto, el del
   /// servidor para la foto y los registros nuevos al final.
