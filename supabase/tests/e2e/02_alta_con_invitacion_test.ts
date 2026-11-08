@@ -1,5 +1,7 @@
 // E2E-02 · Invitación: el invitado entra; el no invitado y el proveedor no permitido son
-// rechazados con su mensaje (docs/15 §4, HU-002).
+// rechazados con su mensaje (docs/15 §4, HU-002). Con HU-003, el Administrador invita y revoca
+// por las RPC `invitar_usuario` y `revocar_invitacion`, y una invitación revocada o vencida no
+// deja entrar.
 //
 // El ingreso con Google no se puede automatizar (docs/04 §1), así que el alta se prueba con
 // correo y contraseña, que solo existen en local y CI: Auth real, con su hook "antes de crear
@@ -14,7 +16,13 @@ import {
   restablecer,
   type Sql,
 } from "./utilidades/pruebas.ts";
-import { iniciarSesion, sesionAnonima } from "./utilidades/sesion.ts";
+import {
+  crearUsuarioDePrueba,
+  iniciarSesion,
+  type Respuesta,
+  type Sesion,
+  sesionAnonima,
+} from "./utilidades/sesion.ts";
 import { entorno } from "./utilidades/entorno.ts";
 
 const SIN_INVITACION =
@@ -178,4 +186,283 @@ Deno.test("E2E-02: los usuarios de prueba de la semilla ingresan con correo y co
     assertEquals(claims.app_estado, "activo");
   }
   assert(entorno.urlApi.length > 0);
+});
+
+// ---------------------------------------------------------------------------------------------
+// HU-003 · Invitar y revocar por las RPC `invitar_usuario` y `revocar_invitacion`.
+// El Administrador de la semilla invita por la API, como lo hace la app; la persona entra con esa
+// invitación (Auth real, con su hook y su trigger de alta) y una invitación revocada o vencida no
+// deja entrar. Los códigos de error viajan en `message` (docs/06 §9).
+// ---------------------------------------------------------------------------------------------
+
+const CLAVE_DE_PRUEBA = "prueba-local-1234";
+
+interface InvitacionRpc {
+  id: string;
+  email: string;
+  rol: string;
+  estado: string;
+  cupo_inicial: number;
+}
+
+function codigoDe(respuesta: Respuesta): string | undefined {
+  return (respuesta.cuerpo as { message?: string } | null)?.message;
+}
+
+function sesionDelAdministrador() {
+  return iniciarSesion("admin@prueba.local", CLAVE_DE_PRUEBA);
+}
+
+function invitarPorRpc(
+  sesion: Sesion,
+  correo: string,
+  rol = "usuario",
+  cupo = 0,
+) {
+  return sesion.rpc("invitar_usuario", {
+    p_email: correo,
+    p_rol: rol,
+    p_cupo_inicial: cupo,
+  });
+}
+
+async function eventosDeInvitacion(
+  sql: Sql,
+  id: string,
+  estado: string,
+): Promise<number> {
+  const [{ cuantos }] = await sql`
+    select count(*)::int as cuantos from realtime.messages
+    where topic = 'admin' and event = 'invitacion' and private
+      and payload->>'id' = ${id} and payload->>'estado' = ${estado}`;
+  return cuantos;
+}
+
+Deno.test("E2E-02: el Administrador invita por la RPC y la persona entra con esa invitación", async () => {
+  await conBd(async (sql) => {
+    const admin = await sesionDelAdministrador();
+    const correo = correoNuevo("rpc");
+    try {
+      const respuesta = await invitarPorRpc(admin, correo, "analista", 0);
+      assertEquals(respuesta.estado, 200, JSON.stringify(respuesta.cuerpo));
+      const invitacion = respuesta.cuerpo as InvitacionRpc;
+      assertEquals(
+        [invitacion.email, invitacion.rol, invitacion.estado],
+        [correo, "analista", "pendiente"],
+      );
+
+      // La ve en su lista (RLS) y el evento salió por el canal admin.
+      const lista = await admin.leer(
+        "invitaciones",
+        `id=eq.${invitacion.id}&select=email,estado`,
+      );
+      assertEquals(lista.cuerpo, [{ email: correo, estado: "pendiente" }]);
+      assertEquals(
+        await eventosDeInvitacion(sql, invitacion.id, "pendiente"),
+        1,
+      );
+
+      // La persona entra con esa invitación y queda con el rol que se le dio.
+      const alta = await registrarse(correo);
+      assertEquals(alta.estado, 200, JSON.stringify(alta.cuerpo));
+      const [perfil] = await sql`
+        select rol, estado from public.perfiles where email = ${correo}`;
+      assertEquals([perfil.rol, perfil.estado], ["analista", "activo"]);
+      const [aceptada] = await sql`
+        select estado, usuario_id is not null as con_usuario
+        from public.invitaciones where id = ${invitacion.id}`;
+      assertEquals([aceptada.estado, aceptada.con_usuario], ["aceptada", true]);
+      assertEquals(
+        await eventosDeInvitacion(sql, invitacion.id, "aceptada"),
+        1,
+      );
+
+      // Quedó en la bitácora quién invitó.
+      const [{ cuantos }] = await sql`
+        select count(*)::int as cuantos from public.auditoria
+        where accion = 'cuenta.invitada' and entidad_id = ${invitacion.id}
+          and actor_rol = 'administrador'`;
+      assertEquals(cuantos, 1);
+    } finally {
+      await limpiar(sql, [correo]);
+    }
+  });
+});
+
+Deno.test("E2E-02: una invitación revocada no deja entrar y se puede invitar de nuevo", async () => {
+  await conBd(async (sql) => {
+    const admin = await sesionDelAdministrador();
+    const correo = correoNuevo("revocada");
+    try {
+      const creada = await invitarPorRpc(admin, correo);
+      assertEquals(creada.estado, 200, JSON.stringify(creada.cuerpo));
+      const { id } = creada.cuerpo as InvitacionRpc;
+
+      const revocada = await admin.rpc("revocar_invitacion", { p_id: id });
+      assertEquals(revocada.estado, 200, JSON.stringify(revocada.cuerpo));
+      assertEquals((revocada.cuerpo as InvitacionRpc).estado, "revocada");
+      assertEquals(await eventosDeInvitacion(sql, id, "revocada"), 1);
+      const [{ cuantos }] = await sql`
+        select count(*)::int as cuantos from public.auditoria
+        where accion = 'cuenta.invitacion_revocada' and entidad_id = ${id}`;
+      assertEquals(cuantos, 1);
+
+      // Con la invitación revocada, el alta se rechaza con su mensaje y no se crea el usuario.
+      const rechazada = await registrarse(correo);
+      assertEquals(rechazada.estado, 403, JSON.stringify(rechazada.cuerpo));
+      assertStringIncludes(JSON.stringify(rechazada.cuerpo), SIN_INVITACION);
+      assert(!(await existeUsuario(sql, correo)));
+
+      // Revocarla otra vez no es posible: ya cambió de estado.
+      const otraVez = await admin.rpc("revocar_invitacion", { p_id: id });
+      assertEquals(otraVez.estado, 400);
+      assertEquals(codigoDe(otraVez), "ESTADO_INVALIDO");
+
+      // Invitar de nuevo ese correo es posible y esa invitación sí deja entrar.
+      const nueva = await invitarPorRpc(admin, correo, "usuario", 100);
+      assertEquals(nueva.estado, 200, JSON.stringify(nueva.cuerpo));
+      const alta = await registrarse(correo);
+      assertEquals(alta.estado, 200, JSON.stringify(alta.cuerpo));
+      const [perfil] = await sql`
+        select rol, estado from public.perfiles where email = ${correo}`;
+      assertEquals([perfil.rol, perfil.estado], ["usuario", "activo"]);
+    } finally {
+      await limpiar(sql, [correo]);
+    }
+  });
+});
+
+Deno.test("E2E-02: invitar un correo con invitación vigente o con cuenta responde su código", async () => {
+  await conBd(async (sql) => {
+    const admin = await sesionDelAdministrador();
+    const correo = correoNuevo("duplicada");
+    try {
+      const primera = await invitarPorRpc(admin, correo);
+      assertEquals(primera.estado, 200, JSON.stringify(primera.cuerpo));
+
+      const duplicada = await invitarPorRpc(admin, correo.toUpperCase());
+      assertEquals(duplicada.estado, 400);
+      assertEquals(codigoDe(duplicada), "INVITACION_DUPLICADA");
+
+      const conCuenta = await invitarPorRpc(admin, "usuario1@prueba.local");
+      assertEquals(conCuenta.estado, 400);
+      assertEquals(codigoDe(conCuenta), "CORREO_YA_REGISTRADO");
+
+      const [{ cuantos }] = await sql`
+        select count(*)::int as cuantos from public.invitaciones
+        where lower(email) in (${correo}, 'usuario1@prueba.local')
+          and estado = 'pendiente'`;
+      assertEquals(cuantos, 1);
+    } finally {
+      await limpiar(sql, [correo]);
+    }
+  });
+});
+
+Deno.test("E2E-02: un Usuario, un Analista o quien no ingresó no pueden invitar ni revocar", async () => {
+  await conBd(async (sql) => {
+    const admin = await sesionDelAdministrador();
+    const correo = correoNuevo("permisos");
+    try {
+      const creada = await invitarPorRpc(admin, correo);
+      const { id } = creada.cuerpo as InvitacionRpc;
+
+      for (
+        const [correoDeSesion, nombre] of [
+          ["usuario1@prueba.local", "un Usuario"],
+          ["analista1@prueba.local", "un Analista"],
+        ]
+      ) {
+        const sesion = await iniciarSesion(correoDeSesion, CLAVE_DE_PRUEBA);
+        const invita = await invitarPorRpc(sesion, correoNuevo("otro"));
+        assertEquals(invita.estado, 400, nombre);
+        assertEquals(codigoDe(invita), "NO_AUTORIZADO", nombre);
+        const revoca = await sesion.rpc("revocar_invitacion", { p_id: id });
+        assertEquals(revoca.estado, 400, nombre);
+        assertEquals(codigoDe(revoca), "NO_AUTORIZADO", nombre);
+        // y no lee las invitaciones
+        assertEquals((await sesion.leer("invitaciones")).cuerpo, []);
+      }
+
+      const anonimo = await invitarPorRpc(sesionAnonima(), correoNuevo("anon"));
+      assert([401, 403].includes(anonimo.estado), `anónimo: ${anonimo.estado}`);
+
+      const [{ estado }] = await sql`
+        select estado from public.invitaciones where id = ${id}`;
+      assertEquals(estado, "pendiente");
+    } finally {
+      await limpiar(sql, [correo]);
+    }
+  });
+});
+
+Deno.test("E2E-02: un administrador suspendido con token vigente no puede invitar ni revocar (CA-7)", async () => {
+  await conBd(async (sql) => {
+    const admin = await sesionDelAdministrador();
+    const correo = correoNuevo("suspendido");
+    const suspendido = await crearUsuarioDePrueba(sql, "administrador");
+    try {
+      const creada = await invitarPorRpc(admin, correo);
+      const { id } = creada.cuerpo as InvitacionRpc;
+
+      // Suspender llega con HU-010: la cuenta de prueba se deja ya suspendida. Su token sigue
+      // vigente y dice que está activa; la función mira `perfiles`, no el token.
+      await sql`update public.perfiles set estado = 'suspendido', suspendido_en = now()
+                where id = ${suspendido.id}`;
+
+      const invita = await invitarPorRpc(
+        suspendido.sesion,
+        correoNuevo("otro"),
+      );
+      assertEquals(invita.estado, 400);
+      assertEquals(codigoDe(invita), "SESION_INVALIDA");
+      const revoca = await suspendido.sesion.rpc("revocar_invitacion", {
+        p_id: id,
+      });
+      assertEquals(revoca.estado, 400);
+      assertEquals(codigoDe(revoca), "SESION_INVALIDA");
+
+      const [{ estado }] = await sql`
+        select estado from public.invitaciones where id = ${id}`;
+      assertEquals(estado, "pendiente");
+    } finally {
+      await suspendido.eliminar();
+      await limpiar(sql, [correo]);
+    }
+  });
+});
+
+Deno.test("E2E-02: pasados 7 días la invitación no deja entrar y al invitar de nuevo la anterior pasa a vencida", async () => {
+  await conBd(async (sql) => {
+    const admin = await sesionDelAdministrador();
+    const correo = correoNuevo("vencida-rpc");
+    try {
+      const primera = await invitarPorRpc(admin, correo, "usuario", 50);
+      assertEquals(primera.estado, 200, JSON.stringify(primera.cuerpo));
+      const { id: idAnterior } = primera.cuerpo as InvitacionRpc;
+
+      await fijarReloj(sql, new Date(Date.now() + 8 * 24 * 3600 * 1000));
+      const rechazada = await registrarse(correo);
+      assertEquals(rechazada.estado, 403, JSON.stringify(rechazada.cuerpo));
+      assertStringIncludes(JSON.stringify(rechazada.cuerpo), SIN_INVITACION);
+      assert(!(await existeUsuario(sql, correo)));
+
+      // La pendiente ya pasó de fecha: no impide invitar de nuevo; pasa a vencida y se crea otra.
+      const nueva = await invitarPorRpc(admin, correo, "analista", 0);
+      assertEquals(nueva.estado, 200, JSON.stringify(nueva.cuerpo));
+      const [anterior] = await sql`
+        select estado from public.invitaciones where id = ${idAnterior}`;
+      assertEquals(anterior.estado, "vencida");
+      assertEquals(await eventosDeInvitacion(sql, idAnterior, "vencida"), 1);
+
+      const alta = await registrarse(correo);
+      assertEquals(alta.estado, 200, JSON.stringify(alta.cuerpo));
+      const [perfil] = await sql`
+        select rol, estado from public.perfiles where email = ${correo}`;
+      assertEquals([perfil.rol, perfil.estado], ["analista", "activo"]);
+    } finally {
+      await restablecer(sql);
+      await limpiar(sql, [correo]);
+    }
+  });
 });
