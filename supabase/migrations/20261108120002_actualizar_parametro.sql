@@ -111,7 +111,6 @@ declare
   v_despues  jsonb := '{}'::jsonb;
   v_suma     numeric := 0;
   v_fila     public.parametros;
-  r          record;
 begin
   if private.rol_actual() is distinct from 'administrador' then
     raise exception 'NO_AUTORIZADO';
