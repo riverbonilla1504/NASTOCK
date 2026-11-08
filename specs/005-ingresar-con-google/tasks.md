@@ -35,7 +35,7 @@ Una sola historia de usuario (US1). Cada fase es una capa con sus pruebas y term
 - [x] T011 [US1] `lib/features/auth/presentation/sesion_provider.dart`: `sesionProvider` sobre `onAuthStateChange` (con la sesión inicial; sin Supabase configurado, sin sesión); `test/features/auth/presentation/sesion_provider_test.dart`
 - [x] T012 [US1] `lib/features/auth/presentation/ingreso_controlador.dart`: estados inactivo, ingresando y fallo; cancelar vuelve a inactivo sin mensaje; los fallos del repositorio y los de regreso pasan por `traducirError`; `test/features/auth/presentation/ingreso_controlador_test.dart`
 - [x] T013 [US1] `lib/features/auth/presentation/pagina_de_ingreso.dart`: pantalla con "Entrar con Google" (botón primario), aviso de error en línea, aviso de configuración que falta, formulario de correo y contraseña **solo** con `MODO_PRUEBAS`; solo tokens de `lib/app/tema.dart` y componentes de `lib/shared/widgets/`; `test/features/auth/presentation/pagina_de_ingreso_test.dart` (inactivo, ingresando, cada fallo con su texto exacto, cancelado sin mensaje, sin configuración, correo oculto sin `MODO_PRUEBAS`, escala de texto grande, claro y oscuro)
-- [ ] T014 [US1] `/impeccable audit` y `/impeccable polish` de la pantalla, revisándola en Chrome (y en el emulador de Android si la memoria lo permite); lo hallado se corrige aquí; el par de colores nuevo, si lo hay, a `test/app/tema_test.dart`
+- [x] T014 [US1] `/impeccable audit` y `/impeccable polish` de la pantalla, revisándola en Chrome (y en el emulador de Android si la memoria lo permite); lo hallado se corrige aquí; el par de colores nuevo, si lo hay, a `test/app/tema_test.dart`. Hecho en Chrome (360 dp oscuro con error y 1280 dp claro con error): sin hallazgos; no hay pares de color nuevos (tinta suave sobre hoja y tinta tenue sobre papel ya los mide `tema_test`). El emulador de Android no se usó por la RAM de la PC
 
 ## Fase 6 · Enrutador y E2E de la app (commit 6)
 
@@ -47,8 +47,8 @@ Una sola historia de usuario (US1). Cada fase es una capa con sus pruebas y term
 
 - [x] T018 [P] `DESIGN.md`: entradas del diálogo de confirmación y de la pantalla de ingreso (textos incluidos); `lib/app/catalogo/pagina_componentes.dart`: entradas del diálogo y del campo de contraseña
 - [x] T019 [P] `docs/17`: M-01 (`lib/features/auth/`, `lib/core/supabase/almacenamiento_seguro.dart`, `lib/core/errores/fallo_de_ingreso.dart`, pruebas de la app) y la ruta `/ingreso`; sin tocar las secciones de `docs/` que cambia HU-004
-- [ ] T020 Tras `git fetch origin && git rebase origin/main`, `scripts/verificar.sh` completo en verde (con el candado de Supabase local)
-- [ ] T021 Cuerpo del PR (`.github/pull_request_template.md`, "Closes #22") y relevo con "Pasos manuales" en `C:\Users\Javier\Desktop\Nastock.md\`; prueba manual de `docs/04` §3, paso 10, queda para Javier (necesita cuentas de Google reales)
+- [x] T020 Tras `git fetch origin && git rebase origin/main`, `scripts/verificar.sh` completo en verde (con el candado de Supabase local)
+- [x] T021 Cuerpo del PR (`.github/pull_request_template.md`, "Closes #22") y relevo con "Pasos manuales" en `C:\Users\Javier\Desktop\Nastock.md\`; prueba manual de `docs/04` §3, paso 10, queda para Javier (necesita cuentas de Google reales)
 
 ## Dependencias
 
