@@ -145,8 +145,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 09 §3–§4, §7 · 08 §9
 - **BD**: política `canales_permitidos` sobre `realtime.messages`; `private.publicar_evento`, `private.carga_evento`; triggers por entidad (`invitaciones_publicar_evento`, HU-003)
 - **Funciones**: —
-- **App**: `lib/core/realtime/`
-- **Pruebas**: `supabase/tests/database/08_realtime_canales_test.sql` · E2E-03, E2E-08
+- **App**: `lib/core/realtime/` (`canales.dart`, `fuente_de_tiempo_real.dart`, `gestor_de_tiempo_real.dart`, `estado_conexion.dart`, `tiempo_real_provider.dart` con `conexionProvider`, `reloj.dart` con `relojProvider`, `foto_y_eventos.dart`, `activador_de_tiempo_real.dart`) · `lib/shared/widgets/barra_de_conexion.dart`
+- **Pruebas**: `supabase/tests/database/08_realtime_canales_test.sql` · `test/core/realtime/` · `test/shared/widgets/barra_de_conexion_test.dart` · `integration_test/app_test.dart` (HU-084, CA-1) · E2E-03, E2E-08
 - **Depende de**: M-02 · **Lo usan**: todas las pantallas en vivo
 
 ### M-14 · Notificaciones y push

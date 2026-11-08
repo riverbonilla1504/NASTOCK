@@ -5,6 +5,8 @@
 ///
 /// - **HU-005**: sin sesión la app abre en la pantalla de ingreso, conectada al
 ///   backend, y entrar con un usuario de la semilla lleva a la pantalla inicial.
+/// - **HU-084 (CA-1)**: tras ingresar, la app abre los canales de su rol, el
+///   servidor los acepta todos y la conexión queda en `conectado`.
 /// - **E2E-01 (HU-006)**: cada rol ve su menú y las rutas de otro rol, o que no
 ///   existen, vuelven al inicio. La parte de backend (claims y RLS por rol) está
 ///   en `supabase/tests/e2e/01_ingreso_por_rol_test.ts`.
@@ -28,6 +30,10 @@ import 'package:inversiones/app/cascaron_de_navegacion.dart';
 import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
 import 'package:inversiones/app/pagina_marcador.dart';
+import 'package:inversiones/core/perfil/perfil.dart';
+import 'package:inversiones/core/realtime/canales.dart';
+import 'package:inversiones/core/realtime/estado_conexion.dart';
+import 'package:inversiones/core/realtime/tiempo_real_provider.dart';
 import 'package:inversiones/features/admin/presentation/pagina_administracion.dart';
 import 'package:inversiones/features/auth/presentation/pagina_cuenta_suspendida.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
@@ -53,6 +59,13 @@ class _Rol {
   final List<String> menu;
   final List<String> prohibidas;
 }
+
+/// El rol de cada correo de la semilla, para los canales que le tocan.
+const _rolesDeApp = {
+  'usuario': RolApp.usuario,
+  'analista': RolApp.analista,
+  'administrador': RolApp.administrador,
+};
 
 const _roles = {
   'usuario': _Rol(
@@ -107,6 +120,22 @@ GoRouter _enrutador(WidgetTester tester) =>
 String _ruta(GoRouter enrutador) =>
     enrutador.routeInformationProvider.value.uri.path;
 
+/// Espera a que el servidor acepte todos los canales (suscripción privada).
+Future<void> _esperarCanales(WidgetTester tester) async {
+  final contenedor = ProviderScope.containerOf(
+    tester.element(find.byType(MaterialApp)),
+  );
+  bool listos() {
+    final gestor = contenedor.read(gestorDeTiempoRealProvider);
+    return gestor != null &&
+        gestor.canalesSuscritos.length == gestor.canales.length;
+  }
+
+  for (var i = 0; i < 80 && !listos(); i++) {
+    await tester.pump(const Duration(milliseconds: 250));
+  }
+}
+
 List<String> _pestanasVisibles() => [
   for (final ruta in _todasLasPestanas)
     if (find.byKey(claveDeDestino(ruta)).evaluate().isNotEmpty) ruta,
@@ -155,6 +184,33 @@ void main() {
         // E2E-01 · CA-1: cada rol ve el menú de docs/03 §3 y ninguna pestaña más.
         expect(_pestanasVisibles(), rol.menu, reason: 'menú de $nombre');
 
+        // HU-084 · CA-1: al ingresar se abren los canales del rol, el servidor los
+        // acepta y la conexión queda en `conectado`.
+        await _esperarCanales(tester);
+        final contenedor = ProviderScope.containerOf(
+          tester.element(find.byType(MaterialApp)),
+        );
+        final gestor = contenedor.read(gestorDeTiempoRealProvider);
+        expect(gestor, isNotNull, reason: nombre);
+        expect(
+          gestor!.canales,
+          canalesDeRol(
+            _rolesDeApp[nombre]!,
+            Supabase.instance.client.auth.currentUser!.id,
+          ),
+          reason: 'canales de $nombre',
+        );
+        expect(
+          gestor.canalesSuscritos,
+          gestor.canales.toSet(),
+          reason: 'canales aceptados para $nombre',
+        );
+        expect(
+          contenedor.read(conexionProvider),
+          EstadoConexion.conectado,
+          reason: nombre,
+        );
+
         // Tocar una pestaña abre su pantalla (un marcador hasta que su historia
         // la construya).
         await tester.tap(find.byKey(claveDeDestino(Rutas.alertas)));
@@ -190,6 +246,13 @@ void main() {
         await Supabase.instance.client.auth.signOut();
         await _esperarA(tester, find.byType(PaginaDeIngreso));
         expect(find.byType(PaginaDeIngreso), findsOneWidget, reason: nombre);
+        // Sin sesión no hay canales abiertos.
+        expect(
+          ProviderScope.containerOf(tester.element(find.byType(MaterialApp)))
+              .read(gestorDeTiempoRealProvider),
+          isNull,
+          reason: nombre,
+        );
       }
 
       // E2E-01 · CA-3: la cuenta suspendida de la semilla (perfil suspendido, sin
