@@ -61,7 +61,17 @@ const esquemaBarraDeResumen = z.object({
   v: z.number().optional(),
 });
 
+const esquemaBarraDeMinuto = z.object({
+  t: z.string(),
+  o: z.number(),
+  h: z.number(),
+  l: z.number(),
+  c: z.number(),
+  v: z.number(),
+});
+
 const esquemaSnapshot = z.object({
+  minuteBar: z.unknown().optional(),
   latestTrade: esquemaOperacion.nullable().optional(),
   latestQuote: esquemaCotizacion.nullable().optional(),
   dailyBar: esquemaBarraDeResumen.nullable().optional(),
@@ -165,7 +175,7 @@ export class MercadoAlpaca implements ProveedorDeMercado {
       if (!operacion || !(operacion.p > 0)) continue; // sin precio no hay cotización
       const instante = new Date(operacion.t);
       if (Number.isNaN(instante.getTime())) continue;
-      cotizaciones.push({
+      const cotizacion: Cotizacion = {
         simbolo,
         precio: operacion.p,
         bid: snapshot.latestQuote?.bp ?? null,
@@ -173,7 +183,21 @@ export class MercadoAlpaca implements ProveedorDeMercado {
         cierreAnterior: snapshot.prevDailyBar?.c ?? null,
         volumenDia: snapshot.dailyBar?.v ?? null,
         momento: instante.toISOString(),
-      });
+      };
+      // La barra de minuto es opcional: si llega mal formada se ignora, la cotización sigue.
+      const minuto = esquemaBarraDeMinuto.safeParse(snapshot.minuteBar);
+      const inicio = minuto.success ? new Date(minuto.data.t) : null;
+      if (minuto.success && inicio && !Number.isNaN(inicio.getTime())) {
+        cotizacion.barraMinuto = {
+          momento: inicio.toISOString(),
+          apertura: minuto.data.o,
+          maximo: minuto.data.h,
+          minimo: minuto.data.l,
+          cierre: minuto.data.c,
+          volumen: minuto.data.v,
+        };
+      }
+      cotizaciones.push(cotizacion);
     }
     return cotizaciones;
   }

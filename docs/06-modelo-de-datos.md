@@ -789,7 +789,7 @@ no mezcla el latido con las reglas de otra tabla.
 | `resumen_fondo()` | RPC `security definer` | Por bolsillo: efectivo, valor de posiciones, patrimonio, peso actual, peso objetivo. **Solo agregados.** | Todos (PM-30) |
 | `mi_cupo()` | RPC | Efectivo, retenido, disponible, patrimonio, resultado realizado y no realizado, rendimiento TWR del cupo | Usuario |
 | `bandeja_riesgo()` | RPC | Sugerencias vivas que decide un analista, con marca de "espera tu segunda aprobación" | Analista, Admin (lectura) |
-| `estado_mercado()` | RPC | Abierto / cerrado, próxima apertura o cierre, ventana de compras, frescura de datos (`datos_actualizados_en`, nula hasta que HU-028 tenga `cotizaciones`) | Todos |
+| `estado_mercado()` | RPC | Abierto / cerrado, próxima apertura o cierre, ventana de compras, frescura de datos (`datos_actualizados_en`: hora de recepción de la última cotización, nula si no hay ninguna) | Todos |
 | `desempeno_ia(desde, hasta)` | RPC | Tasa de aprobación, rendimiento de aprobadas vs rechazadas, calibración de la confianza de JEV, valor del contexto, costo; por versión de configuración | Analista, Admin |
 | `oportunidades(bolsillo)` | RPC | Candidatas del último ciclo con puntaje, confianza, aportes, advertencias y resumen del contexto. El Usuario solo ve el bolsillo de Usuarios. | Todos |
 

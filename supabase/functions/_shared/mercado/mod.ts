@@ -15,6 +15,7 @@ import { MercadoSimulado } from "./simulado.ts";
 
 export type {
   Barra,
+  BarraDeMinuto,
   ConsultaDeBarras,
   Cotizacion,
   ProveedorDeMercado,

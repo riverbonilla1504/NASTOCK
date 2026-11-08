@@ -377,7 +377,7 @@ select is((select compras_hasta from public.estado_mercado()), '2026-11-05T20:45
 select is((select ventana_compras_abierta from public.estado_mercado()), true, 'CA-1: la ventana de compras está abierta');
 select is((select sesion from public.estado_mercado()), 'regular', 'CA-1: sesión regular');
 select is((select datos_actualizados_en from public.estado_mercado()), null::timestamptz,
-          'la frescura de los datos queda nula hasta que HU-028 cree cotizaciones');
+          'sin cotizaciones, la frescura de los datos es nula (la llena HU-028)');
 -- En la media jornada, la sesión y la ventana salen del cierre de las 13:00
 select pruebas.fijar_reloj('2026-11-27T16:00:00Z');
 select is((select sesion from public.estado_mercado()), 'media_jornada', 'CA-3: la sesión es media jornada');
