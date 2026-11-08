@@ -86,6 +86,16 @@ jobs:
             echo "::error::Hay un archivo .env en el repositorio"
             exit 1
           fi
+      - name: Sin usuario ni contraseña de administrador en el código (HU-004, CA-4)
+        run: |
+          if grep -rniE "admin@admin\.com" lib supabase/migrations supabase/functions .github 2>/dev/null; then
+            echo "::error::Hay un usuario de administrador fijo en el código"
+            exit 1
+          fi
+          if [ -d supabase/migrations ] && grep -rniE "encrypted_password|crypt[[:space:]]*\(" supabase/migrations; then
+            echo "::error::Una migración guarda una contraseña"
+            exit 1
+          fi
       - name: Ninguna migración crea el esquema pruebas
         run: |
           if [ -d supabase/migrations ] && grep -rniE 'create[[:space:]]+(or[[:space:]]+replace[[:space:]]+)?(schema|table|function|view|type|sequence)[[:space:]]+(if[[:space:]]+not[[:space:]]+exists[[:space:]]+)?"?pruebas([^[:alnum:]_]|$)' supabase/migrations; then

@@ -51,6 +51,15 @@ fi
 if [[ -d lib ]] && grep -rqE "ALPACA_(KEY_ID|SECRET_KEY)|DEEPSEEK_API_KEY|TYPESAFE_API_KEY|CLOUDFLARE_API_TOKEN|FCM_CUENTA_SERVICIO|SECRETO_INTERNO" lib; then
   echo "ERROR: la app menciona llaves de proveedores o el secreto interno"; exit 1
 fi
+# HU-004 · CA-4: ningún usuario ni contraseña de administrador en el código. El de la v2 era
+# admin@admin.com / 1234; el primer administrador sale de ADMIN_INICIAL_EMAIL (docs/04 §9). Los usuarios
+# de prueba de local y CI viven solo en supabase/seed.sql.
+if grep -rniE "admin@admin\.com" lib supabase/migrations supabase/functions .github 2>/dev/null; then
+  echo "ERROR: hay un usuario de administrador fijo en el código"; exit 1
+fi
+if [[ -d supabase/migrations ]] && grep -rniE "encrypted_password|crypt[[:space:]]*\(" supabase/migrations; then
+  echo "ERROR: una migración guarda una contraseña"; exit 1
+fi
 if git ls-files | grep -qE '(^|/)\.env$'; then
   echo "ERROR: hay un archivo .env versionado"; exit 1
 fi
