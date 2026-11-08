@@ -1,60 +1,63 @@
 /// Enrutador de la app (go_router, docs/05 §9.3).
 ///
-/// HU-005 agrega `/ingreso` y la guarda por sesión: sin sesión, todo lleva a
-/// `/ingreso`; con sesión, `/ingreso` lleva a `/inicio`. Las demás guardas de
-/// 05 §9.3 (`/cuenta-suspendida`, `/admin/*`, `/riesgo/*` por estado y rol) las
-/// agrega HU-006 sobre este mismo enrutador. El catálogo de componentes
-/// (`/catalogo`) solo se registra en debug o con `MODO_PRUEBAS` (HU-116) y
-/// queda fuera de la guarda: es una herramienta, no una pantalla de la app.
+/// Guardas (FR-021; la política está en `acceso_por_rol.dart`):
+///
+/// ```
+/// sin sesión                               → /ingreso
+/// sesión con app_estado distinto de activo → /cuenta-suspendida
+/// ruta de otro rol, o que no existe        → /inicio
+/// ```
+///
+/// Las pantallas del menú cuelgan de un `ShellRoute` con el cascarón de
+/// navegación (isla o riel). `/ingreso` y `/cuenta-suspendida` van fuera de él.
+/// Los destinos y los roles que los ven están en `destinos.dart`; las rutas de
+/// pantallas que no existen en el MVP corto (como `/riesgo/*`) no se crean.
+/// El catálogo de componentes (`/catalogo`) solo se registra en debug o con
+/// `MODO_PRUEBAS` (HU-116) y queda fuera de la guarda.
 library;
 
 import 'package:flutter/foundation.dart' show Listenable, ValueNotifier;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/auth/presentation/acceso_de_sesion_provider.dart';
+import '../features/auth/presentation/pagina_cuenta_suspendida.dart';
 import '../features/auth/presentation/pagina_de_ingreso.dart';
-import '../features/auth/presentation/sesion_provider.dart';
+import 'acceso_por_rol.dart';
+import 'cascaron_de_navegacion.dart';
 import 'catalogo/pagina_catalogo.dart';
-import 'pagina_inicio.dart';
+import 'destinos.dart';
+import 'pagina_marcador.dart';
+import 'rutas.dart';
 
-/// Rutas de la app. Cada historia agrega las suyas aquí.
-abstract final class Rutas {
-  static const String ingreso = '/ingreso';
-  static const String inicio = '/inicio';
-}
-
-/// La ruta a la que hay que ir según la sesión, o `null` si se queda donde está.
-///
-/// [ruta] es la ruta que se pidió. Pura, para probarla sin pantallas.
-String? redirigirSegunSesion({required String ruta, required bool haySesion}) {
-  // El catálogo de componentes no pide sesión.
-  if (ruta == RutasCatalogo.inicio ||
-      ruta.startsWith('${RutasCatalogo.inicio}/')) {
-    return null;
-  }
-  if (!haySesion && ruta != Rutas.ingreso) return Rutas.ingreso;
-  if (haySesion && ruta == Rutas.ingreso) return Rutas.inicio;
-  return null;
-}
+export 'rutas.dart';
 
 /// [conCatalogo] registra las rutas del catálogo de componentes. Con
-/// [haySesion] la guarda por sesión está activa; [refrescarCon] avisa cuándo
-/// volver a evaluarla (al ingresar y al cerrar sesión). Sin [haySesion] no hay
-/// guarda (las pruebas de otras pantallas montan el enrutador sin ella).
+/// [accesoDeSesion] las guardas están activas; [refrescarCon] avisa cuándo
+/// volver a evaluarlas (al ingresar, al cerrar sesión y cuando el token trae
+/// otro rol u otro estado). Sin [accesoDeSesion] no hay guardas: las pruebas de
+/// otras pantallas montan el enrutador sin ellas.
 GoRouter crearEnrutador({
   bool conCatalogo = false,
-  bool Function()? haySesion,
+  AccesoDeSesion Function()? accesoDeSesion,
   Listenable? refrescarCon,
 }) {
   return GoRouter(
     initialLocation: Rutas.inicio,
     refreshListenable: refrescarCon,
-    redirect: haySesion == null
+    redirect: accesoDeSesion == null
         ? null
-        : (context, state) => redirigirSegunSesion(
-            ruta: state.matchedLocation,
-            haySesion: haySesion(),
-          ),
+        : (context, state) {
+            final acceso = accesoDeSesion();
+            return redirigirSegunAcceso(
+              ruta: state.matchedLocation,
+              haySesion: acceso.haySesion,
+              claims: acceso.claims,
+            );
+          },
+    // Una ruta que no existe (un enlace viejo, `/riesgo/...` en el MVP corto)
+    // lleva al inicio, como manda docs/03 §3.
+    onException: (context, state, router) => router.go(Rutas.inicio),
     routes: [
       GoRoute(path: '/', redirect: (context, state) => Rutas.inicio),
       GoRoute(
@@ -62,8 +65,25 @@ GoRouter crearEnrutador({
         builder: (context, state) => const PaginaDeIngreso(),
       ),
       GoRoute(
-        path: Rutas.inicio,
-        builder: (context, state) => const PaginaInicio(),
+        path: Rutas.cuentaSuspendida,
+        builder: (context, state) => const PaginaCuentaSuspendida(),
+      ),
+      ShellRoute(
+        builder: (context, state, hijo) => CascaronDeNavegacion(
+          rutaActual: state.matchedLocation,
+          hijo: hijo,
+          alElegirRuta: context.go,
+        ),
+        routes: [
+          for (final destino in destinosDelMvp)
+            GoRoute(
+              path: destino.ruta,
+              builder: (context, state) =>
+                  destino.pantalla?.call(context) ??
+                  PaginaMarcador(etiqueta: destino.etiqueta),
+              routes: destino.subrutas,
+            ),
+        ],
       ),
       if (conCatalogo) ...rutasDelCatalogo(),
     ],
@@ -71,18 +91,19 @@ GoRouter crearEnrutador({
 }
 
 final enrutadorProvider = Provider<GoRouter>((ref) {
-  // La guarda se vuelve a evaluar cada vez que la sesión cambia.
-  final cambioDeSesion = ValueNotifier<int>(0);
-  ref.listen(sesionProvider, (_, _) => cambioDeSesion.value++);
+  // Las guardas se vuelven a evaluar cada vez que el acceso de la sesión
+  // cambia: ingreso, cierre de sesión y un token renovado con otro rol o estado.
+  final cambioDeAcceso = ValueNotifier<int>(0);
+  ref.listen(accesoDeSesionProvider, (_, _) => cambioDeAcceso.value++);
 
   final enrutador = crearEnrutador(
     conCatalogo: ref.watch(catalogoDisponibleProvider),
-    haySesion: () => ref.read(sesionProvider) != null,
-    refrescarCon: cambioDeSesion,
+    accesoDeSesion: () => ref.read(accesoDeSesionProvider),
+    refrescarCon: cambioDeAcceso,
   );
   ref.onDispose(() {
     enrutador.dispose();
-    cambioDeSesion.dispose();
+    cambioDeAcceso.dispose();
   });
   return enrutador;
 });

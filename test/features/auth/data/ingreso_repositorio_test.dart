@@ -18,6 +18,7 @@ class _AuthFalso implements ClienteDeAuth {
   final List<String> llamadas = [];
   Map<String, String>? parametrosDeOAuth;
   Object? errorAlIngresar;
+  Object? errorAlCerrar;
   bool oauthSePudoAbrir = true;
 
   @override
@@ -46,6 +47,12 @@ class _AuthFalso implements ClienteDeAuth {
   }
 
   @override
+  Future<void> cerrarSesion() async {
+    llamadas.add('cerrarSesion');
+    if (errorAlCerrar != null) throw errorAlCerrar!;
+  }
+
+  @override
   Stream<AuthState> get cambios => flujo.stream;
 
   @override
@@ -54,6 +61,7 @@ class _AuthFalso implements ClienteDeAuth {
 
 class _GoogleFalso implements ProveedorDeGoogleNativo {
   Object? error;
+  Object? errorAlCerrar;
   bool sesionCerrada = false;
 
   @override
@@ -63,7 +71,10 @@ class _GoogleFalso implements ProveedorDeGoogleNativo {
   }
 
   @override
-  Future<void> cerrarSesion() async => sesionCerrada = true;
+  Future<void> cerrarSesion() async {
+    if (errorAlCerrar != null) throw errorAlCerrar!;
+    sesionCerrada = true;
+  }
 }
 
 void main() {
@@ -296,5 +307,54 @@ void main() {
       expect(google.sesionCerrada, isTrue);
       expect(auth.llamadas, isEmpty);
     });
+  });
+
+  group('cerrar la sesión', () {
+    test('cierra la de Supabase y la de Google', () async {
+      final repo = IngresoRepositorioSupabase(
+        auth,
+        google: google,
+        esWeb: false,
+      );
+
+      await repo.cerrarSesion();
+
+      expect(auth.llamadas, ['cerrarSesion']);
+      expect(google.sesionCerrada, isTrue);
+    });
+
+    test('en web solo cierra la de Supabase', () async {
+      await IngresoRepositorioSupabase(auth, esWeb: true).cerrarSesion();
+
+      expect(auth.llamadas, ['cerrarSesion']);
+    });
+
+    test('si la de Google falla, igual sale', () async {
+      google.errorAlCerrar = StateError('google');
+      final repo = IngresoRepositorioSupabase(
+        auth,
+        google: google,
+        esWeb: false,
+      );
+
+      await repo.cerrarSesion();
+
+      expect(auth.llamadas, ['cerrarSesion']);
+    });
+
+    test(
+      'si la de Supabase falla, el error sube para que se pueda reintentar',
+      () async {
+        auth.errorAlCerrar = StateError('sin red');
+        final repo = IngresoRepositorioSupabase(
+          auth,
+          google: google,
+          esWeb: false,
+        );
+
+        await expectLater(repo.cerrarSesion(), throwsStateError);
+        expect(google.sesionCerrada, isFalse);
+      },
+    );
   });
 }

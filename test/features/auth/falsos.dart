@@ -1,13 +1,34 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:inversiones/core/errores/fallo_de_ingreso.dart';
 import 'package:inversiones/features/auth/data/ingreso_repositorio.dart';
 import 'package:inversiones/features/auth/domain/resultado_de_ingreso.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show Session, User;
 
-/// Una sesión cualquiera, solo para probar quién tiene sesión y quién no.
-Session sesionDePrueba([String id = 'usuario-1']) => Session(
-  accessToken: 'token-$id',
+/// Un token con la forma de un JWT y los claims `app_rol` y `app_estado` que
+/// agrega el hook de Auth (docs/04 §7). Sin firma: la app no la valida.
+String tokenDePrueba({String? rol, String? estado}) {
+  String parte(Map<String, Object?> datos) =>
+      base64Url.encode(utf8.encode(jsonEncode(datos))).replaceAll('=', '');
+  return [
+    parte({'alg': 'none', 'typ': 'JWT'}),
+    parte({'sub': 'usuario-1', 'app_rol': rol, 'app_estado': estado}),
+    'firma',
+  ].join('.');
+}
+
+/// Una sesión cualquiera, solo para probar quién tiene sesión y quién no. Con
+/// [rol] y [estado] el token trae esos claims; sin ellos, es un token sin
+/// claims.
+Session sesionDePrueba({
+  String id = 'usuario-1',
+  String? rol,
+  String? estado,
+}) => Session(
+  accessToken: rol == null && estado == null
+      ? 'token-$id'
+      : tokenDePrueba(rol: rol, estado: estado),
   tokenType: 'bearer',
   user: User(
     id: id,
@@ -31,6 +52,7 @@ class IngresoRepositorioFalso implements IngresoRepositorio {
   int ingresosConGoogle = 0;
   final List<(String, String)> ingresosConCorreo = [];
   bool sesionDeGoogleCerrada = false;
+  int cierresDeSesion = 0;
 
   final StreamController<FalloDeIngreso> fallos = StreamController.broadcast();
   final StreamController<Session?> sesiones = StreamController.broadcast();
@@ -67,4 +89,10 @@ class IngresoRepositorioFalso implements IngresoRepositorio {
 
   @override
   Future<void> cerrarSesionDeGoogle() async => sesionDeGoogleCerrada = true;
+
+  @override
+  Future<void> cerrarSesion() async {
+    if (error != null) throw error!;
+    cierresDeSesion++;
+  }
 }

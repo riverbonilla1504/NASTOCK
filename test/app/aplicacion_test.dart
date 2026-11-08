@@ -22,6 +22,9 @@ const _entornoSinConfigurar = Entorno(
   supabaseLlavePublicable: '',
 );
 
+/// Una sesión de un Usuario activo: el token trae `app_rol` y `app_estado`.
+Session _sesionActiva() => sesionDePrueba(rol: 'usuario', estado: 'activo');
+
 /// Sesión fija, para llegar a la pantalla inicial sin pasar por Supabase.
 class _SesionFija extends SesionNotifier {
   _SesionFija(this._sesion);
@@ -71,7 +74,7 @@ void main() {
     await _abrirApp(
       tester,
       _entornoConfigurado,
-      repo: IngresoRepositorioFalso()..sesionActual = sesionDePrueba(),
+      repo: IngresoRepositorioFalso()..sesionActual = _sesionActiva(),
     );
 
     expect(find.byType(PaginaInicio), findsOneWidget);
@@ -106,7 +109,7 @@ void main() {
       tester,
       _entornoSinConfigurar,
       repo: IngresoRepositorioFalso(),
-      sesionFija: sesionDePrueba(),
+      sesionFija: _sesionActiva(),
     );
 
     expect(find.byType(PaginaInicio), findsOneWidget);
@@ -120,7 +123,7 @@ void main() {
     await _abrirApp(
       tester,
       _entornoConfigurado,
-      repo: IngresoRepositorioFalso()..sesionActual = sesionDePrueba(),
+      repo: IngresoRepositorioFalso()..sesionActual = _sesionActiva(),
     );
 
     final contenedor = ProviderScope.containerOf(
@@ -159,7 +162,7 @@ void main() {
     await _abrirApp(tester, _entornoConfigurado, repo: repo);
     expect(find.byType(PaginaDeIngreso), findsOneWidget);
 
-    repo.sesiones.add(sesionDePrueba());
+    repo.sesiones.add(_sesionActiva());
     await tester.pumpAndSettle();
 
     expect(find.byType(PaginaInicio), findsOneWidget);
@@ -167,7 +170,7 @@ void main() {
   });
 
   testWidgets('al perder la sesión la app vuelve al ingreso', (tester) async {
-    final repo = IngresoRepositorioFalso()..sesionActual = sesionDePrueba();
+    final repo = IngresoRepositorioFalso()..sesionActual = _sesionActiva();
     await _abrirApp(tester, _entornoConfigurado, repo: repo);
     expect(find.byType(PaginaInicio), findsOneWidget);
 
