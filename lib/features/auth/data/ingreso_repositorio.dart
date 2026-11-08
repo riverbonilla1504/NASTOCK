@@ -46,6 +46,12 @@ abstract interface class IngresoRepositorio {
   /// Cierra la sesión de `google_sign_in` (la llama HU-007); no toca la de
   /// Supabase.
   Future<void> cerrarSesionDeGoogle();
+
+  /// Cierra la sesión: la de Supabase (revoca el refresh token) y la de
+  /// `google_sign_in`, para que el siguiente ingreso permita elegir cuenta
+  /// (docs/04 §4.5). La usa la pantalla de cuenta suspendida; HU-007 la amplía
+  /// con los canales de Realtime y el token de push.
+  Future<void> cerrarSesion();
 }
 
 /// Lo que el repositorio usa de `GoTrueClient`, para probarlo con falsos.
@@ -61,6 +67,9 @@ abstract interface class ClienteDeAuth {
   Future<bool> ingresarConOAuthGoogle({
     required Map<String, String> parametros,
   });
+
+  /// Cierra la sesión de Supabase y borra la sesión guardada.
+  Future<void> cerrarSesion();
 
   Stream<AuthState> get cambios;
 
@@ -97,6 +106,9 @@ class ClienteDeAuthSupabase implements ClienteDeAuth {
     // URLs de redirección permitidas de Supabase. PKCE es el flujo por omisión.
     return _auth.signInWithOAuth(OAuthProvider.google, queryParams: parametros);
   }
+
+  @override
+  Future<void> cerrarSesion() => _auth.signOut();
 
   @override
   Stream<AuthState> get cambios => _auth.onAuthStateChange;
@@ -184,6 +196,18 @@ class IngresoRepositorioSupabase implements IngresoRepositorio {
 
   @override
   Future<void> cerrarSesionDeGoogle() async => _google?.cerrarSesion();
+
+  @override
+  Future<void> cerrarSesion() async {
+    // Primero la de Supabase: es la que protege los datos. La de Google es un
+    // detalle de comodidad y no debe impedir salir.
+    await _auth.cerrarSesion();
+    try {
+      await cerrarSesionDeGoogle();
+    } catch (_) {
+      // el siguiente ingreso solo podría reutilizar la cuenta de Google
+    }
+  }
 }
 
 /// El repositorio de ingreso de este arranque. Solo se lee con Supabase

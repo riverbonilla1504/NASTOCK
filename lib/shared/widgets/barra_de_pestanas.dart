@@ -19,11 +19,16 @@ class Pestana {
     required this.etiqueta,
     required this.icono,
     this.iconoActivo,
+    this.clave,
   });
 
   final String etiqueta;
   final IconData icono;
   final IconData? iconoActivo;
+
+  /// Identifica el destino en las pruebas (la isla y el riel de navegación
+  /// usan la misma clave para el mismo destino).
+  final Key? clave;
 }
 
 class BarraDePestanas extends StatelessWidget {
@@ -46,6 +51,7 @@ class BarraDePestanas extends StatelessWidget {
         ? Duration.zero
         : Duracion.transicion;
     Widget destino(int i, Pestana pestana) => _Destino(
+      key: pestana.clave,
       pestana: pestana,
       actual: i == actual,
       duracion: duracion,
@@ -107,6 +113,7 @@ class BarraDePestanas extends StatelessWidget {
 
 class _Destino extends StatefulWidget {
   const _Destino({
+    super.key,
     required this.pestana,
     required this.actual,
     required this.duracion,
