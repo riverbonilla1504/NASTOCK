@@ -31,4 +31,6 @@ Solo capa de base de datos (sin Edge Functions ni app; el gestor de la app es HU
 ## Notas
 
 - La política solo evalúa `realtime.topic()` (el canal al que se suscribe el cliente); Realtime filtra los mensajes por canal.
+- `private.carga_evento` recibe el `id` como texto: `parametros` se identifica por `clave` y `salud_integraciones` por `integracion` (`docs/06` §5.6). Las entidades con uuid pasan `new.id::text`. Una tabla sin versión o sin estado manda NULL: las cuatro claves viajan siempre.
+- `publicar_evento` no revisa la forma de la carga: `docs/09` §4 admite cargas que no son de entidad (`cotizaciones` en `mercado`). La regla "sin montos" la cumple quien arma la carga con `carga_evento`.
 - Sin escenario E2E propio (lo ejercitan E2E-03 y E2E-08).
