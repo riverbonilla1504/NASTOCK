@@ -73,8 +73,8 @@ Todas gratuitas salvo DeepSeek y TypeSafe (pago por uso).
 
 Un mismo proyecto de Google Cloud sirve para OAuth y Firebase.
 
-- [ ] Proyecto de Google Cloud dentro de la organización de Workspace de RiTech (o, si no hay organización, pantalla **Externa en modo prueba**: 04 §1).
-- [ ] Pantalla de consentimiento (Interna), alcances `openid`, `email`, `profile`.
+- [ ] Proyecto de Google Cloud (sin organización: RiTech no tiene Workspace).
+- [ ] Pantalla de consentimiento **Externa en modo prueba** (04 §1), alcances `openid`, `email`, `profile`. Cada persona del equipo agregada como *Test user* (máximo 100).
 - [ ] Clientes OAuth: **Web** (redirección `https://<ref>.supabase.co/auth/v1/callback`) y **Android** (paquete `com.ritech.inversiones` + SHA-1 de las llaves debug y release).
 - [ ] Firebase agregado al mismo proyecto, plan **Spark** (gratis): app Android y app Web.
 - [ ] Cloud Messaging habilitado; cuenta de servicio con permiso de envío → `FCM_CUENTA_SERVICIO`.
@@ -167,6 +167,7 @@ curl -s -X POST https://api.typesafe.ai/v1/systemone \
 | `SUPABASE_ACCESS_TOKEN` | Secreto | Cuenta de Supabase | despliegue |
 | `SUPABASE_DB_PASSWORD` | Secreto | Creación del proyecto | despliegue |
 | `SUPABASE_DB_URL` | Secreto | Panel de Supabase (cadena de conexión) | respaldo |
+| `ADMIN_INICIAL_EMAIL` | Secreto | Gmail del primer administrador (Q-08); cargarlo **antes** de integrar HU-004 | despliegue (→ Vault, 04 §9) |
 | `ALPACA_KEY_ID`, `ALPACA_SECRET_KEY` | Secreto | Alpaca (paper) | despliegue (→ funciones), prueba semanal |
 | `DEEPSEEK_API_KEY` | Secreto | DeepSeek | despliegue (→ funciones), prueba semanal |
 | `TYPESAFE_API_KEY` (o `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_API_TOKEN`) | Secreto | TypeSafe / Cloudflare | despliegue (→ funciones), prueba semanal |

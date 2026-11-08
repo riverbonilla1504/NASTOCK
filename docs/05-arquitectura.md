@@ -37,7 +37,7 @@ flowchart TB
   end
 
   subgraph EXT["Servicios externos"]
-    GOO["Google Workspace"]
+    GOO["Google (cuenta Gmail)"]
     ALP["Alpaca Trading<br/>paper"]
     ALD["Alpaca Market Data<br/>IEX + News"]
     DS["DeepSeek API<br/>(contexto)"]
@@ -117,7 +117,7 @@ flowchart TB
 
 | Servicio | Para qué | Costo en el MVP |
 |---|---|---|
-| **Google Workspace / Google Cloud** | Identidad (OAuth) | Gratis (OAuth) |
+| **Google Cloud** (cuentas de Gmail) | Identidad (OAuth) | Gratis (OAuth) |
 | **Alpaca** | Órdenes paper, precios IEX, noticias, calendario | Gratis |
 | **DeepSeek** | Contexto a partir de noticias (Sistema 2) | **Pago por uso** (~USD 3/mes) |
 | **TypeSafe JEV** | Decisiones tipadas con confianza calibrada (Sistema 1) | **Pago por uso** (~USD 1/mes) |
@@ -181,7 +181,7 @@ herramientas que ejecuten órdenes.
 | Tiempo real | Realtime con broadcast desde la base de datos |
 | Procesos programados | `pg_cron` + `pg_net` |
 | Trabajo confiable | `pgmq` |
-| OAuth corporativo | Auth con Google + hooks |
+| OAuth con Google (Gmail invitado) | Auth con Google + hooks |
 | Pruebas locales completas | CLI de Supabase con Docker: el mismo stack en el portátil y en CI |
 | **Límite**: funciones cortas | 150 s y 2 s de CPU por ejecución: el ciclo de decisión (JEV, milisegundos) va separado del contexto (DeepSeek, segundos) y todo proceso largo se parte en pasos. |
 | **Límite**: sin procesos siempre encendidos | Precios cada 15 s por REST en vez de WebSocket. Suficiente para un flujo con aprobación humana. |
@@ -375,7 +375,7 @@ ruta /riesgo/* y rol ≠ analista (el admin entra en modo lectura) → /inicio
 |---|---|
 | Secretos de Edge Functions (`supabase secrets set`, sincronizados por el despliegue) | `ENTORNO`, `PROVEEDOR_*`, `ALPACA_KEY_ID`, `ALPACA_SECRET_KEY`, `ALPACA_TRADING_URL`, `ALPACA_DATA_URL`, `DEEPSEEK_API_KEY`, `DEEPSEEK_BASE_URL`, `TYPESAFE_API_KEY` (o `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_API_TOKEN`), `JEV_PROVEEDOR`, `FCM_CUENTA_SERVICIO`, `SECRETO_INTERNO` |
 | Los da la plataforma a las Edge Functions (nadie los configura) | `SUPABASE_URL`, `SUPABASE_DB_URL` (conexión directa a Postgres, D-66) y la llave secreta de Supabase, que solo usa `admin-usuarios`. En local los entrega `supabase functions serve` |
-| Vault (para SQL) | `url_funciones`, `secreto_interno` |
+| Vault (para SQL) | `url_funciones`, `secreto_interno` y `admin_inicial_email` (lo sube `supabase db push` desde `[db.vault]`, 04 §9) |
 | Secretos y variables de GitHub Actions | Ver [16 §4](16-arranque-del-repositorio.md#4-secretos-y-variables) |
 | App (`--dart-define`, no son secretos) | `SUPABASE_URL`, llave publicable, IDs de clientes OAuth, configuración de Firebase, `MODO_PRUEBAS` (solo en CI) |
 | `.env` local (nunca en git) | Copia de `.env.example` con llaves propias si se quiere usar proveedores reales en local |

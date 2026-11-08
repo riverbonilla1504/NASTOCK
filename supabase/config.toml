@@ -54,8 +54,11 @@ default_pool_size = 20
 # Maximum number of client connections allowed.
 max_client_conn = 100
 
-# [db.vault]
-# secret_key = "env(SECRET_VALUE)"
+# Secretos de Vault que `supabase db push` sube antes de aplicar las migraciones pendientes. Los valores
+# vacíos se omiten: en local y CI no se define la variable y no se crea nada (HU-004, docs/04 §9). En la
+# nube el despliegue la toma del secreto de GitHub ADMIN_INICIAL_EMAIL.
+[db.vault]
+admin_inicial_email = "env(ADMIN_INICIAL_EMAIL)"
 
 [db.migrations]
 # If disabled, migrations will be skipped during a db push or reset.

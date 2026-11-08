@@ -24,7 +24,7 @@ Los criterios de aceptación no cambian.
 ## Historia
 
 **Como** Usuario, Analista o Administrador invitado,  
-**quiero** entrar a la app con mi cuenta de Google de RiTech desde Android o desde el navegador,  
+**quiero** entrar a la app con mi cuenta de Google desde Android o desde el navegador,  
 **para** usar la plataforma sin crear ni recordar otra contraseña.
 
 ## Requisitos funcionales
@@ -39,12 +39,12 @@ PM-01 · D-12 · 04 §1 · 04 §4 · 04 §11
 ## Criterios de aceptación
 
 - **CA-1** Dada una persona invitada, cuando toca "Entrar con Google" en Android, entonces el ingreso nativo entrega el `id_token` a Supabase y la persona queda con la sesión iniciada en la pantalla de inicio.
-- **CA-2** Dada una persona invitada, cuando entra desde la web, entonces la redirección OAuth con PKCE preselecciona la cuenta corporativa y vuelve a la app con la sesión iniciada.
+- **CA-2** Dada una persona invitada, cuando entra desde la web, entonces la redirección OAuth con PKCE deja elegir la cuenta de Google y vuelve a la app con la sesión iniciada.
 - **CA-3** Dada una cuenta suspendida o de baja, cuando intenta ingresar, entonces ve "Tu cuenta está suspendida. Comunícate con el administrador."
 - **CA-4** Dado un dispositivo sin conexión, cuando intenta ingresar, entonces ve "No hay conexión. Revisa tu internet e inténtalo de nuevo."; y si cierra la ventana de Google, vuelve a la pantalla de ingreso sin mensaje.
-- **CA-5** (caso borde) CB-01: Dado un correo del dominio sin una invitación vigente, cuando intenta ingresar, entonces ve "Tu correo no tiene una invitación vigente. Pídele una al administrador."
+- **CA-5** (caso borde) CB-01: Dado un correo de un dominio permitido sin una invitación vigente, cuando intenta ingresar, entonces ve "Tu correo no tiene una invitación vigente. Pídele una al administrador."
 - **CA-6** Dado un error inesperado al iniciar sesión, cuando ocurre, entonces ve "No pudimos iniciar tu sesión. Inténtalo de nuevo." y el detalle queda en el registro técnico, no en la pantalla.
-- **CA-7** Dada una cuenta de Google de fuera del Workspace de RiTech (por ejemplo, una personal de Gmail), cuando intenta ingresar, entonces Google la rechaza.
+- **CA-7** Dada una cuenta de Gmail que no está en la lista de *Test users* de Google Cloud, cuando intenta ingresar, entonces Google la rechaza.
 
 ## Casos borde
 
@@ -56,13 +56,13 @@ Sin escenario propio: el ingreso con Google no se puede automatizar (04 §1). E2
 
 ## Tareas
 
-- [ ] App: pantalla de ingreso en `lib/features/auth/` con `google_sign_in` en Android (`serverClientId` del cliente Web) y `signInWithOAuth` con PKCE y el parámetro `hd` en web.
+- [ ] App: pantalla de ingreso en `lib/features/auth/` con `google_sign_in` en Android (`serverClientId` del cliente Web) y `signInWithOAuth` con PKCE y `prompt=select_account` en web.
 - [ ] App: `sesionProvider` sobre el estado de autenticación de `supabase_flutter`.
 - [ ] App: los mensajes de 04 §11 para cada fallo; el detalle técnico va al registro y no a la pantalla.
 - [ ] App: ingreso con correo solo cuando está definido `MODO_PRUEBAS` (CI), para los usuarios de prueba.
 - [ ] Configuración de Supabase: URLs de redirección del dominio web y de `com.ritech.inversiones://login-callback`.
 - [ ] Pruebas de widget de la pantalla y de los mensajes de error.
-- [ ] Prueba manual de 04 §3, paso 10: la cuenta invitada entra, la no invitada del dominio es rechazada y la cuenta personal de Gmail la rechaza Google.
+- [ ] Prueba manual de 04 §3, paso 10: la cuenta invitada (y *Test user*) entra, la de Gmail que es *Test user* pero no está invitada la rechaza el hook y la de Gmail que no es *Test user* la rechaza Google.
 - [ ] Verificación: `scripts/verificar.sh` completo en verde.
 
 ## Relaciones

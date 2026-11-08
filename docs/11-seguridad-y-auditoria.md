@@ -17,7 +17,7 @@
 
 | Amenaza | Ejemplo | Controles |
 |---|---|---|
-| Suplantación de identidad | Alguien usa la cuenta de otro empleado | Google Workspace con verificación en dos pasos exigida; app interna de Google; solo invitados; biometría para decidir; JWT de 15 min |
+| Suplantación de identidad | Alguien usa la cuenta de otro empleado | Cuenta de Google (Gmail) con verificación en dos pasos **recomendada** a cada persona (no se puede exigir); app de Google en modo de prueba, solo para la lista de *Test users*; solo invitados; biometría para decidir; JWT de 15 min |
 | Escalada de privilegios | Un Usuario intenta aprobar Arriesgadas o ver otros cupos | RLS en todas las tablas; escrituras solo por RPC que validan rol y dueño; rol leído de la tabla, no del token; pruebas pgTAP |
 | Cliente modificado | App alterada que llama la API directo | Mismo resultado: la seguridad está en la base de datos, no en la app |
 | Manipulación del libro | Editar un saldo | Sin permisos de escritura; asientos inmutables (trigger); suma cero verificada; recálculo diario |
@@ -44,7 +44,7 @@
 
 | Capa | Controles |
 |---|---|
-| **Identidad** | Google Workspace (interna), invitación obligatoria, hook de alta, bloqueo en Auth al suspender, JWT de 15 min, refresh tokens rotativos |
+| **Identidad** | Cuenta de Google (Gmail), invitación obligatoria, lista de *Test users* de Google, hook de alta, suspensión desde la app con bloqueo en Auth, JWT de 15 min, refresh tokens rotativos |
 | **Autorización** | RLS en todas las tablas de `public`; `anon` sin acceso; funciones `security definer` con `search_path = ''`; esquema `private` no expuesto; Realtime con canales privados y políticas |
 | **Datos** | Restricciones `CHECK` y `UNIQUE` para invariantes de dinero; libro inmutable; `numeric` para dinero; conciliación con el broker |
 | **Integraciones** | Llaves solo en Edge Functions; secreto interno para las llamadas del cron; validación de todo lo externo; idempotencia; tiempos de espera |
@@ -144,10 +144,10 @@ sus decretos reglamentarios.
 
 | Principio | Cómo se cumple |
 |---|---|
-| Datos mínimos | Solo nombre y correo corporativo (vienen de Google). La v2 pedía documento y celular: **se eliminan** porque no se necesitan. |
+| Datos mínimos | Solo nombre y correo (vienen de Google). La v2 pedía documento y celular: **se eliminan** porque no se necesitan. |
 | Finalidad | Identificar a quién decide sobre el dinero del fondo y avisarle. Se declara en un aviso de privacidad interno que se acepta al primer ingreso. |
 | Transferencia internacional | Supabase, Google y Firebase guardan datos fuera de Colombia: se declara en la política de tratamiento de RiTech. A **DeepSeek y a JEV no se envían datos personales** (07 §4.5), así se evita una transferencia adicional. TypeSafe declara que no entrena con los datos de sus clientes. |
-| Acceso y rectificación | Cada persona ve su perfil; el nombre se corrige en Google Workspace. |
+| Acceso y rectificación | Cada persona ve su perfil; el nombre se corrige en su cuenta de Google. |
 | Seguridad | Todo este documento. |
 | Conservación | El historial de operaciones se conserva por su valor contable aunque la persona se retire; su cuenta queda bloqueada, no borrada (RN-40). |
 
@@ -206,8 +206,8 @@ Decisión en Q-10.
 
 ## 10. Lista de verificación antes de abrir el MVP al equipo
 
-- [ ] Pantalla de consentimiento de Google en modo **Interna**.
-- [ ] Verificación en dos pasos exigida en Google Workspace.
+- [ ] Pantalla de consentimiento de Google **Externa en modo de prueba**, con cada persona del equipo en la lista de *Test users* (máximo 100).
+- [ ] Verificación en dos pasos **recomendada** a cada persona en su Gmail (no se puede exigir).
 - [ ] MFA en todas las cuentas con acceso al panel de Supabase, Alpaca, Google Cloud y Firebase.
 - [ ] RLS activo en todas las tablas (asesor de Supabase en verde).
 - [ ] JWT a 15 minutos.

@@ -34,7 +34,7 @@ gratuitas (solo se pagan las IAs) para probar si el enfoque funciona.
 | 01 | [Visión y alcance](01-vision-y-alcance.md) | Qué problema resolvemos, qué entra en el MVP y qué no |
 | 02 | [Lógica de negocio](02-logica-de-negocio.md) | Bolsillos, cupos, aportes, ganancias, pérdidas, rebalanceo, reglas de riesgo, parámetros |
 | 03 | [Roles y permisos](03-roles-y-permisos.md) | Qué puede hacer y qué ve cada rol, y cómo se hace cumplir |
-| 04 | [Autenticación y OAuth](04-autenticacion-oauth.md) | Google Workspace, invitaciones, sesiones, suspensión |
+| 04 | [Autenticación y OAuth](04-autenticacion-oauth.md) | Cuenta de Google (Gmail), invitaciones, sesiones, suspensión |
 | 05 | [Arquitectura](05-arquitectura.md) | Componentes, conexiones, Supabase gratuito, entornos, estructura del repositorio |
 | 06 | [Modelo de datos](06-modelo-de-datos.md) | Tablas, libro contable, RLS, funciones RPC, códigos de error |
 | 07 | [Agente de IA](07-agente-ia.md) | IA principal + DeepSeek + JEV: qué ve cada uno, cómo se decide y se explica |

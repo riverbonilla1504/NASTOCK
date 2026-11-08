@@ -33,7 +33,7 @@ Ninguno: este ítem no agrega un requisito funcional del producto.
 ## Tareas
 
 - [ ] Supabase: organización, proyecto `ritech-mvp` en la región Este de EE. UU. (Q-10), llaves publicable y secreta, token de acceso, `supabase login` y `supabase link`.
-- [ ] Google Cloud: proyecto, pantalla de consentimiento Interna (o Externa en modo prueba, Q-22) con los alcances `openid`, `email` y `profile`, y clientes OAuth Web y Android.
+- [ ] Google Cloud: proyecto, pantalla de consentimiento Externa en modo prueba (Q-22), con cada persona del equipo como *Test user* (máximo 100) y los alcances `openid`, `email` y `profile`, y clientes OAuth Web y Android.
 - [ ] Firebase en el mismo proyecto: apps Android y Web, Cloud Messaging con su cuenta de servicio, Hosting, App Distribution, Crashlytics, cuenta de servicio para CI y llave de firma de Android fuera del repositorio.
 - [ ] Alpaca: cuenta paper reiniciada con el monto del fondo, par de llaves y verificación del acceso a noticias.
 - [ ] DeepSeek: cuenta, saldo mínimo y llave. TypeSafe: solicitud de acceso anticipado el primer día y llave, o cuenta de Cloudflare con Workers AI como alternativa.

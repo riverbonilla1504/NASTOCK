@@ -14,14 +14,14 @@
 ## Historia
 
 **Como** Administrador,  
-**quiero** que solo pueda crearse una cuenta para un correo del dominio de RiTech que tenga una invitación vigente,  
+**quiero** que solo pueda crearse una cuenta para un correo de un dominio permitido que tenga una invitación vigente,  
 **para** que nadie ajeno a la empresa o sin invitar entre a la plataforma.
 
 ## Requisitos funcionales
 
 - [FR-013 · Alta solo con invitación vigente](../requisitos-funcionales/FR-013-alta-solo-con-invitacion-vigente.md)
 - [FR-014 · Perfil activo al aceptar la invitación](../requisitos-funcionales/FR-014-perfil-activo-al-aceptar-la-invitacion.md)
-- [FR-025 · Sincronización del correo cambiado en Workspace](../requisitos-funcionales/FR-025-sincronizacion-del-correo-cambiado-en-workspace.md)
+- [FR-025 · Sincronización del correo cambiado en la cuenta de Google](../requisitos-funcionales/FR-025-sincronizacion-del-correo-cambiado-en-workspace.md)
 - [FR-007 · Usuarios de prueba solo en local y CI](../requisitos-funcionales/FR-007-usuarios-de-prueba-solo-en-local-y-ci.md)
 
 ## Reglas
@@ -31,11 +31,11 @@ PM-01 · RN-58 · 04 §5 · 04 §6 · 15 §3 · D-12 · D-48
 ## Criterios de aceptación
 
 - **CA-1** Dado un correo con una invitación pendiente y no vencida, cuando esa persona ingresa por primera vez, entonces se crea su perfil activo con el rol de la invitación, la invitación queda aceptada y se registra `cuenta.activada`.
-- **CA-2** (caso borde) CB-01: Dado un correo del dominio sin invitación, cuando intenta ingresar, entonces el usuario no se crea y recibe "Tu correo no tiene una invitación vigente. Pídele una al administrador."
+- **CA-2** (caso borde) CB-01: Dado un correo de un dominio permitido sin invitación, cuando intenta ingresar, entonces el usuario no se crea y recibe "Tu correo no tiene una invitación vigente. Pídele una al administrador."
 - **CA-3** (caso borde) CB-02: Dada una invitación con más de 7 días, cuando su correo intenta ingresar, entonces ocurre lo mismo que sin invitación.
-- **CA-4** Dado un correo de un dominio que no está en `auth.dominios_permitidos`, cuando intenta ingresar, entonces el usuario no se crea y recibe "Solo se admiten cuentas corporativas de RiTech."
-- **CA-5** (caso borde) CB-92: Dado `auth.proveedores_permitidos` con solo `google`, cuando alguien intenta darse de alta con correo y contraseña, entonces el usuario no se crea y recibe "Solo puedes ingresar con tu cuenta de Google de RiTech."
-- **CA-6** (caso borde) CB-05: Dado que Workspace cambió el correo de una cuenta, cuando esa persona vuelve a ingresar, entonces `perfiles.email` se actualiza y el cambio queda en la bitácora.
+- **CA-4** Dado un correo de un dominio que no está en `auth.dominios_permitidos`, cuando intenta ingresar, entonces el usuario no se crea y recibe "Solo se admiten cuentas de Google invitadas."
+- **CA-5** (caso borde) CB-92: Dado `auth.proveedores_permitidos` con solo `google`, cuando alguien intenta darse de alta con correo y contraseña, entonces el usuario no se crea y recibe "Solo puedes ingresar con tu cuenta de Google."
+- **CA-6** (caso borde) CB-05: Dado que Google cambió el correo de una cuenta, cuando esa persona vuelve a ingresar, entonces `perfiles.email` se actualiza y el cambio queda en la bitácora.
 - **CA-7** Dado el entorno local o de CI con la semilla aplicada, cuando un usuario de prueba ingresa con correo y contraseña, entonces el ingreso se acepta.
 
 ## Casos borde
