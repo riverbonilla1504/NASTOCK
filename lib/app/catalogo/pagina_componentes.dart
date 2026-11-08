@@ -17,6 +17,7 @@ import '../../shared/widgets/forma_de_linea.dart';
 import '../../shared/widgets/franja_de_la_jornada.dart';
 import '../../shared/widgets/grafica_de_linea.dart';
 import '../../shared/widgets/mensaje_de_error.dart';
+import '../../shared/widgets/opciones_excluyentes.dart';
 import '../../shared/widgets/tarjeta.dart';
 import '../../shared/widgets/tarjeta_de_cotizacion.dart';
 import '../tema.dart';
@@ -41,6 +42,7 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
     end: DateTime(2026, 11, 20),
   );
   bool _enviando = false;
+  String _rol = 'usuario';
   final TextEditingController _fueraDeRango = TextEditingController(
     text: '900',
   );
@@ -221,6 +223,35 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
                     alAccionar: () {},
                   ),
                 ),
+              ),
+            ],
+          ),
+          _Seccion(
+            titulo: 'Opciones excluyentes',
+            children: [
+              OpcionesExcluyentes<String>(
+                etiqueta: 'Rol',
+                ayuda: 'Define qué verá la persona.',
+                opciones: const [
+                  OpcionExcluyente(valor: 'usuario', etiqueta: 'Usuario'),
+                  OpcionExcluyente(valor: 'analista', etiqueta: 'Analista'),
+                  OpcionExcluyente(
+                    valor: 'administrador',
+                    etiqueta: 'Administrador',
+                  ),
+                ],
+                valor: _rol,
+                alElegir: (rol) => setState(() => _rol = rol),
+              ),
+              const SizedBox(height: Espacio.x4),
+              const OpcionesExcluyentes<String>(
+                etiqueta: 'Rol (deshabilitado)',
+                opciones: [
+                  OpcionExcluyente(valor: 'usuario', etiqueta: 'Usuario'),
+                  OpcionExcluyente(valor: 'analista', etiqueta: 'Analista'),
+                ],
+                valor: 'usuario',
+                alElegir: null,
               ),
             ],
           ),
