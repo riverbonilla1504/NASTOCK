@@ -35,5 +35,5 @@
 
 - **Excepción del proyecto.** Los criterios de aceptación, la descripción de los requisitos, el texto de los casos borde y los motivos de las relaciones se copian tal cual de la historia, del catálogo y de `docs/`, y pueden nombrar tecnología. No se reescriben: lo pide la plantilla del proyecto.
 - No tiene escenario E2E propio.
-- Q-08 no tiene valor provisional: el correo del primer administrador se define al desplegar.
+- Q-08 quedó resuelta en parte (3.20): el dominio es `gmail.com`. El correo del primer administrador no tiene valor provisional: se define al desplegar.
 - Los puntos sin marcar exigen corregir la spec antes de `/speckit-clarify` o `/speckit-plan`.
