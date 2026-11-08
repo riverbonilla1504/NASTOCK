@@ -390,6 +390,8 @@ Los bordes son reglas de 1 px (`regla` en tarjetas, `regla-fuerte` en campos y c
 ### Navigation
 - **Barra superior:** grafito con su degradado gris, título condensado de 24 px en `sobre-grafito`, íconos de la barra en `sobre-grafito` y barra de estado clara.
 - **Isla de navegación** (teléfono; componente `BarraDePestanas`): cápsula flotante de 56 dp de alto, centrada abajo, a 16 dp de los bordes y del área segura, esquinas totalmente redondeadas, sobre el velo con desenfoque y sombra Flotante; sin regla superior. La pestaña actual lleva ícono y rótulo en tinta dentro de una píldora `morado-tenue`; las demás, solo el ícono en `tinta-suave`. Al cambiar de pestaña la píldora se mueve y la cápsula se estira o encoge en 200 ms (`Duracion.transicion`, curva de salida suave); sin animación si el sistema pide quitar animaciones. Cada destino mide al menos 48 dp, tiene foco de teclado con borde morado de 2 px y conserva su nombre completo para el lector de pantalla y la descripción emergente. En ventanas anchas se usa el riel de navegación con los mismos roles, sin la isla.
+- **Menú por rol** (componente `CascaronDeNavegacion`): cada rol ve solo sus destinos, en este orden: **Usuario** Mercado, Oportunidades, Mi cupo, Alertas; **Analista** Mercado, Oportunidades, Alertas; **Administrador** Mercado, Oportunidades, Alertas, Administración. Los destinos de otro rol no aparecen deshabilitados: no aparecen. Nunca más de cuatro, que es el tope de la isla; Nueva orden manual no es pestaña (la acción va en la tarjeta de detalle).
+- **Riel de navegación** (desde 840 dp, la clase "expandida" de Material 3; entre 600 y 840 dp sigue la isla): `NavigationRail` con `navigationRailTheme` del tema, ícono y rótulo siempre visibles, los mismos destinos en el mismo orden y el contenido a su derecha. Sin la isla.
 
 ### Avisos
 Siempre en hoja con texto en tinta; cada tipo se reconoce por la forma de su marca (30 dp) y de su borde, nunca por el color:
@@ -413,6 +415,12 @@ Barra grafito con "RiTech Inversiones" y una hoja blanca sobre papel (máximo 42
 - **Solo con `MODO_PRUEBAS`** (CI y local): bajo una regla y el rótulo "SOLO PRUEBAS", los campos "Correo" y "Contraseña" y un botón secundario "Entrar con correo". Sin `MODO_PRUEBAS` ese bloque no existe en el árbol.
 - **Falta configuración** (solo desarrollo): aviso de advertencia (rombo, borde discontinuo) y el botón deshabilitado.
 - Los textos de los fallos son los de `docs/04` §11; los de arriba (título, ayuda, pie, rótulos) no están en `docs/` y son decisión de tono de esta pantalla. Ninguno habla de "cuenta corporativa" ni "de RiTech": el equipo entra con su cuenta de Google personal.
+
+### Marcador de sección
+Mientras la historia de una sección del MVP corto no construye su pantalla, su destino abre un marcador: `BarraSuperior` con el nombre de la sección y una `Tarjeta` (máximo 560 dp, alineada arriba) con un `EstadoVacio`: "Aún no está disponible" y "Esta sección se habilita en una próxima entrega." Sin botón (el menú sigue a la vista), sin ícono decorativo y sin números de historia. Cuando la sección tiene pantalla, esta reemplaza al marcador.
+
+### Pantalla de cuenta suspendida
+Para quien tiene la sesión con la cuenta suspendida o de baja. Misma estructura que la pantalla de ingreso, **sin menú**: barra grafito con "RiTech Inversiones" y una hoja blanca sobre papel (máximo 420 dp, alineada arriba) con el título "Cuenta suspendida" (headline small), el texto de `docs/04` §11 "Tu cuenta está suspendida. Comunícate con el administrador." (body) y un botón secundario "Cerrar sesión" de ancho completo, que dice "Procesando…" mientras cierra. Sin aviso de error (no es el error de una acción), sin rojo y sin morado; si el cierre falla, el botón vuelve sin mensaje técnico.
 
 ### Cifras
 - **Dinero:** USD con dos decimales en cifras tabulares; desactualizado, subrayado punteado y `tinta-suave`.
