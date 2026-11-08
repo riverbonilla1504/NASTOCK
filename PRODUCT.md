@@ -17,7 +17,8 @@ MVP (`docs/01` §4).
 ## Users
 
 Empresa cerrada: pocos participantes, conocidos, solo por invitación y con
-cuenta de Google Workspace de RiTech. Un rol por persona (`docs/03` §1).
+cuenta de Google (Gmail personal: RiTech no tiene Google Workspace, 2026-11-08).
+Un rol por persona (`docs/03` §1).
 
 - **Usuario** (empleados de RiTech). Hace crecer su cupo dentro del bolsillo
   de Usuarios. En el MVP corto ve el mercado en vivo, Oportunidades de su
@@ -86,7 +87,7 @@ operación viola una regla de riesgo y ninguna sale con datos desactualizados.
 
 - Solo paper trading: ninguna orden mueve dinero real. Solo herramientas
   gratuitas, salvo las IAs.
-- Ingreso solo con Google Workspace de RiTech y solo por invitación. Sin
+- Ingreso solo con cuenta de Google (Gmail) invitada y solo por invitación. Sin
   correo y contraseña (salvo usuarios de prueba en local y CI).
 - Los permisos se aplican en el servidor. La app oculta lo que un rol no
   puede usar para que la experiencia sea limpia; el menú de cada rol muestra
