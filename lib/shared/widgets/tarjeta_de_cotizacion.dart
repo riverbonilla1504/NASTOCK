@@ -256,8 +256,7 @@ class _SimboloConFactor extends StatelessWidget {
             TextSpan(
               text: '  $factor',
               style: estilo.copyWith(
-                fontFamily: Familias.condensada,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 color: c.tintaSuave,
                 fontSize: (estilo.fontSize ?? 16) * 0.8,
               ),

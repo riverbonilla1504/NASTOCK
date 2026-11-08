@@ -350,22 +350,23 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
             children: [
               DecoratedBox(
                 decoration: BoxDecoration(
-                  gradient: context.profundidad.degradadoGrafito,
-                  borderRadius: BorderRadius.circular(Radios.control),
+                  color: c.hoja,
+                  border: Border.all(color: c.regla),
+                  borderRadius: BorderRadius.circular(Radios.hoja),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(Espacio.x4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const _RotuloSobreGrafito('Abierta · ahora 11:46'),
+                      const _RotuloDeFranja('Abierta · ahora 11:46'),
                       FranjaDeLaJornada(
                         apertura: Ejemplo.apertura,
                         cierre: Ejemplo.cierre,
                         ahora: Ejemplo.ahora,
                       ),
                       const SizedBox(height: Espacio.x4),
-                      const _RotuloSobreGrafito(
+                      const _RotuloDeFranja(
                         'Media jornada · cierra a las 13:00',
                       ),
                       FranjaDeLaJornada(
@@ -374,7 +375,7 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
                         ahora: Ejemplo.ahora,
                       ),
                       const SizedBox(height: Espacio.x4),
-                      const _RotuloSobreGrafito('Cerrada · después del cierre'),
+                      const _RotuloDeFranja('Cerrada · después del cierre'),
                       FranjaDeLaJornada(
                         apertura: Ejemplo.apertura,
                         cierre: Ejemplo.cierre,
@@ -568,9 +569,9 @@ class _CampoConFoco extends StatelessWidget {
   }
 }
 
-/// Rótulo sobre grafito para los estados de la franja.
-class _RotuloSobreGrafito extends StatelessWidget {
-  const _RotuloSobreGrafito(this.texto);
+/// Rótulo de los estados de la franja.
+class _RotuloDeFranja extends StatelessWidget {
+  const _RotuloDeFranja(this.texto);
 
   final String texto;
 
@@ -582,7 +583,7 @@ class _RotuloSobreGrafito extends StatelessWidget {
       child: Text(
         texto,
         style: Theme.of(context).textTheme.bodySmall!
-            .copyWith(color: c.sobreGrafitoSuave),
+            .copyWith(color: c.tintaSuave),
       ),
     );
   }

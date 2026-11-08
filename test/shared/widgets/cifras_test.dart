@@ -46,8 +46,8 @@ void main() {
     expect(find.byIcon(Icons.remove), findsOneWidget);
     final sube = tester.widget<Text>(find.text('+2,47 %'));
     final baja = tester.widget<Text>(find.text('-0,82 %'));
-    expect(sube.style!.color, ColoresAlmanaque.claro.alza);
-    expect(baja.style!.color, ColoresAlmanaque.claro.baja);
+    expect(sube.style!.color, ColoresTema.claro.alza);
+    expect(baja.style!.color, ColoresTema.claro.baja);
   });
 
   testWidgets('la variación se lee en palabras', (tester) async {

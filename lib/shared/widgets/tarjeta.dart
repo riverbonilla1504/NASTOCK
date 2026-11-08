@@ -1,5 +1,5 @@
-/// Superficie base: hoja blanca, regla de 1 px, esquinas de 4 dp y una sombra
-/// suave desplazada hacia abajo.
+/// Superficie base: hoja blanca con borde fino gris, esquinas de 8 dp y sin
+/// sombra marcada (D-69).
 library;
 
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class Tarjeta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
-    final esquina = BorderRadius.circular(Radios.control);
+    final esquina = BorderRadius.circular(Radios.hoja);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: c.hoja,

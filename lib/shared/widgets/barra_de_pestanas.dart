@@ -74,8 +74,8 @@ class BarraDePestanas extends StatelessWidget {
               clipper: ShapeBorderClipper(shape: forma),
               child: BackdropFilter(
                 filter: ui.ImageFilter.blur(
-                  sigmaX: ProfundidadAlmanaque.desenfoque,
-                  sigmaY: ProfundidadAlmanaque.desenfoque,
+                  sigmaX: ProfundidadTema.desenfoque,
+                  sigmaY: ProfundidadTema.desenfoque,
                 ),
                 child: DecoratedBox(
                   decoration: ShapeDecoration(shape: forma, color: p.velo),
@@ -139,7 +139,6 @@ class _DestinoState extends State<_Destino> {
     final actual = widget.actual;
     final color = actual ? c.tinta : c.tintaSuave;
     final estiloRotulo = Theme.of(context).textTheme.bodySmall!.copyWith(
-      fontFamily: Familias.condensada,
       fontSize: 12,
       color: color,
       fontWeight: actual ? FontWeight.w700 : FontWeight.w600,

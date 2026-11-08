@@ -99,7 +99,7 @@ class EtiquetaDeCampo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       texto,
-      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 13),
+      style: Theme.of(context).textTheme.titleSmall,
     );
   }
 }

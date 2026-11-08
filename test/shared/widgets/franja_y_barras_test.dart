@@ -60,7 +60,7 @@ void main() {
   });
 
   group('barra superior', () {
-    testWidgets('lleva el título, el degradado grafito y su contenido', (
+    testWidgets('lleva el título, su contenido y es blanca con borde inferior fino', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -86,10 +86,10 @@ void main() {
             )
             .first,
       );
-      expect(
-        (caja.decoration as BoxDecoration).gradient,
-        ProfundidadAlmanaque.claro.degradadoGrafito,
-      );
+      final decoracion = caja.decoration as BoxDecoration;
+      expect(decoracion.gradient, isNull);
+      expect(decoracion.color, ColoresTema.claro.hoja);
+      expect(decoracion.border, isNotNull);
       expect(
         const BarraSuperior(titulo: 'x', alturaInferior: 40).preferredSize,
         const Size.fromHeight(kToolbarHeight + 40),

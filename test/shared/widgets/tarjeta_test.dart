@@ -34,7 +34,7 @@ void main() {
 
     expect(
       _decoracion(tester).boxShadow,
-      ProfundidadAlmanaque.claro.sombraTarjeta,
+      ProfundidadTema.claro.sombraTarjeta,
     );
   });
 

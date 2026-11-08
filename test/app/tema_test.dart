@@ -12,23 +12,35 @@ double contraste(Color a, Color b) {
 
 void main() {
   for (final (nombre, tema, colores, brillo) in [
-    ('claro', crearTema(), ColoresAlmanaque.claro, Brightness.light),
-    ('oscuro', crearTemaOscuro(), ColoresAlmanaque.oscuro, Brightness.dark),
+    ('claro', crearTema(), ColoresTema.claro, Brightness.light),
+    ('oscuro', crearTemaOscuro(), ColoresTema.oscuro, Brightness.dark),
   ]) {
     group('tema $nombre', () {
-      test('trae los colores y la profundidad del Almanaque', () {
+      test('trae los colores y la profundidad del sistema', () {
         expect(tema.brightness, brillo);
-        expect(tema.extension<ColoresAlmanaque>(), colores);
-        expect(tema.extension<ProfundidadAlmanaque>(), isNotNull);
+        expect(tema.extension<ColoresTema>(), colores);
+        expect(tema.extension<ProfundidadTema>(), isNotNull);
         expect(tema.scaffoldBackgroundColor, colores.papel);
-        expect(tema.colorScheme.primary, colores.tinta);
+        expect(tema.colorScheme.primary, colores.morado);
       });
 
-      test('usa Archivo con cifras tabulares', () {
+      test('usa Inter para el texto y JetBrains Mono para las cifras', () {
         final cuerpo = tema.textTheme.bodyMedium!;
         expect(cuerpo.fontFamily, Familias.texto);
         expect(cuerpo.fontFeatures, cifrasTabulares);
-        expect(tema.textTheme.headlineMedium!.fontFamily, Familias.condensada);
+        expect(tema.textTheme.headlineMedium!.fontFamily, Familias.texto);
+        expect(tema.textTheme.displaySmall!.fontFamily, Familias.cifras);
+        final cifra = estiloDeCifra(cuerpo);
+        expect(cifra.fontFamily, Familias.cifras);
+        expect(cifra.fontFeatures, cifrasTabulares);
+      });
+
+      test('el botón principal va en el acento y la tarjeta tiene 8 dp', () {
+        final fondo = tema.filledButtonTheme.style!.backgroundColor!
+            .resolve(<WidgetState>{});
+        expect(fondo, colores.morado);
+        final forma = tema.cardTheme.shape! as RoundedRectangleBorder;
+        expect(forma.borderRadius, BorderRadius.circular(Radios.hoja));
       });
 
       test('el error no es rojo: se dibuja en tinta', () {
@@ -51,9 +63,11 @@ void main() {
             colores.sobreGrafitoSuave,
             colores.grafito,
           ),
-          'morado sobre grafito': (colores.moradoSobreGrafito, colores.grafito),
           'texto sobre morado': (colores.sobreMorado, colores.morado),
           'tinta sobre morado tenue': (colores.tinta, colores.moradoTenue),
+          'morado sobre morado tenue': (colores.morado, colores.moradoTenue),
+          'tinta sobre relleno': (colores.tinta, colores.relleno),
+          'tinta tenue sobre relleno': (colores.tintaTenue, colores.relleno),
         };
         for (final MapEntry(key: par, value: (texto, fondo)) in pares.entries) {
           expect(
@@ -64,18 +78,22 @@ void main() {
         }
       });
 
-      test('el degradado de la barra conserva el contraste del texto', () {
-        final degradado = tema.extension<ProfundidadAlmanaque>()!;
-        for (final tono in degradado.degradadoGrafito.colors) {
-          expect(
-            contraste(colores.sobreGrafito, tono),
-            greaterThanOrEqualTo(4.5),
-          );
-          expect(
-            contraste(colores.sobreGrafitoSuave, tono),
-            greaterThanOrEqualTo(4.5),
-          );
-        }
+      test('el borde de un campo y el acento cumplen 3:1 (WCAG 1.4.11)', () {
+        expect(
+          contraste(colores.reglaFuerte, colores.hoja),
+          greaterThanOrEqualTo(3),
+          reason: 'borde de campo sobre hoja',
+        );
+        expect(
+          contraste(colores.morado, colores.hoja),
+          greaterThanOrEqualTo(3),
+          reason: 'línea de gráfica sobre hoja',
+        );
+        expect(
+          contraste(colores.morado, colores.papel),
+          greaterThanOrEqualTo(4.5),
+          reason: 'botón de texto sobre papel',
+        );
       });
     });
   }

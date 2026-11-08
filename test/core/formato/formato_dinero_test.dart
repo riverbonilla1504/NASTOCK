@@ -45,4 +45,26 @@ void main() {
       expect(() => formatearUsd(double.infinity), throwsArgumentError);
     });
   });
+
+  group('formatearCifraCorta', () {
+    test('abrevia miles y millones con un decimal', () {
+      expect(formatearCifraCorta(10000), '10,0K');
+      expect(formatearCifraCorta(1500), '1,5K');
+      expect(formatearCifraCorta(2500000), '2,5M');
+    });
+
+    test('por debajo de mil lleva dos decimales', () {
+      expect(formatearCifraCorta(96.02), '96,02');
+      expect(formatearCifraCorta(0), '0,00');
+    });
+
+    test('el signo va delante y lo que redondea a cero no lo lleva', () {
+      expect(formatearCifraCorta(-2500), '-2,5K');
+      expect(formatearCifraCorta(-0.001), '0,00');
+    });
+
+    test('un número que no es finito se rechaza', () {
+      expect(() => formatearCifraCorta(double.nan), throwsArgumentError);
+    });
+  });
 }

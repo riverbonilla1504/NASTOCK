@@ -19,6 +19,23 @@ String formatearUsd(num monto) {
   return '${negativo ? '-' : ''}USD $entero,${partes[1]}';
 }
 
+/// Cifra corta para los ejes de una gráfica y los espacios muy angostos:
+/// `10000` → `10,0K`, `2500000` → `2,5M`, `96.02` → `96,02`. Sin la moneda: el
+/// valor completo de la pantalla ya dice USD. Los miles y millones llevan un
+/// decimal; por debajo de mil, dos.
+String formatearCifraCorta(num valor) {
+  if (valor.isNaN || valor.isInfinite) {
+    throw ArgumentError.value(valor, 'valor', 'debe ser un número finito');
+  }
+  final abs = valor.abs();
+  final (escalado, sufijo) = abs >= 1e6
+      ? (abs / 1e6, 'M')
+      : (abs >= 1e3 ? (abs / 1e3, 'K') : (abs.toDouble(), ''));
+  final texto = escalado.toStringAsFixed(sufijo.isEmpty ? 2 : 1);
+  final cero = double.parse(texto) == 0;
+  return '${valor < 0 && !cero ? '-' : ''}${texto.replaceFirst('.', ',')}$sufijo';
+}
+
 String _conSeparadorDeMiles(String digitos) {
   final salida = StringBuffer();
   for (var i = 0; i < digitos.length; i++) {
