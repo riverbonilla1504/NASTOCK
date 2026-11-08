@@ -897,7 +897,7 @@ Las Edge Functions las ejecutan por conexión directa a Postgres, con
 | `despertar_funcion(nombre)` | `pg_net` hacia una Edge Function con el secreto interno, que envía en la cabecera `x-secreto-interno`. |
 | `auditar(actor, accion, entidad, id, detalle, antes, despues, origen)` | Agrega a la bitácora encadenando el hash (11 §4.3). `id` es texto; `detalle`, `antes`, `despues` y `origen` son opcionales. El rol del actor lo lee de `perfiles`; sin origen, `sistema` si no hay actor y `app` si lo hay. |
 | `publicar_evento(topico, evento, carga)` | Envoltura de `realtime.send`: siempre con canal privado, y rechaza (`22023`) un canal que no sea uno de los cinco de 09 §3. |
-| `carga_evento(tabla, id, version, estado)` | Arma la carga de un evento de entidad (09 §4): solo esas cuatro claves, nunca montos. Es la convención que usan los triggers de las demás historias. |
+| `carga_evento(tabla, id, version, estado)` | Arma la carga de un evento de entidad (09 §4): solo esas cuatro claves, nunca montos. El `id` va como texto (`parametros` se identifica por `clave`). Es la convención que usan los triggers de las demás historias. |
 
 ---
 

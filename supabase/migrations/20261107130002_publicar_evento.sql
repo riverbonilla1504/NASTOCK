@@ -6,17 +6,21 @@
 -- solo tabla, id, versión y estado, nunca montos. Los precios del canal mercado son la excepción
 -- y viajan con su propia carga (docs/09 §4).
 
-create function private.carga_evento(p_tabla text, p_id uuid, p_version integer, p_estado text)
+-- El id va como texto porque no todas las entidades tienen uuid: parametros se identifica por
+-- clave (text) y salud_integraciones por integracion (docs/06 §5.6). Quien publica una entidad
+-- con uuid pasa new.id::text. Una tabla sin versión o sin estado manda NULL en ese campo: las
+-- cuatro claves viajan siempre.
+create function private.carga_evento(p_tabla text, p_id text, p_version integer, p_estado text)
 returns jsonb
 language sql
-immutable
+stable
 set search_path = ''
 as $$
   select jsonb_build_object('tabla', p_tabla, 'id', p_id, 'version', p_version, 'estado', p_estado)
 $$;
 
-comment on function private.carga_evento(text, uuid, integer, text) is
-  'Carga de un evento de entidad: solo tabla, id, versión y estado, sin montos (docs/09 §4, D-32).';
+comment on function private.carga_evento(text, text, integer, text) is
+  'Carga de un evento de entidad: solo tabla, id, versión y estado, sin montos (docs/09 §4, D-32). El id va como texto.';
 
 create function private.publicar_evento(p_topico text, p_evento text, p_carga jsonb)
 returns void
@@ -41,5 +45,5 @@ $$;
 comment on function private.publicar_evento(text, text, jsonb) is
   'Publica un evento en un canal privado de docs/09 §3. Solo la base de datos publica; envuelve realtime.send.';
 
-revoke all on function private.carga_evento(text, uuid, integer, text) from public, anon, authenticated;
+revoke all on function private.carga_evento(text, text, integer, text) from public, anon, authenticated;
 revoke all on function private.publicar_evento(text, text, jsonb) from public, anon, authenticated;

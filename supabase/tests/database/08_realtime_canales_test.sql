@@ -3,7 +3,7 @@
 -- Criterios: CA-1 a CA-5 (backlog/E-09-tiempo-real-y-notificaciones/HU-083-*.md). Reglas: docs/09 §3 y §4.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(44);
+select plan(46);
 
 -- Cuentas de prueba: 0001 usuario · 0002 analista · 0003 administrador · 0004 suspendido (rol administrador) · 0005 de baja.
 -- Suspender llega con HU-010 (R2): por eso la cuenta suspendida se crea ya así (CA-5).
@@ -31,7 +31,7 @@ select is((select cmd from pg_policies where schemaname = 'realtime' and tablena
 select is((select count(*)::int from pg_policies where schemaname = 'realtime' and tablename = 'messages' and cmd in ('INSERT', 'ALL')), 0,
           'realtime.messages no tiene política de INSERT');
 select has_function('private', 'publicar_evento', array['text', 'text', 'jsonb'], 'existe private.publicar_evento');
-select has_function('private', 'carga_evento', array['text', 'uuid', 'integer', 'text'], 'existe private.carga_evento');
+select has_function('private', 'carga_evento', array['text', 'text', 'integer', 'text'], 'existe private.carga_evento');
 select ok(not has_function_privilege('authenticated', 'private.publicar_evento(text, text, jsonb)', 'execute'),
           'authenticated no puede ejecutar publicar_evento');
 select ok(not has_function_privilege('anon', 'private.publicar_evento(text, text, jsonb)', 'execute'),
@@ -54,8 +54,13 @@ select is((select count(*)::int from realtime.messages where private and event l
 select is(private.carga_evento('sugerencias', '5f1c0000-0000-4000-8000-000000000000', 4, 'aprobada'),
           '{"tabla": "sugerencias", "id": "5f1c0000-0000-4000-8000-000000000000", "version": 4, "estado": "aprobada"}'::jsonb,
           'la carga de un evento de entidad trae tabla, id, versión y estado');
-select is((select array_agg(k order by k) from jsonb_object_keys(private.carga_evento('t', gen_random_uuid(), 1, 'e')) k),
+select is((select array_agg(k order by k) from jsonb_object_keys(private.carga_evento('t', gen_random_uuid()::text, 1, 'e')) k),
           array['estado', 'id', 'tabla', 'version'], 'y ninguna otra clave: sin montos');
+select is(private.carga_evento('parametros', 'mercado.minutos_tras_apertura', 3, null),
+          '{"tabla": "parametros", "id": "mercado.minutos_tras_apertura", "version": 3, "estado": null}'::jsonb,
+          'una entidad con clave de texto y sin estado conserva las cuatro claves');
+select ok(not has_function_privilege('authenticated', 'private.carga_evento(text, text, integer, text)', 'execute'),
+          'authenticated no puede ejecutar carga_evento');
 
 -- Escucha por rol (CA-1, CA-2, CA-5) ------------------------------------------------------------
 -- Abre el canal (realtime.topic) y dice si la política deja ver el mensaje de prueba.
