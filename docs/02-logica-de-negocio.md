@@ -429,7 +429,7 @@ partir de ese momento.
 | `conciliacion.tolerancia_usd` | 1,00 | 0–100 | Descuadre aceptable |
 | `conciliacion.minutos_entre` | 5 | 1–60 | Frecuencia de conciliación |
 | `cupos.maximo_usd` | sin límite | ≥ 0 | RN-19 |
-| `auth.dominios_permitidos` | `["<dominio de RiTech>"]` | lista de dominios | Hook de alta ([04 §5](04-autenticacion-oauth.md#5-hook-antes-de-crear-usuario)) |
+| `auth.dominios_permitidos` | `[]` al crearse (la migración no conoce el dominio, Q-08: nadie entra hasta cargar `["<dominio de RiTech>"]`); local/CI: `["prueba.local"]` | lista de dominios | Hook de alta ([04 §5](04-autenticacion-oauth.md#5-hook-antes-de-crear-usuario)) |
 | `auth.proveedores_permitidos` | `["google"]` (local/CI: `["google","email"]`) | lista | Hook de alta; en la nube solo Google |
 | `app.minutos_bloqueo` | 5 | 1–60 | Bloqueo biométrico al volver de segundo plano ([04 §8](04-autenticacion-oauth.md#8-sesión-en-la-app)) |
 

@@ -60,7 +60,7 @@
 
 | Categoría | Acciones (`auditoria.accion`) |
 |---|---|
-| Cuentas | `cuenta.invitada`, `cuenta.invitacion_revocada`, `cuenta.activada`, `cuenta.rol_cambiado`, `cuenta.suspendida`, `cuenta.reactivada`, `cuenta.baja` |
+| Cuentas | `cuenta.invitada`, `cuenta.invitacion_revocada`, `cuenta.activada`, `cuenta.correo_cambiado`, `cuenta.rol_cambiado`, `cuenta.suspendida`, `cuenta.reactivada`, `cuenta.baja` |
 | Capital | `capital.aporte_registrado`, `capital.aporte_confirmado`, `capital.aporte_anulado`, `capital.retiro_registrado`, `capital.retiro_confirmado` |
 | Cupos | `cupo.asignado`, `cupo.reducido`, `cupo.cerrado`, `cupo.liquidacion_solicitada` |
 | Decisiones | `sugerencia.aprobada`, `sugerencia.rechazada`, `decision.anulada`, `rebalanceo.aprobado`, `rebalanceo.rechazado` |

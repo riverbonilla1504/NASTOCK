@@ -198,3 +198,57 @@ select b.simbolo,
        floor(1000000 * (0.5 + b.u5))::bigint
   from barras b
  where b.fecha between date '2025-11-03' and date '2026-10-30';
+
+-- Ingreso de prueba (HU-002, docs/04 §5, docs/15 §3, D-48). SOLO local y CI: este archivo no se aplica en la nube.
+-- La migración deja auth.dominios_permitidos = [] y auth.proveedores_permitidos = ["google"]; aquí se
+-- permite el dominio de los usuarios de prueba y el proveedor de correo, para poder automatizar el ingreso.
+update public.parametros set valor = '["prueba.local"]'::jsonb where clave = 'auth.dominios_permitidos';
+update public.parametros set valor = '["google","email"]'::jsonb where clave = 'auth.proveedores_permitidos';
+
+-- Un usuario de prueba por rol (más un segundo analista y un segundo usuario). Contraseña de todos:
+-- 'prueba-local-1234' (no es un secreto). Se siembran con las filas ya hechas, sin disparar los
+-- triggers del alta: así la bitácora arranca vacía en las pruebas (private.al_crear_usuario ya se
+-- prueba con altas reales).
+set session_replication_role = replica;
+
+with u(n, correo, rol, nombre) as (values
+  (1, 'admin@prueba.local',    'administrador', 'Administrador de prueba'),
+  (2, 'analista1@prueba.local', 'analista',      'Analista 1 de prueba'),
+  (3, 'analista2@prueba.local', 'analista',      'Analista 2 de prueba'),
+  (4, 'usuario1@prueba.local',  'usuario',       'Usuario 1 de prueba'),
+  (5, 'usuario2@prueba.local',  'usuario',       'Usuario 2 de prueba')
+),
+ids as (
+  select n, correo, rol::public.rol_app as rol, nombre,
+         ('00000000-0000-4000-8000-0000000a00' || lpad(n::text, 2, '0'))::uuid as id,
+         ('00000000-0000-4000-8000-0000000b00' || lpad(n::text, 2, '0'))::uuid as inv_id
+  from u
+),
+auth_users as (
+  insert into auth.users (
+    instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+    raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+    confirmation_token, recovery_token, email_change, email_change_token_new, email_change_token_current,
+    phone_change, phone_change_token, reauthentication_token)
+  select '00000000-0000-0000-0000-000000000000', id, 'authenticated', 'authenticated', correo,
+         extensions.crypt('prueba-local-1234', extensions.gen_salt('bf')), now(),
+         '{"provider":"email","providers":["email"]}'::jsonb, jsonb_build_object('full_name', nombre),
+         now(), now(), '', '', '', '', '', '', '', ''
+  from ids
+  returning id
+),
+identidades as (
+  insert into auth.identities (provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+  select id::text, id, jsonb_build_object('sub', id::text, 'email', correo, 'email_verified', true), 'email', now(), now(), now()
+  from ids
+  returning user_id
+),
+perfiles_sembrados as (
+  insert into public.perfiles (id, email, nombre, rol, estado, invitacion_id)
+  select id, correo, nombre, rol, 'activo', inv_id from ids
+  returning id
+)
+insert into public.invitaciones (id, email, rol, estado, expira_en, usuario_id, aceptada_en)
+select inv_id, correo, rol, 'aceptada', now() + interval '7 days', id, now() from ids;
+
+set session_replication_role = origin;

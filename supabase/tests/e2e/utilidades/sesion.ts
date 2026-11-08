@@ -5,7 +5,8 @@
 //   prueba por rol de docs/15 §3 (`admin@prueba.local`, `analista1@…`…) cuando `seed.sql`
 //   los cree (HU-002).
 // - `crearUsuarioDePrueba(rol)`: crea en la prueba un usuario con su perfil y su rol, inicia
-//   sesión y lo borra al terminar. Sirve mientras `seed.sql` no los siembre.
+//   sesión y lo borra al terminar. Como cualquier alta, pasa por una invitación vigente
+//   (HU-002): la crea y deja que `private.al_crear_usuario` cree el perfil.
 //
 // Las respuestas vuelven ya leídas ({ estado, cuerpo }) para que ninguna prueba deje un
 // cuerpo sin consumir.
@@ -98,8 +99,10 @@ export interface UsuarioDePrueba {
 
 /**
  * Crea un usuario con perfil activo del rol dado y devuelve su sesión.
- * El usuario nace confirmado (Auth local no manda correos) y su perfil se inserta por SQL,
- * porque `perfiles` solo la escriben funciones `security definer`.
+ * El usuario nace confirmado (Auth local no manda correos). Antes se inserta su invitación
+ * por SQL (`invitaciones` solo la escriben funciones `security definer`) y el trigger de
+ * alta crea el perfil con el rol de la invitación. El dominio `prueba.local` y el proveedor
+ * `email` los permite `seed.sql`.
  */
 export async function crearUsuarioDePrueba(
   sql: Sql,
@@ -108,6 +111,9 @@ export async function crearUsuarioDePrueba(
   const sufijo = crypto.randomUUID().slice(0, 8);
   const correo = `e2e-${rol}-${sufijo}@prueba.local`;
   const contrasena = crypto.randomUUID();
+
+  await sql`
+    insert into public.invitaciones (email, rol) values (${correo}, ${rol})`;
 
   const creado = await leerRespuesta(
     await fetch(`${entorno.urlApi}/auth/v1/admin/users`, {
@@ -126,11 +132,15 @@ export async function crearUsuarioDePrueba(
   );
   const id = (creado.cuerpo as { id?: string } | null)?.id;
   if (creado.estado >= 300 || !id) {
+    await sql`delete from public.invitaciones where lower(email) = ${correo}`;
     throw new Error(`No se pudo crear el usuario de prueba: ${creado.estado}`);
   }
 
   const eliminar = async () => {
+    // Las llaves foráneas se cruzan: se suelta la de la invitación antes de borrar el perfil.
+    await sql`update public.invitaciones set usuario_id = null where usuario_id = ${id}`;
     await sql`delete from public.perfiles where id = ${id}`;
+    await sql`delete from public.invitaciones where lower(email) = ${correo}`;
     await fetch(`${entorno.urlApi}/auth/v1/admin/users/${id}`, {
       method: "DELETE",
       headers: {
@@ -141,9 +151,6 @@ export async function crearUsuarioDePrueba(
   };
 
   try {
-    await sql`
-      insert into public.perfiles (id, email, nombre, rol)
-      values (${id}, ${correo}, ${"Prueba E2E " + rol}, ${rol})`;
     return {
       sesion: await iniciarSesion(correo, contrasena),
       id,
