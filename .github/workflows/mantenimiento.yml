@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.122.0 # la misma que se usa en local (EC-024)
       - name: Volcado y cifrado
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}

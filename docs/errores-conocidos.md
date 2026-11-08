@@ -194,3 +194,10 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Causa: la versión mayor de `chromedriver` y la de Chrome tienen que coincidir. En CI coinciden (`$CHROMEWEBDRIVER` viene con el Chrome del ejecutor); en un equipo local Chrome se actualiza solo y `chromedriver` (instalado con Scoop) no.
 - Solución: poner `chromedriver` en la misma versión mayor que Chrome (`chrome://version` y `chromedriver --version`), actualizando uno u otro.
 - Para no repetirlo: al actualizar Chrome en el equipo de desarrollo, actualizar también `chromedriver`.
+
+### EC-024 · El despliegue falla en `supabase db push` con "Target: local stack (127.0.0.1:54322)"
+- Fecha: 2026-11-08 · Módulos: M-20 · Origen: primer despliegue de TT-08 (#157)
+- Síntoma: el trabajo `Supabase` de `despliegue.yml` termina con `Target: local stack (127.0.0.1:54322) · default; pass --remote for <proyecto>` y `failed to connect to postgres … dial error (connect ECONNREFUSED 127.0.0.1:54322)`, aunque `supabase link` funcionó y los secretos están cargados.
+- Causa: `supabase/setup-cli` con `version: latest` instaló la versión 3 de la CLI. En la 3, `db push` apunta por defecto al stack local; en la 2 (la que se usa en local, 2.122.0) apunta al proyecto enlazado. En el ejecutor de GitHub no hay stack local.
+- Solución: fijar `version: 2.122.0` en `despliegue.yml` y `mantenimiento.yml` (TT-07 hace lo mismo en `ci.yml`).
+- Para no repetirlo: los flujos usan la misma versión de la CLI que el equipo local, nunca `latest`. Pasar a la 3 es un cambio aparte: actualizar local y flujos juntos y revisar los comandos que ahora piden `--remote`.
