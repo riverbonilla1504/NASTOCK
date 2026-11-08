@@ -4,7 +4,7 @@
 -- El flujo completo con Auth real (invitar, entrar, revocada que no entra) lo cubre el E2E-02.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(91);
+select plan(92);
 
 -- Cuentas de prueba: 0001 usuario · 0002 analista · 0003 administrador · 0004 administrador suspendido ·
 -- 0005 de baja. Suspender llega con HU-010 (R2): por eso la cuenta suspendida se crea ya así (CA-7).
@@ -97,8 +97,8 @@ select is((select (accion, entidad, entidad_id, actor_id, actor_rol, origen)::te
           'CA-1: se registra cuenta.invitada con quién invitó');
 select is((select detalle - 'expira_en' from public.auditoria
             where accion = 'cuenta.invitada' and entidad_id = pg_temp.id_de('nueva@prueba.test', 'pendiente')::text),
-          '{"rol": "usuario", "email": "nueva@prueba.test", "cupo_inicial": 250.50}'::jsonb,
-          'la bitácora guarda el correo, el rol y el cupo de la invitación');
+          '{"rol": "usuario", "cupo_inicial": 250.50}'::jsonb,
+          'la bitácora guarda el rol y el cupo de la invitación (el correo se cruza por el id)');
 select is(pg_temp.eventos(pg_temp.id_de('nueva@prueba.test', 'pendiente'), 'pendiente'), 1,
           'se publica un evento invitacion en el canal admin con el estado pendiente');
 select is((select array_agg(k order by k) from realtime.messages m, jsonb_object_keys(m.payload) k
@@ -155,7 +155,7 @@ select is((select count(*)::int from public.invitaciones where email = 'nueva@pr
 select is((select (accion, entidad, actor_id, antes, despues, detalle)::text from public.auditoria
             where accion = 'cuenta.invitacion_revocada'
               and entidad_id = (select max(id::text) from public.invitaciones where email = 'nueva@prueba.test' and rol = 'analista')),
-          '(cuenta.invitacion_revocada,invitaciones,00000000-0000-4000-8000-000000000003,"{""estado"": ""pendiente""}","{""estado"": ""revocada""}","{""rol"": ""analista"", ""email"": ""nueva@prueba.test""}")',
+          '(cuenta.invitacion_revocada,invitaciones,00000000-0000-4000-8000-000000000003,"{""estado"": ""pendiente""}","{""estado"": ""revocada""}","{""rol"": ""analista""}")',
           'CA-4: se registra cuenta.invitacion_revocada con el estado antes y después');
 select is(pg_temp.eventos((select id from public.invitaciones where email = 'nueva@prueba.test' and rol = 'analista'), 'revocada'), 1,
           'CA-4: se publica el evento invitacion con el estado revocada');
@@ -300,6 +300,8 @@ select is((select count(*)::int from public.auditoria where accion = 'cuenta.inv
           'SC-004: cuenta.invitacion_revocada quedó registrada por cada revocación');
 select is((select count(*)::int from public.auditoria where accion like 'cuenta.invit%' and actor_id is null), 0,
           'toda entrada tiene quién actuó');
+select is((select count(*)::int from public.auditoria where accion like 'cuenta.invit%' and detalle::text ~ '@'), 0,
+          'la bitácora inmutable no guarda correos (datos personales, docs/11 §1)');
 
 select * from finish();
 rollback;

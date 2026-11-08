@@ -5,6 +5,10 @@
 -- fecha; invitar de nuevo pasa a vencida la pendiente ya pasada), docs/11 §4.1 (acciones de la
 -- bitácora), PM-50, CB-02, CB-03, CB-04.
 --
+-- La bitácora es inmutable y se guarda para siempre (docs/06 §10): el correo, que es un dato personal
+-- (docs/11 §1), no va en su detalle, como en cuenta.invitada del primer administrador (HU-004). Quien
+-- quiera saber a quién se invitó cruza `entidad_id` con `invitaciones.id`.
+--
 -- La tabla `invitaciones` no admite escrituras de la API (HU-002): solo estas funciones y el trigger de
 -- alta la escriben. El evento `invitacion` lo publica el trigger de la migración anterior.
 
@@ -79,7 +83,6 @@ begin
     'invitaciones',
     v_nueva.id::text,
     p_detalle => jsonb_build_object(
-                   'email', v_nueva.email,
                    'rol', v_nueva.rol,
                    'cupo_inicial', v_nueva.cupo_inicial,
                    'expira_en', v_nueva.expira_en
@@ -136,7 +139,7 @@ begin
     'cuenta.invitacion_revocada',
     'invitaciones',
     v_inv.id::text,
-    p_detalle => jsonb_build_object('email', v_inv.email, 'rol', v_inv.rol),
+    p_detalle => jsonb_build_object('rol', v_inv.rol),
     p_antes => jsonb_build_object('estado', 'pendiente'),
     p_despues => jsonb_build_object('estado', 'revocada')
   );
