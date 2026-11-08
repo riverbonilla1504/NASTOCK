@@ -395,6 +395,10 @@ deno_version = 2
 [functions.calendario-mercado]
 verify_jwt = false
 
+# cierre-diario también: solo el secreto interno (trabajo cierre_diario de pg_cron).
+[functions.cierre-diario]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327
