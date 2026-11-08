@@ -1,50 +1,33 @@
-// Prueba de humo contra el proyecto MVP, después de cada despliegue (docs/15 §11, FR-009).
-//
-// Corre en el trabajo `humo` de despliegue.yml con la URL y la llave PUBLICABLE (no es
-// secreta). Solo usa lo que cualquiera con esa llave podría llamar.
+// Verificaciones de docs/15 §11 sobre proveedores y Auth, contra el proyecto MVP (FR-009).
+// `ping()` está en salud_test.ts y el proyecto al que se le habla, en entorno.ts.
 //
 //   SUPABASE_URL=https://<ref>.supabase.co SUPABASE_PUBLISHABLE_KEY=sb_publishable_… \
-//     deno test --config supabase/tests/humo/deno.json \
+//     deno test --config supabase/tests/deno.json \
 //       --allow-net --allow-env --allow-read supabase/tests/humo
 //
-// Entran las verificaciones de docs/15 §11 que ya aplican. Entran con su historia:
-// `estado_mercado()` y el calendario (M-05), cuenta de Alpaca paper (M-10), salud de
+// Entran con su historia: `estado_mercado()` y el calendario (HU-002 y HU-005, cuando haya
+// usuarios: solo la ejecuta `authenticated`), cuenta de Alpaca paper (M-10), salud de
 // integraciones (M-18), configuración de decisión y prompt de contexto (M-07), y la fila
 // `auth.proveedores_permitidos` de `public.parametros` (M-01).
 
 import { assert, assertEquals } from "@std/assert";
-
-function variable(nombre: string): string {
-  const valor = Deno.env.get(nombre)?.trim();
-  if (!valor) throw new Error(`Falta la variable ${nombre}`);
-  return valor;
-}
-
-const url = variable("SUPABASE_URL").replace(/\/+$/, "");
-const llave = variable("SUPABASE_PUBLISHABLE_KEY");
+import { proyecto } from "./entorno.ts";
 
 /** Llama a la API del proyecto con la llave publicable y devuelve estado y cuerpo. */
 async function llamar(
   ruta: string,
   init: { method?: string; body?: string } = {},
 ): Promise<{ estado: number; cuerpo: string }> {
-  const respuesta = await fetch(`${url}${ruta}`, {
+  const respuesta = await fetch(`${proyecto.url}${ruta}`, {
     method: init.method ?? "GET",
-    headers: { apikey: llave, "Content-Type": "application/json" },
+    headers: {
+      apikey: proyecto.llavePublicable,
+      "Content-Type": "application/json",
+    },
     body: init.body,
   });
   return { estado: respuesta.status, cuerpo: await respuesta.text() };
 }
-
-Deno.test("ping() responde con la hora del servidor", async () => {
-  const { estado, cuerpo } = await llamar("/rest/v1/rpc/ping", {
-    method: "POST",
-    body: "{}",
-  });
-  assertEquals(estado, 200, `ping() respondió ${estado}`);
-  const hora = Date.parse(JSON.parse(cuerpo));
-  assert(!Number.isNaN(hora), "ping() no devolvió una fecha");
-});
 
 // CB-91: con ENTORNO=mvp una función no arranca si algún PROVEEDOR_* es simulado
 // (_shared/proveedores.ts valida los seis al cargar el módulo). Una función que no arranca
