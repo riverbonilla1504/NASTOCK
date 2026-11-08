@@ -110,6 +110,45 @@ void main() {
       }
     });
 
+    test(
+      'reconoce los tres mensajes de la migración más reciente del hook',
+      () {
+        // Los lee de `supabase/migrations/` (la prueba corre desde la raíz del
+        // proyecto): si alguien cambia la redacción sin conservar el prefijo,
+        // esta prueba falla en vez de que la app muestre "No pudimos iniciar…".
+        final migraciones =
+            Directory('supabase/migrations')
+                .listSync()
+                .whereType<File>()
+                .where((f) => f.path.endsWith('.sql'))
+                .where(
+                  (f) =>
+                      RegExp(r"error_auth\(403,")
+                          .hasMatch(f.readAsStringSync()),
+                )
+                .toList()
+              ..sort((a, b) => a.path.compareTo(b.path));
+        final mensajes = RegExp(r"error_auth\(403,\s*'([^']+)'")
+            .allMatches(migraciones.last.readAsStringSync())
+            .map((m) => m.group(1)!)
+            .toList();
+
+        expect(mensajes, hasLength(3), reason: migraciones.last.path);
+        for (final texto in mensajes) {
+          final fallo = clasificarFalloDeIngreso(
+            AuthApiException(texto, statusCode: '403'),
+          );
+
+          expect(
+            fallo.tipo,
+            isNot(TipoDeFalloDeIngreso.inesperado),
+            reason: texto,
+          );
+          expect(fallo.mensaje, texto);
+        }
+      },
+    );
+
     test('un mensaje que no empieza con el prefijo no se reconoce', () {
       final fallo = clasificarFalloDeIngreso(
         const AuthApiException(
