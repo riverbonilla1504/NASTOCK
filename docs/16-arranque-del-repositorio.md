@@ -73,8 +73,8 @@ Todas gratuitas salvo DeepSeek y TypeSafe (pago por uso).
 
 Un mismo proyecto de Google Cloud sirve para OAuth y Firebase.
 
-- [ ] Proyecto de Google Cloud dentro de la organización de Workspace de RiTech (o, si no hay organización, pantalla **Externa en modo prueba**: 04 §1).
-- [ ] Pantalla de consentimiento (Interna), alcances `openid`, `email`, `profile`.
+- [ ] Proyecto de Google Cloud (sin organización: RiTech no tiene Workspace).
+- [ ] Pantalla de consentimiento **Externa en modo prueba** (04 §1), alcances `openid`, `email`, `profile`. Cada persona del equipo agregada como *Test user* (máximo 100).
 - [ ] Clientes OAuth: **Web** (redirección `https://<ref>.supabase.co/auth/v1/callback`) y **Android** (paquete `com.ritech.inversiones` + SHA-1 de las llaves debug y release).
 - [ ] Firebase agregado al mismo proyecto, plan **Spark** (gratis): app Android y app Web.
 - [ ] Cloud Messaging habilitado; cuenta de servicio con permiso de envío → `FCM_CUENTA_SERVICIO`.

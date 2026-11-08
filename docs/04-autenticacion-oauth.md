@@ -4,18 +4,19 @@
 
 | Decisión | Detalle |
 |---|---|
-| **Solo Google Workspace** (D-12) | No hay correo + contraseña, ni otros proveedores. La contraseña, su política y el segundo factor los gobierna Google Workspace. |
+| **Solo cuenta de Google (Gmail) invitada** (D-12) | No hay correo + contraseña, ni otros proveedores. RiTech **no tiene Google Workspace**: el equipo entra con su **Gmail personal**. La contraseña, su política y el segundo factor los gobierna Google. |
 | **Solo por invitación** | Nadie entra si el Administrador no lo invitó antes. No existe registro abierto. |
-| **Solo el dominio de RiTech** | La aplicación OAuth de Google se configura como **Interna**: Google rechaza cuentas de fuera de la organización antes de llegar a nosotros. |
-| **Si RiTech no tiene organización de Workspace** | La pantalla de consentimiento se crea como **Externa en modo de prueba** (gratis, hasta 100 usuarios de prueba que se registran en Google Cloud). El control real lo sigue haciendo el hook (invitación + dominio o correos permitidos). |
+| **Solo quien está en la lista de Test users** (Q-22) | La aplicación OAuth de Google se configura como **Externa en modo de prueba** (gratis, hasta 100 *Test users*): cada persona del equipo se agrega como *Test user* en Google Cloud. Google rechaza a quien no esté en esa lista antes de llegar a nosotros. |
+| **Dominio permitido** (Q-08) | En la nube `auth.dominios_permitidos = ["gmail.com"]`: el hook rechaza cualquier otro dominio. No sustituye al control real, que son la invitación y la lista de Test users. |
 | **Pruebas automáticas** | En local y CI se habilita además correo + contraseña **solo para usuarios de prueba**, porque el ingreso con Google no se puede automatizar. En la nube está prohibido (§5 y [15 §3](15-calidad-pruebas-y-ci-cd.md#3-modo-simulado-y-datos-de-prueba)). |
 | **Supabase Auth** administra sesiones | Emite el JWT que usa la app para hablar con la base de datos, Realtime y las Edge Functions. |
 
 > Lo que desaparece de la v2: login con contraseña, bloqueo por intentos
 > fallidos, política de contraseñas, código 2FA de demostración,
 > recuperación de contraseña y cambio obligatorio de contraseña. Todo eso lo
-> hace Google. Se recomienda que el administrador de Workspace **exija la
-> verificación en dos pasos** a todas las cuentas de RiTech.
+> hace Google. Se **recomienda** que cada persona active la verificación en
+> dos pasos en su Gmail; no se puede exigir, porque RiTech no administra esas
+> cuentas.
 
 ---
 
@@ -23,8 +24,8 @@
 
 ```mermaid
 flowchart LR
-  subgraph Google["Google Cloud / Workspace"]
-    CS["Pantalla de consentimiento<br/>tipo INTERNA"]
+  subgraph Google["Google Cloud"]
+    CS["Pantalla de consentimiento<br/>EXTERNA en modo de prueba"]
     CW["Cliente OAuth Web"]
     CA["Cliente OAuth Android"]
     CI["Cliente OAuth iOS"]
@@ -56,7 +57,7 @@ flowchart LR
 
 | Pieza | Dónde se configura | Para qué |
 |---|---|---|
-| Pantalla de consentimiento **Interna** | Google Cloud Console → APIs y servicios | Solo cuentas del Workspace de RiTech pueden autorizar la app. |
+| Pantalla de consentimiento **Externa en modo de prueba** | Google Cloud Console → APIs y servicios | Solo las cuentas agregadas como *Test user* (máximo 100) pueden autorizar la app. |
 | Cliente OAuth **Web** | Google Cloud Console | Lo usa Supabase para el flujo web y como `serverClientId` en móvil. Su ID y secreto van en Supabase. |
 | Clientes OAuth **Android** e **iOS** | Google Cloud Console | Inicio de sesión nativo en móvil. Sus IDs se agregan a la lista de clientes autorizados del proveedor Google en Supabase. |
 | Proveedor Google | Supabase → Authentication → Providers | Valida el `id_token` de Google y crea o recupera al usuario. |
@@ -69,9 +70,10 @@ flowchart LR
 
 ## 3. Configuración paso a paso (checklist para una historia técnica)
 
-1. Crear proyecto en Google Cloud **dentro de la organización** de RiTech.
-2. Pantalla de consentimiento: tipo **Interna**; alcances `openid`, `email`,
-   `profile`. Nada más.
+1. Crear proyecto en Google Cloud (sin organización: RiTech no tiene Workspace).
+2. Pantalla de consentimiento: tipo **Externa**, en **modo de prueba** (no se
+   publica); alcances `openid`, `email`, `profile`. Nada más. Agregar a cada
+   persona del equipo como **Test user** (máximo 100).
 3. Crear cliente OAuth **Web**. Origen autorizado: dominio web de la app.
    URI de redirección: `https://<proyecto>.supabase.co/auth/v1/callback`.
 4. Crear cliente OAuth **Android** (paquete + huella SHA-1 de cada llave de
@@ -85,8 +87,9 @@ flowchart LR
 8. Configurar la **duración del JWT en 900 s** (15 min). Los refresh tokens
    rotan automáticamente.
 9. Cargar el correo del **primer administrador** (§9).
-10. Probar: cuenta invitada entra; cuenta no invitada del dominio es
-    rechazada; cuenta personal de Gmail es rechazada por Google.
+10. Probar: cuenta invitada (y Test user) entra; cuenta de Gmail que es Test
+    user pero no está invitada es rechazada por el hook; cuenta de Gmail que
+    no es Test user es rechazada por Google.
 11. Verificar que en la nube `auth.proveedores_permitidos` vale `["google"]`
     y que el proveedor de correo está deshabilitado en Supabase Auth (lo
     comprueba la prueba de humo del despliegue).
@@ -114,7 +117,7 @@ sequenceDiagram
 
   E->>App: "Entrar con Google"
   App->>G: google_sign_in (móvil) / redirección (web)
-  G-->>App: id_token (solo si la cuenta es del Workspace)
+  G-->>App: id_token (solo si la cuenta es Test user)
   App->>SA: signInWithIdToken(google, id_token)
   SA->>DB: Hook antes_de_crear_usuario(evento)
   alt sin invitación vigente o dominio no permitido
@@ -144,12 +147,13 @@ suspendida. Comunícate con el administrador."*
 
 Flujo OAuth estándar con **PKCE** (`signInWithOAuth`). El parámetro
 `hd=<dominio>` se envía solo como **pista** para que Google preseleccione la
-cuenta corporativa; la seguridad real la dan la pantalla Interna y el hook.
+cuenta de Google; la seguridad real la dan la lista de Test users, la
+invitación y el hook.
 
 ```dart
 await supabase.auth.signInWithOAuth(
   OAuthProvider.google,
-  queryParams: {'hd': 'ritech.com.co', 'prompt': 'select_account'}, // dominio de ejemplo
+  queryParams: {'hd': 'gmail.com', 'prompt': 'select_account'}, // dominio permitido (Q-08)
 );
 ```
 
@@ -205,7 +209,7 @@ begin
     where clave = 'auth.proveedores_permitidos'
       and valor ? coalesce(v_proveedor, '')
   ) then
-    return private.error_auth(403, 'Solo puedes ingresar con tu cuenta de Google de RiTech.');
+    return private.error_auth(403, 'Solo puedes ingresar con tu cuenta de Google.');
   end if;
 
   if not exists (
@@ -213,7 +217,7 @@ begin
     where clave = 'auth.dominios_permitidos'
       and valor ? v_dominio                      -- valor es un arreglo JSON
   ) then
-    return private.error_auth(403, 'Solo se admiten cuentas corporativas de RiTech.');
+    return private.error_auth(403, 'Solo se admiten cuentas de Google invitadas.');
   end if;
 
   if not exists (
@@ -393,14 +397,14 @@ le crea un cupo nuevo en 0.
 
 | Situación | Mensaje |
 |---|---|
-| Cuenta fuera del Workspace | Lo muestra Google (la app Interna no la admite). |
-| Del dominio pero sin invitación / invitación vencida o revocada | "Tu correo no tiene una invitación vigente. Pídele una al administrador." |
-| Dominio que no está en `auth.dominios_permitidos` (§5) | "Solo se admiten cuentas corporativas de RiTech." |
-| Proveedor que no está en `auth.proveedores_permitidos` (§5, CB-92) | "Solo puedes ingresar con tu cuenta de Google de RiTech." |
+| Cuenta de Google que no es Test user | Lo muestra Google (la app en modo de prueba solo admite a los Test users). |
+| Dominio permitido pero sin invitación / invitación vencida o revocada | "Tu correo no tiene una invitación vigente. Pídele una al administrador." |
+| Dominio que no está en `auth.dominios_permitidos` (§5) | "Solo se admiten cuentas de Google invitadas." |
+| Proveedor que no está en `auth.proveedores_permitidos` (§5, CB-92) | "Solo puedes ingresar con tu cuenta de Google." |
 | Cuenta suspendida o de baja | "Tu cuenta está suspendida. Comunícate con el administrador." |
 | El usuario cerró la ventana de Google | Sin mensaje; vuelve a la pantalla de ingreso. |
 | Sin conexión | "No hay conexión. Revisa tu internet e inténtalo de nuevo." |
 | Error inesperado | "No pudimos iniciar tu sesión. Inténtalo de nuevo." (el detalle va al registro técnico, no a la pantalla) |
 
-Casos borde de identidad (cambio de correo en Workspace, reingreso tras una
+Casos borde de identidad (cambio de correo en la cuenta de Google, reingreso tras una
 baja, invitación duplicada, etc.) en [12 · Casos borde](12-casos-borde.md#1-identidad-y-acceso).

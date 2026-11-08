@@ -10,14 +10,14 @@ Cuando la respuesta ya está definida en otro documento, se cita.
 
 | ID | Situación | Qué hace el sistema | Ref. |
 |---|---|---|---|
-| CB-01 | Un empleado del dominio **sin invitación** intenta entrar | El hook de alta rechaza; no se crea el usuario; mensaje "Tu correo no tiene una invitación vigente…" | 04 §5 |
+| CB-01 | Un empleado con cuenta de Google permitida **sin invitación** intenta entrar | El hook de alta rechaza; no se crea el usuario; mensaje "Tu correo no tiene una invitación vigente…" | 04 §5 |
 | CB-02 | La invitación **venció** (7 días) | Igual que CB-01. El admin crea una invitación nueva. | 04 §5 |
 | CB-03 | El admin invita un correo que **ya tiene cuenta** | `CORREO_YA_REGISTRADO`. Si la cuenta está de baja, se ofrece reincorporar (CB-06). | 06 §9 |
 | CB-04 | El admin invita **dos veces** el mismo correo | `INVITACION_DUPLICADA`. Puede revocar la vigente y crear otra. | 06 §5.1 |
-| CB-05 | Workspace **cambia el correo** de un empleado | La identidad está ligada al identificador de Google, no al correo. En el siguiente ingreso Supabase actualiza `auth.users` y un trigger sincroniza `perfiles.email` y lo audita. | RN-58 |
+| CB-05 | Google **cambia el correo** de la cuenta de un empleado | La identidad está ligada al identificador de Google, no al correo. En el siguiente ingreso Supabase actualiza `auth.users` y un trigger sincroniza `perfiles.email` y lo audita. | RN-58 |
 | CB-06 | Un empleado dado de baja **vuelve a la empresa** | El admin usa "Reincorporar": la cuenta vuelve a `activo` con un **cupo nuevo en 0**; el cupo viejo sigue cerrado con su historial. | 08 §5 |
 | CB-07 | Se suspende a alguien **con la app abierta** | RLS le corta los datos al instante; evento `sesion_revocada` cierra su sesión; su cupo queda congelado. | 04 §10 |
-| CB-08 | Un empleado **pierde el teléfono** | Biometría y bloqueo protegen la app. El admin suspende la cuenta (o el admin de Workspace cierra sus sesiones de Google) y la reactiva cuando tenga otro dispositivo. | 04 §8 |
+| CB-08 | Un empleado **pierde el teléfono** | Biometría y bloqueo protegen la app. El admin suspende la cuenta (o la persona cierra sus sesiones desde su cuenta de Google) y la reactiva cuando tenga otro dispositivo. | 04 §8 |
 | CB-09 | Intento de suspender, dar de baja o cambiar de rol al **último admin**, o de aplicarse la acción **a sí mismo** | `ULTIMO_ADMIN` / `AUTO_ACCION`. | RN-50, RN-51 |
 | CB-10 | Cambio de rol con cosas vivas: Usuario con posiciones pasa a Analista; analista con una 1ª aprobación pendiente pasa a otro rol | `CUPO_CON_POSICIONES` (primero se liquida); la 1ª aprobación se anula y la sugerencia vuelve a `pendiente`. | RN-54, RN-56 |
 

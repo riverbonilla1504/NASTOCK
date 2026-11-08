@@ -57,7 +57,7 @@ Principios que no se negocian en ninguna historia de usuario:
 Actores no humanos: **IA principal** (código que orquesta), **DeepSeek**
 (contexto a partir de noticias), **JEV** de TypeSafe AI (decisión),
 **Broker** (Alpaca paper), **Datos de mercado y noticias** (Alpaca),
-**Google Workspace** (identidad), **Firebase** (push, hosting, distribución).
+**Google** (identidad: OAuth con cuentas de Gmail), **Firebase** (push, hosting, distribución).
 
 Detalle completo en [03 · Roles y permisos](03-roles-y-permisos.md).
 
@@ -89,7 +89,7 @@ de JEV y el desempeño de las sugerencias aprobadas contra las rechazadas.
 
 ### Entra
 
-- Ingreso **solo con Google Workspace** de RiTech, **solo por invitación**.
+- Ingreso **solo con cuenta de Google (Gmail) invitada**, **solo por invitación**.
 - Tres roles con permisos aplicados en la base de datos (RLS), no solo en
   pantalla.
 - Fondo único con bolsillos 50/25/25, cupos por empleado, libro contable.
@@ -124,7 +124,7 @@ de JEV y el desempeño de las sugerencias aprobadas contra las rechazadas.
 | Dinero real | Fuera del alcance | Sería otra etapa (producción) que no se planifica todavía. El MVP solo opera en paper trading. |
 | iOS | Fuera del MVP | Publicar exige la cuenta paga de desarrollador de Apple (el MVP solo usa herramientas gratuitas). El código Flutter queda compatible. |
 | Servicios pagos distintos de las IAs | Descartado en el MVP | Solo se pagan DeepSeek y JEV, por uso (D-45). |
-| Correo + contraseña | Descartado | Decisión D-12: solo Google Workspace (salvo usuarios de prueba en local y CI, D-48). |
+| Correo + contraseña | Descartado | Decisión D-12: solo cuenta de Google (salvo usuarios de prueba en local y CI, D-48). |
 | Autoregistro | Descartado | Empresa cerrada: solo invitación. |
 | Aprobar desde la notificación / pantalla bloqueada | Descartado | Se exige abrir la app y confirmar con biometría. |
 | Horario extendido (pre/post mercado) | Fase posterior | Menos liquidez, más riesgo; el broker solo acepta órdenes límite ahí. |
@@ -138,7 +138,7 @@ de JEV y el desempeño de las sugerencias aprobadas contra las rechazadas.
 
 | # | Supuesto | Si resulta falso |
 |---|---|---|
-| S1 | RiTech usa Google Workspace con dominio propio. | Pantalla de consentimiento Externa en modo prueba (04 §1); el resto no cambia. |
+| S1 | RiTech usa Google Workspace con dominio propio. **Falso** (2026-11-08): RiTech no tiene Google Workspace y el equipo entra con Gmail personal. | Consecuencia aplicada: pantalla de consentimiento Externa en modo prueba con cada persona como *Test user*, máximo 100 (Q-22); `auth.dominios_permitidos = ["gmail.com"]` en la nube (Q-08); la verificación en dos pasos se recomienda, no se exige (04 §1, 11 §2); el resto no cambia. |
 | S2 | La app sigue siendo **Flutter** (Android + web). | La arquitectura de backend no cambia; cambia solo el cliente. |
 | S3 | Moneda única **USD** (la del broker). | Agregar TRM para mostrar COP como referencia; nunca para contabilidad. |
 | S4 | Pocos usuarios concurrentes (decenas, no miles). | Revisar límites de Realtime y el plan de datos de mercado. |

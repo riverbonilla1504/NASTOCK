@@ -37,7 +37,7 @@ flowchart TB
   end
 
   subgraph EXT["Servicios externos"]
-    GOO["Google Workspace"]
+    GOO["Google (cuenta Gmail)"]
     ALP["Alpaca Trading<br/>paper"]
     ALD["Alpaca Market Data<br/>IEX + News"]
     DS["DeepSeek API<br/>(contexto)"]
@@ -117,7 +117,7 @@ flowchart TB
 
 | Servicio | Para qué | Costo en el MVP |
 |---|---|---|
-| **Google Workspace / Google Cloud** | Identidad (OAuth) | Gratis (OAuth) |
+| **Google Cloud** (cuentas de Gmail) | Identidad (OAuth) | Gratis (OAuth) |
 | **Alpaca** | Órdenes paper, precios IEX, noticias, calendario | Gratis |
 | **DeepSeek** | Contexto a partir de noticias (Sistema 2) | **Pago por uso** (~USD 3/mes) |
 | **TypeSafe JEV** | Decisiones tipadas con confianza calibrada (Sistema 1) | **Pago por uso** (~USD 1/mes) |
@@ -181,7 +181,7 @@ herramientas que ejecuten órdenes.
 | Tiempo real | Realtime con broadcast desde la base de datos |
 | Procesos programados | `pg_cron` + `pg_net` |
 | Trabajo confiable | `pgmq` |
-| OAuth corporativo | Auth con Google + hooks |
+| OAuth con Google (Gmail invitado) | Auth con Google + hooks |
 | Pruebas locales completas | CLI de Supabase con Docker: el mismo stack en el portátil y en CI |
 | **Límite**: funciones cortas | 150 s y 2 s de CPU por ejecución: el ciclo de decisión (JEV, milisegundos) va separado del contexto (DeepSeek, segundos) y todo proceso largo se parte en pasos. |
 | **Límite**: sin procesos siempre encendidos | Precios cada 15 s por REST en vez de WebSocket. Suficiente para un flujo con aprobación humana. |
