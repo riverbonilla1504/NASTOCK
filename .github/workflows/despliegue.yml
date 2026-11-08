@@ -76,7 +76,7 @@ jobs:
           ref: ${{ env.REF }}
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.122.0 # la misma que se usa en local; la 3 apunta db push al stack local (EC-024)
       - run: supabase link --project-ref "${{ vars.SUPABASE_PROJECT_REF }}"
       - run: supabase db push
       - name: Secretos de las Edge Functions (proveedores reales, nunca simulados)
