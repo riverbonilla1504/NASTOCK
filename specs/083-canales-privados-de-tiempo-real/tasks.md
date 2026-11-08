@@ -10,7 +10,7 @@
 
 ## Fase 2: Pruebas
 
-- [ ] T004 [US1] `supabase/tests/database/08_realtime_canales_test.sql`: cada canal por rol, cuenta no activa, publicación de clientes bloqueada, carga sin montos (CA-1 a CA-5)
+- [x] T004 [US1] `supabase/tests/database/08_realtime_canales_test.sql`: cada canal por rol, cuenta no activa, publicación de clientes bloqueada, carga sin montos (CA-1 a CA-5)
 
 ## Fase 3: Cierre
 
