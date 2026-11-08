@@ -8,7 +8,7 @@ Solo se crea una cuenta si el proveedor y el dominio están permitidos y existe 
 
 ## Contexto técnico
 
-SQL/PL/pgSQL en Supabase local; pgTAP en `supabase/tests/database/`; E2E de backend en Deno contra Auth real. Módulos: M-01 y M-02 (`docs/17`). Cambios a `docs/` de esta historia, registrados en `docs/13` §4 (3.18) y pendientes de la confirmación de Javier: acción `cuenta.correo_cambiado` (`docs/11` §4.1) y dominios vacíos en la migración (`docs/02` §13, Q-08).
+SQL/PL/pgSQL en Supabase local; pgTAP en `supabase/tests/database/`; E2E de backend en Deno contra Auth real. Módulos: M-01 y M-02 (`docs/17`). Cambios a `docs/` de esta historia, registrados en `docs/13` §4 (3.19) y pendientes de la confirmación de Javier: acción `cuenta.correo_cambiado` (`docs/11` §4.1) y dominios vacíos en la migración (`docs/02` §13, Q-08).
 
 ## Revisión de la constitución
 

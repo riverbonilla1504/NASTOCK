@@ -6,7 +6,7 @@ description: "Tareas de HU-002 · Alta solo con invitación vigente"
 
 **Entrada**: [plan.md](plan.md), [spec.md](spec.md).
 
-- [x] T001 Docs: `cuenta.correo_cambiado` (docs/11 §4.1), dominios vacíos (docs/02 §13), historial 3.18 (docs/13 §4)
+- [x] T001 Docs: `cuenta.correo_cambiado` (docs/11 §4.1), dominios vacíos (docs/02 §13), historial 3.19 (docs/13 §4)
 - [x] T002 Migración `20261107150000_invitaciones.sql`: tipo `estado_invitacion`, tabla, índice único, llave foránea de `perfiles`, RLS
 - [x] T003 Migración `20261107150002_parametros.sql`: tabla, RLS y las dos claves
 - [x] T004 Migración `20261107150004_hook_antes_de_crear_usuario.sql`: `private.error_auth`, hook y permisos; registro en `config.toml`
