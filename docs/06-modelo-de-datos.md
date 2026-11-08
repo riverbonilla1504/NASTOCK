@@ -892,7 +892,7 @@ Las Edge Functions las ejecutan por conexión directa a Postgres, con
 | `registrar_salud(integracion, ok, error)` | `salud_integraciones`. |
 | `suspender_cuenta`, `reactivar_cuenta`, `dar_de_baja`, `reincorporar` | Parte de base de datos de la Edge Function `admin-usuarios`. |
 | `mercado_abierto()`, `mercado_en_ventana(margen)`, `ventana_compras_abierta()` | Horario (RN-41, RR-07). |
-| `margenes_de_compra()` | Minutos tras la apertura y antes del cierre en que no se compra (RR-07). Devuelve 5 y 15 (02 §10) hasta que la tabla `parametros` exista; HU-033 cambia su cuerpo para leer `mercado.minutos_tras_apertura` y `mercado.minutos_antes_cierre`. |
+| `margenes_de_compra()` | Minutos tras la apertura y antes del cierre en que no se compra (RR-07). Lee `mercado.minutos_tras_apertura` y `mercado.minutos_antes_cierre` de `parametros` (defectos 5 y 15, 02 §10). |
 | `sincronizar_calendario(desde, hasta, datos)`, `sincronizar_activos(datos)` | Las llama `calendario-mercado`: guardan el calendario del broker (borrando lo que ya no lista dentro del rango) y los atributos `fraccionable` y `negociable` de la lista blanca, y desactivan el símbolo que deja de ser negociable (10 §1, §10 y §12). |
 | `cierre_diario_pendiente()` | Condición del trabajo `cierre_diario` (05 §7): el mercado ya cerró hoy (calendario, fecha de Nueva York) y a algún símbolo del universo le falta su barra diaria de hoy. Sin sesión (feriado, fin de semana) nunca es verdadera. |
 | `limpiar_barras_minuto()` | Retención de `barras_minuto` (§10): borra las de más de 5 días y las de símbolos que no son ETF (`lista_blanca` con `en_nasdaq100` falso, más QQQ) ni tienen una posición sin cerrar; la tabla `posiciones` se incluye apenas existe. La llama el trabajo `limpieza`. |
