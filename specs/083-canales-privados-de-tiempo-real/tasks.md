@@ -15,4 +15,4 @@
 ## Fase 3: Cierre
 
 - [x] T005 Actualizar M-13 en `docs/17-mapa-de-modulos.md`
-- [ ] T006 `scripts/verificar.sh` completo en verde
+- [x] T006 `scripts/verificar.sh` completo en verde
