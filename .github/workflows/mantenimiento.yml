@@ -1,106 +1,185 @@
-# Mantenimiento del plan gratuito (docs/15 §5):
-#  - diario: ping() para que Supabase no pause el proyecto y respaldo cifrado
-#    (el plan gratuito no incluye respaldos);
-#  - semanal: prueba real mínima contra Alpaca paper, DeepSeek y JEV.
+# Mantenimiento del plan gratuito (docs/15 §5 y §6):
+#  - diario: ping() para que Supabase no pause el proyecto (FR-008, CB-93) y respaldo
+#    cifrado (el plan gratuito no incluye respaldos; FR-010, D-55);
+#  - semanal: prueba real mínima contra Alpaca paper, DeepSeek y JEV (FR-011, RSG-03).
+# Un trabajo que falla deja el flujo en rojo y GitHub avisa por correo a quien lo programó.
+# Secretos y variables que necesita: docs/16 §4.1.
 name: Mantenimiento
 
 on:
   schedule:
     - cron: "0 12 * * *" # diario, 12:00 UTC (7:00 en Bogotá)
     - cron: "0 13 * * 1" # lunes, 13:00 UTC: prueba real semanal
-  workflow_dispatch:
+  workflow_dispatch: # a mano corre todo: ping, respaldo y prueba real
+
+concurrency:
+  group: mantenimiento
+  cancel-in-progress: false
 
 permissions:
   contents: read
 
 jobs:
+  detectar:
+    name: Detectar proyecto
+    # El lunes de las 13:00 solo corre la prueba semanal: el ping y el respaldo ya corrieron a las 12:00.
+    if: github.event.schedule != '0 13 * * 1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      configurado: ${{ steps.d.outputs.configurado }}
+    steps:
+      - id: d
+        env:
+          URL: ${{ vars.SUPABASE_URL }}
+          LLAVE: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          if [ -n "$URL" ] && [ -n "$LLAVE" ]; then
+            echo "configurado=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configurado=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Faltan las variables SUPABASE_URL o SUPABASE_PUBLISHABLE_KEY: no hay proyecto al que hacer ping ni respaldar (docs/16 §4.1)."
+          fi
+
   mantener-activo:
     name: Mantener activo el proyecto
-    if: vars.SUPABASE_URL != ''
+    needs: detectar
+    if: needs.detectar.outputs.configurado == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: ping()
         env:
           URL: ${{ vars.SUPABASE_URL }}
           LLAVE: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
         run: |
-          codigo=$(curl -s -o respuesta.txt -w "%{http_code}" -X POST "$URL/rest/v1/rpc/ping" \
-            -H "apikey: $LLAVE" -H "Content-Type: application/json" -d '{}')
-          if [ "$codigo" = "404" ]; then
-            echo "::warning::ping() todavía no existe (llega con las migraciones de E-01)."
-            exit 0
-          fi
+          # Un proyecto pausado, caído o sin la función no responde 200 con la hora: el flujo
+          # falla y GitHub avisa (CB-93). No hay reintentos: un fallo suelto se ve en el correo.
+          codigo=$(curl -sS --max-time 30 -o respuesta.txt -w "%{http_code}" -X POST "$URL/rest/v1/rpc/ping" \
+            -H "apikey: $LLAVE" -H "Content-Type: application/json" -d '{}') || codigo=000
           if [ "$codigo" != "200" ]; then
-            echo "::error::ping() respondió $codigo: el proyecto podría estar pausado."
-            cat respuesta.txt
+            echo "::error title=ping() sin respuesta::ping() respondió $codigo. El proyecto podría estar pausado: reactivarlo desde el panel de Supabase (CB-93)."
+            head -c 500 respuesta.txt || true
             exit 1
           fi
-          echo "Proyecto activo."
+          # ping() devuelve la hora del servidor como texto JSON, p. ej. "2026-11-08T12:00:03.1+00:00".
+          if ! grep -Eq '^"[0-9]{4}-[0-9]{2}-[0-9]{2}T' respuesta.txt; then
+            echo "::error title=ping() devolvió algo inesperado::Se esperaba la hora del servidor."
+            head -c 500 respuesta.txt || true
+            exit 1
+          fi
+          echo "Proyecto activo. Latido: $(cat respuesta.txt)" | tee -a "$GITHUB_STEP_SUMMARY"
 
   respaldo:
     name: Respaldo cifrado
-    if: vars.SUPABASE_URL != ''
+    needs: detectar
+    if: needs.detectar.outputs.configurado == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: supabase/setup-cli@v1
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v3
         with:
           version: 2.122.0 # la misma que se usa en local (EC-024)
       - name: Volcado y cifrado
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-          CLAVE: ${{ secrets.RESPALDO_CLAVE_GPG }}
+          RESPALDO_CLAVE_GPG: ${{ secrets.RESPALDO_CLAVE_GPG }}
         run: |
-          set -euo pipefail
-          if [ -z "$SUPABASE_DB_URL" ] || [ -z "$CLAVE" ]; then
-            echo "::warning::Faltan SUPABASE_DB_URL o RESPALDO_CLAVE_GPG: no se hizo respaldo."
-            exit 0
-          fi
-          supabase db dump --db-url "$SUPABASE_DB_URL" -f esquema.sql
-          supabase db dump --db-url "$SUPABASE_DB_URL" --data-only --schema public,auth -f datos.sql
-          tar czf respaldo.tar.gz esquema.sql datos.sql
-          gpg --batch --yes --pinentry-mode loopback --passphrase "$CLAVE" \
-            --symmetric --cipher-algo AES256 \
-            -o "respaldo-$(date -u +%Y%m%d).tar.gz.gpg" respaldo.tar.gz
-          rm -f esquema.sql datos.sql respaldo.tar.gz
-      - uses: actions/upload-artifact@v4
+          # Sin los secretos no hay respaldo, y un respaldo que no existe no debe pasar por bueno.
+          for v in SUPABASE_DB_URL RESPALDO_CLAVE_GPG; do
+            [ -n "${!v}" ] || { echo "::error::Falta el secreto $v: hoy no hay respaldo (docs/16 §4.1)."; exit 1; }
+          done
+          mkdir respaldo
+          scripts/mantenimiento/respaldar.sh respaldo
+      - uses: actions/upload-artifact@v7
         with:
           name: respaldo-${{ github.run_id }}
-          path: respaldo-*.gpg
+          path: respaldo/respaldo-*.tar.gz.gpg
           retention-days: 7
-          if-no-files-found: ignore
+          if-no-files-found: error
 
   prueba-real:
     name: Prueba real semanal (solo lectura, costo mínimo)
     if: github.event.schedule == '0 13 * * 1' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
       DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
       TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
     steps:
-      - name: Alpaca paper (cuenta)
-        if: env.ALPACA_KEY_ID != ''
+      - uses: actions/checkout@v7
+      # Cada proveedor se prueba cuando existe su adaptador real: así la prueba cubre lo que el
+      # sistema usa de verdad y no gasta en lo que todavía no se construye (D-59: el MVP corto no
+      # usa noticias ni DeepSeek; JEV llega con R3). Sin adaptador el paso queda desactivado; cuando
+      # el archivo aparece, se activa solo. Quien construya el adaptador revisa aquí la llamada.
+      - name: Qué proveedores tienen adaptador real
+        id: plan
         run: |
-          curl -fsS -o /dev/null \
+          activar() { # nombre, comprobación
+            if eval "$2"; then
+              echo "$1=true" >> "$GITHUB_OUTPUT"
+              echo "| $1 | se prueba |" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "$1=false" >> "$GITHUB_OUTPUT"
+              echo "| $1 | desactivada: aún no existe su adaptador real |" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          }
+          printf '| Proveedor | Estado |\n|---|---|\n' >> "$GITHUB_STEP_SUMMARY"
+          activar alpaca     '[ -f supabase/functions/_shared/broker/alpaca.ts ]'
+          activar noticias   '[ -f supabase/functions/_shared/noticias/alpaca.ts ]'
+          activar deepseek   'compgen -G "supabase/functions/_shared/ia/contexto*" > /dev/null'
+          activar jev        '[ -f supabase/functions/_shared/ia/jev.ts ]'
+
+      - name: Alpaca paper (cuenta, solo lectura)
+        if: steps.plan.outputs.alpaca == 'true'
+        run: |
+          [ -n "$ALPACA_KEY_ID" ] && [ -n "$ALPACA_SECRET_KEY" ] \
+            || { echo "::error::Faltan ALPACA_KEY_ID o ALPACA_SECRET_KEY (docs/16 §4.1)"; exit 1; }
+          codigo=$(curl -sS --max-time 30 -o /dev/null -w "%{http_code}" \
             -H "APCA-API-KEY-ID: $ALPACA_KEY_ID" -H "APCA-API-SECRET-KEY: $ALPACA_SECRET_KEY" \
-            https://paper-api.alpaca.markets/v2/account
+            https://paper-api.alpaca.markets/v2/account) || codigo=000
+          [ "$codigo" = "200" ] || { echo "::error title=Alpaca paper::GET /v2/account respondió $codigo"; exit 1; }
+          echo "Alpaca paper: cuenta legible."
+
       - name: Alpaca News (acceso)
-        if: env.ALPACA_KEY_ID != ''
+        if: steps.plan.outputs.noticias == 'true'
         run: |
-          codigo=$(curl -s -o /dev/null -w "%{http_code}" \
+          [ -n "$ALPACA_KEY_ID" ] && [ -n "$ALPACA_SECRET_KEY" ] \
+            || { echo "::error::Faltan ALPACA_KEY_ID o ALPACA_SECRET_KEY (docs/16 §4.1)"; exit 1; }
+          codigo=$(curl -sS --max-time 30 -o /dev/null -w "%{http_code}" \
             -H "APCA-API-KEY-ID: $ALPACA_KEY_ID" -H "APCA-API-SECRET-KEY: $ALPACA_SECRET_KEY" \
-            "https://data.alpaca.markets/v1beta1/news?symbols=AAPL&limit=1")
-          [ "$codigo" = "200" ] || { echo "::error::Alpaca News respondió $codigo (ver EC-004)"; exit 1; }
-      - name: DeepSeek
-        if: env.DEEPSEEK_API_KEY != ''
+            "https://data.alpaca.markets/v1beta1/news?symbols=AAPL&limit=1") || codigo=000
+          [ "$codigo" = "200" ] || { echo "::error title=Alpaca News::respondió $codigo (ver EC-004)"; exit 1; }
+          echo "Alpaca News: acceso correcto."
+
+      - name: DeepSeek (una llamada de 20 tokens)
+        if: steps.plan.outputs.deepseek == 'true'
         run: |
-          curl -fsS -o /dev/null https://api.deepseek.com/chat/completions \
+          [ -n "$DEEPSEEK_API_KEY" ] || { echo "::error::Falta DEEPSEEK_API_KEY (docs/16 §4.1)"; exit 1; }
+          # El modelo es un parámetro del sistema (ia.modelo_contexto, EC-006): si DeepSeek lo retira,
+          # esta prueba es la que lo detecta; al cambiarlo en el sistema, cambiarlo aquí.
+          codigo=$(curl -sS --max-time 60 -o respuesta.json -w "%{http_code}" https://api.deepseek.com/chat/completions \
             -H "Authorization: Bearer $DEEPSEEK_API_KEY" -H "Content-Type: application/json" \
-            -d '{"model":"deepseek-flash","max_tokens":20,"messages":[{"role":"user","content":"Responde en json: {\"ok\": true}"}],"response_format":{"type":"json_object"}}'
-      - name: JEV (TypeSafe)
-        if: env.TYPESAFE_API_KEY != ''
+            -d '{"model":"deepseek-flash","max_tokens":20,"messages":[{"role":"user","content":"Responde en json: {\"ok\": true}"}],"response_format":{"type":"json_object"}}') || codigo=000
+          [ "$codigo" = "200" ] || { echo "::error title=DeepSeek::respondió $codigo (¿modelo retirado? ver EC-006)"; exit 1; }
+          # EC-005: el modo JSON a veces devuelve contenido vacío.
+          jq -e '.choices[0].message.content | length > 0' respuesta.json > /dev/null \
+            || { echo "::error title=DeepSeek::respondió 200 pero sin contenido (EC-005)"; exit 1; }
+          echo "DeepSeek: respuesta con contenido."
+
+      - name: JEV (TypeSafe, una llamada)
+        if: steps.plan.outputs.jev == 'true'
         run: |
-          curl -fsS -o /dev/null -X POST https://api.typesafe.ai/v1/systemone \
+          # JEV también puede venir de Cloudflare Workers AI (docs/16 §3.6); esa ruta no se prueba aquí.
+          if [ -z "$TYPESAFE_API_KEY" ]; then
+            echo "::warning title=JEV::Sin TYPESAFE_API_KEY: no se probó JEV (¿se usa Cloudflare?)."
+            exit 0
+          fi
+          codigo=$(curl -sS --max-time 60 -o /dev/null -w "%{http_code}" -X POST https://api.typesafe.ai/v1/systemone \
             -H "Authorization: Bearer $TYPESAFE_API_KEY" -H "Content-Type: application/json" \
-            -d '{"state":"Weekly connectivity test.","model":"jev-1.13.0","questions":{"is_test":{"type":"noul","instructions":"Is this a test message?"}}}'
+            -d '{"state":"Weekly connectivity test.","model":"jev-1.13.0","questions":{"is_test":{"type":"noul","instructions":"Is this a test message?"}}}') || codigo=000
+          [ "$codigo" = "200" ] || { echo "::error title=JEV::respondió $codigo (¿versión retirada? ver RSG-03)"; exit 1; }
+          echo "JEV: respuesta correcta."
