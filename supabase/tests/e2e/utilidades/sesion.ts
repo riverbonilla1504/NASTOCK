@@ -93,6 +93,8 @@ export interface UsuarioDePrueba {
   sesion: Sesion;
   id: string;
   correo: string;
+  /** Su contraseña, para volver a iniciar sesión (p. ej. tras cambiar su estado) y obtener un token nuevo. */
+  contrasena: string;
   /** Borra el perfil y el usuario. Llamarlo siempre al terminar (en un `finally`). */
   eliminar(): Promise<void>;
 }
@@ -155,6 +157,7 @@ export async function crearUsuarioDePrueba(
       sesion: await iniciarSesion(correo, contrasena),
       id,
       correo,
+      contrasena,
       eliminar,
     };
   } catch (error) {
