@@ -96,10 +96,10 @@ select is(private.antes_de_crear_usuario('{"user": {"email": "aceptada@ritech.te
             -> 'error' ->> 'message',
           'Tu correo no tiene una invitación vigente. Pídele una al administrador.', 'una invitación ya aceptada no sirve');
 select is(private.antes_de_crear_usuario('{"user": {"email": "otrodominio@otra.test", "app_metadata": {"provider": "google"}}}'),
-          '{"error": {"http_code": 403, "message": "Solo se admiten cuentas corporativas de RiTech."}}'::jsonb,
+          '{"error": {"http_code": 403, "message": "Solo se admiten cuentas de Google invitadas."}}'::jsonb,
           'CA-4: dominio no permitido, rechaza con su mensaje aunque haya invitación');
 select is(private.antes_de_crear_usuario('{"user": {"email": "vigente@ritech.test", "app_metadata": {"provider": "email"}}}'),
-          '{"error": {"http_code": 403, "message": "Solo puedes ingresar con tu cuenta de Google de RiTech."}}'::jsonb,
+          '{"error": {"http_code": 403, "message": "Solo puedes ingresar con tu cuenta de Google."}}'::jsonb,
           'CA-5 (CB-92): proveedor de correo no permitido, rechaza con su mensaje');
 select is(private.antes_de_crear_usuario('{"user": {"email": "vigente@ritech.test", "app_metadata": {}}}') -> 'error' ->> 'http_code',
           '403', 'sin proveedor informado, rechaza');
