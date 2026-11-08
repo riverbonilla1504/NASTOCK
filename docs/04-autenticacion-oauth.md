@@ -354,12 +354,27 @@ Sin administrador nadie puede invitar a nadie. El arranque se resuelve en el
 despliegue, **nunca con credenciales en el código de la app** (como pasaba en
 la v2 con `admin@admin.com / 1234`):
 
-1. La migración de arranque lee el correo de una variable de configuración
-   del entorno (`ADMIN_INICIAL_EMAIL`) y crea una **invitación** con rol
-   `administrador` y vencimiento de 7 días.
-2. Esa persona entra con Google y queda como administrador activo.
-3. La migración no hace nada si ya existe al menos un administrador (es
-   idempotente).
+1. El correo llega como el secreto de GitHub `ADMIN_INICIAL_EMAIL`
+   ([16 §4.1](16-arranque-del-repositorio.md#41-github-actions)).
+   `supabase/config.toml` lo declara en `[db.vault]` y `supabase db push` lo
+   guarda en Vault (`admin_inicial_email`) antes de aplicar las migraciones
+   pendientes. Una migración no lee variables de entorno; sí lee Vault. El
+   despliegue falla antes de `db push` si el secreto no está cargado.
+2. La migración de arranque llama a `private.crear_invitacion_inicial()`, que
+   lee ese valor y crea una **invitación** con rol `administrador`,
+   `creada_por` nulo y vencimiento de 7 días. En la nube deja además
+   `auth.dominios_permitidos = ["gmail.com"]` (Q-08).
+3. Esa persona entra con su Gmail (que también debe estar en la lista de
+   *Test users*, §1) y queda como administrador activo.
+4. Es idempotente: no hace nada si ya existe al menos un administrador, si ya
+   hay una invitación pendiente para ese correo o si no hay correo
+   configurado (local y CI, donde la semilla ya trae al administrador de
+   prueba).
+
+La migración corre **una sola vez** por proyecto. Si el secreto se cargó mal o
+la invitación venció sin usarse, se corrige con una migración nueva que vuelva
+a llamar a la función (migraciones solo hacia adelante: nunca se edita la nube
+a mano). Vault se sincroniza solo cuando hay migraciones pendientes.
 
 ---
 

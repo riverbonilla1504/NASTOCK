@@ -375,7 +375,7 @@ ruta /riesgo/* y rol ≠ analista (el admin entra en modo lectura) → /inicio
 |---|---|
 | Secretos de Edge Functions (`supabase secrets set`, sincronizados por el despliegue) | `ENTORNO`, `PROVEEDOR_*`, `ALPACA_KEY_ID`, `ALPACA_SECRET_KEY`, `ALPACA_TRADING_URL`, `ALPACA_DATA_URL`, `DEEPSEEK_API_KEY`, `DEEPSEEK_BASE_URL`, `TYPESAFE_API_KEY` (o `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_API_TOKEN`), `JEV_PROVEEDOR`, `FCM_CUENTA_SERVICIO`, `SECRETO_INTERNO` |
 | Los da la plataforma a las Edge Functions (nadie los configura) | `SUPABASE_URL`, `SUPABASE_DB_URL` (conexión directa a Postgres, D-66) y la llave secreta de Supabase, que solo usa `admin-usuarios`. En local los entrega `supabase functions serve` |
-| Vault (para SQL) | `url_funciones`, `secreto_interno` |
+| Vault (para SQL) | `url_funciones`, `secreto_interno` y `admin_inicial_email` (lo sube `supabase db push` desde `[db.vault]`, 04 §9) |
 | Secretos y variables de GitHub Actions | Ver [16 §4](16-arranque-del-repositorio.md#4-secretos-y-variables) |
 | App (`--dart-define`, no son secretos) | `SUPABASE_URL`, llave publicable, IDs de clientes OAuth, configuración de Firebase, `MODO_PRUEBAS` (solo en CI) |
 | `.env` local (nunca en git) | Copia de `.env.example` con llaves propias si se quiere usar proveedores reales en local |

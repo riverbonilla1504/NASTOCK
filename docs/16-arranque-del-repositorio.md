@@ -167,6 +167,7 @@ curl -s -X POST https://api.typesafe.ai/v1/systemone \
 | `SUPABASE_ACCESS_TOKEN` | Secreto | Cuenta de Supabase | despliegue |
 | `SUPABASE_DB_PASSWORD` | Secreto | Creación del proyecto | despliegue |
 | `SUPABASE_DB_URL` | Secreto | Panel de Supabase (cadena de conexión) | respaldo |
+| `ADMIN_INICIAL_EMAIL` | Secreto | Gmail del primer administrador (Q-08); cargarlo **antes** de integrar HU-004 | despliegue (→ Vault, 04 §9) |
 | `ALPACA_KEY_ID`, `ALPACA_SECRET_KEY` | Secreto | Alpaca (paper) | despliegue (→ funciones), prueba semanal |
 | `DEEPSEEK_API_KEY` | Secreto | DeepSeek | despliegue (→ funciones), prueba semanal |
 | `TYPESAFE_API_KEY` (o `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_API_TOKEN`) | Secreto | TypeSafe / Cloudflare | despliegue (→ funciones), prueba semanal |
