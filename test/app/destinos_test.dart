@@ -97,10 +97,22 @@ void main() {
       }
     });
 
-    test('Administración trae la subruta de invitaciones (HU-003)', () {
-      final admin = destinosDelMvp.firstWhere((d) => d.ruta == Rutas.admin);
-      expect(admin.subrutas.map((r) => r.path), ['usuarios']);
-    });
+    test(
+      'Administración trae las subrutas de sus secciones (HU-003, HU-099)',
+      () {
+        final admin = destinosDelMvp.firstWhere((d) => d.ruta == Rutas.admin);
+        expect(
+          admin.subrutas.map((r) => r.path),
+          containsAll(['usuarios', 'capital']),
+        );
+        expect(seccionDeAdministracionDisponible(Rutas.adminCapital), isTrue);
+        expect(seccionDeAdministracionDisponible(Rutas.adminUsuarios), isTrue);
+        expect(
+          seccionDeAdministracionDisponible('/admin/inexistente'),
+          isFalse,
+        );
+      },
+    );
   });
 
   group('destinoDeRuta', () {
