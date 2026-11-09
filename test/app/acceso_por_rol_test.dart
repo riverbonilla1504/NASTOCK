@@ -50,6 +50,7 @@ void main() {
       for (final ruta in [
         '/admin',
         '/admin/usuarios',
+        '/admin/cupos',
         '/admin/capital/aportes',
       ]) {
         expect(
