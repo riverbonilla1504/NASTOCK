@@ -9,6 +9,7 @@ import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
 import 'package:inversiones/features/auth/presentation/sesion_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show Session;
 
+import '../core/realtime/falsos.dart';
 import '../features/auth/falsos.dart';
 
 const _entornoConfigurado = Entorno(
@@ -44,6 +45,7 @@ Future<void> _abrirApp(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        ...tiempoRealEnMemoria(),
         entornoProvider.overrideWithValue(entorno),
         ingresoRepositorioProvider.overrideWithValue(repo),
         if (sesionFija != null)

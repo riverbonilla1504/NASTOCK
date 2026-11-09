@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/realtime/activador_de_tiempo_real.dart';
 import 'enrutador.dart';
 import 'tema.dart';
 
@@ -18,6 +19,8 @@ class Aplicacion extends ConsumerWidget {
       darkTheme: crearTemaOscuro(),
       themeMode: ThemeMode.system,
       routerConfig: ref.watch(enrutadorProvider),
+      // Canales en vivo y reloj corregido, mientras haya sesión (HU-084).
+      builder: (context, hijo) => ActivadorDeTiempoReal(hijo: hijo!),
     );
   }
 }
