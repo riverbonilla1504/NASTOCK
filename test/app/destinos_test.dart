@@ -82,9 +82,9 @@ void main() {
     });
 
     test(
-      'Mercado y Administración tienen pantalla propia; el resto, marcador',
+      'Mercado, Oportunidades y Administración tienen pantalla propia; el resto, marcador',
       () {
-        const conPantalla = {Rutas.inicio, Rutas.admin};
+        const conPantalla = {Rutas.inicio, Rutas.oportunidades, Rutas.admin};
         for (final destino in destinosDelMvp) {
           expect(
             destino.pantalla == null,
