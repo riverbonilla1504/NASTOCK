@@ -61,6 +61,6 @@ La historia no agrega entidades. Usa estas (`docs/06` §4, §5.1 y §5.5):
 
 - Depende de HU-013 · Libro contable de doble partida: el cupo es una subcuenta del libro.
 - Depende de HU-002 · Alta solo con invitación vigente: extiende el trigger de alta.
-- Depende de HU-085 · Alertas del sistema por audiencia: crea la alerta `cupo_inicial_no_asignado`.
+- Depende de HU-085 · Alertas del sistema por audiencia: crea la alerta `cupo_inicial_no_asignado`. HU-085 aún no está en `main` (no existe `alertas`): HU-017 deja el cupo en 0 y un aviso (WARNING) en el registro de Postgres; la alerta se conecta al construir HU-085.
 - Si el cupo inicial no se puede asignar, el ingreso no falla (`docs/04` §6).
 - Cuando el cupo inicial se asigna, queda registrado en la bitácora.

@@ -67,6 +67,8 @@ async function existeUsuario(sql: Sql, correo: string): Promise<boolean> {
 async function limpiar(sql: Sql, correos: string[]) {
   for (const correo of correos) {
     await sql`update public.invitaciones set usuario_id = null where lower(email) = ${correo}`;
+    // El alta de un Usuario crea su cupo en 0 (HU-017): se quita antes del perfil.
+    await sql`delete from public.subcuentas where usuario_id in (select id from public.perfiles where email = ${correo})`;
     await sql`delete from public.perfiles where email = ${correo}`;
     await sql`delete from public.invitaciones where lower(email) = ${correo}`;
     await sql`delete from auth.identities where lower(email) = ${correo}`;
