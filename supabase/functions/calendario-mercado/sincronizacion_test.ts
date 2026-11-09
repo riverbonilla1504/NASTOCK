@@ -140,6 +140,10 @@ Deno.test("activos: sin símbolos en el universo no llama al broker ni guarda", 
       reloj: () => Promise.reject(new Error("no debería llamarse")),
       activos: () => Promise.reject(new Error("no debería llamarse")),
       cuenta: () => Promise.reject(new Error("no debería llamarse")),
+      enviarOrden: () => Promise.reject(new Error("no debería llamarse")),
+      consultarOrden: () => Promise.reject(new Error("no debería llamarse")),
+      cancelarOrden: () => Promise.reject(new Error("no debería llamarse")),
+      posiciones: () => Promise.reject(new Error("no debería llamarse")),
     },
   });
   assertEquals(resultado, {
