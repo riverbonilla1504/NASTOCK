@@ -116,6 +116,12 @@ class MercadoRepositorioFalso implements MercadoRepositorio {
     return estado_;
   }
 
+  /// Los últimos cierres diarios que devuelve `ultimosCierres`.
+  List<CierreDiario> cierres = [];
+
+  @override
+  Future<List<CierreDiario>> ultimosCierres() async => cierres;
+
   @override
   Future<List<PuntoDeSerie>> serie(String simbolo, RangoDeGrafica rango) async {
     series.add((simbolo: simbolo, rango: rango));

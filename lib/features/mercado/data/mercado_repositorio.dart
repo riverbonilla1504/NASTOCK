@@ -19,6 +19,11 @@ abstract interface class MercadoRepositorio {
   /// El estado del mercado según el servidor.
   Future<EstadoDelMercado> estadoDelMercado();
 
+  /// El último cierre diario de cada símbolo con barras en los últimos días,
+  /// con el cierre anterior. Es lo que muestra la lista cuando no hay
+  /// cotización en vivo (mercado cerrado).
+  Future<List<CierreDiario>> ultimosCierres();
+
   /// La serie de [simbolo] en [rango], en orden de tiempo. `1D` sale de las
   /// barras de minuto (solo los ETF y QQQ las guardan); los demás rangos, de
   /// las barras diarias.
@@ -57,6 +62,20 @@ class MercadoRepositorioSupabase implements MercadoRepositorio {
   }
 
   @override
+  Future<List<CierreDiario>> ultimosCierres() async {
+    // Diez días cubren fines de semana y feriados; unos 100 símbolos por
+    // sesión caben en el máximo de 1000 filas de la API.
+    final desde = DateTime.now().toUtc().subtract(const Duration(days: 10));
+    final filas = await _cliente
+        .from('barras_diarias')
+        .select('simbolo, fecha, cierre')
+        .gte('fecha', desde.toIso8601String().substring(0, 10))
+        .order('fecha', ascending: false)
+        .limit(1000);
+    return cierresDesdeFilas(filas);
+  }
+
+  @override
   Future<List<PuntoDeSerie>> serie(String simbolo, RangoDeGrafica rango) async {
     if (rango == RangoDeGrafica.dia) {
       // Las últimas barras de minuto: una jornada regular tiene 390.
@@ -88,7 +107,7 @@ class MercadoRepositorioSupabase implements MercadoRepositorio {
     return [
       for (final fila in filas.reversed)
         PuntoDeSerie(
-          DateTime.parse(fila['fecha'] as String).toUtc(),
+          fechaUtc(fila['fecha'] as String),
           (fila['cierre'] as num).toDouble(),
         ),
     ];
@@ -98,3 +117,33 @@ class MercadoRepositorioSupabase implements MercadoRepositorio {
 final mercadoRepositorioProvider = Provider<MercadoRepositorio>(
   (ref) => MercadoRepositorioSupabase(ref.watch(clienteSupabaseProvider)),
 );
+
+/// Una fecha `AAAA-MM-DD` como medianoche UTC (sin correrla por la zona del
+/// dispositivo).
+DateTime fechaUtc(String fecha) =>
+    DateTime.parse('${fecha.substring(0, 10)}T00:00:00Z');
+
+/// Arma el último cierre de cada símbolo con las filas `{simbolo, fecha,
+/// cierre}` en cualquier orden: el de la fecha más reciente y el de la
+/// anterior.
+List<CierreDiario> cierresDesdeFilas(List<Map<String, dynamic>> filas) {
+  final porSimbolo = <String, List<({DateTime fecha, double cierre})>>{};
+  for (final fila in filas) {
+    porSimbolo.putIfAbsent(fila['simbolo'] as String, () => []).add((
+      fecha: fechaUtc(fila['fecha'] as String),
+      cierre: (fila['cierre'] as num).toDouble(),
+    ));
+  }
+  return [
+    for (final MapEntry(key: simbolo, value: barras) in porSimbolo.entries)
+      () {
+        barras.sort((a, b) => b.fecha.compareTo(a.fecha));
+        return CierreDiario(
+          simbolo: simbolo,
+          fecha: barras.first.fecha,
+          cierre: barras.first.cierre,
+          cierreAnterior: barras.length > 1 ? barras[1].cierre : null,
+        );
+      }(),
+  ];
+}

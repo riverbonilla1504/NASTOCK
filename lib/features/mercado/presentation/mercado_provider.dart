@@ -134,6 +134,15 @@ final listaBlancaProvider = FutureProvider<List<SimboloDeLista>>(
   retry: _sinReintentos,
 );
 
+/// El último cierre diario por símbolo: el precio de respaldo de la lista
+/// cuando no hay cotización en vivo. Si falla, la lista sigue sin él.
+final ultimosCierresProvider = FutureProvider<Map<String, CierreDiario>>((
+  ref,
+) async {
+  final cierres = await ref.watch(mercadoRepositorioProvider).ultimosCierres();
+  return {for (final c in cierres) c.simbolo: c};
+}, retry: _sinReintentos);
+
 /// El bolsillo por el que se filtra la lista; `null` es todo el universo.
 class BolsilloElegidoNotifier extends Notifier<BolsilloDeLista?> {
   @override
@@ -188,11 +197,17 @@ class FilaDeMercado {
     required this.simbolo,
     required this.nombre,
     this.cotizacion,
+    this.cierre,
   });
 
   final String simbolo;
   final String nombre;
+
+  /// El precio en vivo, si lo hay.
   final Cotizacion? cotizacion;
+
+  /// El último cierre diario: lo que se muestra mientras no hay [cotizacion].
+  final CierreDiario? cierre;
 }
 
 /// Las filas que se ven: el universo (o el bolsillo elegido) con su cotización
@@ -200,6 +215,7 @@ class FilaDeMercado {
 List<FilaDeMercado> filasDeMercado({
   required List<SimboloDeLista> lista,
   required Map<String, Cotizacion> cotizaciones,
+  Map<String, CierreDiario> cierres = const {},
   BolsilloDeLista? bolsillo,
 }) {
   final nombres = <String, String>{};
@@ -227,6 +243,7 @@ List<FilaDeMercado> filasDeMercado({
         simbolo: s,
         nombre: nombres[s]!,
         cotizacion: cotizaciones[s],
+        cierre: cierres[s],
       ),
   ];
 }

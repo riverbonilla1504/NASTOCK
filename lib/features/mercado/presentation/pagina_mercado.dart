@@ -11,7 +11,7 @@ import '../../../app/tema.dart';
 import '../../../core/realtime/reloj.dart';
 import '../../../shared/widgets/cifras.dart';
 import '../../../shared/widgets/estados.dart';
-import '../../../shared/widgets/opciones_excluyentes.dart';
+import '../../../shared/widgets/lista_desplegable.dart';
 import '../../../shared/widgets/selector_de_rango.dart';
 import '../../../shared/widgets/tarjeta.dart';
 import '../../../shared/widgets/tarjeta_de_cotizacion.dart';
@@ -37,7 +37,10 @@ double? variacionDeLaSerie(List<PuntoDeSerie> serie) {
   return (serie.last.valor / serie.first.valor - 1) * 100;
 }
 
-class PaginaMercado extends ConsumerWidget {
+/// Cuántas acciones se ven de entrada; el resto va en "Ver las demás".
+const int accionesVisibles = 10;
+
+class PaginaMercado extends ConsumerStatefulWidget {
   const PaginaMercado({this.pie = const [], super.key});
 
   /// Contenido al principio de la pantalla (aviso de configuración y acceso
@@ -45,9 +48,39 @@ class PaginaMercado extends ConsumerWidget {
   final List<Widget> pie;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PaginaMercado> createState() => _PaginaMercadoState();
+}
+
+class _PaginaMercadoState extends ConsumerState<PaginaMercado> {
+  final ScrollController _desplazamiento = ScrollController();
+  bool _verLasDemas = false;
+
+  @override
+  void dispose() {
+    _desplazamiento.dispose();
+    super.dispose();
+  }
+
+  /// Deja [simbolo] en la gráfica y sube la página, animada, hasta arriba para
+  /// ver cómo se ha comportado.
+  void _elegirSimbolo(String simbolo) {
+    ref.read(simboloGraficadoProvider.notifier).elegir(simbolo);
+    if (_desplazamiento.hasClients && _desplazamiento.offset > 0) {
+      _desplazamiento.animateTo(
+        0,
+        duration: Duracion.transicion * 2,
+        curve: Curves.easeOutCubic,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final lista = ref.watch(listaBlancaProvider);
     final cotizaciones = ref.watch(cotizacionesProvider);
+    // Sin cotización en vivo (mercado cerrado) la lista usa el último cierre;
+    // si el cierre falla, la lista sigue con lo que tenga.
+    final cierres = ref.watch(ultimosCierresProvider).value ?? const {};
     final bolsillo = ref.watch(bolsilloElegidoProvider);
     final graficado = ref.watch(simboloGraficadoProvider);
 
@@ -62,11 +95,13 @@ class PaginaMercado extends ConsumerWidget {
         ? filasDeMercado(
             lista: lista.requireValue,
             cotizaciones: cotizaciones.requireValue,
+            cierres: cierres,
             bolsillo: bolsillo,
           )
         : const <FilaDeMercado>[];
 
     return ListView(
+      controller: _desplazamiento,
       padding: const EdgeInsets.fromLTRB(
         Espacio.x4,
         Espacio.x3,
@@ -74,7 +109,7 @@ class PaginaMercado extends ConsumerWidget {
         Espacio.x8,
       ),
       children: [
-        ...pie,
+        ...widget.pie,
         const EncabezadoDelMercado(),
         const SizedBox(height: Espacio.x4),
         _TarjetaDeGrafica(
@@ -83,7 +118,7 @@ class PaginaMercado extends ConsumerWidget {
           nombre: _nombreDe(graficado, lista.value),
         ),
         const SizedBox(height: Espacio.x4),
-        OpcionesExcluyentes<BolsilloDeLista?>(
+        ListaDesplegable<BolsilloDeLista?>(
           etiqueta: 'Lista blanca',
           valor: bolsillo,
           alElegir: ref.read(bolsilloElegidoProvider.notifier).elegir,
@@ -111,19 +146,13 @@ class PaginaMercado extends ConsumerWidget {
                 'Este bolsillo no tiene símbolos activos en la lista blanca.',
           )
         else
-          Tarjeta(
-            padding: EdgeInsets.zero,
-            child: Column(
-              children: [
-                for (var i = 0; i < filas.length; i++) ...[
-                  if (i > 0) Divider(height: 1, color: context.colores.regla),
-                  _FilaDeLista(
-                    fila: filas[i],
-                    elegida: filas[i].simbolo == graficado,
-                  ),
-                ],
-              ],
-            ),
+          _ListaDeAcciones(
+            filas: filas,
+            graficado: graficado,
+            verLasDemas: _verLasDemas,
+            alAlternarLasDemas: () =>
+                setState(() => _verLasDemas = !_verLasDemas),
+            alElegir: _elegirSimbolo,
           ),
       ],
     );
@@ -137,65 +166,149 @@ class PaginaMercado extends ConsumerWidget {
   }
 }
 
+/// Las primeras [accionesVisibles] acciones y, debajo, "Ver las demás (N)"
+/// que despliega el resto. Tocar cualquiera avisa con [alElegir].
+class _ListaDeAcciones extends StatelessWidget {
+  const _ListaDeAcciones({
+    required this.filas,
+    required this.graficado,
+    required this.verLasDemas,
+    required this.alAlternarLasDemas,
+    required this.alElegir,
+  });
+
+  final List<FilaDeMercado> filas;
+  final String graficado;
+  final bool verLasDemas;
+  final VoidCallback alAlternarLasDemas;
+  final ValueChanged<String> alElegir;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    final primeras = filas.take(accionesVisibles).toList();
+    final demas = filas.skip(accionesVisibles).toList();
+
+    Widget fila(FilaDeMercado f) => _FilaDeLista(
+      fila: f,
+      elegida: f.simbolo == graficado,
+      alElegir: alElegir,
+    );
+
+    return Tarjeta(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          for (var i = 0; i < primeras.length; i++) ...[
+            if (i > 0) Divider(height: 1, color: c.regla),
+            fila(primeras[i]),
+          ],
+          if (demas.isNotEmpty) ...[
+            Divider(height: 1, color: c.regla),
+            _EncabezadoDeLasDemas(
+              cuantas: demas.length,
+              abierto: verLasDemas,
+              alTocar: alAlternarLasDemas,
+            ),
+            AnimatedSize(
+              duration: Duracion.transicion,
+              alignment: Alignment.topCenter,
+              child: verLasDemas
+                  ? Column(
+                      children: [
+                        for (final f in demas) ...[
+                          Divider(height: 1, color: c.regla),
+                          fila(f),
+                        ],
+                      ],
+                    )
+                  : const SizedBox(width: double.infinity),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _EncabezadoDeLasDemas extends StatelessWidget {
+  const _EncabezadoDeLasDemas({
+    required this.cuantas,
+    required this.abierto,
+    required this.alTocar,
+  });
+
+  final int cuantas;
+  final bool abierto;
+  final VoidCallback alTocar;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colores;
+    final textos = Theme.of(context).textTheme;
+    final texto = abierto
+        ? 'Ocultar las demás ($cuantas)'
+        : 'Ver las demás ($cuantas)';
+    return Semantics(
+      button: true,
+      expanded: abierto,
+      label: texto,
+      excludeSemantics: true,
+      onTap: alTocar,
+      child: InkWell(
+        onTap: alTocar,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: Espacio.objetivoTactil),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Espacio.x3),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    texto,
+                    style: textos.labelLarge!.copyWith(color: c.morado),
+                  ),
+                ),
+                Icon(
+                  abierto ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: c.morado,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _FilaDeLista extends ConsumerWidget {
-  const _FilaDeLista({required this.fila, required this.elegida});
+  const _FilaDeLista({
+    required this.fila,
+    required this.elegida,
+    required this.alElegir,
+  });
 
   final FilaDeMercado fila;
   final bool elegida;
+  final ValueChanged<String> alElegir;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colores;
     final cotizacion = fila.cotizacion;
-    void elegir() =>
-        ref.read(simboloGraficadoProvider.notifier).elegir(fila.simbolo);
-    final contenido = cotizacion == null
-        ? InkWell(
-            onTap: elegir,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 60),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Espacio.x3,
-                  vertical: Espacio.x2,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            fila.simbolo,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Text(
-                            fila.nombre,
-                            style: Theme.of(context).textTheme.bodySmall,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      'Sin precio',
-                      style: Theme.of(context).textTheme.bodySmall!
-                          .copyWith(color: c.tintaSuave),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-        : FilaDeCotizacion(
+    void elegir() => alElegir(fila.simbolo);
+    final cierre = fila.cierre;
+    final contenido = cotizacion != null
+        ? FilaDeCotizacion(
             simbolo: fila.simbolo,
             nombre: fila.nombre,
             precio: cotizacion.precio,
             variacion: _variacionDe(cotizacion),
             antiguedad: _antiguedad(ref, cotizacion),
             alTocar: elegir,
-          );
+          )
+        : _FilaSinCotizacion(fila: fila, cierre: cierre, alTocar: elegir);
     return DecoratedBox(
       decoration: BoxDecoration(color: elegida ? c.moradoTenue : null),
       child: contenido,
@@ -215,6 +328,94 @@ class _FilaDeLista extends ConsumerWidget {
   static Duration _antiguedad(WidgetRef ref, Cotizacion c) {
     final d = ref.read(relojProvider).ahora().difference(c.recibidoEn);
     return d.isNegative ? Duration.zero : d;
+  }
+}
+
+/// Fila sin cotización en vivo: con el mercado cerrado muestra el último
+/// cierre y su variación contra el cierre anterior, con la fecha de esa
+/// sesión (`Cierre 6 nov`). Sin barras tampoco, dice "Sin precio".
+class _FilaSinCotizacion extends StatelessWidget {
+  const _FilaSinCotizacion({
+    required this.fila,
+    required this.cierre,
+    required this.alTocar,
+  });
+
+  final FilaDeMercado fila;
+  final CierreDiario? cierre;
+  final VoidCallback alTocar;
+
+  @override
+  Widget build(BuildContext context) {
+    final textos = Theme.of(context).textTheme;
+    final c = context.colores;
+    final cierre = this.cierre;
+    final variacion = cierre?.variacionPct;
+    return InkWell(
+      onTap: alTocar,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 60),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Espacio.x3,
+            vertical: Espacio.x2,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(fila.simbolo, style: textos.titleMedium),
+                    Text(
+                      fila.nombre,
+                      style: textos.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: Espacio.x3),
+              Expanded(
+                flex: 3,
+                child: cierre == null
+                    ? Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Sin precio',
+                          style: textos.bodySmall!.copyWith(
+                            color: c.tintaSuave,
+                          ),
+                        ),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          CifraUsd(cierre.cierre),
+                          Wrap(
+                            alignment: WrapAlignment.end,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: Espacio.x2,
+                            children: [
+                              if (variacion != null) Variacion(variacion),
+                              Text(
+                                'Cierre ${fechaCorta(cierre.fecha)}',
+                                style: textos.bodySmall!.copyWith(
+                                  color: c.tintaSuave,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

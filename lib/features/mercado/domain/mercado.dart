@@ -140,3 +140,29 @@ class PuntoDeSerie {
   final DateTime momento;
   final double valor;
 }
+
+/// El último cierre diario de un símbolo y el anterior (`barras_diarias`). Con
+/// el mercado cerrado no hay cotización en vivo: la lista muestra este precio
+/// y su variación contra el cierre anterior.
+class CierreDiario {
+  const CierreDiario({
+    required this.simbolo,
+    required this.fecha,
+    required this.cierre,
+    this.cierreAnterior,
+  });
+
+  final String simbolo;
+
+  /// El día de la sesión (medianoche UTC, solo importa la fecha).
+  final DateTime fecha;
+  final double cierre;
+  final double? cierreAnterior;
+
+  /// Variación contra el cierre anterior, en porcentaje; nula sin anterior.
+  double? get variacionPct {
+    final anterior = cierreAnterior;
+    if (anterior == null || anterior == 0) return null;
+    return (cierre / anterior - 1) * 100;
+  }
+}

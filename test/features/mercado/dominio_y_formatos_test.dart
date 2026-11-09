@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inversiones/features/mercado/data/mercado_repositorio.dart';
 import 'package:inversiones/features/mercado/domain/mercado.dart';
 import 'package:inversiones/features/mercado/presentation/encabezado_del_mercado.dart';
 import 'package:inversiones/features/mercado/presentation/grafica_de_mercado.dart';
@@ -134,5 +135,39 @@ void main() {
     expect(n.cierreAnterior, 98);
     expect(n.variacionDiaPct, 1);
     expect(n.precio, 101);
+  });
+
+  group('cierresDesdeFilas', () {
+    test('toma el cierre más reciente y el anterior de cada símbolo', () {
+      final cierres = cierresDesdeFilas([
+        {'simbolo': 'AAPL', 'fecha': '2026-11-05', 'cierre': 100},
+        {'simbolo': 'AAPL', 'fecha': '2026-11-06', 'cierre': 110},
+        {'simbolo': 'NVDA', 'fecha': '2026-11-06', 'cierre': 50.5},
+      ]);
+      final aapl = cierres.firstWhere((c) => c.simbolo == 'AAPL');
+      expect(aapl.cierre, 110);
+      expect(aapl.cierreAnterior, 100);
+      expect(aapl.fecha, DateTime.utc(2026, 11, 6));
+      expect(aapl.variacionPct, closeTo(10, 1e-9));
+      final nvda = cierres.firstWhere((c) => c.simbolo == 'NVDA');
+      expect(nvda.cierreAnterior, isNull);
+      expect(nvda.variacionPct, isNull);
+    });
+  });
+
+  test('filasDeMercado agrega el cierre de cada símbolo', () {
+    final filas = filasDeMercado(
+      lista: [simbolo('arriesgadas', 'AAPL', 'Apple')],
+      cotizaciones: const {},
+      cierres: {
+        'AAPL': CierreDiario(
+          simbolo: 'AAPL',
+          fecha: DateTime.utc(2026, 11, 6),
+          cierre: 190,
+        ),
+      },
+    );
+    expect(filas.single.cotizacion, isNull);
+    expect(filas.single.cierre?.cierre, 190);
   });
 }
