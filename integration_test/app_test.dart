@@ -37,6 +37,7 @@ import 'package:inversiones/core/realtime/tiempo_real_provider.dart';
 import 'package:inversiones/features/admin/presentation/pagina_administracion.dart';
 import 'package:inversiones/features/auth/presentation/pagina_cuenta_suspendida.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
+import 'package:inversiones/features/mercado/presentation/pagina_mercado.dart';
 import 'package:inversiones/main.dart' as app;
 import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
 
@@ -170,11 +171,8 @@ void main() {
         // Con la sesión iniciada, la app pasa sola a la pantalla inicial.
         expect(find.byType(PaginaInicio), findsOneWidget, reason: nombre);
         expect(find.byType(PaginaDeIngreso), findsNothing, reason: nombre);
-        expect(
-          find.text('Plataforma de inversión asistida por IA'),
-          findsOneWidget,
-          reason: nombre,
-        );
+        // Inicio es Mercado (HU-030).
+        expect(find.byType(PaginaMercado), findsOneWidget, reason: nombre);
         expect(
           find.byKey(PaginaInicio.claveDeAvisoSinConfiguracion),
           findsNothing,

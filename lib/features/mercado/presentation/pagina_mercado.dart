@@ -38,7 +38,8 @@ double? variacionDeLaSerie(List<PuntoDeSerie> serie) {
 class PaginaMercado extends ConsumerWidget {
   const PaginaMercado({this.pie = const [], super.key});
 
-  /// Contenido al final de la pantalla (avisos de configuración, accesos).
+  /// Contenido al principio de la pantalla (aviso de configuración y acceso
+  /// al catálogo, que solo ve quien desarrolla).
   final List<Widget> pie;
 
   @override
@@ -71,6 +72,7 @@ class PaginaMercado extends ConsumerWidget {
         Espacio.x8,
       ),
       children: [
+        ...pie,
         const EncabezadoDelMercado(),
         const SizedBox(height: Espacio.x4),
         _TarjetaDeGrafica(
@@ -121,7 +123,6 @@ class PaginaMercado extends ConsumerWidget {
               ],
             ),
           ),
-        ...pie,
       ],
     );
   }

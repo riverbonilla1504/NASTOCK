@@ -1,4 +1,4 @@
-/// Pantalla de inicio de los tres roles: Mercado (HU-030). Conserva al pie el
+/// Pantalla de inicio de los tres roles: Mercado (HU-030). Conserva arriba el
 /// aviso de configuración y el acceso al catálogo del esqueleto.
 library;
 
@@ -23,7 +23,7 @@ class PaginaInicio extends ConsumerWidget {
     final entorno = ref.watch(entornoProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Mercado')),
+      appBar: AppBar(title: const Text('RiTech Inversiones')),
       body: PaginaMercado(
         pie: [
           if (!entorno.supabaseConfigurado) ...[

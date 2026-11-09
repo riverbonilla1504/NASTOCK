@@ -85,46 +85,54 @@ class _Contenido extends ConsumerWidget {
     return Semantics(
       container: true,
       label: '$rotuloEstado. $etiqueta $cuenta',
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: Espacio.x3,
+        runSpacing: Espacio.x2,
         children: [
-          estado.abierto
-              ? ChipDeEstado.enVivo(etiqueta: rotuloEstado)
-              : ChipDeEstado.deshabilitado(etiqueta: rotuloEstado),
-          const SizedBox(width: Espacio.x3),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '$etiqueta ',
-                        style: textos.bodySmall!.copyWith(color: c.tintaSuave),
+          // Con el texto muy grande el chip se encoge en vez de desbordar.
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: estado.abierto
+                  ? ChipDeEstado.enVivo(etiqueta: rotuloEstado)
+                  : ChipDeEstado.deshabilitado(etiqueta: rotuloEstado),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '$etiqueta ',
+                      style: textos.bodySmall!.copyWith(color: c.tintaSuave),
+                    ),
+                    TextSpan(
+                      text: cuenta,
+                      style: textos.titleMedium!.copyWith(
+                        fontFamily: familiaMonoespaciada,
+                        fontWeight: FontWeight.w700,
                       ),
-                      TextSpan(
-                        text: cuenta,
-                        style: textos.titleMedium!.copyWith(
-                          fontFamily: familiaMonoespaciada,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
+                    ),
+                  ],
+                ),
+                textAlign: TextAlign.end,
+              ),
+              if (objetivo != null)
+                Text(
+                  '${formatearFechaHora(objetivo)} · hora de Bogotá',
+                  style: textos.bodySmall!.copyWith(
+                    color: c.tintaSuave,
+                    fontFamily: familiaMonoespaciada,
                   ),
                   textAlign: TextAlign.end,
                 ),
-                if (objetivo != null)
-                  Text(
-                    '${formatearFechaHora(objetivo)} · hora de Bogotá',
-                    style: textos.bodySmall!.copyWith(
-                      color: c.tintaSuave,
-                      fontFamily: familiaMonoespaciada,
-                    ),
-                    textAlign: TextAlign.end,
-                  ),
-              ],
-            ),
+            ],
           ),
         ],
       ),
