@@ -62,7 +62,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-04 · Capital, cupos, reparto y rebalanceo
 - **Qué hace**: aportes, retiros, cupos, reparto 50/25/25 de aportes y ganancias, rebalanceo.
 - **Docs**: 02 §3–§5, §7, §8, §14 · 08 §4 · 12 §2
-- **BD**: `movimientos_capital`; RPC `registrar_aporte`, `anular_aporte`, `registrar_retiro`, `asignar_cupo`, `reducir_cupo`, `solicitar_liquidacion`; `private.crear_cupo`, `private.proponer_rebalanceo`, reparto dentro de `private.aplicar_llenado`
+- **BD**: `movimientos_capital`; RPC `registrar_aporte`, `anular_aporte`, `registrar_retiro`, `asignar_cupo`, `reducir_cupo`, `solicitar_liquidacion`; `private.crear_cupo`, `private.mover_cupo`, `private.publicar_evento_subcuenta`, `private.proponer_rebalanceo`, reparto dentro de `private.aplicar_llenado`
 - **Funciones**: `conciliacion` (confirma aportes), `cierre-diario` (rebalanceo)
 - **App**: `lib/features/admin/capital/`, `lib/features/admin/cupos/`
 - **Pruebas**: `supabase/tests/capital_*.sql`, `reparto_*.sql` · E2E-04, E2E-08
