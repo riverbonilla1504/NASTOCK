@@ -16,6 +16,7 @@ import 'package:go_router/go_router.dart';
 import '../core/perfil/perfil.dart';
 import '../features/admin/presentation/pagina_administracion.dart';
 import '../features/admin/usuarios/presentation/pagina_invitaciones.dart';
+import '../features/cupo/presentation/pagina_mi_cupo.dart';
 import '../features/oportunidades/presentation/pagina_oportunidades.dart';
 import 'pagina_inicio.dart';
 import 'rutas.dart';
@@ -73,6 +74,7 @@ final List<Destino> destinosDelMvp = [
     etiqueta: 'Mi cupo',
     icono: Icons.account_balance_wallet_outlined,
     roles: {RolApp.usuario},
+    pantalla: (_) => const PaginaMiCupo(),
   ),
   Destino(
     ruta: Rutas.alertas,
