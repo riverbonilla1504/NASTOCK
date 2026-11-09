@@ -201,3 +201,10 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Causa: `supabase/setup-cli` con `version: latest` instaló la versión 3 de la CLI. En la 3, `db push` apunta por defecto al stack local; en la 2 (la que se usa en local, 2.122.0) apunta al proyecto enlazado. En el ejecutor de GitHub no hay stack local.
 - Solución: fijar `version: 2.122.0` en `despliegue.yml` y `mantenimiento.yml` (TT-07 hace lo mismo en `ci.yml`).
 - Para no repetirlo: los flujos usan la misma versión de la CLI que el equipo local, nunca `latest`. Pasar a la 3 es un cambio aparte: actualizar local y flujos juntos y revisar los comandos que ahora piden `--remote`.
+
+### EC-025 · `supabase db lint` falla con "relation pg_temp.<tabla> does not exist (42P01)" en una función plpgsql
+- Fecha: 2026-11-09 · Módulos: M-03 · Origen: HU-013 (#31)
+- Síntoma: el paso `supabase db lint --level warning --fail-on warning` de CI termina con `function private.registrar_movimiento · level error · relation "pg_temp.asientos_nuevos" does not exist (42P01)`, aunque la función y sus pruebas funcionan.
+- Causa: `plpgsql_check` analiza el cuerpo de forma estática y no ve las tablas temporales que la función crea al ejecutarse.
+- Solución: no usar tablas temporales dentro de funciones. Leer la entrada con `jsonb_to_recordset(p_param) as x (...)` en cada consulta (migración `20261109120008_registrar_movimiento_sin_tabla_temporal.sql`).
+- Para no repetirlo: antes de subir una función nueva, correr `supabase db lint --level warning --fail-on warning`; las pruebas pgTAP no detectan esto.
