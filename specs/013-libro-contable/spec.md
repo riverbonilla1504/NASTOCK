@@ -66,7 +66,7 @@ La historia agrega cuatro entidades, definidas en `docs/06` §4:
 ## Supuestos (Assumptions)
 
 - Depende de HU-001 · Perfiles, rol actual y lecturas por rol: las subcuentas de cupo y las políticas dependen de `perfiles` y de `private.rol_actual()`.
-- Depende de HU-085 · Alertas del sistema por audiencia: la verificación diaria crea una alerta.
+- Depende de HU-085 · Alertas del sistema por audiencia: la verificación diaria crea una alerta. HU-085 aún no está en `main` (no existe la tabla `alertas`): HU-013 entrega la detección (`private.verificar_libro()`) y un aviso en el registro de Postgres; crear la alerta `descuadre` se conecta al construir HU-085.
 - El dinero se lleva en USD con dos decimales.
 - El retenido no forma parte del libro (invariante L5).
 - Las ganancias no realizadas no son contables: se calculan al vuelo (RN-06).

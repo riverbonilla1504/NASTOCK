@@ -53,10 +53,10 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-03 · Libro contable
 - **Qué hace**: subcuentas, movimientos de doble partida, invariantes del libro.
 - **Docs**: 02 §2 · 06 §4
-- **BD**: `fondos`, `subcuentas`, `movimientos`, `asientos`; `private.registrar_movimiento`
+- **BD**: `fondos`, `subcuentas`, `movimientos`, `asientos`; `private.registrar_movimiento`, `private.verificar_libro`, `private.verificar_suma_cero`, `private.rechazar_cambio_libro`; trabajo `verificar_libro`
 - **Funciones**: —
 - **App**: — (lo consumen M-15 y M-16)
-- **Pruebas**: `supabase/tests/libro_*.sql`
+- **Pruebas**: `supabase/tests/database/12_libro_contable_test.sql`
 - **Depende de**: — · **Lo usan**: M-04, M-10, M-11, M-12, M-15
 
 ### M-04 · Capital, cupos, reparto y rebalanceo

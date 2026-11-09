@@ -870,7 +870,8 @@ Las Edge Functions las ejecutan por conexión directa a Postgres, con
 |---|---|
 | `rol_actual()`, `es_supervisor()` | Autorización (03 §4.2). |
 | `validar_operacion(subcuenta, simbolo, lado, monto, cantidad, stop_pct, confianza, momento)` | **Motor de políticas.** Devuelve la lista de reglas violadas (vacía = OK). |
-| `registrar_movimiento(tipo, asientos, referencia, descripcion, parametros)` | Única escritura del libro (L1, L2). |
+| `registrar_movimiento(tipo, asientos, referencia, descripcion, parametros, creado_por)` | Única escritura del libro (L1, L2). `asientos` es un arreglo JSON `[{subcuenta_id, concepto, monto}]`; `referencia`, `{"tabla", "id"}` o nulo; `parametros` y `creado_por` (nulo = el sistema) son opcionales. Rechaza con `LIBRO_DESCUADRADO` (`23514`) lo que no suma cero y deja que los `CHECK` de `subcuentas` rechacen un saldo negativo (RN-05). |
+| `verificar_libro()` | Recalcula `efectivo` e `invertido` desde `asientos` y devuelve las subcuentas que difieren del saldo guardado (L2). La corre el trabajo diario `verificar_libro` (07:00 UTC); la alerta `descuadre` se conecta con HU-085. |
 | `crear_cupo(usuario, monto)` | Subcuenta de cupo + asignación inicial si alcanza. |
 | `publicar_cotizaciones(datos)` | Guarda precios, emite broadcast, evalúa protecciones virtuales, invalida sugerencias fuera de banda, detecta evento en QQQ. |
 | `simbolos_del_universo()` | Los símbolos que se ingieren: los activos de `lista_blanca` de cualquier bolsillo, más QQQ aunque no esté activo en ninguno (10 §12). |
