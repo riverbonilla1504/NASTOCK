@@ -1,5 +1,5 @@
-// Interfaz del broker (docs/10 §1: `_shared/broker/`). HU-027 solo trae las operaciones de
-// lectura que necesita el calendario del mercado: `calendario`, `reloj` y `activos`. Las
+// Interfaz del broker (docs/10 §1: `_shared/broker/`). HU-027 trae las operaciones de
+// lectura del calendario del mercado (`calendario`, `reloj` y `activos`) y HU-015 agrega `cuenta`. Las
 // operaciones de órdenes (`enviarOrden`, `consultarOrden`…) llegan con E-08.
 //
 // La implementan `alpaca.ts` (real) y `simulado.ts` (pruebas y demostraciones, docs/10 §9).
@@ -46,6 +46,12 @@ export interface ConsultaDeCalendario {
   hasta: string;
 }
 
+/** La cuenta del broker (docs/10 §8): hoy solo el efectivo que la conciliación compara con el libro. */
+export interface CuentaDelBroker {
+  /** `cash` de la cuenta, en USD. */
+  efectivo: number;
+}
+
 export interface Broker {
   /**
    * Días de mercado entre `desde` y `hasta`, ordenados por fecha. Los feriados y los fines de
@@ -65,6 +71,9 @@ export interface Broker {
    * que el broker no conoce vuelve como no negociable y no fraccionable.
    */
   activos(simbolos: readonly string[]): Promise<ActivoDelBroker[]>;
+
+  /** El efectivo de la cuenta paper (HU-015). Lo usa la conciliación para confirmar aportes. */
+  cuenta(): Promise<CuentaDelBroker>;
 }
 
 /** Hora de cierre (minutos desde la medianoche de Nueva York) de una sesión regular: 16:00. */

@@ -131,3 +131,10 @@ Deno.test("hay cuatro modos de reloj y el primero es el de por defecto", () => {
   ]);
   assertEquals(new BrokerSimulado().modo, "calendario");
 });
+
+Deno.test("cuenta: el efectivo por defecto es el de una cuenta paper nueva y se puede configurar", async () => {
+  assertEquals(await new BrokerSimulado().cuenta(), { efectivo: 100_000 });
+  assertEquals(await new BrokerSimulado({ efectivo: 10_000 }).cuenta(), {
+    efectivo: 10_000,
+  });
+});

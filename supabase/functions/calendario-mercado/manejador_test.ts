@@ -334,6 +334,7 @@ Deno.test("si el broker falla responde 502, pero la historia de barras igual se 
     calendario: () => caido("/v2/calendar"),
     reloj: () => caido("/v2/clock"),
     activos: () => caido("/v2/assets"),
+    cuenta: () => caido("/v2/account"),
   };
   const { manejador } = manejadorCon({ bd, broker });
 
@@ -386,7 +387,12 @@ Deno.test("la historia de barras recibe lo que queda del presupuesto de tiempo",
 Deno.test("un error que no es del proveedor en el calendario responde 500", async () => {
   const { bd } = bdFalsa();
   const roto = () => Promise.reject(new TypeError("falla interna"));
-  const broker: Broker = { calendario: roto, reloj: roto, activos: roto };
+  const broker: Broker = {
+    calendario: roto,
+    reloj: roto,
+    activos: roto,
+    cuenta: roto,
+  };
   const { manejador } = manejadorCon({ bd, broker });
   const respuesta = await manejador(post(CON_SECRETO));
   assertEquals(respuesta.status, 500);

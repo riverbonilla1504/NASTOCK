@@ -301,3 +301,39 @@ Deno.test("exige las llaves y la URL", () => {
     assert(lanzo);
   }
 });
+
+Deno.test("cuenta: lee el cash de /v2/account como número y envía las llaves solo en cabeceras", async () => {
+  const { fn, solicitudes } = fetchFalso(() =>
+    new Response(JSON.stringify({ cash: "10000.55", equity: "10000.55" }))
+  );
+  const broker = new BrokerAlpaca({
+    urlTrading: "https://paper-api.alpaca.markets",
+    keyId: KEY_ID,
+    secretKey: SECRET,
+    fetch: fn,
+  });
+  assertEquals(await broker.cuenta(), { efectivo: 10000.55 });
+  assertEquals(solicitudes[0].url.pathname, "/v2/account");
+  assert(!solicitudes[0].url.toString().includes(SECRET));
+  assertEquals(solicitudes[0].headers.get("APCA-API-SECRET-KEY"), SECRET);
+});
+
+Deno.test("cuenta: un cash que no es número o un 5xx es ErrorDeProveedor", async () => {
+  for (
+    const respuesta of [
+      () => new Response(JSON.stringify({ cash: "abc" })),
+      () => new Response(JSON.stringify({ cash: "" })),
+      () => new Response(JSON.stringify({ otra: 1 })),
+      () => new Response("", { status: 503 }),
+    ]
+  ) {
+    const { fn } = fetchFalso(respuesta);
+    const broker = new BrokerAlpaca({
+      urlTrading: "https://paper-api.alpaca.markets",
+      keyId: KEY_ID,
+      secretKey: SECRET,
+      fetch: fn,
+    });
+    await assertRejects(() => broker.cuenta(), ErrorDeProveedor);
+  }
+});

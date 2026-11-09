@@ -21,6 +21,7 @@ import type {
   ActivoDelBroker,
   Broker,
   ConsultaDeCalendario,
+  CuentaDelBroker,
   DiaDeCalendario,
   RelojDelBroker,
 } from "./interfaz.ts";
@@ -48,6 +49,8 @@ export interface OpcionesDelBrokerSimulado {
   noFraccionables?: readonly string[];
   /** Símbolos que el broker simulado no conoce (como un 404 de Alpaca). */
   desconocidos?: readonly string[];
+  /** Efectivo de la cuenta paper simulada, en USD. Alpaca trae 100.000 por defecto (docs/10 §4.1). */
+  efectivo?: number;
 }
 
 const MINUTO_DE_APERTURA = 9 * 60 + 30;
@@ -84,6 +87,7 @@ export class BrokerSimulado implements Broker {
   readonly #noNegociables: ReadonlySet<string>;
   readonly #noFraccionables: ReadonlySet<string>;
   readonly #desconocidos: ReadonlySet<string>;
+  readonly #efectivo: number;
 
   constructor(opciones: OpcionesDelBrokerSimulado = {}) {
     this.modo = opciones.modo ?? "calendario";
@@ -91,6 +95,11 @@ export class BrokerSimulado implements Broker {
     this.#noNegociables = new Set(opciones.noNegociables ?? []);
     this.#noFraccionables = new Set(opciones.noFraccionables ?? []);
     this.#desconocidos = new Set(opciones.desconocidos ?? []);
+    this.#efectivo = opciones.efectivo ?? 100_000;
+  }
+
+  cuenta(): Promise<CuentaDelBroker> {
+    return Promise.resolve({ efectivo: this.#efectivo });
   }
 
   calendario(
