@@ -26,14 +26,33 @@ import {
   MODOS_DE_RELOJ,
 } from "./simulado.ts";
 
+export {
+  envioIncierto,
+  OrdenInvalida,
+  OrdenRechazada,
+  validarOrden,
+} from "./interfaz.ts";
 export type {
   ActivoDelBroker,
   Broker,
   ConsultaDeCalendario,
   CuentaDelBroker,
   DiaDeCalendario,
+  EstadoDeOrdenBroker,
+  LadoDeOrden,
+  OrdenAEnviar,
+  OrdenDelBroker,
+  PataDeOrden,
+  PosicionDelBroker,
+  ReferenciaDeOrden,
   RelojDelBroker,
+  ResultadoDeCancelacion,
 } from "./interfaz.ts";
+export {
+  type EscenarioDeOrden,
+  ESCENARIOS_DE_ORDEN,
+  esEscenarioDeOrden,
+} from "./simulado.ts";
 
 /** URL de la API de trading paper de Alpaca si ALPACA_TRADING_URL no está definida (docs/10 §1). */
 export const URL_DE_TRADING_POR_DEFECTO = "https://paper-api.alpaca.markets";

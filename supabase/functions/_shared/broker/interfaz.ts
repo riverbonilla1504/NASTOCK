@@ -223,6 +223,25 @@ export interface Broker {
 
   /** El efectivo de la cuenta paper (HU-015). Lo usa la conciliación para confirmar aportes. */
   cuenta(): Promise<CuentaDelBroker>;
+
+  /**
+   * Envía una orden (docs/10 §5). Lanza `OrdenInvalida` si no cumple el alcance D-63,
+   * `OrdenRechazada` si el broker la rechaza y `ErrorDeProveedor` ante cualquier otro fallo;
+   * `envioIncierto(error)` dice si hay que consultarla por `idCliente` antes de reintentar.
+   */
+  enviarOrden(orden: OrdenAEnviar): Promise<OrdenDelBroker>;
+
+  /** Una orden, con sus patas. Null si el broker no la conoce. */
+  consultarOrden(referencia: ReferenciaDeOrden): Promise<OrdenDelBroker | null>;
+
+  /**
+   * Cancela una orden (o una pata). Cancelar un bracket cancela también sus patas vivas
+   * (política provisional de docs/10 §6, Q-12).
+   */
+  cancelarOrden(idBroker: string): Promise<ResultadoDeCancelacion>;
+
+  /** Posiciones abiertas de la cuenta. */
+  posiciones(): Promise<PosicionDelBroker[]>;
 }
 
 /** Hora de cierre (minutos desde la medianoche de Nueva York) de una sesión regular: 16:00. */
