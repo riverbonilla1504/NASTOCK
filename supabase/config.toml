@@ -418,6 +418,10 @@ verify_jwt = false
 [functions.ejecutor-ordenes]
 verify_jwt = false
 
+# sincronizar-ordenes también: solo el secreto interno (trabajo sincronizar_ordenes de pg_cron).
+[functions.sincronizar-ordenes]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

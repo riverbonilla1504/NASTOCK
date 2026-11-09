@@ -478,6 +478,7 @@ function aOrden(o: z.infer<typeof esquemaOrden>): OrdenDelBroker {
     cantidad,
     precioLimite: numeroOpcional(o.limit_price, "el precio límite"),
     estado: aEstado(o.status),
+    estadoBroker: o.status,
     cantidadLlenada: numeroOpcional(o.filled_qty, "lo llenado de la orden") ??
       0,
     precioPromedio: numeroOpcional(o.filled_avg_price, "el precio de la orden"),
