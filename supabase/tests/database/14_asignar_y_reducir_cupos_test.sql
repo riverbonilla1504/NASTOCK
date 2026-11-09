@@ -69,7 +69,10 @@ select is((select count(*)::int from public.movimientos where tipo = 'asignacion
 -- Eventos: avisan sin montos (docs/09 §4)
 select is(pg_temp.eventos('usuario:00000000-0000-4000-8000-000000000001', 'cupo'), 1, 'se publica el evento cupo en el canal del Usuario');
 select ok(pg_temp.eventos('fondo', 'resumen_cambio') >= 1, 'y resumen_cambio en el canal fondo');
-select is((select count(*)::int from realtime.messages where event in ('cupo', 'resumen_cambio') and payload::text ~ '(monto|efectivo|saldo|400)'),
+-- Solo las cuatro claves de docs/09 §4 (no se busca un número en el texto: los uuid pueden contener «400»).
+select is((select count(*)::int from realtime.messages m
+            where m.event in ('cupo', 'resumen_cambio')
+              and exists (select 1 from jsonb_object_keys(m.payload) k where k not in ('tabla', 'id', 'version', 'estado'))),
           0, 'los eventos no llevan montos');
 
 -- CA-2 / CB-14 · Más que la bolsa común -----------------------------------------------------------------------------------
