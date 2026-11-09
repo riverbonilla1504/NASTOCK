@@ -50,6 +50,13 @@ class FuenteFalsa implements FuenteDeTiempoReal {
     ),
   );
 
+  /// Llega un evento con una carga cualquiera (como `cotizaciones`, que trae
+  /// los precios en vez de una entidad).
+  void crudo(String canal, String nombre, Map<String, dynamic> carga) =>
+      _eventos.add(
+        EventoDeTiempoReal(canal: canal, evento: nombre, carga: carga),
+      );
+
   void senal(SenalDeConexion senal) => _senales.add(senal);
 
   /// El servidor acepta todas las suscripciones abiertas.

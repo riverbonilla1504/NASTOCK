@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/app/aplicacion.dart';
 import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
+import 'package:inversiones/features/mercado/presentation/pagina_mercado.dart';
 import 'package:inversiones/core/configuracion/entorno.dart';
 import 'package:inversiones/features/auth/data/ingreso_repositorio.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
@@ -81,10 +82,8 @@ void main() {
 
     expect(find.byType(PaginaInicio), findsOneWidget);
     expect(find.text('RiTech Inversiones'), findsOneWidget);
-    expect(
-      find.text('Plataforma de inversión asistida por IA'),
-      findsOneWidget,
-    );
+    // Inicio es Mercado (HU-030).
+    expect(find.byType(PaginaMercado), findsOneWidget);
     expect(find.byKey(PaginaInicio.claveDeAvisoSinConfiguracion), findsNothing);
   });
 
