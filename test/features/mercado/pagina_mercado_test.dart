@@ -200,4 +200,68 @@ void main() {
     await abrirMercado(tester, overridesDeMercado(repo, fuente));
     expect(tester.takeException(), isNull);
   });
+
+  group('mercado cerrado: sin cotización en vivo', () {
+    CierreDiario cierre(String simbolo, double cierre, double anterior) =>
+        CierreDiario(
+          simbolo: simbolo,
+          fecha: DateTime.utc(2026, 11, 6),
+          cierre: cierre,
+          cierreAnterior: anterior,
+        );
+
+    testWidgets('la fila muestra el último cierre, su variación y la fecha', (
+      tester,
+    ) async {
+      repo = MercadoRepositorioFalso(cotizaciones: const [])
+        ..cierres = [cierre('AAPL', 190.1, 200), cierre('NVDA', 920.4, 900)];
+      await abrirMercado(tester, overridesDeMercado(repo, fuente));
+
+      expect(find.text('USD 190,10'), findsOneWidget);
+      expect(find.text('USD 920,40'), findsOneWidget);
+      expect(find.text('Cierre 6 nov'), findsWidgets);
+      expect(find.text('-4,95 %'), findsOneWidget);
+      expect(find.text('+2,27 %'), findsOneWidget);
+      // QQQ y QLD no traen cierre en esta prueba.
+      expect(find.text('Sin precio'), findsNWidgets(2));
+    });
+
+    testWidgets('cuando llega la cotización en vivo se usa esa', (
+      tester,
+    ) async {
+      repo = MercadoRepositorioFalso(cotizaciones: const [])
+        ..cierres = [cierre('NVDA', 920.4, 900)];
+      await abrirMercado(tester, overridesDeMercado(repo, fuente));
+      expect(find.text('Cierre 6 nov'), findsOneWidget);
+
+      fuente.crudo('mercado', 'cotizaciones', {
+        'momento': '2026-11-09T15:30:15Z',
+        'datos': [
+          {'s': 'NVDA', 'p': 930.0, 'vd': 3.3},
+        ],
+      });
+      await asentar(tester);
+
+      expect(find.text('USD 930,00'), findsOneWidget);
+      expect(find.text('USD 920,40'), findsNothing);
+      expect(find.text('Cierre 6 nov'), findsNothing);
+    });
+
+    testWidgets('si falla leer los cierres, la lista sigue (Sin precio)', (
+      tester,
+    ) async {
+      final falla = _RepoSinCierres();
+      await abrirMercado(tester, overridesDeMercado(falla, fuente));
+      expect(find.text('Sin precio'), findsNWidgets(4));
+      expect(tester.takeException(), isNull);
+    });
+  });
+}
+
+class _RepoSinCierres extends MercadoRepositorioFalso {
+  _RepoSinCierres() : super(cotizaciones: const []);
+
+  @override
+  Future<List<CierreDiario>> ultimosCierres() async =>
+      throw Exception('sin red');
 }

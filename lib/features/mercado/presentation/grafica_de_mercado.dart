@@ -33,6 +33,9 @@ const List<String> _meses = [
   'dic',
 ];
 
+/// La fecha corta de una sesión: `6 nov`.
+String fechaCorta(DateTime fecha) => '${fecha.day} ${_meses[fecha.month - 1]}';
+
 /// La marca del eje horizontal según el [rango]: la hora de Bogotá en 1D, el
 /// día y mes en 1M, el mes y año en 1Y y All.
 String etiquetaDeEje(DateTime momento, RangoDeGrafica rango) {

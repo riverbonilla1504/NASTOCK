@@ -48,6 +48,9 @@ class PaginaMercado extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final lista = ref.watch(listaBlancaProvider);
     final cotizaciones = ref.watch(cotizacionesProvider);
+    // Sin cotización en vivo (mercado cerrado) la lista usa el último cierre;
+    // si el cierre falla, la lista sigue con lo que tenga.
+    final cierres = ref.watch(ultimosCierresProvider).value ?? const {};
     final bolsillo = ref.watch(bolsilloElegidoProvider);
     final graficado = ref.watch(simboloGraficadoProvider);
 
@@ -62,6 +65,7 @@ class PaginaMercado extends ConsumerWidget {
         ? filasDeMercado(
             lista: lista.requireValue,
             cotizaciones: cotizaciones.requireValue,
+            cierres: cierres,
             bolsillo: bolsillo,
           )
         : const <FilaDeMercado>[];
@@ -149,53 +153,17 @@ class _FilaDeLista extends ConsumerWidget {
     final cotizacion = fila.cotizacion;
     void elegir() =>
         ref.read(simboloGraficadoProvider.notifier).elegir(fila.simbolo);
-    final contenido = cotizacion == null
-        ? InkWell(
-            onTap: elegir,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 60),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Espacio.x3,
-                  vertical: Espacio.x2,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            fila.simbolo,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Text(
-                            fila.nombre,
-                            style: Theme.of(context).textTheme.bodySmall,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      'Sin precio',
-                      style: Theme.of(context).textTheme.bodySmall!
-                          .copyWith(color: c.tintaSuave),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-        : FilaDeCotizacion(
+    final cierre = fila.cierre;
+    final contenido = cotizacion != null
+        ? FilaDeCotizacion(
             simbolo: fila.simbolo,
             nombre: fila.nombre,
             precio: cotizacion.precio,
             variacion: _variacionDe(cotizacion),
             antiguedad: _antiguedad(ref, cotizacion),
             alTocar: elegir,
-          );
+          )
+        : _FilaSinCotizacion(fila: fila, cierre: cierre, alTocar: elegir);
     return DecoratedBox(
       decoration: BoxDecoration(color: elegida ? c.moradoTenue : null),
       child: contenido,
@@ -215,6 +183,94 @@ class _FilaDeLista extends ConsumerWidget {
   static Duration _antiguedad(WidgetRef ref, Cotizacion c) {
     final d = ref.read(relojProvider).ahora().difference(c.recibidoEn);
     return d.isNegative ? Duration.zero : d;
+  }
+}
+
+/// Fila sin cotización en vivo: con el mercado cerrado muestra el último
+/// cierre y su variación contra el cierre anterior, con la fecha de esa
+/// sesión (`Cierre 6 nov`). Sin barras tampoco, dice "Sin precio".
+class _FilaSinCotizacion extends StatelessWidget {
+  const _FilaSinCotizacion({
+    required this.fila,
+    required this.cierre,
+    required this.alTocar,
+  });
+
+  final FilaDeMercado fila;
+  final CierreDiario? cierre;
+  final VoidCallback alTocar;
+
+  @override
+  Widget build(BuildContext context) {
+    final textos = Theme.of(context).textTheme;
+    final c = context.colores;
+    final cierre = this.cierre;
+    final variacion = cierre?.variacionPct;
+    return InkWell(
+      onTap: alTocar,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 60),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Espacio.x3,
+            vertical: Espacio.x2,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(fila.simbolo, style: textos.titleMedium),
+                    Text(
+                      fila.nombre,
+                      style: textos.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: Espacio.x3),
+              Expanded(
+                flex: 3,
+                child: cierre == null
+                    ? Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Sin precio',
+                          style: textos.bodySmall!.copyWith(
+                            color: c.tintaSuave,
+                          ),
+                        ),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          CifraUsd(cierre.cierre),
+                          Wrap(
+                            alignment: WrapAlignment.end,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: Espacio.x2,
+                            children: [
+                              if (variacion != null) Variacion(variacion),
+                              Text(
+                                'Cierre ${fechaCorta(cierre.fecha)}',
+                                style: textos.bodySmall!.copyWith(
+                                  color: c.tintaSuave,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
