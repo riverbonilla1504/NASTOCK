@@ -285,7 +285,7 @@ cotizaciones (
   recibido_en      timestamptz not null default now()
 )
 
-barras_minuto  (simbolo, momento, apertura, maximo, minimo, cierre, volumen)  pk (simbolo, momento)  -- 5 días, solo símbolos con posiciones y ETFs
+barras_minuto  (simbolo, momento, apertura, maximo, minimo, cierre, volumen)  pk (simbolo, momento)  -- ETF y símbolos con posición: 5 días; demás acciones de la lista blanca: solo el día en curso (D-71)
 barras_diarias (simbolo, fecha,   apertura, maximo, minimo, cierre, volumen)  pk (simbolo, fecha)    -- se guardan siempre
 
 calendario_mercado (
@@ -954,7 +954,7 @@ está pensada para no acercarse a ese límite.
 |---|---|
 | Libro, órdenes, sugerencias, decisiones, señales, auditoría, ciclos del agente | Siempre (valor contable y de auditoría) |
 | `barras_diarias` (≈100 símbolos) y `patrimonio_diario` | Siempre (unos pocos MB por año) |
-| `barras_minuto` | 5 días, solo símbolos con posiciones y ETFs |
+| `barras_minuto` | ETF y símbolos con posición: 5 días; demás acciones de la lista blanca: solo el día en curso (se borran en la limpieza de cada madrugada, D-71). Las acciones suman ≈39 mil filas por día (≈100 símbolos × 390 minutos), unos pocos MB que no pesan en el límite |
 | `cotizaciones` | Solo la última por símbolo |
 | `noticias` | 30 días |
 | `contextos_ia` | 90 días |
