@@ -9,6 +9,8 @@ import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
 import 'package:inversiones/app/tema.dart';
 import 'package:inversiones/core/configuracion/entorno.dart';
+import 'package:inversiones/shared/widgets/selector_de_rango.dart';
+import 'package:inversiones/shared/widgets/tarjeta_de_grafica.dart';
 import 'package:inversiones/features/auth/data/ingreso_repositorio.dart';
 
 import '../features/auth/falsos.dart';
@@ -109,5 +111,29 @@ void main() {
     await tester.tap(find.text('Catálogo de componentes'));
     await tester.pumpAndSettle();
     expect(find.byType(PaginaCatalogo), findsOneWidget);
+  });
+
+  testWidgets('los componentes muestran la gráfica con su selector de rango', (
+    tester,
+  ) async {
+    final enrutador = await _abrir(tester, conCatalogo: true);
+    enrutador.go(RutasCatalogo.componentes);
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byType(TarjetaDeGrafica),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Valor del portafolio'), findsOneWidget);
+    await tester.ensureVisible(find.byKey(claveDeRango(RangoDeGrafica.anio)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(claveDeRango(RangoDeGrafica.anio)));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<TarjetaDeGrafica>(find.byType(TarjetaDeGrafica)).rango,
+      RangoDeGrafica.anio,
+    );
+    expect(tester.takeException(), isNull);
   });
 }

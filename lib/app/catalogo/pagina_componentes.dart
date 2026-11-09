@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../../core/errores/traduccion_de_errores.dart';
+import '../../core/formato/formato_dinero.dart';
 import '../../shared/widgets/avisos.dart';
 import '../../shared/widgets/barra_superior.dart';
 import '../../shared/widgets/botones.dart';
@@ -18,7 +19,9 @@ import '../../shared/widgets/franja_de_la_jornada.dart';
 import '../../shared/widgets/grafica_de_linea.dart';
 import '../../shared/widgets/mensaje_de_error.dart';
 import '../../shared/widgets/opciones_excluyentes.dart';
+import '../../shared/widgets/selector_de_rango.dart';
 import '../../shared/widgets/tarjeta.dart';
+import '../../shared/widgets/tarjeta_de_grafica.dart';
 import '../../shared/widgets/tarjeta_de_cotizacion.dart';
 import '../tema.dart';
 import 'datos_de_ejemplo.dart';
@@ -43,6 +46,7 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
   );
   bool _enviando = false;
   String _rol = 'usuario';
+  RangoDeGrafica _rango = RangoDeGrafica.dia;
   final TextEditingController _fueraDeRango = TextEditingController(
     text: '900',
   );
@@ -329,6 +333,26 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
             ],
           ),
           _Seccion(
+            titulo: 'Gráfica con rango',
+            children: [
+              TarjetaDeGrafica(
+                titulo: 'Valor del portafolio',
+                valor: 10000,
+                cambio: 0.62,
+                fecha: '06/11/2026 11:46',
+                serie: _serieDelRango(_rango),
+                etiquetasX: const ['7 AM', '10 AM', '1 PM'],
+                formatoY: formatearCifraCorta,
+                descripcion:
+                    'Valor del portafolio en el rango ${_rango.lectura}: '
+                    'sube de 9.940 a 10.000 dólares',
+                rango: _rango,
+                alElegirRango: (r) => setState(() => _rango = r),
+                alRefrescar: () {},
+              ),
+            ],
+          ),
+          _Seccion(
             titulo: 'Cotización',
             children: [
               TarjetaDeCotizacion(
@@ -447,6 +471,19 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
         ],
       ),
     );
+  }
+
+  /// Una serie de ejemplo distinta por rango, de la misma forma que la curva
+  /// de QLD pero en dólares del portafolio.
+  static List<double> _serieDelRango(RangoDeGrafica rango) {
+    final factor = switch (rango) {
+      RangoDeGrafica.dia => 1.0,
+      RangoDeGrafica.mes => 2.5,
+      RangoDeGrafica.anio => 6.0,
+      RangoDeGrafica.todo => 9.0,
+    };
+    final base = Ejemplo.curvaQld;
+    return [for (final p in base) 10000 + (p - base.last) * 100 * factor];
   }
 
   static List<double> _variacionDesdeApertura(List<double> precios) => [

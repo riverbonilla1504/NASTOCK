@@ -174,27 +174,36 @@ class TarjetaDeCotizacion extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: Espacio.x3),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CifraUsd(
-                    precio,
-                    tamano: TamanoCifra.grande,
-                    desactualizada: desactualizado,
-                  ),
-                  const SizedBox(height: Espacio.x1),
-                  Wrap(
-                    spacing: Espacio.x2,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Variacion(variacion),
-                      AntiguedadDelDato(
-                        antiguedad,
-                        desactualizado: desactualizado,
+              // Flexible: con la monoespaciada la columna del precio es ancha;
+              // así acota su ancho, el precio se achica y la variación baja.
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: CifraUsd(
+                        precio,
+                        tamano: TamanoCifra.grande,
+                        desactualizada: desactualizado,
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: Espacio.x1),
+                    Wrap(
+                      alignment: WrapAlignment.end,
+                      spacing: Espacio.x2,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Variacion(variacion),
+                        AntiguedadDelDato(
+                          antiguedad,
+                          desactualizado: desactualizado,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
