@@ -1,8 +1,10 @@
 /// Menú de cuenta: el botón visible en toda pantalla con menú y la hoja que
 /// muestra quién tiene la sesión y deja cerrarla (HU-007, FR-023).
 ///
-/// El botón flota arriba a la derecha (en ventanas anchas va al pie del riel),
-/// mide 48 dp y está en los tres roles. Cerrar la sesión pide confirmación y
+/// En teléfono es el último ítem de la barra de navegación ("Salir", con el
+/// mismo ícono de cuenta); en ventanas anchas, el botón al pie del riel. No es un
+/// destino con ruta: abre la hoja de cuenta y nunca queda marcado como pestaña
+/// activa. Mide 48 dp y está en los tres roles. Cerrar la sesión pide confirmación y
 /// termina en `/ingreso` sin datos de la sesión anterior (ver
 /// `RaizDeProviders`). La pantalla de perfil (HU-008) puede crecer desde esta
 /// hoja.
@@ -33,7 +35,20 @@ String etiquetaDeRol(RolApp? rol) => switch (rol) {
   null => 'Sin rol',
 };
 
-/// Botón de cuenta: abre la hoja con la persona y "Cerrar sesión".
+/// Rótulo y ícono del ítem de cuenta en la barra de navegación.
+const String etiquetaDelItemDeCuenta = 'Salir';
+const IconData iconoDeCuenta = Icons.account_circle_outlined;
+
+/// Abre la hoja de cuenta (correo, rol y "Cerrar sesión" con confirmación).
+Future<void> abrirHojaDeCuenta(BuildContext context) =>
+    mostrarHojaInferior<void>(
+      context,
+      constructor: (_) => const HojaDeCuenta(),
+    );
+
+/// Botón de cuenta del riel de navegación (ventanas anchas): abre la hoja con la
+/// persona y "Cerrar sesión". En teléfono el mismo papel lo hace el último ítem
+/// de la isla, con esta misma [clave].
 class BotonDeCuenta extends StatelessWidget {
   const BotonDeCuenta({super.key});
 
@@ -57,13 +72,10 @@ class BotonDeCuenta extends StatelessWidget {
           child: InkWell(
             key: clave,
             borderRadius: BorderRadius.circular(Radios.control),
-            onTap: () => mostrarHojaInferior<void>(
-              context,
-              constructor: (_) => const HojaDeCuenta(),
-            ),
+            onTap: () => abrirHojaDeCuenta(context),
             child: SizedBox.square(
               dimension: Espacio.objetivoTactil,
-              child: Icon(Icons.account_circle_outlined, color: c.tinta),
+              child: Icon(iconoDeCuenta, color: c.tinta),
             ),
           ),
         ),

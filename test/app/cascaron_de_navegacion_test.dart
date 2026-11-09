@@ -120,6 +120,28 @@ void main() {
     expect(find.byKey(claveDeDestino(Rutas.admin)), findsOneWidget);
   });
 
+  testWidgets(
+    'la isla termina con el ítem de cuenta y ningún rol pasa de cinco',
+    (tester) async {
+      for (final rol in RolApp.values) {
+        await _abrir(tester, rol: rol, ancho: 360);
+
+        final isla = tester.widget<BarraDePestanas>(
+          find.byType(BarraDePestanas),
+        );
+        expect(
+          isla.pestanas.length,
+          destinosDeRol(rol).length + 1,
+          reason: '$rol',
+        );
+        expect(isla.pestanas.length, lessThanOrEqualTo(5), reason: '$rol');
+        expect(isla.pestanas.last.etiqueta, 'Salir', reason: '$rol');
+        // Nunca es la pestaña actual: no es un destino con ruta.
+        expect(isla.actual, lessThan(isla.pestanas.length - 1), reason: '$rol');
+      }
+    },
+  );
+
   testWidgets('sin rol solo queda Mercado', (tester) async {
     await _abrir(tester, rol: null, ancho: 360);
 

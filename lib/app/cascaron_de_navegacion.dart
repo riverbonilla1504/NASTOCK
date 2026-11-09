@@ -7,9 +7,11 @@
 /// deshabilitados, no aparecen.
 ///
 /// Encima del contenido muestra el estado de la conexión en vivo ("Reconectando…"
-/// y datos atenuados, FR-189) y, en toda pantalla con menú y para los tres
-/// roles, el botón de cuenta (HU-007): flota arriba a la derecha en teléfono y
-/// va al pie del riel en ventanas anchas.
+/// y datos atenuados, FR-189). Y, para los tres roles, el ítem de cuenta
+/// (HU-007): el último de la isla ("Salir", con el ícono de cuenta) y, en
+/// ventanas anchas, el botón al pie del riel. No es un destino con ruta: abre la
+/// hoja de cuenta y nunca queda marcado como pestaña actual. Ningún rol pasa de
+/// cinco ítems en la isla.
 ///
 /// No navega por sí mismo: avisa la ruta elegida con [alElegirRuta], así se
 /// prueba sin enrutador. Forma en
@@ -110,21 +112,13 @@ class CascaronDeNavegacion extends ConsumerWidget {
       // El contenido termina donde empieza la isla (D-69): nada con scroll
       // queda tapado, ni siquiera el último botón de una lista.
       extendBody: false,
-      body: Stack(
-        children: [
-          Positioned.fill(child: contenido),
-          // Visible desde cualquier pantalla, a la altura de la barra superior:
-          // 48 dp de alto para el pulgar y fuera del camino del contenido.
-          Positioned(
-            top: MediaQuery.paddingOf(context).top + Espacio.x1,
-            right: Espacio.x2,
-            child: const BotonDeCuenta(),
-          ),
-        ],
-      ),
+      body: contenido,
       bottomNavigationBar: BarraDePestanas(
         actual: actual,
-        alElegir: elegir,
+        // El ítem de cuenta va después del último destino: abre la hoja y no
+        // cambia la pestaña actual.
+        alElegir: (i) =>
+            i == destinos.length ? abrirHojaDeCuenta(context) : elegir(i),
         pestanas: [
           for (final d in destinos)
             Pestana(
@@ -132,6 +126,13 @@ class CascaronDeNavegacion extends ConsumerWidget {
               icono: d.icono,
               clave: claveDeDestino(d.ruta),
             ),
+          // Después de Administración (o del último destino del rol): el mismo
+          // estilo de ítem y el ícono de cuenta.
+          const Pestana(
+            etiqueta: etiquetaDelItemDeCuenta,
+            icono: iconoDeCuenta,
+            clave: BotonDeCuenta.clave,
+          ),
         ],
       ),
     );

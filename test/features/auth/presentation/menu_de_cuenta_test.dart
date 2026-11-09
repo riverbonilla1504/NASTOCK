@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/app/aplicacion.dart';
 import 'package:inversiones/app/cascaron_de_navegacion.dart';
+import 'package:inversiones/app/destinos.dart';
 import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
 import 'package:inversiones/app/raiz_de_providers.dart';
@@ -19,6 +20,7 @@ import 'package:inversiones/features/mercado/data/mercado_repositorio.dart';
 import 'package:inversiones/features/mercado/presentation/mercado_provider.dart';
 import 'package:inversiones/features/auth/presentation/menu_de_cuenta.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
+import 'package:inversiones/shared/widgets/barra_de_pestanas.dart';
 import 'package:inversiones/shared/widgets/botones.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show Session;
 
@@ -148,58 +150,90 @@ void main() {
     fuente = FuenteFalsa();
   });
 
-  group(
-    'el botón de cuenta es visible en toda pantalla y para los tres roles',
-    () {
-      for (final rol in ['usuario', 'analista', 'administrador']) {
-        testWidgets('$rol, en teléfono, con 48 dp', (tester) async {
+  group('el ítem de cuenta está en la barra de navegación de los tres roles', () {
+    for (final rol in ['usuario', 'analista', 'administrador']) {
+      testWidgets(
+        '$rol: último ítem de la isla, con 48 dp y dentro de la pantalla',
+        (tester) async {
           repo.sesionActual = _sesion(rol);
           await _abrir(tester, repo, fuente);
 
           expect(_cuenta, findsOneWidget);
-          final tamano = tester.getSize(
-            find.descendant(of: _cuenta, matching: find.byType(SizedBox)).first,
+          final isla = tester.widget<BarraDePestanas>(
+            find.byType(BarraDePestanas),
           );
-          expect(tamano.width, greaterThanOrEqualTo(48));
-          expect(tamano.height, greaterThanOrEqualTo(48));
-          // Dentro de la pantalla, sin cortarse.
+          // Va al final, con el mismo estilo (ícono y rótulo corto) que los demás.
+          expect(isla.pestanas.last.etiqueta, etiquetaDelItemDeCuenta);
+          expect(isla.pestanas.last.icono, iconoDeCuenta);
+          expect(isla.pestanas.length, lessThanOrEqualTo(5));
+          expect(find.byType(NavigationRail), findsNothing);
+          // Está en la barra de abajo, a la derecha de los destinos, sin cortarse.
           final caja = tester.getRect(_cuenta);
+          expect(caja.height, greaterThanOrEqualTo(48));
+          expect(caja.width, greaterThanOrEqualTo(48));
           expect(caja.right, lessThanOrEqualTo(360));
-          expect(caja.top, greaterThanOrEqualTo(0));
-        });
-      }
+          expect(caja.top, greaterThan(800 / 2));
+          for (final d in destinosDeRol(RolApp.values.byName(rol))) {
+            expect(
+              tester.getRect(find.byKey(claveDeDestino(d.ruta))).right,
+              lessThanOrEqualTo(caja.left + 1),
+              reason: d.etiqueta,
+            );
+          }
+          // No hay ningún botón flotante arriba.
+          expect(caja.top, greaterThan(100));
+        },
+      );
 
-      testWidgets('sigue visible al cambiar de pantalla', (tester) async {
-        repo.sesionActual = _sesion('administrador');
+      testWidgets('$rol: nunca queda marcado como pestaña actual', (
+        tester,
+      ) async {
+        repo.sesionActual = _sesion(rol);
         await _abrir(tester, repo, fuente);
+        final ultimo = destinosDeRol(RolApp.values.byName(rol)).length;
 
-        _contenedor(tester).read(enrutadorProvider).go(Rutas.alertas);
-        await tester.pumpAndSettle();
+        int actual() =>
+            tester.widget<BarraDePestanas>(find.byType(BarraDePestanas)).actual;
+        expect(actual(), lessThan(ultimo));
 
-        expect(find.byType(PaginaInicio), findsNothing);
-        expect(_cuenta, findsOneWidget);
+        // Tocarlo abre la hoja de cuenta, no cambia de pantalla ni de pestaña.
+        await _abrirHoja(tester);
+        expect(find.text('Cuenta'), findsOneWidget);
+        expect(find.byType(PaginaInicio), findsOneWidget);
+        expect(actual(), lessThan(ultimo));
       });
+    }
 
-      testWidgets('en ventana ancha va al pie del riel', (tester) async {
-        repo.sesionActual = _sesion('usuario');
-        await _abrir(tester, repo, fuente, ancho: 1280);
+    testWidgets('sigue visible al cambiar de pantalla', (tester) async {
+      repo.sesionActual = _sesion('administrador');
+      await _abrir(tester, repo, fuente);
 
-        expect(find.byType(NavigationRail), findsOneWidget);
-        expect(_cuenta, findsOneWidget);
-        expect(
-          tester.getRect(_cuenta).left,
-          lessThan(tester.getRect(find.byType(NavigationRail)).right),
-        );
-      });
+      _contenedor(tester).read(enrutadorProvider).go(Rutas.alertas);
+      await tester.pumpAndSettle();
 
-      testWidgets('no está en la pantalla de ingreso', (tester) async {
-        await _abrir(tester, repo, fuente);
+      expect(find.byType(PaginaInicio), findsNothing);
+      expect(_cuenta, findsOneWidget);
+    });
 
-        expect(find.byType(PaginaDeIngreso), findsOneWidget);
-        expect(_cuenta, findsNothing);
-      });
-    },
-  );
+    testWidgets('en ventana ancha va al pie del riel', (tester) async {
+      repo.sesionActual = _sesion('usuario');
+      await _abrir(tester, repo, fuente, ancho: 1280);
+
+      expect(find.byType(NavigationRail), findsOneWidget);
+      expect(_cuenta, findsOneWidget);
+      expect(
+        tester.getRect(_cuenta).left,
+        lessThan(tester.getRect(find.byType(NavigationRail)).right),
+      );
+    });
+
+    testWidgets('no está en la pantalla de ingreso', (tester) async {
+      await _abrir(tester, repo, fuente);
+
+      expect(find.byType(PaginaDeIngreso), findsOneWidget);
+      expect(_cuenta, findsNothing);
+    });
+  });
 
   testWidgets('la hoja muestra quién tiene la sesión y su rol', (tester) async {
     repo.sesionActual = _sesion('administrador');
