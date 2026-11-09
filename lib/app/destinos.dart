@@ -15,6 +15,9 @@ import 'package:go_router/go_router.dart';
 
 import '../core/perfil/perfil.dart';
 import '../features/admin/presentation/pagina_administracion.dart';
+import '../features/admin/cupos/presentation/pagina_cupos.dart';
+import '../features/admin/capital/presentation/pagina_capital.dart';
+import '../features/admin/parametros/presentation/pagina_parametros.dart';
 import '../features/admin/usuarios/presentation/pagina_invitaciones.dart';
 import '../features/cupo/presentation/pagina_mi_cupo.dart';
 import '../features/oportunidades/presentation/pagina_oportunidades.dart';
@@ -93,9 +96,31 @@ final List<Destino> destinosDelMvp = [
         path: 'usuarios',
         builder: (context, state) => const PaginaInvitaciones(),
       ),
+      GoRoute(path: 'cupos', builder: (context, state) => const PaginaCupos()),
+      GoRoute(
+        path: 'capital',
+        builder: (context, state) => const PaginaCapital(),
+      ),
+      GoRoute(
+        path: 'parametros',
+        builder: (context, state) => const PaginaParametros(),
+      ),
     ],
   ),
 ];
+
+/// Si la sección [ruta] de Administración (`/admin/capital`…) ya tiene
+/// pantalla. Cada historia de E-11 registra su subruta en [destinosDelMvp] y
+/// con eso su entrada de Administración deja de estar deshabilitada.
+bool seccionDeAdministracionDisponible(String ruta) {
+  for (final destino in destinosDelMvp) {
+    if (destino.ruta != Rutas.admin) continue;
+    for (final subruta in destino.subrutas) {
+      if ('${Rutas.admin}/${subruta.path}' == ruta) return true;
+    }
+  }
+  return false;
+}
 
 /// El menú de [rol], en orden. Sin rol (o con un rol desconocido) solo queda
 /// Mercado, que es de todos y nunca deja a nadie sin a dónde ir.
