@@ -12,11 +12,6 @@ import '../../../app/tema.dart';
 import '../../../core/formato/formato_fechas.dart';
 import '../domain/mercado.dart';
 
-/// La monoespaciada del sistema: en Android es Droid Sans Mono / Roboto Mono y
-/// en la web la `monospace` del navegador. Cuando el rediseño (D-69) fije una
-/// familia en `tema.dart`, se cambia aquí.
-const String familiaMonoespaciada = 'monospace';
-
 /// Un precio para las etiquetas: `478,62` (coma decimal, sin moneda).
 String etiquetaDePrecio(double valor) {
   final texto = valor.toStringAsFixed(2).replaceAll('.', ',');
@@ -130,10 +125,11 @@ class _GraficaDeMercadoState extends State<GraficaDeMercado> {
                     child: Text(
                       '${etiquetaDePrecio(marcado.valor)} · '
                       '${widget.rango == RangoDeGrafica.dia ? formatearHora(marcado.momento) : '${marcado.momento.day} ${_meses[marcado.momento.month - 1]} ${marcado.momento.year}'}',
-                      style: textos.bodySmall!.copyWith(
-                        fontFamily: familiaMonoespaciada,
-                        color: c.tinta,
-                        fontWeight: FontWeight.w600,
+                      style: estiloDeCifra(
+                        textos.bodySmall!.copyWith(
+                          color: c.tinta,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -164,16 +160,14 @@ class _PintorDeMercado extends CustomPainter {
   final List<PuntoDeSerie> serie;
   final RangoDeGrafica rango;
   final int? marcado;
-  final ColoresAlmanaque colores;
+  final ColoresTema colores;
 
   TextPainter _texto(String texto, {TextAlign alineacion = TextAlign.left}) {
     return TextPainter(
       text: TextSpan(
         text: texto,
-        style: TextStyle(
-          fontFamily: familiaMonoespaciada,
-          fontSize: 10.5,
-          color: colores.tintaSuave,
+        style: estiloDeCifra(
+          TextStyle(fontSize: 11, height: 1.2, color: colores.tintaTenue),
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -259,7 +253,7 @@ class _PintorDeMercado extends CustomPainter {
       Paint()
         ..color = colores.morado
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.75
+        ..strokeWidth = 2
         ..strokeJoin = StrokeJoin.round
         ..strokeCap = StrokeCap.round,
     );

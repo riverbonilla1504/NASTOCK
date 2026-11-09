@@ -15,7 +15,6 @@ import '../../../core/realtime/reloj.dart';
 import '../../../shared/widgets/chip_de_estado.dart';
 import '../../../shared/widgets/estados.dart';
 import '../domain/mercado.dart';
-import 'grafica_de_mercado.dart' show familiaMonoespaciada;
 import 'mercado_provider.dart';
 
 /// `2 d 03:12:10`, `03:12:10`, `12:10`: lo que falta, sin negativos.
@@ -114,9 +113,10 @@ class _Contenido extends ConsumerWidget {
                     ),
                     TextSpan(
                       text: cuenta,
-                      style: textos.titleMedium!.copyWith(
-                        fontFamily: familiaMonoespaciada,
-                        fontWeight: FontWeight.w700,
+                      style: estiloDeCifra(
+                        textos.titleMedium!.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
@@ -126,9 +126,8 @@ class _Contenido extends ConsumerWidget {
               if (objetivo != null)
                 Text(
                   '${formatearFechaHora(objetivo)} · hora de Bogotá',
-                  style: textos.bodySmall!.copyWith(
-                    color: c.tintaSuave,
-                    fontFamily: familiaMonoespaciada,
+                  style: estiloDeCifra(
+                    textos.bodySmall!.copyWith(color: c.tintaSuave),
                   ),
                   textAlign: TextAlign.end,
                 ),

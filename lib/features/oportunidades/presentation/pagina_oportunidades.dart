@@ -69,8 +69,6 @@ class _PaginaOportunidadesState extends ConsumerState<PaginaOportunidades> {
   @override
   Widget build(BuildContext context) {
     final estado = ref.watch(oportunidadesProvider);
-    // Deja libre el espacio de la isla de navegación, que flota sobre el cuerpo.
-    final abajo = MediaQuery.paddingOf(context).bottom + Espacio.x4;
     return Scaffold(
       appBar: const BarraSuperior(titulo: 'Oportunidades'),
       body: Align(
@@ -87,7 +85,7 @@ class _PaginaOportunidadesState extends ConsumerState<PaginaOportunidades> {
                 Espacio.x4,
                 Espacio.x4,
                 Espacio.x4,
-                abajo + Espacio.x4,
+                Espacio.x8,
               ),
               children: [
                 const AvisoEnLinea(

@@ -1,6 +1,9 @@
 /// Modelos de la pantalla de mercado (HU-030, docs/06 §5.2 y §6, docs/09 §4).
 library;
 
+/// El rango de la gráfica (1D · 1M · 1Y · All) es el del selector compartido.
+export '../../../shared/widgets/selector_de_rango.dart' show RangoDeGrafica;
+
 /// Los bolsillos con lista blanca (`lista_blanca.bolsillo`, nunca `reserva`).
 enum BolsilloDeLista {
   usuarios('usuarios', 'Usuarios'),
@@ -128,18 +131,6 @@ class EstadoDelMercado {
   /// El instante hacia el que cuenta la cuenta regresiva: el cierre con el
   /// mercado abierto, la apertura con el mercado cerrado (CA-3).
   DateTime? get objetivo => abierto ? proximoCierre : proximaApertura;
-}
-
-/// El rango de la gráfica: 1D · 1M · 1Y · All.
-enum RangoDeGrafica {
-  dia('1D'),
-  mes('1M'),
-  anio('1Y'),
-  todo('All');
-
-  const RangoDeGrafica(this.etiqueta);
-
-  final String etiqueta;
 }
 
 /// Un punto de la serie de la gráfica.

@@ -86,7 +86,7 @@ void main() {
     await _montar(tester, _RepositorioFalso([_fila()]));
 
     expect(find.text('NVDA'), findsOneWidget);
-    expect(find.text('RECOMENDADA'), findsOneWidget);
+    expect(find.text('Recomendada'), findsOneWidget);
     expect(find.text('0,78'), findsOneWidget);
     expect(find.text('81 %'), findsOneWidget);
     expect(find.textContaining('considerar comprar NVDA'), findsOneWidget);
@@ -155,7 +155,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('QQQ'), findsOneWidget);
-    expect(find.text('SIN RECOMENDAR'), findsOneWidget);
+    expect(find.text('Sin recomendar'), findsOneWidget);
     expect(find.text('NVDA'), findsNothing);
   });
 

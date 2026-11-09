@@ -9,8 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/tema.dart';
 import '../../../core/realtime/reloj.dart';
+import '../../../shared/widgets/cifras.dart';
 import '../../../shared/widgets/estados.dart';
 import '../../../shared/widgets/opciones_excluyentes.dart';
+import '../../../shared/widgets/selector_de_rango.dart';
 import '../../../shared/widgets/tarjeta.dart';
 import '../../../shared/widgets/tarjeta_de_cotizacion.dart';
 import '../domain/mercado.dart';
@@ -263,32 +265,28 @@ class _TarjetaDeGrafica extends ConsumerWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: Espacio.x1),
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.end,
-            spacing: Espacio.x3,
-            children: [
-              Text(
-                precio == null ? '—' : 'USD ${etiquetaDePrecio(precio)}',
-                style: textos.headlineSmall!.copyWith(
-                  fontFamily: familiaMonoespaciada,
-                  fontWeight: FontWeight.w700,
-                ),
+          if (precio != null) ...[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: CifraUsd(precio, tamano: TamanoCifra.grande),
               ),
-              if (variacion != null)
-                Text(
-                  '${variacion >= 0 ? '+' : ''}${etiquetaDePrecio(variacion)} %',
-                  style: textos.bodyMedium!.copyWith(
-                    fontFamily: familiaMonoespaciada,
-                    fontWeight: FontWeight.w600,
-                    color: variacion >= 0 ? c.alza : c.baja,
-                  ),
-                ),
+            ),
+            if (variacion != null) ...[
+              const SizedBox(height: Espacio.x1),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Variacion(variacion),
+              ),
             ],
-          ),
+          ] else
+            Text('—', style: textos.displaySmall),
           const SizedBox(height: Espacio.x2),
-          _SelectorDeRango(
+          SelectorDeRango(
             rango: rango,
             alElegir: ref.read(rangoElegidoProvider.notifier).elegir,
+            expandido: true,
           ),
           const SizedBox(height: Espacio.x2),
           if (serie.hasError && !serie.hasValue)
@@ -326,68 +324,6 @@ class _TarjetaDeGrafica extends ConsumerWidget {
             ),
         ],
       ),
-    );
-  }
-}
-
-/// El selector 1D · 1M · 1Y · All: botones de texto; el elegido lleva una
-/// píldora tenue del morado. Cada uno mide al menos 48 dp de alto.
-class _SelectorDeRango extends StatelessWidget {
-  const _SelectorDeRango({required this.rango, required this.alElegir});
-
-  final RangoDeGrafica rango;
-  final ValueChanged<RangoDeGrafica> alElegir;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.colores;
-    final textos = Theme.of(context).textTheme;
-    return Row(
-      children: [
-        for (final r in RangoDeGrafica.values)
-          Expanded(
-            child: Semantics(
-              button: true,
-              selected: r == rango,
-              label: 'Rango ${r.etiqueta}',
-              excludeSemantics: true,
-              child: InkWell(
-                key: ValueKey('rango-${r.etiqueta}'),
-                onTap: () => alElegir(r),
-                borderRadius: BorderRadius.circular(999),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    minHeight: Espacio.objetivoTactil,
-                  ),
-                  child: Center(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: r == rango ? c.moradoTenue : null,
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Espacio.x3,
-                          vertical: Espacio.x1,
-                        ),
-                        child: Text(
-                          r.etiqueta,
-                          style: textos.bodyMedium!.copyWith(
-                            fontFamily: familiaMonoespaciada,
-                            fontWeight: r == rango
-                                ? FontWeight.w700
-                                : FontWeight.w500,
-                            color: r == rango ? c.morado : c.tintaSuave,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-      ],
     );
   }
 }

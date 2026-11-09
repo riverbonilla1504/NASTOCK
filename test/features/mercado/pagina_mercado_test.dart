@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/features/mercado/domain/mercado.dart';
+import 'package:inversiones/shared/widgets/selector_de_rango.dart';
 import 'package:inversiones/features/mercado/presentation/grafica_de_mercado.dart';
 import 'package:inversiones/features/mercado/presentation/mercado_provider.dart';
 
@@ -23,7 +23,7 @@ void main() {
     (tester) async {
       await abrirMercado(tester, overridesDeMercado(repo, fuente));
 
-      expect(find.text('MERCADO ABIERTO'), findsOneWidget);
+      expect(find.text('Mercado abierto'), findsOneWidget);
       expect(find.text('QQQ'), findsWidgets);
       expect(find.text('USD 478,62'), findsWidgets);
       expect(find.text('NVIDIA'), findsOneWidget);
@@ -88,7 +88,7 @@ void main() {
     repo.estado_ = estadoCerrado();
     await abrirMercado(tester, overridesDeMercado(repo, fuente));
 
-    expect(find.text('MERCADO CERRADO'), findsOneWidget);
+    expect(find.text('Mercado cerrado'), findsOneWidget);
     expect(find.textContaining('Abre en'), findsOneWidget);
     expect(find.textContaining('1 d 03:00:00'), findsOneWidget);
   });
@@ -151,10 +151,10 @@ void main() {
     await abrirMercado(tester, overridesDeMercado(repo, fuente));
     expect(repo.series.last, (simbolo: 'QQQ', rango: RangoDeGrafica.dia));
 
-    for (final r in ['1D', '1M', '1Y', 'All']) {
-      expect(find.byKey(ValueKey('rango-$r')), findsOneWidget);
+    for (final r in RangoDeGrafica.values) {
+      expect(find.byKey(claveDeRango(r)), findsOneWidget);
     }
-    await tester.tap(find.byKey(const ValueKey('rango-1M')));
+    await tester.tap(find.byKey(claveDeRango(RangoDeGrafica.mes)));
     await asentar(tester);
 
     expect(repo.series.last, (simbolo: 'QQQ', rango: RangoDeGrafica.mes));
