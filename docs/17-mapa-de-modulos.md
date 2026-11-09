@@ -102,10 +102,10 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-08 · Motor de políticas y parámetros
 - **Qué hace**: reglas de riesgo RR-01 a RR-22, parámetros con historial, interruptores.
 - **Docs**: 02 §9–§10 · 08 §6 (interruptores)
-- **BD**: `parametros`, `parametros_historial`, `fondos` (interruptores); `private.validar_operacion`; RPC `actualizar_parametro` (con `private.validar_valor_parametro` y `private.aplicar_parametro`), `activar_freno`, `reanudar` · migraciones `supabase/migrations/*_catalogo_de_parametros.sql` (catálogo de 02 §10 e historial), `*_actualizar_parametro.sql` y `*_margenes_desde_parametros.sql`
+- **BD**: `parametros`, `parametros_historial`, `fondos` (interruptores); `private.validar_operacion`; RPC `actualizar_parametro` (con `private.validar_valor_parametro` y `private.aplicar_parametro`), `activar_freno`, `reanudar` (con `private.cambiar_interruptor`; trigger `fondos_publicar_interruptor`) · migraciones `supabase/migrations/*_catalogo_de_parametros.sql` (catálogo de 02 §10 e historial), `*_actualizar_parametro.sql` y `*_margenes_desde_parametros.sql` e `*_interruptores_del_fondo.sql`
 - **Funciones**: — (lo llaman `agente`, `opinion-ia`, `ejecutor-ordenes` y las RPC)
 - **App**: `lib/features/admin/parametros/`, freno en la barra
-- **Pruebas**: `supabase/tests/database/10_politicas_parametros_test.sql` (más `politicas_*` de las historias siguientes)
+- **Pruebas**: `supabase/tests/database/10_politicas_parametros_test.sql`, `16_interruptores_del_fondo_test.sql` (más `politicas_*` de las historias siguientes)
 - **Depende de**: M-03, M-05, M-18 · **Lo usan**: M-07, M-09, M-10, M-11
 
 ### M-09 · Sugerencias y decisiones
@@ -193,10 +193,10 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-18 · Salud, alertas e integraciones
 - **Qué hace**: estado de cada integración, alertas operativas, presupuesto de IA.
 - **Docs**: 06 §5.6 · 08 §6 · 05 §13
-- **BD**: `salud_integraciones`, `alertas`; `private.registrar_salud`
-- **Funciones**: `_shared/salud.ts` (todas las funciones lo usan)
+- **BD**: `salud_integraciones`, `alertas`; `private.registrar_salud`, `private.publicar_evento_salud` (la tabla `alertas` llega con HU-085)
+- **Funciones**: `_shared/salud.ts` (todas las funciones lo usan; hoy `ingesta-mercado`, `calendario-mercado` y `conciliacion`)
 - **App**: `lib/features/admin/salud/`, `lib/features/alertas/`
-- **Pruebas**: `supabase/tests/salud_*.sql`
+- **Pruebas**: `supabase/tests/database/17_salud_de_las_integraciones_test.sql`, `supabase/functions/_shared/salud_test.ts`
 - **Depende de**: — · **Lo usan**: M-05 a M-14
 
 ### M-19 · Proveedores simulados y reloj
