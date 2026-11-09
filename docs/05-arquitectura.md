@@ -130,7 +130,7 @@ flowchart TB
 |---|---|---|
 | Pausa por inactividad | A los 7 días sin actividad | Los trabajos de `pg_cron` generan actividad a diario; además, un flujo de GitHub Actions llama a `ping()` una vez al día ([15 §6](15-calidad-pruebas-y-ci-cd.md#6-flujos-de-github-actions)). |
 | Respaldos | **No incluidos** | Respaldo diario cifrado con `supabase db dump` desde GitHub Actions (11 §7). |
-| Base de datos | 500 MB | Barras de minuto solo 5 días y solo de símbolos con posiciones; noticias 30 días; contextos 90 días (06 §10). |
+| Base de datos | 500 MB | Barras de minuto: ETF y símbolos con posición 5 días, demás acciones solo el día en curso (D-71); noticias 30 días; contextos 90 días (06 §10). |
 | Edge Functions | 500.000 invocaciones/mes; 150 s por ejecución; 2 s de CPU | ~40 mil invocaciones al mes previstas; el contexto de DeepSeek se separa del ciclo de decisión para no acercarse a los 150 s. |
 | Realtime | 2 millones de mensajes y 200 conexiones simultáneas | ~0,7 millones de entregas al mes previstas (09 §8). |
 | Proyectos | 2 activos | `ritech-mvp` (real) y, opcional, `ritech-demo` (simulado). |
