@@ -104,8 +104,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 02 §9–§10 · 08 §6 (interruptores)
 - **BD**: `parametros`, `parametros_historial`, `fondos` (interruptores); `private.validar_operacion`; RPC `actualizar_parametro` (con `private.validar_valor_parametro` y `private.aplicar_parametro`), `activar_freno`, `reanudar` (con `private.cambiar_interruptor`; trigger `fondos_publicar_interruptor`) · migraciones `supabase/migrations/*_catalogo_de_parametros.sql` (catálogo de 02 §10 e historial), `*_actualizar_parametro.sql` y `*_margenes_desde_parametros.sql` e `*_interruptores_del_fondo.sql`
 - **Funciones**: — (lo llaman `agente`, `opinion-ia`, `ejecutor-ordenes` y las RPC)
-- **App**: `lib/features/admin/parametros/`, freno en la barra
-- **Pruebas**: `supabase/tests/database/10_politicas_parametros_test.sql`, `16_interruptores_del_fondo_test.sql` (más `politicas_*` de las historias siguientes)
+- **App**: `lib/features/admin/parametros/` (pantalla de parámetros e interruptores, HU-101), freno en la barra
+- **Pruebas**: `test/features/admin/parametros/`, `supabase/tests/database/10_politicas_parametros_test.sql`, `16_interruptores_del_fondo_test.sql` (más `politicas_*` de las historias siguientes)
 - **Depende de**: M-03, M-05, M-18 · **Lo usan**: M-07, M-09, M-10, M-11
 
 ### M-09 · Sugerencias y decisiones
