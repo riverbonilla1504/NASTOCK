@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/features/mercado/domain/mercado.dart';
+import 'package:inversiones/shared/widgets/lista_desplegable.dart';
 import 'package:inversiones/shared/widgets/selector_de_rango.dart';
 import 'package:inversiones/features/mercado/presentation/grafica_de_mercado.dart';
 import 'package:inversiones/features/mercado/presentation/mercado_provider.dart';
@@ -125,20 +127,119 @@ void main() {
     expect(find.text('Apple'), findsOneWidget);
     expect(find.text('ProShares Ultra QQQ'), findsOneWidget);
 
-    await tester.tap(find.text('Arriesgadas'));
-    await tester.pump();
+    // La lista desplegable abre con el valor actual y elige otra opción.
+    Future<void> elegir(String actual, String nueva) async {
+      await tester.tap(find.text(actual));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(nueva).last);
+      await tester.pumpAndSettle();
+    }
+
+    await elegir('Todos', 'Arriesgadas');
     expect(find.text('Apple'), findsOneWidget);
     expect(find.text('NVIDIA'), findsOneWidget);
     expect(find.text('ProShares Ultra QQQ'), findsNothing);
 
-    await tester.tap(find.text('Usuarios'));
-    await tester.pump();
+    await elegir('Arriesgadas', 'Usuarios');
     expect(find.text('Apple'), findsNothing);
     expect(find.text('ProShares Ultra QQQ'), findsOneWidget);
 
-    await tester.tap(find.text('Todos'));
-    await tester.pump();
+    await elegir('Usuarios', 'Todos');
     expect(find.text('Apple'), findsOneWidget);
+  });
+
+  testWidgets('el selector de bolsillo es una lista desplegable', (
+    tester,
+  ) async {
+    await abrirMercado(tester, overridesDeMercado(repo, fuente));
+    expect(find.byType(ListaDesplegable<BolsilloDeLista?>), findsOneWidget);
+    // Cerrada, solo se ve la opción elegida.
+    expect(find.text('Todos'), findsOneWidget);
+    expect(find.text('Usuarios'), findsNothing);
+    expect(find.text('Arriesgadas'), findsNothing);
+  });
+
+  group('solo 10 acciones y "Ver las demás"', () {
+    // 25 acciones AAA01..AAA25 (en orden alfabético, ya sin ETF).
+    MercadoRepositorioFalso muchas() {
+      final simbolos = [
+        for (var i = 1; i <= 25; i++) 'AAA${i.toString().padLeft(2, '0')}',
+      ];
+      return MercadoRepositorioFalso(
+        lista: [
+          for (final s in simbolos) simbolo('arriesgadas', s, 'Empresa $s'),
+        ],
+        cotizaciones: [for (final s in simbolos) cotizacion(s, 100)],
+      );
+    }
+
+    testWidgets('muestra las primeras 10 y el resto queda oculto', (
+      tester,
+    ) async {
+      await abrirMercado(tester, overridesDeMercado(muchas(), fuente));
+
+      expect(find.text('Empresa AAA10'), findsOneWidget);
+      expect(find.text('Empresa AAA11'), findsNothing);
+      expect(find.text('Ver las demás (15)'), findsOneWidget);
+    });
+
+    testWidgets('al tocar "Ver las demás" se despliega el resto', (
+      tester,
+    ) async {
+      await abrirMercado(tester, overridesDeMercado(muchas(), fuente));
+
+      await tester.tap(find.text('Ver las demás (15)'));
+      await tester.pumpAndSettle();
+      expect(find.text('Empresa AAA11'), findsOneWidget);
+      expect(find.text('Empresa AAA25'), findsOneWidget);
+      expect(find.text('Ocultar las demás (15)'), findsOneWidget);
+
+      await tester.tap(find.text('Ocultar las demás (15)'));
+      await tester.pumpAndSettle();
+      expect(find.text('Empresa AAA11'), findsNothing);
+    });
+
+    testWidgets('con 10 o menos no hay sección de las demás', (tester) async {
+      await abrirMercado(tester, overridesDeMercado(repo, fuente));
+      expect(find.textContaining('Ver las demás'), findsNothing);
+    });
+
+    testWidgets(
+      'tocar una acción (de las 10 o de las demás) la pone en la gráfica y sube la página',
+      (tester) async {
+        final muchasAcciones = muchas();
+        // Una pantalla baja para que haya desplazamiento.
+        await abrirMercado(
+          tester,
+          overridesDeMercado(muchasAcciones, fuente),
+          alto: 700,
+        );
+        final desplazable = find.byType(Scrollable).first;
+        ScrollPosition posicion() =>
+            tester.state<ScrollableState>(desplazable).position;
+
+        // De las 10 primeras.
+        await tester.drag(desplazable, const Offset(0, -900));
+        await tester.pumpAndSettle();
+        expect(posicion().pixels, greaterThan(0));
+        await tester.tap(find.text('Empresa AAA05'));
+        await tester.pumpAndSettle();
+        expect(posicion().pixels, 0);
+        expect(find.textContaining('AAA05 · Empresa AAA05'), findsOneWidget);
+
+        // De las demás.
+        await tester.drag(desplazable, const Offset(0, -900));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Ver las demás (15)'));
+        await tester.pumpAndSettle();
+        await tester.drag(desplazable, const Offset(0, -900));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Empresa AAA20'));
+        await tester.pumpAndSettle();
+        expect(posicion().pixels, 0);
+        expect(find.textContaining('AAA20 · Empresa AAA20'), findsOneWidget);
+      },
+    );
   });
 
   testWidgets('el selector de rango pide la serie del rango y la dibuja', (
