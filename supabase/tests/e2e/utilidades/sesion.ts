@@ -141,6 +141,9 @@ export async function crearUsuarioDePrueba(
   const eliminar = async () => {
     // Las llaves foráneas se cruzan: se suelta la de la invitación antes de borrar el perfil.
     await sql`update public.invitaciones set usuario_id = null where usuario_id = ${id}`;
+    // Desde HU-017 el alta crea el cupo del Usuario (subcuenta en 0, sin asientos). La limpieza de
+    // pruebas lo quita antes del perfil; si tuviera asientos, la llave foránea falla y avisa.
+    await sql`delete from public.subcuentas where usuario_id = ${id}`;
     await sql`delete from public.perfiles where id = ${id}`;
     await sql`delete from public.invitaciones where lower(email) = ${correo}`;
     await fetch(`${entorno.urlApi}/auth/v1/admin/users/${id}`, {

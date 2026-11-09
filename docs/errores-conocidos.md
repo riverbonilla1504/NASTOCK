@@ -208,3 +208,10 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Causa: `plpgsql_check` analiza el cuerpo de forma estática y no ve las tablas temporales que la función crea al ejecutarse.
 - Solución: no usar tablas temporales dentro de funciones. Leer la entrada con `jsonb_to_recordset(p_param) as x (...)` en cada consulta (migración `20261109120008_registrar_movimiento_sin_tabla_temporal.sql`).
 - Para no repetirlo: antes de subir una función nueva, correr `supabase db lint --level warning --fail-on warning`; las pruebas pgTAP no detectan esto.
+
+### EC-026 · El E2E falla al limpiar con "violates foreign key constraint subcuentas_usuario_id_fkey"
+- Fecha: 2026-11-09 · Módulos: M-04, M-20 · Origen: HU-017 (#35)
+- Síntoma: `PostgresError: update or delete on table "perfiles" violates foreign key constraint "subcuentas_usuario_id_fkey"` en `eliminar()` del arnés (`supabase/tests/e2e/utilidades/sesion.ts`) y en `limpiar()` de E2E-02.
+- Causa: desde HU-017 el alta de un Usuario crea su cupo (una subcuenta). La limpieza de las pruebas borraba el perfil sin contar con ella. No es un error del producto: la app nunca borra perfiles (se da de baja).
+- Solución: la limpieza de pruebas borra primero la subcuenta de cupo del usuario de prueba (en 0 y sin asientos). No se agregó `on delete cascade` al modelo; si el cupo tuviera asientos, la llave foránea sigue fallando y avisa.
+- Para no repetirlo: toda limpieza de pruebas que borre perfiles debe quitar antes lo que cuelga de ellos (cupos).
