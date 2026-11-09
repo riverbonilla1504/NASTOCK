@@ -174,9 +174,9 @@ begin
   v_libro := private.efectivo_del_libro();
   v_dif := round(p_efectivo_broker, 2) - v_libro;
   v_resultado := case
-    when v_dif >= 0 then 'ok'
-    when -v_dif <= v_tolerancia then 'diferencia_menor'
-    else 'descuadre_critico'
+    when v_dif >= 0 then 'ok'::public.resultado_conciliacion
+    when -v_dif <= v_tolerancia then 'diferencia_menor'::public.resultado_conciliacion
+    else 'descuadre_critico'::public.resultado_conciliacion
   end;
 
   if v_resultado = 'ok' then
