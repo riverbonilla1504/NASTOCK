@@ -3,12 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/app/tema.dart';
 import 'package:inversiones/core/realtime/gestor_de_tiempo_real.dart';
+import 'package:inversiones/core/realtime/reloj.dart';
 import 'package:inversiones/core/realtime/tiempo_real_provider.dart';
+import 'package:inversiones/features/mercado/data/mercado_repositorio.dart';
 import 'package:inversiones/features/cupo/data/cupo_repositorio.dart';
 import 'package:inversiones/features/cupo/domain/mi_cupo.dart';
+import 'package:inversiones/features/cupo/domain/posicion.dart';
 import 'package:inversiones/features/cupo/presentation/pagina_mi_cupo.dart';
 
 import '../../core/realtime/falsos.dart';
+import '../mercado/ayudas.dart';
 
 const _idCupo = '11111111-1111-4111-8111-111111111111';
 
@@ -42,6 +46,9 @@ class _RepositorioFalso implements CupoRepositorio {
   int pedidos = 0;
 
   @override
+  Future<List<PosicionDeCupo>> posiciones(String idCupo) async => const [];
+
+  @override
   Future<MiCupo?> miCupo() async {
     pedidos++;
     if (error != null) throw error!;
@@ -65,6 +72,14 @@ void main() {
         overrides: [
           cupoRepositorioProvider.overrideWithValue(repo),
           gestorDeTiempoRealProvider.overrideWithValue(gestor),
+          // Mi cupo ahora también muestra posiciones: sin Supabase.
+          mercadoRepositorioProvider.overrideWithValue(
+            MercadoRepositorioFalso(),
+          ),
+          relojRepositorioProvider.overrideWithValue(
+            RelojRepositorioFalso(() => ahoraDePrueba),
+          ),
+          ahoraLocalProvider.overrideWithValue(() => ahoraDePrueba),
         ],
         child: MaterialApp(theme: crearTema(), home: const PaginaMiCupo()),
       ),

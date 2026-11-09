@@ -134,6 +134,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 08 §3 · 10 §6 · 02 §6–§7 · 12 §5
 - **BD**: `posiciones`, `protecciones`, vista `posiciones_valoradas`; RPC `ajustar_proteccion`; `private.disparar_proteccion_virtual`
   · HU-074: migración `20261110130004_posiciones_y_protecciones.sql` (tipos `estado_posicion`, `tipo_proteccion` y `estado_proteccion`, tablas `posiciones` y `protecciones` con RLS y llaves de `ordenes`, vista `posiciones_valoradas` con `security_invoker`, evento `posicion`); `private.aplicar_llenado` crea y mueve las posiciones a costo promedio ponderado. `protecciones` queda vacía hasta HU-077
+  · HU-091: Mi cupo lista las posiciones abiertas con su protección vigente (`lib/features/cupo/`: `domain/posicion.dart`, `presentation/posiciones_provider.dart` con foto + eventos `posicion`, `tarjeta_de_posicion.dart`); lee `posiciones` y `protecciones` por la API (RLS) y valora al vuelo con `cotizacionesProvider` (RN-06)
 - **Funciones**: `sincronizar-ordenes` (patas nativas), `ingesta-mercado` (virtuales), `cierre-diario` (renovación)
 - **App**: `lib/features/cupo/`
 - **Pruebas**: `supabase/tests/protecciones_*.sql` · E2E-08, E2E-12
