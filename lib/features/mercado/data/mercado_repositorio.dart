@@ -25,7 +25,7 @@ abstract interface class MercadoRepositorio {
   Future<List<CierreDiario>> ultimosCierres();
 
   /// La serie de [simbolo] en [rango], en orden de tiempo. `1D` sale de las
-  /// barras de minuto (solo los ETF y QQQ las guardan); los demás rangos, de
+  /// barras de minuto (todos los símbolos del universo las guardan, D-71); los demás rangos, de
   /// las barras diarias.
   Future<List<PuntoDeSerie>> serie(String simbolo, RangoDeGrafica rango);
 }

@@ -5,7 +5,7 @@
 -- Todo corre dentro de una transacción que se deshace.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(54);
+select plan(56);
 
 -- Cuentas de prueba: 0001 usuario · 0004 suspendido.
 set local session_replication_role = replica;
@@ -52,7 +52,7 @@ select * from private.publicar_cotizaciones($json$[
 ]$json$::jsonb);
 select is((select guardadas from lote1), 3, 'CA-1: se guardan las 3 cotizaciones válidas');
 select is((select descartadas from lote1), 6, 'CA-2: se descartan las 6 inválidas (precio 0, negativo, nulo, texto, ausente y símbolo ajeno)');
-select is((select barras_minuto from lote1), 1, 'se guarda una barra de minuto (solo la del ETF)');
+select is((select barras_minuto from lote1), 2, 'se guardan las barras de minuto de la acción y del ETF (D-71)');
 select is((select count(*)::int from public.cotizaciones where simbolo in ('AAPL', 'QQQ', 'MSFT')), 3, 'CA-1: cotizaciones tiene las válidas');
 select is((select count(*)::int from public.cotizaciones where simbolo in ('NVDA', 'AMZN', 'GOOG', 'META', 'AMD', 'ZZZZ')), 0,
           'CA-2: ningún precio inválido llega a guardarse');
@@ -71,7 +71,7 @@ select is((select motivo from lote1, jsonb_to_recordset(descartes) as d(simbolo 
 select is((select motivo from lote1, jsonb_to_recordset(descartes) as d(simbolo text, motivo text) where d.simbolo = 'ZZZZ'),
           'SIMBOLO_FUERA_DEL_UNIVERSO', 'un símbolo ajeno al universo se descarta');
 select is((select count(*)::int from public.barras_minuto where simbolo = 'QQQ'), 1, 'el ETF QQQ guarda su barra de minuto');
-select is((select count(*)::int from public.barras_minuto where simbolo = 'AAPL'), 0, 'una acción sin posición no guarda barra de minuto');
+select is((select count(*)::int from public.barras_minuto where simbolo = 'AAPL'), 1, 'una acción también guarda su barra de minuto (D-71)');
 
 -- El evento en el canal mercado (CA-1, FR-069) -------------------------------------------------
 select is((select count(*)::int from realtime.messages where topic = 'mercado' and event = 'cotizaciones' and private), 1,
@@ -158,6 +158,14 @@ select pruebas.fijar_reloj('2031-03-04T14:21:00Z');
 select ok(private.mercado_en_ventana(interval '10 minutes'), '9 minutos antes de abrir ya está en ventana');
 select pruebas.fijar_reloj('2031-03-04T21:30:00Z');
 select is(pg_temp.filas_del_trabajo(), 0, 'CA-3: después del cierre el trabajo no despierta la función');
+
+-- D-71: las barras de las acciones sirven el día en curso y la limpieza de la madrugada las borra ---
+select pruebas.fijar_reloj('2031-03-05T08:00:00Z');
+select private.limpiar_barras_minuto();
+select is((select count(*)::int from public.barras_minuto where simbolo = 'AAPL'), 0,
+          'D-71: al día siguiente la limpieza borra la barra de la acción sin posición');
+select is((select count(*)::int from public.barras_minuto where simbolo = 'QQQ'), 1,
+          'D-71: la limpieza conserva la barra reciente del ETF');
 
 select * from finish();
 rollback;
