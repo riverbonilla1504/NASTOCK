@@ -1,0 +1,49 @@
+{
+  "id": "61e69015-8549-4bfd-b9c3-01e75843f47d",
+  "client_order_id": "3b7e5c0a-0000-4000-8000-orden-id-001",
+  "symbol": "QLD",
+  "asset_class": "us_equity",
+  "qty": "1",
+  "filled_qty": "0",
+  "filled_avg_price": null,
+  "order_class": "bracket",
+  "type": "limit",
+  "side": "buy",
+  "time_in_force": "gtc",
+  "limit_price": "111.10",
+  "stop_price": null,
+  "status": "accepted",
+  "created_at": "2026-11-06T15:00:00.123Z",
+  "legs": [
+    {
+      "id": "pata-tp-1",
+      "client_order_id": "pata-tp-1-c",
+      "symbol": "QLD",
+      "side": "sell",
+      "qty": "1",
+      "type": "limit",
+      "order_class": "bracket",
+      "time_in_force": "gtc",
+      "status": "held",
+      "filled_qty": "0",
+      "filled_avg_price": null,
+      "stop_price": null,
+      "limit_price": "123.20"
+    },
+    {
+      "id": "pata-sl-1",
+      "client_order_id": "pata-sl-1-c",
+      "symbol": "QLD",
+      "side": "sell",
+      "qty": "1",
+      "type": "stop",
+      "order_class": "bracket",
+      "time_in_force": "gtc",
+      "status": "held",
+      "filled_qty": "0",
+      "filled_avg_price": null,
+      "stop_price": "103.40",
+      "limit_price": null
+    }
+  ]
+}

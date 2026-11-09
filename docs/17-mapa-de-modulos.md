@@ -122,6 +122,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 10 §3, §5, §7, §10 · 08 §2 · 12 §4
 - **BD**: `ordenes`, `ordenes_eventos`; RPC `crear_orden_manual`, `cancelar_orden`; `private.tomar_orden_para_envio`, `registrar_respuesta_envio`, `registrar_error_envio`, `aplicar_llenado`; cola `ordenes_por_enviar`
 - **Funciones**: `ejecutor-ordenes`, `sincronizar-ordenes`; `_shared/broker/`
+  · HU-072: `_shared/broker/` con `enviarOrden`, `consultarOrden`, `cancelarOrden` y `posiciones` en `interfaz.ts` (con `validarOrden`, `OrdenRechazada`, `OrdenInvalida`, `envioIncierto`), `alpaca.ts` (POST/GET/DELETE de `/v2/orders`, `/v2/positions`; respuestas validadas con zod) y `simulado.ts` + `simulado_ordenes.ts` (órdenes en memoria; `avanzar(precios)`; escenarios `llenado_parcial`, `rechazo`, `sin_respuesta` y `halt`); pruebas `alpaca_ordenes_test.ts`, `simulado_ordenes_test.ts` y `fixtures/orden_*.json`, `posiciones.json`, `error_*.json`
 - **App**: `lib/features/ordenes/`
 - **Pruebas**: `supabase/functions/ejecutor-ordenes/*_test.ts`, `supabase/tests/llenados_*.sql` · E2E-08, E2E-11
 - **Depende de**: M-03, M-04, M-08, M-19 · **Lo usan**: M-11, M-12, M-15

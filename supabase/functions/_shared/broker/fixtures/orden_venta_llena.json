@@ -1,0 +1,18 @@
+{
+  "id": "61e69015-8549-4bfd-b9c3-01e75843f47d",
+  "client_order_id": "3b7e5c0a-0000-4000-8000-orden-id-001",
+  "symbol": "QLD",
+  "asset_class": "us_equity",
+  "qty": "3",
+  "filled_qty": "3",
+  "filled_avg_price": "121.00",
+  "order_class": "simple",
+  "type": "limit",
+  "side": "sell",
+  "time_in_force": "day",
+  "limit_price": "120.50",
+  "stop_price": null,
+  "status": "filled",
+  "created_at": "2026-11-06T15:00:00.123Z",
+  "legs": null
+}

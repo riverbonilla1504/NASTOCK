@@ -1,0 +1,22 @@
+[
+  {
+    "asset_id": "a1",
+    "symbol": "QLD",
+    "exchange": "ARCA",
+    "asset_class": "us_equity",
+    "qty": "3",
+    "avg_entry_price": "110.85",
+    "side": "long",
+    "market_value": "340.5",
+    "current_price": "113.5"
+  },
+  {
+    "asset_id": "a2",
+    "symbol": "AAPL",
+    "qty": "1",
+    "avg_entry_price": "200.00",
+    "side": "long",
+    "market_value": "201.1",
+    "current_price": null
+  }
+]
