@@ -1,4 +1,5 @@
-/// Cifras del sistema: dinero en USD, variación y antigüedad del dato.
+/// Cifras del sistema: dinero en USD, variación y antigüedad del dato, todas
+/// en monoespaciada (D-69).
 ///
 /// El dinero siempre en USD con dos decimales (docs/README, FR-003). La
 /// variación lleva flecha y signo además del color; la antigüedad lleva el
@@ -15,7 +16,7 @@ import 'forma_de_linea.dart';
 /// Tamaños de una cifra.
 enum TamanoCifra { pequena, normal, grande }
 
-/// Monto en USD con cifras tabulares.
+/// Monto en USD en monoespaciada tabular.
 class CifraUsd extends StatelessWidget {
   const CifraUsd(
     this.monto, {
@@ -34,13 +35,13 @@ class CifraUsd extends StatelessWidget {
   Widget build(BuildContext context) {
     final textos = Theme.of(context).textTheme;
     final c = context.colores;
-    final base = switch (tamano) {
+    final base = estiloDeCifra(switch (tamano) {
       TamanoCifra.pequena => textos.bodyMedium!.copyWith(
         fontWeight: FontWeight.w600,
       ),
       TamanoCifra.normal => textos.titleMedium!,
       TamanoCifra.grande => textos.displaySmall!,
-    };
+    });
     final texto = formatearUsd(monto);
     return Semantics(
       label: desactualizada ? '$texto, precio desactualizado' : texto,
@@ -91,8 +92,10 @@ class Variacion extends StatelessWidget {
           Flexible(
             child: Text(
               texto,
-              style: Theme.of(context).textTheme.bodyMedium!
-                  .copyWith(color: color, fontWeight: FontWeight.w600),
+              style: estiloDeCifra(
+                Theme.of(context).textTheme.bodyMedium!
+                    .copyWith(color: color, fontWeight: FontWeight.w600),
+              ),
             ),
           ),
         ],
@@ -125,9 +128,11 @@ class AntiguedadDelDato extends StatelessWidget {
     final texto = desactualizado
         ? 'desactualizado · $tiempo'
         : (compacta ? tiempo : 'hace $tiempo');
-    final estilo = Theme.of(context).textTheme.bodySmall!.copyWith(
-      color: desactualizado ? c.tinta : c.tintaSuave,
-      fontWeight: desactualizado ? FontWeight.w600 : FontWeight.w400,
+    final estilo = estiloDeCifra(
+      Theme.of(context).textTheme.bodySmall!.copyWith(
+        color: desactualizado ? c.tinta : c.tintaSuave,
+        fontWeight: desactualizado ? FontWeight.w600 : FontWeight.w400,
+      ),
     );
     return Semantics(
       label: desactualizado

@@ -19,6 +19,7 @@ import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
 import 'package:inversiones/shared/widgets/barra_de_pestanas.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show Session;
 
+import '../core/realtime/falsos.dart';
 import '../features/auth/falsos.dart';
 
 const _entorno = Entorno(
@@ -41,6 +42,7 @@ Future<GoRouter> _abrir(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        ...tiempoRealEnMemoria(),
         entornoProvider.overrideWithValue(_entorno),
         ingresoRepositorioProvider.overrideWithValue(repo),
       ],
@@ -293,6 +295,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
+            ...tiempoRealEnMemoria(),
             entornoProvider.overrideWithValue(_entorno),
             ingresoRepositorioProvider.overrideWithValue(
               IngresoRepositorioFalso(),

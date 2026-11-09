@@ -6,8 +6,20 @@ import 'package:inversiones/app/destinos.dart';
 import 'package:inversiones/app/rutas.dart';
 import 'package:inversiones/app/tema.dart';
 import 'package:inversiones/core/perfil/perfil.dart';
+import 'package:inversiones/core/realtime/estado_conexion.dart';
+import 'package:inversiones/core/realtime/tiempo_real_provider.dart';
 import 'package:inversiones/features/auth/presentation/acceso_de_sesion_provider.dart';
+import 'package:inversiones/shared/widgets/barra_de_conexion.dart';
 import 'package:inversiones/shared/widgets/barra_de_pestanas.dart';
+
+/// La conexión en vivo fija en un estado, sin gestor ni sesión real.
+class _ConexionFija extends ConexionNotifier {
+  _ConexionFija(this._estado);
+  final EstadoConexion _estado;
+
+  @override
+  EstadoConexion build() => _estado;
+}
 
 AccesoDeSesion _acceso(RolApp? rol) => AccesoDeSesion(
   haySesion: true,
@@ -21,6 +33,8 @@ Future<List<String>> _abrir(
   String ruta = Rutas.inicio,
   bool oscuro = false,
   double textoEscala = 1,
+  EstadoConexion conexion = EstadoConexion.conectado,
+  Widget hijo = const Center(child: Text('Contenido del destino')),
 }) async {
   tester.view.physicalSize = Size(ancho, 800);
   tester.view.devicePixelRatio = 1;
@@ -28,7 +42,10 @@ Future<List<String>> _abrir(
   final elegidas = <String>[];
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [accesoDeSesionProvider.overrideWithValue(_acceso(rol))],
+      overrides: [
+        accesoDeSesionProvider.overrideWithValue(_acceso(rol)),
+        conexionProvider.overrideWith(() => _ConexionFija(conexion)),
+      ],
       child: MaterialApp(
         theme: oscuro ? crearTemaOscuro() : crearTema(),
         builder: (context, hijo) => MediaQuery(
@@ -38,7 +55,7 @@ Future<List<String>> _abrir(
         ),
         home: CascaronDeNavegacion(
           rutaActual: ruta,
-          hijo: const Center(child: Text('Contenido del destino')),
+          hijo: hijo,
           alElegirRuta: elegidas.add,
         ),
       ),
@@ -183,6 +200,44 @@ void main() {
     });
   });
 
+  group('conexión en vivo (FR-189)', () {
+    for (final ancho in [360.0, 1280.0]) {
+      testWidgets('a ${ancho.toInt()} dp reconectando muestra la barra', (
+        tester,
+      ) async {
+        await _abrir(
+          tester,
+          rol: RolApp.usuario,
+          ancho: ancho,
+          conexion: EstadoConexion.reconectando,
+        );
+
+        expect(find.text('Reconectando…'), findsOneWidget);
+        expect(find.text('Contenido del destino'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+    }
+
+    testWidgets('sin conexión muestra la barra de sin conexión', (
+      tester,
+    ) async {
+      await _abrir(
+        tester,
+        rol: RolApp.usuario,
+        ancho: 360,
+        conexion: EstadoConexion.sinConexion,
+      );
+
+      expect(find.text('Sin conexión'), findsOneWidget);
+    });
+
+    testWidgets('conectado no muestra ninguna barra', (tester) async {
+      await _abrir(tester, rol: RolApp.usuario, ancho: 360);
+
+      expect(find.byKey(ContenidoConConexion.claveDeLaBarra), findsNothing);
+    });
+  });
+
   group('se ve bien', () {
     for (final oscuro in [false, true]) {
       for (final ancho in [360.0, 1280.0]) {
@@ -203,5 +258,60 @@ void main() {
         );
       }
     }
+  });
+
+  group('la isla no tapa el contenido (D-69)', () {
+    const claveDelUltimo = Key('ultimo-boton');
+    final pagina = Scaffold(
+      body: ListView(
+        padding: const EdgeInsets.all(Espacio.x4),
+        children: [
+          for (var i = 0; i < 30; i++)
+            SizedBox(height: 56, child: Text('Fila $i')),
+          const FilledButton(
+            key: claveDelUltimo,
+            onPressed: null,
+            child: Text('Invitar'),
+          ),
+        ],
+      ),
+    );
+
+    for (final oscuro in [false, true]) {
+      testWidgets('el último botón de una lista con scroll queda sobre la isla '
+          '(${oscuro ? 'oscuro' : 'claro'})', (tester) async {
+        await _abrir(
+          tester,
+          rol: RolApp.administrador,
+          ancho: 360,
+          oscuro: oscuro,
+          hijo: pagina,
+        );
+        await tester.scrollUntilVisible(
+          find.byKey(claveDelUltimo),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.drag(find.byType(ListView), const Offset(0, -2000));
+        await tester.pumpAndSettle();
+
+        final techoDeLaIsla = tester.getTopLeft(find.byType(BarraDePestanas));
+        final boton = tester.getRect(find.byKey(claveDelUltimo));
+        expect(boton.bottom, lessThanOrEqualTo(techoDeLaIsla.dy));
+      });
+    }
+
+    testWidgets('el cuerpo termina donde empieza la isla', (tester) async {
+      await _abrir(
+        tester,
+        rol: RolApp.usuario,
+        ancho: 412,
+        hijo: const SizedBox.expand(key: Key('cuerpo')),
+      );
+
+      final cuerpo = tester.getRect(find.byKey(const Key('cuerpo')));
+      final techoDeLaIsla = tester.getTopLeft(find.byType(BarraDePestanas));
+      expect(cuerpo.bottom, lessThanOrEqualTo(techoDeLaIsla.dy));
+    });
   });
 }

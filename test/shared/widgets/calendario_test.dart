@@ -64,7 +64,7 @@ void main() {
     );
     expect(
       (circulo.decoration! as BoxDecoration).color,
-      ColoresAlmanaque.claro.morado,
+      ColoresTema.claro.morado,
     );
   });
 

@@ -1,8 +1,8 @@
-/// La firma del Almanaque: la jornada del mercado como una franja de tiempo.
+/// La jornada del mercado como una franja de tiempo.
 ///
-/// Va sobre la barra superior en grafito. Lo transcurrido se marca con un
-/// trazo grueso y un difuminado gris que crece hacia "ahora"; la aguja de
-/// ahora va en morado. Las horas se muestran en hora de Bogotá (RN-42).
+/// Va sobre la barra superior blanca. Lo transcurrido se marca con un trazo
+/// grueso en tinta sobre un relleno gris plano; la aguja de ahora va en
+/// morado. Las horas, en monoespaciada y en hora de Bogotá (RN-42).
 /// Apertura y cierre vienen del calendario del broker (RN-41, HU-027).
 library;
 
@@ -42,7 +42,7 @@ class FranjaDeLaJornada extends StatelessWidget {
             cierre: cierre,
             ahora: ahora,
             colores: context.colores,
-            estilo: Theme.of(context).textTheme.bodySmall!,
+            estilo: estiloDeCifra(Theme.of(context).textTheme.bodySmall!),
             escala: MediaQuery.textScalerOf(context),
           ),
         ),
@@ -64,7 +64,7 @@ class _PintorDeFranja extends CustomPainter {
   final DateTime apertura;
   final DateTime cierre;
   final DateTime ahora;
-  final ColoresAlmanaque colores;
+  final ColoresTema colores;
   final TextStyle estilo;
   final TextScaler escala;
 
@@ -77,8 +77,8 @@ class _PintorDeFranja extends CustomPainter {
     double xDe(DateTime t) =>
         (t.difference(apertura).inSeconds / total).clamp(0.0, 1.0) * size.width;
 
-    final suave = colores.sobreGrafitoSuave;
-    final fuerte = colores.sobreGrafito;
+    final suave = colores.tintaTenue;
+    final fuerte = colores.tinta;
     final xAhora = xDe(ahora);
     final transcurrido = ahora.isAfter(apertura);
 
@@ -86,13 +86,7 @@ class _PintorDeFranja extends CustomPainter {
       final zona = Rect.fromLTWH(0, _ejeY - 8, xAhora, 16);
       canvas.drawRRect(
         RRect.fromRectAndRadius(zona, const Radius.circular(2)),
-        Paint()
-          ..shader = LinearGradient(
-            colors: [
-              fuerte.withValues(alpha: 0),
-              fuerte.withValues(alpha: 0.16),
-            ],
-          ).createShader(zona),
+        Paint()..color = colores.relleno,
       );
     }
 
@@ -161,7 +155,7 @@ class _PintorDeFranja extends CustomPainter {
     }
 
     if (transcurrido && !ahora.isAfter(cierre)) {
-      final morado = colores.moradoSobreGrafito;
+      final morado = colores.morado;
       canvas.drawLine(
         Offset(xAhora, _ejeY - 14),
         Offset(xAhora, _ejeY + 6),

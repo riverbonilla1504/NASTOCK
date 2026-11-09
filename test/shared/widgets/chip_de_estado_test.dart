@@ -21,10 +21,10 @@ void main() {
       ),
     );
 
-    expect(find.text('EN VIVO'), findsOneWidget);
-    expect(find.text('PENDIENTE'), findsOneWidget);
-    expect(find.text('DESACTUALIZADO'), findsOneWidget);
-    expect(find.text('DESHABILITADO'), findsOneWidget);
+    expect(find.text('En vivo'), findsOneWidget);
+    expect(find.text('Pendiente'), findsOneWidget);
+    expect(find.text('Desactualizado'), findsOneWidget);
+    expect(find.text('Deshabilitado'), findsOneWidget);
     final formas = tester
         .widgetList<TrazoDeLinea>(find.byType(TrazoDeLinea))
         .map((t) => t.forma)
@@ -43,7 +43,7 @@ void main() {
     final semantica = tester.ensureSemantics();
     await montar(tester, const ChipDeEstado.deshabilitado());
 
-    final texto = tester.widget<Text>(find.text('DESHABILITADO'));
+    final texto = tester.widget<Text>(find.text('Deshabilitado'));
     expect(texto.style!.decoration, TextDecoration.lineThrough);
     expect(
       find.bySemanticsLabel('Deshabilitado, no disponible'),

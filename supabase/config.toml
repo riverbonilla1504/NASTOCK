@@ -406,6 +406,10 @@ verify_jwt = false
 [functions.ingesta-mercado]
 verify_jwt = false
 
+# agente también: solo el secreto interno (trabajo ciclo_agente de pg_cron). No importa _shared/broker/.
+[functions.agente]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

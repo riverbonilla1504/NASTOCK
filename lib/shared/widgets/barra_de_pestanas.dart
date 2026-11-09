@@ -3,8 +3,11 @@
 /// dentro de una píldora `morado-tenue`; las demás, solo el ícono. En ventanas
 /// anchas la pantalla usa el riel de navegación y no este componente.
 ///
-/// La pantalla que la usa pone `extendBody: true` en su `Scaffold` y deja al
-/// final de sus listas el relleno inferior de `MediaQuery` más `Espacio.x4`.
+/// El cascarón de navegación la pone como `bottomNavigationBar` con
+/// `extendBody: false`: el contenido termina donde empieza la isla y nada con
+/// scroll queda tapado. Con `extendBody: true` el contenido pasa por detrás y
+/// el velo y el desenfoque se notan; quien lo haga debe dejar al final de sus
+/// listas el relleno inferior de `MediaQuery` más `Espacio.x4`.
 library;
 
 import 'dart:ui' as ui;
@@ -74,8 +77,8 @@ class BarraDePestanas extends StatelessWidget {
               clipper: ShapeBorderClipper(shape: forma),
               child: BackdropFilter(
                 filter: ui.ImageFilter.blur(
-                  sigmaX: ProfundidadAlmanaque.desenfoque,
-                  sigmaY: ProfundidadAlmanaque.desenfoque,
+                  sigmaX: ProfundidadTema.desenfoque,
+                  sigmaY: ProfundidadTema.desenfoque,
                 ),
                 child: DecoratedBox(
                   decoration: ShapeDecoration(shape: forma, color: p.velo),
@@ -139,7 +142,6 @@ class _DestinoState extends State<_Destino> {
     final actual = widget.actual;
     final color = actual ? c.tinta : c.tintaSuave;
     final estiloRotulo = Theme.of(context).textTheme.bodySmall!.copyWith(
-      fontFamily: Familias.condensada,
       fontSize: 12,
       color: color,
       fontWeight: actual ? FontWeight.w700 : FontWeight.w600,

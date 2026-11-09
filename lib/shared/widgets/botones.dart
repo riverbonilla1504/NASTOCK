@@ -1,5 +1,5 @@
-/// Botones del sistema: primario en tinta llena, secundario con contorno de
-/// tinta y de texto subrayado. Mientras una acción se envía, el botón se
+/// Botones del sistema (D-69): primario sólido en el acento morado, secundario
+/// en gris claro y de texto en morado. Mientras una acción se envía, el botón se
 /// deshabilita y dice "Procesando…" (docs/08 §9.3).
 library;
 
