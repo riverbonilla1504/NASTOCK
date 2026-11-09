@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inversiones/app/destinos.dart';
 import 'package:inversiones/app/tema.dart';
 import 'package:inversiones/features/admin/data/fondo_repositorio.dart';
 import 'package:inversiones/features/admin/presentation/guia_de_primeros_pasos.dart';
@@ -102,13 +103,27 @@ void main() {
     expect(find.text('Capital'), findsOneWidget);
   });
 
-  testWidgets('las secciones sin pantalla quedan deshabilitadas', (
-    tester,
-  ) async {
-    await _montar(tester, _FondoFalso(() async => true));
+  testWidgets(
+    'las cuatro secciones del MVP tienen pantalla y están habilitadas',
+    (tester) async {
+      await _montar(tester, _FondoFalso(() async => true));
 
-    // Invitaciones tiene pantalla; las demás aún no están registradas aquí.
-    expect(find.text('Próximamente'), findsWidgets);
-    expect(find.byKey(claveDeEntradaAInvitaciones), findsOneWidget);
+      // Con HU-101 las cuatro entradas del MVP corto registran su subruta, así
+      // que ninguna queda como "Próximamente".
+      expect(find.text('Próximamente'), findsNothing);
+      expect(find.byKey(claveDeEntradaAInvitaciones), findsOneWidget);
+      for (final seccion in ['capital', 'cupos', 'parametros']) {
+        expect(
+          find.byKey(claveDeEntrada(seccion)),
+          findsOneWidget,
+          reason: seccion,
+        );
+      }
+    },
+  );
+
+  test('una sección sin subruta registrada queda deshabilitada', () {
+    expect(seccionDeAdministracionDisponible('/admin/parametros'), isTrue);
+    expect(seccionDeAdministracionDisponible('/admin/no-existe'), isFalse);
   });
 }
