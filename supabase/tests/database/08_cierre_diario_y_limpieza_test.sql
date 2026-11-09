@@ -101,16 +101,19 @@ insert into public.barras_minuto (simbolo, momento, apertura, maximo, minimo, ci
   ('NVDA', '2026-11-05T14:00:00Z', 10, 11, 9, 10, 1);   -- ídem
 
 select is(private.limpiar_barras_minuto(), 5,
-          'CA-3: borra las de más de 5 días y las de símbolos que no son ETF (sin tabla de posiciones)');
+          'CA-3: borra las de más de 5 días y las de símbolos que no son ETF (sin posiciones)');
 select is((select array_agg(simbolo || '@' || momento::date order by simbolo, momento) from public.barras_minuto),
           array['QLD@2026-11-02', 'QQQ@2026-11-04', 'TQQQ@2026-11-05'],
           'solo quedan las recientes de los ETF');
 select is(private.limpiar_barras_minuto(), 0, 'repetir la limpieza no borra nada más');
 
--- Con la tabla de posiciones (docs/06 §5.5) se conservan las de los símbolos con posición abierta.
-create table public.posiciones (simbolo text not null, cerrada_en timestamptz);
-insert into public.posiciones (simbolo, cerrada_en) values
-  ('MSFT', null), ('NVDA', '2026-11-04T20:00:00Z');
+-- Con posiciones (docs/06 §5.4, tabla de HU-074) se conservan las de los símbolos con posición abierta.
+insert into public.posiciones (subcuenta_id, simbolo, cantidad, costo_promedio, costo_total, estado, cerrada_en)
+select s.id, v.simbolo, v.cantidad, v.costo, v.costo, v.estado::public.estado_posicion, v.cerrada_en
+  from public.subcuentas s,
+       (values ('MSFT', 1, 10, 'abierta', null::timestamptz),
+               ('NVDA', 0, 0, 'cerrada', '2026-11-04T20:00:00Z'::timestamptz)) as v(simbolo, cantidad, costo, estado, cerrada_en)
+ where s.tipo = 'reserva';
 insert into public.barras_minuto (simbolo, momento, apertura, maximo, minimo, cierre, volumen) values
   ('MSFT', '2026-11-05T14:00:00Z', 10, 11, 9, 10, 1),   -- posición abierta reciente: se queda
   ('MSFT', '2026-10-28T14:00:00Z', 10, 11, 9, 10, 1),   -- posición abierta de 8 días: se borra
