@@ -64,11 +64,11 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 02 §3–§5, §7, §8, §14 · 08 §4 · 12 §2
 - **BD**: `movimientos_capital`; RPC `registrar_aporte`, `anular_aporte`, `registrar_retiro`, `asignar_cupo`, `reducir_cupo`, `solicitar_liquidacion`; `private.crear_cupo`, `private.mover_cupo`, `private.publicar_evento_subcuenta`, `private.proponer_rebalanceo`, reparto dentro de `private.aplicar_llenado`
 - **Funciones**: `conciliacion` (confirma aportes), `cierre-diario` (rebalanceo)
-- **App**: `lib/features/admin/capital/`, `lib/features/admin/cupos/`
+- **App**: `lib/features/admin/capital/` (HU-099: `domain/movimiento_de_capital.dart`, `data/capital_repositorio.dart` sobre `movimientos_capital` y las RPC, `presentation/`: `capital_provider.dart` que se actualiza con el evento `capital` del canal `admin`, `formulario_de_aporte.dart`, `lista_de_aportes.dart` y `pagina_capital.dart`; ruta `/admin/capital`), `lib/features/admin/cupos/`
 - **Rutas**: `supabase/migrations/20261109130000_capital_tabla_y_evento.sql` (tabla, RLS, evento `capital`), `20261109130002_capital_registrar_y_anular_aporte.sql` (`registrar_aporte`, `anular_aporte`)
   · HU-015: `20261109140000_conciliaciones.sql` (tabla, evento `conciliacion`, `conciliacion_pendiente`), `20261109140002_confirmar_aporte_y_conciliar.sql` (`confirmar_aporte`, `registrar_conciliacion`, `aportes_sin_confirmar`), `20261109140004_trabajo_conciliacion.sql` (cron cada minuto)
 - **Funciones (rutas)**: `supabase/functions/conciliacion/`; operación `cuenta` en `supabase/functions/_shared/broker/` (`EFECTIVO_SIMULADO` en `.env.e2e`)
-- **Pruebas**: `supabase/tests/database/13_capital_aportes_test.sql`, `14_conciliacion_y_reparto_test.sql`, `deno test` de `conciliacion/` y `_shared/broker/` · E2E-04, E2E-08
+- **Pruebas**: `supabase/tests/database/13_capital_aportes_test.sql`, `14_conciliacion_y_reparto_test.sql`, `test/features/admin/capital/capital_test.dart`, `deno test` de `conciliacion/` y `_shared/broker/` · E2E-04, E2E-08
 - **Depende de**: M-02, M-03, M-12 · **Lo usan**: M-15
 
 ### M-05 · Datos de mercado
@@ -104,8 +104,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 02 §9–§10 · 08 §6 (interruptores)
 - **BD**: `parametros`, `parametros_historial`, `fondos` (interruptores); `private.validar_operacion`; RPC `actualizar_parametro` (con `private.validar_valor_parametro` y `private.aplicar_parametro`), `activar_freno`, `reanudar` (con `private.cambiar_interruptor`; trigger `fondos_publicar_interruptor`) · migraciones `supabase/migrations/*_catalogo_de_parametros.sql` (catálogo de 02 §10 e historial), `*_actualizar_parametro.sql` y `*_margenes_desde_parametros.sql` e `*_interruptores_del_fondo.sql`
 - **Funciones**: — (lo llaman `agente`, `opinion-ia`, `ejecutor-ordenes` y las RPC)
-- **App**: `lib/features/admin/parametros/`, freno en la barra
-- **Pruebas**: `supabase/tests/database/10_politicas_parametros_test.sql`, `16_interruptores_del_fondo_test.sql` (más `politicas_*` de las historias siguientes)
+- **App**: `lib/features/admin/parametros/` (pantalla de parámetros e interruptores, HU-101), freno en la barra
+- **Pruebas**: `test/features/admin/parametros/`, `supabase/tests/database/10_politicas_parametros_test.sql`, `16_interruptores_del_fondo_test.sql` (más `politicas_*` de las historias siguientes)
 - **Depende de**: M-03, M-05, M-18 · **Lo usan**: M-07, M-09, M-10, M-11
 
 ### M-09 · Sugerencias y decisiones
@@ -122,6 +122,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 10 §3, §5, §7, §10 · 08 §2 · 12 §4
 - **BD**: `ordenes`, `ordenes_eventos`; RPC `crear_orden_manual`, `cancelar_orden`; `private.tomar_orden_para_envio`, `registrar_respuesta_envio`, `registrar_error_envio`, `aplicar_llenado`; cola `ordenes_por_enviar`
 - **Funciones**: `ejecutor-ordenes`, `sincronizar-ordenes`; `_shared/broker/`
+  · HU-072: `_shared/broker/` con `enviarOrden`, `consultarOrden`, `cancelarOrden` y `posiciones` en `interfaz.ts` (con `validarOrden`, `OrdenRechazada`, `OrdenInvalida`, `envioIncierto`), `alpaca.ts` (POST/GET/DELETE de `/v2/orders`, `/v2/positions`; respuestas validadas con zod) y `simulado.ts` + `simulado_ordenes.ts` (órdenes en memoria; `avanzar(precios)`; escenarios `llenado_parcial`, `rechazo`, `sin_respuesta` y `halt`); pruebas `alpaca_ordenes_test.ts`, `simulado_ordenes_test.ts` y `fixtures/orden_*.json`, `posiciones.json`, `error_*.json`
 - **App**: `lib/features/ordenes/`
 - **Pruebas**: `supabase/functions/ejecutor-ordenes/*_test.ts`, `supabase/tests/llenados_*.sql` · E2E-08, E2E-11
 - **Depende de**: M-03, M-04, M-08, M-19 · **Lo usan**: M-11, M-12, M-15
@@ -176,8 +177,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 03 §2–§3
 - **BD**: RPC de administración de los demás módulos
 - **Funciones**: `admin-usuarios`
-- **App**: `lib/features/admin/` (`presentation/pagina_administracion.dart`: la pantalla de `/admin`, donde cada sección agrega su entrada; cada sección tiene su carpeta, como `usuarios/`)
-- **Pruebas**: widget tests de administración, `test/app/entrada_a_invitaciones_test.dart` · E2E-01
+- **App**: `lib/features/admin/` (`presentation/pagina_administracion.dart`: la pantalla de `/admin`, donde cada sección agrega su entrada; cada sección tiene su carpeta, como `usuarios/`, `capital/` y `cupos/`; solo las cuatro entradas del MVP corto, deshabilitadas hasta que su historia registra la subruta en `destinos.dart` (`seccionDeAdministracionDisponible`); `presentation/guia_de_primeros_pasos.dart` y `data/fondo_repositorio.dart` con `fondoConCapitalProvider`: la guía de CB-80 mientras no hay un aporte confirmado)
+- **Pruebas**: widget tests de administración, `test/app/entrada_a_invitaciones_test.dart`, `test/features/admin/pagina_administracion_test.dart`, `test/features/admin/cupos/` · E2E-01
 - **Depende de**: M-02, M-04, M-07, M-08, M-17, M-18 · **Lo usan**: —
 
 ### M-17 · Auditoría

@@ -21,6 +21,7 @@ import { BrokerAlpaca } from "./alpaca.ts";
 import type { Broker } from "./interfaz.ts";
 import {
   BrokerSimulado,
+  type EscenarioDeOrden,
   type ModoDeReloj,
   MODOS_DE_RELOJ,
 } from "./simulado.ts";
@@ -59,14 +60,20 @@ function modoDeReloj(leer: LeerVariable): ModoDeReloj {
   return valor as ModoDeReloj;
 }
 
+/**
+ * `escenario` (docs/10 §9) solo afecta al simulado: quien llama lo lee de `pruebas.escenarios`
+ * (proveedor `broker`) y lo pasa aquí. El broker real lo ignora.
+ */
 export function crearBroker(
   leer: LeerVariable = (nombre) => Deno.env.get(nombre),
+  escenario?: EscenarioDeOrden,
 ): Broker {
   return elegirProveedor<Broker>("broker", {
     simulado: () =>
       new BrokerSimulado({
         modo: modoDeReloj(leer),
         efectivo: efectivoSimulado(leer),
+        escenario,
       }),
     alpaca: () =>
       new BrokerAlpaca({

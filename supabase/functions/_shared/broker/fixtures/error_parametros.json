@@ -1,0 +1,4 @@
+{
+  "code": 42210000,
+  "message": "qty must be integer for non-fractionable asset"
+}

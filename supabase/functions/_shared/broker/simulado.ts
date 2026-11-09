@@ -1,4 +1,5 @@
-// Broker simulado (docs/10 §9, FR-004): mismo contrato que alpaca.ts, sin red ni llaves.
+// Broker simulado (docs/10 §9, FR-004): mismo contrato que alpaca.ts, sin red ni llaves. Las
+// órdenes viven en simulado_ordenes.ts.
 //
 // El reloj de mercado es configurable (docs/10 §9: "siempre abierto", "cerrado", "a 10 min del
 // cierre"), para que el sistema se pueda probar de punta a punta a cualquier hora:
@@ -23,8 +24,20 @@ import type {
   ConsultaDeCalendario,
   CuentaDelBroker,
   DiaDeCalendario,
+  OrdenAEnviar,
+  OrdenDelBroker,
+  PosicionDelBroker,
+  ReferenciaDeOrden,
   RelojDelBroker,
+  ResultadoDeCancelacion,
 } from "./interfaz.ts";
+import { type EscenarioDeOrden, OrdenesSimuladas } from "./simulado_ordenes.ts";
+
+export {
+  type EscenarioDeOrden,
+  ESCENARIOS_DE_ORDEN,
+  esEscenarioDeOrden,
+} from "./simulado_ordenes.ts";
 
 /** Modos del reloj de mercado simulado. El primero es el de por defecto. */
 export const MODOS_DE_RELOJ = [
@@ -51,6 +64,8 @@ export interface OpcionesDelBrokerSimulado {
   desconocidos?: readonly string[];
   /** Efectivo de la cuenta paper simulada, en USD. Alpaca trae 100.000 por defecto (docs/10 §4.1). */
   efectivo?: number;
+  /** Escenario forzado de las órdenes (docs/10 §9). Por defecto, `normal`. */
+  escenario?: EscenarioDeOrden;
 }
 
 const MINUTO_DE_APERTURA = 9 * 60 + 30;
@@ -88,6 +103,7 @@ export class BrokerSimulado implements Broker {
   readonly #noFraccionables: ReadonlySet<string>;
   readonly #desconocidos: ReadonlySet<string>;
   readonly #efectivo: number;
+  readonly #ordenes: OrdenesSimuladas;
 
   constructor(opciones: OpcionesDelBrokerSimulado = {}) {
     this.modo = opciones.modo ?? "calendario";
@@ -96,6 +112,53 @@ export class BrokerSimulado implements Broker {
     this.#noFraccionables = new Set(opciones.noFraccionables ?? []);
     this.#desconocidos = new Set(opciones.desconocidos ?? []);
     this.#efectivo = opciones.efectivo ?? 100_000;
+    this.#ordenes = new OrdenesSimuladas(
+      opciones.escenario ?? "normal",
+      (simbolo) =>
+        this.#desconocidos.has(simbolo) || this.#noNegociables.has(simbolo)
+          ? "activo no negociable"
+          : null,
+    );
+  }
+
+  /** Escenario forzado de las órdenes; cámbialo entre pasos de una prueba. */
+  get escenario(): EscenarioDeOrden {
+    return this.#ordenes.escenario;
+  }
+
+  set escenario(escenario: EscenarioDeOrden) {
+    this.#ordenes.escenario = escenario;
+  }
+
+  /**
+   * Un paso de mercado: fija los precios vigentes y llena las órdenes que cumplen su límite o
+   * cuyas patas se cruzan. Solo existe en el simulado: quien lo usa (pruebas, demostración) es
+   * el "mercado" que mueve el precio.
+   */
+  avanzar(precios: Readonly<Record<string, number>>): void {
+    this.#ordenes.avanzar(precios);
+  }
+
+  enviarOrden(orden: OrdenAEnviar): Promise<OrdenDelBroker> {
+    try {
+      return Promise.resolve(this.#ordenes.enviar(orden));
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  consultarOrden(
+    referencia: ReferenciaDeOrden,
+  ): Promise<OrdenDelBroker | null> {
+    return Promise.resolve(this.#ordenes.consultar(referencia));
+  }
+
+  cancelarOrden(idBroker: string): Promise<ResultadoDeCancelacion> {
+    return Promise.resolve(this.#ordenes.cancelar(idBroker));
+  }
+
+  posiciones(): Promise<PosicionDelBroker[]> {
+    return Promise.resolve(this.#ordenes.posiciones());
   }
 
   cuenta(): Promise<CuentaDelBroker> {
