@@ -65,7 +65,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **BD**: `movimientos_capital`; RPC `registrar_aporte`, `anular_aporte`, `registrar_retiro`, `asignar_cupo`, `reducir_cupo`, `solicitar_liquidacion`; `private.crear_cupo`, `private.proponer_rebalanceo`, reparto dentro de `private.aplicar_llenado`
 - **Funciones**: `conciliacion` (confirma aportes), `cierre-diario` (rebalanceo)
 - **App**: `lib/features/admin/capital/`, `lib/features/admin/cupos/`
-- **Pruebas**: `supabase/tests/capital_*.sql`, `reparto_*.sql` · E2E-04, E2E-08
+- **Rutas**: `supabase/migrations/20261109130000_capital_tabla_y_evento.sql` (tabla, RLS, evento `capital`), `20261109130002_capital_registrar_y_anular_aporte.sql` (`registrar_aporte`, `anular_aporte`)
+- **Pruebas**: `supabase/tests/database/13_capital_aportes_test.sql`, `reparto_*.sql` · E2E-04, E2E-08
 - **Depende de**: M-02, M-03, M-12 · **Lo usan**: M-15
 
 ### M-05 · Datos de mercado
