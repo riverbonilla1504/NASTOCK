@@ -33,4 +33,4 @@ Una sola historia de usuario (US1). Solo app y E2E de la app: sin migraciones. C
 
 - [x] T010 [US1] `integration_test/app_test.dart`: tras ingresar con cada rol, el gestor abre los canales de su rol, el servidor los acepta todos, la conexión queda en `conectado` y al cerrar sesión no hay gestor (CA-1)
 - [x] T011 [P] [US1] `docs/17-mapa-de-modulos.md` M-13: rutas de la app y pruebas
-- [ ] T012 [US1] `scripts/verificar.sh` completo en verde y cuerpo del PR
+- [x] T012 [US1] Verificación rápida (analyze y pruebas de la app; sin `verificar.sh` completo por decisión del 2026-11-08) y cuerpo del PR

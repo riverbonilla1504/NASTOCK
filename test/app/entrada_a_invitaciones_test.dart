@@ -11,6 +11,7 @@ import 'package:inversiones/features/admin/usuarios/presentation/pagina_invitaci
 import 'package:inversiones/features/auth/data/ingreso_repositorio.dart';
 
 import '../features/admin/usuarios/ayudas.dart';
+import '../core/realtime/falsos.dart';
 import '../features/auth/falsos.dart';
 
 const _entorno = Entorno(
@@ -36,6 +37,7 @@ Future<GoRouter> _abrir(
             ..sesionActual = sesionDePrueba(rol: rol, estado: estado),
         ),
         ...overridesDe(RepositorioFalso()),
+        ...tiempoRealEnMemoria(),
       ],
       child: const Aplicacion(),
     ),
