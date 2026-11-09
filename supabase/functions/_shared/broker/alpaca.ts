@@ -17,6 +17,7 @@ import {
   type ActivoDelBroker,
   type Broker,
   type ConsultaDeCalendario,
+  type CuentaDelBroker,
   type DiaDeCalendario,
   MINUTO_DE_CIERRE_REGULAR,
   type RelojDelBroker,
@@ -52,6 +53,9 @@ const esquemaReloj = z.object({
   next_open: z.string(),
   next_close: z.string(),
 });
+
+// Alpaca manda el efectivo como texto ("10000" o "-12.5").
+const esquemaCuenta = z.object({ cash: z.string() });
 
 const esquemaActivo = z.object({
   symbol: z.string(),
@@ -116,6 +120,18 @@ export class BrokerAlpaca implements Broker {
       proximaApertura,
       proximoCierre,
     };
+  }
+
+  async cuenta(): Promise<CuentaDelBroker> {
+    const cuerpo = await this.#pedir("/v2/account");
+    const datos = interpretar(esquemaCuenta, cuerpo, "la cuenta");
+    const efectivo = Number(datos.cash);
+    if (datos.cash.trim() === "" || !Number.isFinite(efectivo)) {
+      throw new ErrorDeProveedor(
+        "Alpaca devolvió la cuenta con un efectivo inválido",
+      );
+    }
+    return { efectivo };
   }
 
   async activos(simbolos: readonly string[]): Promise<ActivoDelBroker[]> {

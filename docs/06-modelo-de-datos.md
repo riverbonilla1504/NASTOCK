@@ -890,7 +890,9 @@ Las Edge Functions las ejecutan por conexión directa a Postgres, con
 | `disparar_proteccion_virtual(proteccion_id, precio)` | Crea y encola la orden de venta de protección. |
 | `vencer_sugerencias()` | Vencimiento por tiempo y aviso previo. |
 | `proponer_rebalanceo()` | RN-33 a RN-35. |
-| `registrar_conciliacion(...)` | Resultado y acción (apagar trading si es crítico). |
+| `registrar_conciliacion(efectivo_broker, detalle_posiciones)` | Compara el efectivo del broker con el del libro (Σ de las subcuentas que no son `externa`), registra el resultado (`ok`, `diferencia_menor`, `descuadre_critico`) y, con `ok`, confirma los aportes registrados que el efectivo cubre, del más antiguo al más nuevo. La pausa del trading ante un descuadre crítico llega con HU-080. |
+| `confirmar_aporte(id)` | Confirma un aporte registrado y lo reparte con los `reparto.pct_*` vigentes (RN-08, RN-09); guarda los porcentajes en `movimientos.parametros`; publica `resumen_cambio` en `fondo`. Solo el sistema. |
+| `aportes_sin_confirmar(antiguedad)` | Aportes registrados desde hace más de una hora (CB-11). Base de la alerta de HU-085. |
 | `tomar_foto_patrimonio(fecha)` | `patrimonio_diario`. |
 | `registrar_salud(integracion, ok, error)` | `salud_integraciones`. |
 | `suspender_cuenta`, `reactivar_cuenta`, `dar_de_baja`, `reincorporar` | Parte de base de datos de la Edge Function `admin-usuarios`. |

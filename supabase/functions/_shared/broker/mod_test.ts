@@ -91,3 +91,15 @@ Deno.test("ENTORNO=mvp no admite el broker simulado (CB-91)", () => {
     BrokerAlpaca,
   );
 });
+
+Deno.test("EFECTIVO_SIMULADO fija el efectivo de la cuenta simulada y se valida", async () => {
+  const broker = crearBroker(entorno({ EFECTIVO_SIMULADO: " 10000 " }));
+  assertEquals(await broker.cuenta(), { efectivo: 10_000 });
+  assertEquals(await crearBroker(entorno({})).cuenta(), { efectivo: 100_000 });
+  for (const malo of ["abc", "-5"]) {
+    assertThrows(
+      () => crearBroker(entorno({ EFECTIVO_SIMULADO: malo })),
+      ErrorDeConfiguracion,
+    );
+  }
+});

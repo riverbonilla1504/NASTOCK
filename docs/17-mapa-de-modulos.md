@@ -66,7 +66,9 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Funciones**: `conciliacion` (confirma aportes), `cierre-diario` (rebalanceo)
 - **App**: `lib/features/admin/capital/`, `lib/features/admin/cupos/`
 - **Rutas**: `supabase/migrations/20261109130000_capital_tabla_y_evento.sql` (tabla, RLS, evento `capital`), `20261109130002_capital_registrar_y_anular_aporte.sql` (`registrar_aporte`, `anular_aporte`)
-- **Pruebas**: `supabase/tests/database/13_capital_aportes_test.sql`, `reparto_*.sql` · E2E-04, E2E-08
+  · HU-015: `20261109140000_conciliaciones.sql` (tabla, evento `conciliacion`, `conciliacion_pendiente`), `20261109140002_confirmar_aporte_y_conciliar.sql` (`confirmar_aporte`, `registrar_conciliacion`, `aportes_sin_confirmar`), `20261109140004_trabajo_conciliacion.sql` (cron cada minuto)
+- **Funciones (rutas)**: `supabase/functions/conciliacion/`; operación `cuenta` en `supabase/functions/_shared/broker/` (`EFECTIVO_SIMULADO` en `.env.e2e`)
+- **Pruebas**: `supabase/tests/database/13_capital_aportes_test.sql`, `14_conciliacion_y_reparto_test.sql`, `deno test` de `conciliacion/` y `_shared/broker/` · E2E-04, E2E-08
 - **Depende de**: M-02, M-03, M-12 · **Lo usan**: M-15
 
 ### M-05 · Datos de mercado

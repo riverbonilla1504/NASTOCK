@@ -4,6 +4,7 @@
 //   PROVEEDOR_BROKER=alpaca                    → BrokerAlpaca, con ALPACA_KEY_ID,
 //                                                ALPACA_SECRET_KEY y ALPACA_TRADING_URL
 //
+// EFECTIVO_SIMULADO (USD, por defecto 100000) es el efectivo de la cuenta del broker simulado.
 // RELOJ_SIMULADO solo cambia al broker simulado: `calendario` (por defecto), `siempre_abierto`,
 // `cerrado` o `cierre_en_10_min`. Otro valor es un error de configuración.
 //
@@ -28,12 +29,25 @@ export type {
   ActivoDelBroker,
   Broker,
   ConsultaDeCalendario,
+  CuentaDelBroker,
   DiaDeCalendario,
   RelojDelBroker,
 } from "./interfaz.ts";
 
 /** URL de la API de trading paper de Alpaca si ALPACA_TRADING_URL no está definida (docs/10 §1). */
 export const URL_DE_TRADING_POR_DEFECTO = "https://paper-api.alpaca.markets";
+
+function efectivoSimulado(leer: LeerVariable): number | undefined {
+  const texto = leer("EFECTIVO_SIMULADO")?.trim();
+  if (!texto) return undefined;
+  const valor = Number(texto);
+  if (!Number.isFinite(valor) || valor < 0) {
+    throw new ErrorDeConfiguracion([
+      "EFECTIVO_SIMULADO debe ser un número no negativo",
+    ]);
+  }
+  return valor;
+}
 
 function modoDeReloj(leer: LeerVariable): ModoDeReloj {
   const valor = leer("RELOJ_SIMULADO")?.trim().toLowerCase() || "calendario";
@@ -49,7 +63,11 @@ export function crearBroker(
   leer: LeerVariable = (nombre) => Deno.env.get(nombre),
 ): Broker {
   return elegirProveedor<Broker>("broker", {
-    simulado: () => new BrokerSimulado({ modo: modoDeReloj(leer) }),
+    simulado: () =>
+      new BrokerSimulado({
+        modo: modoDeReloj(leer),
+        efectivo: efectivoSimulado(leer),
+      }),
     alpaca: () =>
       new BrokerAlpaca({
         urlTrading: leer("ALPACA_TRADING_URL")?.trim() ||

@@ -410,6 +410,10 @@ verify_jwt = false
 [functions.agente]
 verify_jwt = false
 
+# conciliacion también: solo el secreto interno (trabajo conciliacion de pg_cron).
+[functions.conciliacion]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327
