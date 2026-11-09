@@ -91,6 +91,7 @@ Future<ResultadoDeConfirmacion> confirmarAccion(
   required String textoConfirmar,
   required Future<void> Function() alConfirmar,
   String? detalle,
+  String rotuloDelSimbolo = 'Símbolo',
 }) async {
   final resultado = await showDialog<ResultadoDeConfirmacion>(
     context: context,
@@ -102,6 +103,7 @@ Future<ResultadoDeConfirmacion> confirmarAccion(
       textoConfirmar: textoConfirmar,
       alConfirmar: alConfirmar,
       detalle: detalle,
+      rotuloDelSimbolo: rotuloDelSimbolo,
     ),
   );
   return resultado ?? ResultadoDeConfirmacion.cancelado;
@@ -116,6 +118,7 @@ class DialogoDeConfirmacion extends StatefulWidget {
     required this.textoConfirmar,
     required this.alConfirmar,
     this.detalle,
+    this.rotuloDelSimbolo = 'Símbolo',
     super.key,
   });
 
@@ -128,6 +131,10 @@ class DialogoDeConfirmacion extends StatefulWidget {
   final num monto;
   final String textoConfirmar;
   final Future<void> Function() alConfirmar;
+
+  /// Rótulo de la primera fila del resumen; `Símbolo` salvo que lo confirmado
+  /// no sea una operación de mercado (p. ej. `Cupo`).
+  final String rotuloDelSimbolo;
 
   /// Línea opcional bajo el título (p. ej. "Compra a mercado").
   final String? detalle;
@@ -192,7 +199,7 @@ class _EstadoDelDialogo extends State<DialogoDeConfirmacion> {
               const SizedBox(height: Espacio.x3),
             ],
             _FilaDelResumen(
-              rotulo: 'Símbolo',
+              rotulo: widget.rotuloDelSimbolo,
               valor: Text(widget.simbolo, style: textos.titleMedium),
             ),
             const SizedBox(height: Espacio.x2),
