@@ -15,7 +15,7 @@ import '../../../../core/perfil/perfil.dart';
 import '../../../../shared/widgets/avisos.dart';
 import '../../../../shared/widgets/botones.dart';
 import '../../../../shared/widgets/campo.dart';
-import '../../../../shared/widgets/opciones_excluyentes.dart';
+import '../../../../shared/widgets/lista_desplegable.dart';
 import '../../../../app/tema.dart';
 import '../domain/invitacion.dart';
 import 'etiquetas.dart';
@@ -182,7 +182,7 @@ class _FormularioDeInvitacionState
           },
         ),
         const SizedBox(height: Espacio.x4),
-        OpcionesExcluyentes<RolApp>(
+        ListaDesplegable<RolApp>(
           etiqueta: 'Rol',
           opciones: [
             for (final rol in RolApp.values)
