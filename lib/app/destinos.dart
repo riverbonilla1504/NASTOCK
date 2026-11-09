@@ -17,6 +17,7 @@ import '../core/perfil/perfil.dart';
 import '../features/admin/presentation/pagina_administracion.dart';
 import '../features/admin/cupos/presentation/pagina_cupos.dart';
 import '../features/admin/capital/presentation/pagina_capital.dart';
+import '../features/admin/parametros/presentation/pagina_parametros.dart';
 import '../features/admin/usuarios/presentation/pagina_invitaciones.dart';
 import '../features/cupo/presentation/pagina_mi_cupo.dart';
 import '../features/oportunidades/presentation/pagina_oportunidades.dart';
@@ -99,6 +100,10 @@ final List<Destino> destinosDelMvp = [
       GoRoute(
         path: 'capital',
         builder: (context, state) => const PaginaCapital(),
+      ),
+      GoRoute(
+        path: 'parametros',
+        builder: (context, state) => const PaginaParametros(),
       ),
     ],
   ),
