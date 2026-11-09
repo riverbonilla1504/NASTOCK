@@ -7,7 +7,9 @@
 /// deshabilitados, no aparecen.
 ///
 /// Encima del contenido muestra el estado de la conexión en vivo ("Reconectando…"
-/// y datos atenuados, FR-189).
+/// y datos atenuados, FR-189) y, en toda pantalla con menú y para los tres
+/// roles, el botón de cuenta (HU-007): flota arriba a la derecha en teléfono y
+/// va al pie del riel en ventanas anchas.
 ///
 /// No navega por sí mismo: avisa la ruta elegida con [alElegirRuta], así se
 /// prueba sin enrutador. Forma en
@@ -19,10 +21,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/realtime/tiempo_real_provider.dart';
 import '../features/auth/presentation/acceso_de_sesion_provider.dart';
+import '../features/auth/presentation/menu_de_cuenta.dart';
 import '../shared/widgets/barra_de_conexion.dart';
 import '../shared/widgets/barra_de_pestanas.dart';
 import 'destinos.dart';
 import 'rutas.dart';
+import 'tema.dart';
 
 /// Ancho desde el cual el menú pasa de la isla al riel: la clase "expandida" de
 /// Material 3. Entre 600 y 840 dp se sigue viendo la isla.
@@ -75,6 +79,16 @@ class CascaronDeNavegacion extends ConsumerWidget {
               selectedIndex: actual,
               onDestinationSelected: elegir,
               labelType: NavigationRailLabelType.all,
+              // El botón de cuenta, al pie del riel.
+              trailing: const Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: Espacio.x4),
+                    child: BotonDeCuenta(),
+                  ),
+                ),
+              ),
               destinations: [
                 for (final d in destinos)
                   NavigationRailDestination(
@@ -96,7 +110,18 @@ class CascaronDeNavegacion extends ConsumerWidget {
       // El contenido termina donde empieza la isla (D-69): nada con scroll
       // queda tapado, ni siquiera el último botón de una lista.
       extendBody: false,
-      body: contenido,
+      body: Stack(
+        children: [
+          Positioned.fill(child: contenido),
+          // Visible desde cualquier pantalla, a la altura de la barra superior:
+          // 48 dp de alto para el pulgar y fuera del camino del contenido.
+          Positioned(
+            top: MediaQuery.paddingOf(context).top + Espacio.x1,
+            right: Espacio.x2,
+            child: const BotonDeCuenta(),
+          ),
+        ],
+      ),
       bottomNavigationBar: BarraDePestanas(
         actual: actual,
         alElegir: elegir,

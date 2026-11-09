@@ -25,6 +25,7 @@ Session sesionDePrueba({
   String id = 'usuario-1',
   String? rol,
   String? estado,
+  String? email,
 }) => Session(
   accessToken: rol == null && estado == null
       ? 'token-$id'
@@ -32,6 +33,7 @@ Session sesionDePrueba({
   tokenType: 'bearer',
   user: User(
     id: id,
+    email: email,
     appMetadata: const {},
     userMetadata: const {},
     aud: 'authenticated',
@@ -94,5 +96,8 @@ class IngresoRepositorioFalso implements IngresoRepositorio {
   Future<void> cerrarSesion() async {
     if (error != null) throw error!;
     cierresDeSesion++;
+    // Como Supabase: sin sesión y con el aviso del cambio.
+    sesionActual = null;
+    sesiones.add(null);
   }
 }
