@@ -335,6 +335,10 @@ Deno.test("si el broker falla responde 502, pero la historia de barras igual se 
     reloj: () => caido("/v2/clock"),
     activos: () => caido("/v2/assets"),
     cuenta: () => caido("/v2/account"),
+    enviarOrden: () => caido("/v2/orders"),
+    consultarOrden: () => caido("/v2/orders"),
+    cancelarOrden: () => caido("/v2/orders"),
+    posiciones: () => caido("/v2/positions"),
   };
   const { manejador } = manejadorCon({ bd, broker });
 
@@ -392,6 +396,10 @@ Deno.test("un error que no es del proveedor en el calendario responde 500", asyn
     reloj: roto,
     activos: roto,
     cuenta: roto,
+    enviarOrden: roto,
+    consultarOrden: roto,
+    cancelarOrden: roto,
+    posiciones: roto,
   };
   const { manejador } = manejadorCon({ bd, broker });
   const respuesta = await manejador(post(CON_SECRETO));

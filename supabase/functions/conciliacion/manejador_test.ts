@@ -43,7 +43,16 @@ function bdFalsa(opciones: { falla?: Error } = {}) {
 /** Un broker cuya cuenta falla con el error dado; lo demás no se usa. */
 function brokerConCuenta(cuenta: () => Promise<never>): Broker {
   const no = () => Promise.reject(new Error("no se usa"));
-  return { calendario: no, reloj: no, activos: no, cuenta };
+  return {
+    calendario: no,
+    reloj: no,
+    activos: no,
+    cuenta,
+    enviarOrden: no,
+    consultarOrden: no,
+    cancelarOrden: no,
+    posiciones: no,
+  };
 }
 
 function manejadorCon(

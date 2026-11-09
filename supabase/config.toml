@@ -414,6 +414,10 @@ verify_jwt = false
 [functions.conciliacion]
 verify_jwt = false
 
+# ejecutor-ordenes también: solo el secreto interno (trabajo barrer_ejecutor de pg_cron).
+[functions.ejecutor-ordenes]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327
