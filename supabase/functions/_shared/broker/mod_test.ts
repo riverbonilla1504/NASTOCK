@@ -103,3 +103,12 @@ Deno.test("EFECTIVO_SIMULADO fija el efectivo de la cuenta simulada y se valida"
     );
   }
 });
+
+Deno.test("crearBroker pasa el escenario de pruebas al simulado (HU-072)", () => {
+  const broker = crearBroker(entorno({}), "halt") as BrokerSimulado;
+  assertEquals(broker.escenario, "halt");
+  assertEquals(
+    (crearBroker(entorno({})) as BrokerSimulado).escenario,
+    "normal",
+  );
+});
