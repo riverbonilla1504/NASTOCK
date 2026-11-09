@@ -37,6 +37,32 @@ void main() {
     expect(_invitar, findsOneWidget);
   });
 
+  testWidgets('una ayuda fija dice que la app no envía correos y que el Gmail '
+      'debe estar en los usuarios de prueba', (tester) async {
+    await montarPantalla(tester, RepositorioFalso());
+
+    expect(find.byKey(FormularioDeInvitacion.claveDeLaAyuda), findsOneWidget);
+    expect(find.textContaining('La app no envía correos.'), findsOneWidget);
+    expect(find.textContaining('usuarios de prueba de Google'), findsOneWidget);
+  });
+
+  testWidgets('el resultado de invitar se lleva a la vista en una pantalla '
+      'corta', (tester) async {
+    await montarPantalla(tester, RepositorioFalso(), ancho: 360, alto: 640);
+
+    await tester.enterText(_correo, 'ana@gmail.com');
+    await tester.ensureVisible(_invitar);
+    await tester.pumpAndSettle();
+    await tester.tap(_invitar);
+    await tester.pumpAndSettle();
+
+    final aviso = find.byKey(FormularioDeInvitacion.claveDelAvisoDeCreada);
+    expect(aviso, findsOneWidget);
+    final caja = tester.getRect(aviso);
+    expect(caja.top, greaterThanOrEqualTo(0));
+    expect(caja.bottom, lessThanOrEqualTo(640));
+  });
+
   testWidgets('el cupo solo se pide al invitar a un Usuario', (tester) async {
     await montarPantalla(tester, RepositorioFalso());
 
@@ -132,9 +158,14 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Invitación creada'), findsOneWidget);
-    expect(find.textContaining('ana@gmail.com puede entrar'), findsOneWidget);
-    expect(find.textContaining('hasta el 15/11/2026 10:00'), findsOneWidget);
-    expect(find.textContaining('El sistema no envía correos'), findsOneWidget);
+    expect(
+      find.text(
+        'Invitación creada para ana@gmail.com como Usuario. La app no envía '
+        'correos: avísale que entre con Google con ese Gmail antes del '
+        '15/11/2026 10:00.',
+      ),
+      findsOneWidget,
+    );
     expect(tester.widget<TextField>(_correo).controller!.text, isEmpty);
     expect(tester.widget<TextField>(_cupo).controller!.text, isEmpty);
     // La lista se volvió a pedir y muestra la invitación nueva.
