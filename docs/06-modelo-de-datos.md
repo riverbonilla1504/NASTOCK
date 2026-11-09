@@ -395,7 +395,9 @@ evaluaciones_candidatos (                    -- una fila por candidata por ciclo
   puntaje_compuesto      numeric(5,4),
   aportes                jsonb,              -- peso × valor por dimensión (para explicar)
   contradiccion          numeric(4,3),       -- valor de data_context_conflict
-  resultado              text not null,      -- 'elegida', 'elegible_no_elegida', 'descartada:<regla>', 'excluida:<motivo>'
+  confianza              numeric(4,3),       -- confianza de JEV en entry_timing
+  resultado              text not null,      -- 'elegida', 'elegible_no_elegida', 'descartada:<regla>', 'no_elegible:<motivo>', 'excluida:<motivo>'
+  explicacion            jsonb,              -- que, por_que[], frena[], advertencias[], resumen (la arma el código, 07 §14)
   senal_id               uuid,
   creado_en              timestamptz not null default now()
 )

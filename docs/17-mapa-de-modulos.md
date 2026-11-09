@@ -89,10 +89,11 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-07 · Motor de decisión (IA principal + JEV)
 - **Qué hace**: ciclo del agente, calidad de datos, métricas y etiquetas, preguntas a JEV, puntaje compuesto, reglas de decisión, señales, alertas de la IA, oportunidades, opinión sobre órdenes manuales, análisis bajo demanda, evaluación y calibración, configuración versionada y modo sombra.
 - **Docs**: 07 completo · 02 §10 (`ia.*`, `jev.*`) · 12 §7, §10
+- **Corte de demo (D-70)**: ya existen `ciclos_agente`, `evaluaciones_candidatos` y `configuraciones_decision` (v1 activa), la RPC `oportunidades(bolsillo)`, el trabajo `ciclo_agente` de `pg_cron` (cada 5 min pregunta a `private.ciclo_agente_pendiente()`), las funciones de `private` `registrar_ciclo`, `cerrar_ciclo`, `registrar_evaluaciones`, `configuracion_activa`, `parametros_del_agente`, `universo_del_agente`, `barras_del_agente`, `cotizaciones_del_agente`, `estado_del_agente` (migraciones `*_agente_ciclos_y_evaluaciones.sql` y `*_oportunidades_y_trabajo_agente.sql`), la función `agente` (`index.ts`, `manejador.ts`), `_shared/indicadores.ts`, `_shared/decision.ts` y `_shared/ia/` (`jev.ts`, `tipos.ts`, `typesafe.ts`, `simulado.ts`, `etiquetas.ts`), y la app en `lib/features/oportunidades/`. Faltan `senales`, `propuestas_descartadas`, el motor de políticas, el contexto y el presupuesto.
 - **BD**: `ciclos_agente`, `evaluaciones_candidatos`, `configuraciones_decision`, `senales`, `propuestas_descartadas`, `opiniones_ia`, `evaluaciones_ia`, `alertas`; RPC `oportunidades`, `desempeno_ia`, `crear_configuracion`, `poner_en_sombra`, `activar_configuracion`; `private.registrar_ciclo`, `registrar_evaluacion`, `crear_senal`
 - **Funciones**: `agente`, `opinion-ia`, `cierre-diario` (evaluación); `_shared/ia/` (jev), `_shared/indicadores.ts`, `_shared/decision.ts`
 - **App**: `lib/features/oportunidades/`, `lib/features/ia/`, opinión en `lib/features/ordenes/`
-- **Pruebas**: `supabase/functions/agente/*_test.ts`, `decision_test.ts` · E2E-06, E2E-07, E2E-11
+- **Pruebas**: `supabase/functions/agente/*_test.ts`, `supabase/functions/_shared/decision_test.ts`, `indicadores_test.ts`, `ia/jev_test.ts`, `supabase/tests/database/11_agente_y_oportunidades_test.sql`, `test/features/oportunidades/` · E2E-06, E2E-07, E2E-11 (pendientes)
 - **Depende de**: M-05, M-06, M-08, M-19 · **Lo usan**: M-09
 
 ### M-08 · Motor de políticas y parámetros
