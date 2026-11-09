@@ -192,10 +192,10 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-18 · Salud, alertas e integraciones
 - **Qué hace**: estado de cada integración, alertas operativas, presupuesto de IA.
 - **Docs**: 06 §5.6 · 08 §6 · 05 §13
-- **BD**: `salud_integraciones`, `alertas`; `private.registrar_salud`
-- **Funciones**: `_shared/salud.ts` (todas las funciones lo usan)
+- **BD**: `salud_integraciones`, `alertas`; `private.registrar_salud`, `private.publicar_evento_salud` (la tabla `alertas` llega con HU-085)
+- **Funciones**: `_shared/salud.ts` (todas las funciones lo usan; hoy `ingesta-mercado`, `calendario-mercado` y `conciliacion`)
 - **App**: `lib/features/admin/salud/`, `lib/features/alertas/`
-- **Pruebas**: `supabase/tests/salud_*.sql`
+- **Pruebas**: `supabase/tests/database/17_salud_de_las_integraciones_test.sql`, `supabase/functions/_shared/salud_test.ts`
 - **Depende de**: — · **Lo usan**: M-05 a M-14
 
 ### M-19 · Proveedores simulados y reloj

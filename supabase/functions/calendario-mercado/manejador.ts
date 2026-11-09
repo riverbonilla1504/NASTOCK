@@ -21,6 +21,7 @@ import {
   respuestaDeAcceso,
 } from "../_shared/auth.ts";
 import type { Bd } from "../_shared/bd.ts";
+import { registrarSalud } from "../_shared/salud.ts";
 import type { Broker } from "../_shared/broker/interfaz.ts";
 import {
   ErrorDeProveedor,
@@ -125,6 +126,14 @@ export function crearManejador(
       );
       const relojDelBroker = await correr(() => contrastarReloj(base), fallos);
       const activos = await correr(() => sincronizarActivos(base), fallos);
+      // Calendario, reloj y activos son del broker (HU-035): un fallo de cualquiera cuenta como fallo.
+      await registrarSalud(
+        bd,
+        "alpaca_trading",
+        fallos.length === 0,
+        fallos[0],
+      );
+      const fallosDelBroker = fallos.length;
 
       // La historia de barras recibe lo que queda del presupuesto de tiempo de la función.
       let historia: Partial<ResultadoDeCarga>;
@@ -143,6 +152,13 @@ export function crearManejador(
         fallos.push(error.message);
         historia = error.parcial;
       }
+      // La historia de barras viene del proveedor de datos de mercado.
+      await registrarSalud(
+        bd,
+        "alpaca_datos",
+        fallos.length === fallosDelBroker,
+        fallos[fallosDelBroker],
+      );
 
       const cuerpo = {
         ...historia,

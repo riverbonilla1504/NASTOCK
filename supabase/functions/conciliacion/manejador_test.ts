@@ -93,14 +93,19 @@ Deno.test("lee el efectivo del broker y se lo entrega a registrar_conciliacion",
   const respuesta = await manejadorCon(bd)(post(CON_SECRETO));
   assertEquals(respuesta.status, 200);
   assertEquals((await respuesta.json()).conciliacion.resultado, "ok");
+  // La salud del broker se registra antes de conciliar (HU-035).
   assertEquals(estado.llamadas, [
+    {
+      funcion: "registrar_salud",
+      argumentos: ["alpaca_trading", true, null],
+    },
     { funcion: "registrar_conciliacion", argumentos: [10_000] },
   ]);
   assert(estado.cerrada, "cierra la conexión");
 });
 
-Deno.test("si el broker falla responde 502 y no abre la base", async () => {
-  const { bd } = bdFalsa();
+Deno.test("si el broker falla responde 502, no concilia y registra su salud (HU-035)", async () => {
+  const { bd, estado } = bdFalsa();
   const abrio = { valor: false };
   const caido = brokerConCuenta(() =>
     Promise.reject(
@@ -111,7 +116,14 @@ Deno.test("si el broker falla responde 502 y no abre la base", async () => {
   const cuerpo = await respuesta.json();
   assertEquals(respuesta.status, 502);
   assertEquals(cuerpo.codigo, "INTEGRACION_CAIDA");
-  assertEquals(abrio.valor, false);
+  // Solo se abre la base para anotar el fallo: no se llama a registrar_conciliacion.
+  assertEquals(abrio.valor, true);
+  assertEquals(estado.llamadas.map((l) => l.funcion), ["registrar_salud"]);
+  assertEquals(estado.llamadas[0].argumentos.slice(0, 2), [
+    "alpaca_trading",
+    false,
+  ]);
+  assert(estado.cerrada, "cierra la conexión");
 });
 
 Deno.test("un fallo de la base responde 500 sin detalles y cierra la conexión", async () => {

@@ -22,6 +22,7 @@ import {
 import type { Bd } from "../_shared/bd.ts";
 import type { Broker } from "../_shared/broker/interfaz.ts";
 import { ErrorDeProveedor } from "../_shared/mercado/interfaz.ts";
+import { registrarSalud } from "../_shared/salud.ts";
 
 export interface DependenciasDeManejador {
   broker: Broker;
@@ -73,13 +74,15 @@ export function crearManejador(
 
     let bd: Bd | undefined;
     try {
-      // Primero el broker: si cae, no se abre la base ni se registra nada.
+      // Primero el broker. Si cae no se concilia nada, pero su salud sí se registra (HU-035).
       let efectivo: number;
       try {
         ({ efectivo } = await dependencias.broker.cuenta());
       } catch (error) {
         if (!(error instanceof ErrorDeProveedor)) throw error;
         console.error(`conciliacion: el broker falló: ${error.message}`);
+        bd = dependencias.abrirBd();
+        await registrarSalud(bd, "alpaca_trading", false, error);
         return responder(502, {
           codigo: "INTEGRACION_CAIDA",
           detalle: error.message,
@@ -87,6 +90,7 @@ export function crearManejador(
       }
 
       bd = dependencias.abrirBd();
+      await registrarSalud(bd, "alpaca_trading", true);
       const [fila] = await bd.llamar<Record<string, unknown>>(
         "registrar_conciliacion",
         [efectivo],

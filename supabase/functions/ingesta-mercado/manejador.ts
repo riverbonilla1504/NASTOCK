@@ -22,6 +22,7 @@ import {
 } from "../_shared/auth.ts";
 import type { Bd } from "../_shared/bd.ts";
 import { z } from "../_shared/esquemas.ts";
+import { registrarSalud } from "../_shared/salud.ts";
 import {
   type Cotizacion,
   ErrorDeProveedor,
@@ -163,12 +164,14 @@ export function crearManejador(
       } catch (error) {
         if (!(error instanceof ErrorDeProveedor)) throw error;
         console.error(`ingesta-mercado: el proveedor falló: ${error.message}`);
+        await registrarSalud(bd, "alpaca_datos", false, error);
         return responder(502, {
           codigo: "INTEGRACION_CAIDA",
           detalle: error.message,
         });
       }
 
+      await registrarSalud(bd, "alpaca_datos", true);
       const { validas, descartes } = validarCotizaciones(crudas);
       // Un símbolo sin cotización utilizable (el proveedor lo omitió por precio nulo o ≤ 0) también se registra.
       const recibidos = new Set(crudas.map((c) => c.simbolo));
