@@ -373,6 +373,8 @@ Sobre la barra superior blanca: eje de 1 px con marcas por hora, horas de apertu
 - **Referencia:** serie opcional en gris discontinuo (p. ej. QQQ frente a QLD). **Ahora:** marca opcional de 2 px en tinta, y la serie se reparte hasta ahí.
 - **Accesible:** `descripcion` es lo que lee el lector de pantalla ("QLD hoy: sube de 96,02 a 98,14"); el texto de los ejes escala hasta 1,3.
 
+**Variante de mercado.** `GraficaDeMercado` (`lib/features/mercado/`) dibuja con los mismos tokens (línea de 2 px, relleno suave, cuadrícula punteada, ejes en JetBrains Mono) y agrega la marca al deslizar el dedo, con el valor y la hora del punto. Usa el `SelectorDeRango` y el enum `RangoDeGrafica` compartidos; no tiene selector propio.
+
 ### Tarjeta de gráfica (`TarjetaDeGrafica`)
 Compone lo anterior como en el panel de Alpaca: título a la izquierda y botón de refrescar opcional (48 dp); debajo, el **valor grande** en monoespaciada con el cambio (flecha y signo) pegado a la izquierda y la fecha y hora a la derecha; la gráfica a todo el ancho y el `SelectorDeRango` debajo. Desde 520 dp de ancho el selector sube a la derecha del título. API: `TarjetaDeGrafica(titulo, serie, descripcion, rango, alElegirRango, valor, cambio, fecha, ...)`. La pantalla de mercado (HU-030) y toda otra con una serie en el tiempo la usan tal cual: no dibujan gráficas sueltas.
 
