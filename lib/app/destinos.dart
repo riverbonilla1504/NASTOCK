@@ -15,6 +15,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/perfil/perfil.dart';
 import '../features/admin/presentation/pagina_administracion.dart';
+import '../features/admin/cupos/presentation/pagina_cupos.dart';
 import '../features/admin/usuarios/presentation/pagina_invitaciones.dart';
 import '../features/oportunidades/presentation/pagina_oportunidades.dart';
 import 'pagina_inicio.dart';
@@ -91,6 +92,7 @@ final List<Destino> destinosDelMvp = [
         path: 'usuarios',
         builder: (context, state) => const PaginaInvitaciones(),
       ),
+      GoRoute(path: 'cupos', builder: (context, state) => const PaginaCupos()),
     ],
   ),
 ];

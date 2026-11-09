@@ -22,6 +22,9 @@ abstract final class Rutas {
   /// invitaciones" de HU-098 vive en la misma ruta.
   static const String adminUsuarios = '/admin/usuarios';
 
+  /// Cupos del Administrador (HU-100): asignar y reducir.
+  static const String adminCupos = '/admin/cupos';
+
   /// Bandeja de riesgo: no existe en el MVP corto, pero su regla de acceso sí
   /// (Analista permitido, Administrador en solo lectura).
   static const String riesgo = '/riesgo';

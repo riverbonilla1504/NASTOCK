@@ -21,6 +21,9 @@ const double anchoMaximoDeAdministracion = 720;
 /// Clave de la entrada a Invitaciones, para las pruebas.
 const Key claveDeEntradaAInvitaciones = Key('entrada-invitaciones');
 
+/// Clave de la entrada a Cupos (HU-100), para las pruebas.
+const Key claveDeEntradaACupos = Key('entrada-cupos');
+
 class PaginaAdministracion extends StatelessWidget {
   const PaginaAdministracion({super.key});
 
@@ -52,6 +55,14 @@ class PaginaAdministracion extends StatelessWidget {
                     'Invita a una persona con su Gmail o revoca una '
                     'invitación pendiente.',
                 alTocar: () => context.push(Rutas.adminUsuarios),
+              ),
+              _EntradaDeSeccion(
+                key: claveDeEntradaACupos,
+                icono: Icons.account_balance_wallet_outlined,
+                titulo: 'Cupos',
+                descripcion:
+                    'Reparte la bolsa común entre los cupos de los empleados.',
+                alTocar: () => context.push(Rutas.adminCupos),
               ),
             ],
           ),

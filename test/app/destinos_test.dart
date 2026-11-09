@@ -92,9 +92,9 @@ void main() {
       }
     });
 
-    test('Administración trae la subruta de invitaciones (HU-003)', () {
+    test('Administración trae las subrutas de invitaciones (HU-003) y cupos (HU-100)', () {
       final admin = destinosDelMvp.firstWhere((d) => d.ruta == Rutas.admin);
-      expect(admin.subrutas.map((r) => r.path), ['usuarios']);
+      expect(admin.subrutas.map((r) => r.path), ['usuarios', 'cupos']);
     });
   });
 
