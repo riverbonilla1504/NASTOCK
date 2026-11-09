@@ -66,7 +66,7 @@ Map<String, dynamic> _fila({
 };
 
 Future<void> _montar(WidgetTester tester, _RepositorioFalso repositorio) async {
-  await tester.binding.setSurfaceSize(const Size(390, 844));
+  await tester.binding.setSurfaceSize(const Size(360, 640));
   addTearDown(() => tester.binding.setSurfaceSize(null));
   await tester.pumpWidget(
     ProviderScope(
