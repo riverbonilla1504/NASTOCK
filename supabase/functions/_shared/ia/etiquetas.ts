@@ -104,8 +104,16 @@ export function armarEstado(
   const candidata: Record<string, string> = {
     symbol: e.simbolo,
     return_5d: etiquetaPorCortes(m.rendimiento_5d, r["5d"].cortes, r.etiquetas),
-    return_20d: etiquetaPorCortes(m.rendimiento_20d, r["20d"].cortes, r.etiquetas),
-    return_60d: etiquetaPorCortes(m.rendimiento_60d, r["60d"].cortes, r.etiquetas),
+    return_20d: etiquetaPorCortes(
+      m.rendimiento_20d,
+      r["20d"].cortes,
+      r.etiquetas,
+    ),
+    return_60d: etiquetaPorCortes(
+      m.rendimiento_60d,
+      r["60d"].cortes,
+      r.etiquetas,
+    ),
     volatility: etiquetaPorCortes(
       e.percentilVolatilidad,
       c.volatilidad.cortes,
@@ -123,7 +131,9 @@ export function armarEstado(
       c.volumen_relativo.cortes,
       c.volumen_relativo.etiquetas,
     ),
-    quant_rank: `${ordinal(e.posicion)} of ${e.totalCandidatas} candidates on risk-adjusted return`,
+    quant_rank: `${
+      ordinal(e.posicion)
+    } of ${e.totalCandidatas} candidates on risk-adjusted return`,
   };
   if (e.sector) candidata.sector = e.sector;
   return {
@@ -134,7 +144,8 @@ export function armarEstado(
     market: mercado,
     candidate: candidata,
     context: {
-      status: "none (no news context is available; judge only from the market data above)",
+      status:
+        "none (no news context is available; judge only from the market data above)",
     },
   };
 }

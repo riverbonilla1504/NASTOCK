@@ -64,7 +64,10 @@ export class JevTypeSafe implements ProveedorDeJev {
           signal: AbortSignal.timeout(restante),
         });
       } catch (error) {
-        if ((error as Error)?.name === "TimeoutError" || (error as Error)?.name === "AbortError") {
+        if (
+          (error as Error)?.name === "TimeoutError" ||
+          (error as Error)?.name === "AbortError"
+        ) {
           throw new ErrorDeJev("tiempo_agotado", "JEV no respondió a tiempo");
         }
         throw new ErrorDeJev("http", "No se pudo conectar con JEV");
@@ -73,14 +76,25 @@ export class JevTypeSafe implements ProveedorDeJev {
       if (respuesta.status === 429 || respuesta.status === 529) {
         await respuesta.body?.cancel();
         if (++intento >= REINTENTOS) {
-          throw new ErrorDeJev("http", `JEV respondió ${respuesta.status} tras reintentar`);
+          throw new ErrorDeJev(
+            "http",
+            `JEV respondió ${respuesta.status} tras reintentar`,
+          );
         }
-        await this.esperar(Math.min(ESPERA_BASE_MS * 2 ** (intento - 1), Math.max(limite - Date.now(), 0)));
+        await this.esperar(
+          Math.min(
+            ESPERA_BASE_MS * 2 ** (intento - 1),
+            Math.max(limite - Date.now(), 0),
+          ),
+        );
         continue;
       }
       if (respuesta.status === 401 || respuesta.status === 403) {
         await respuesta.body?.cancel();
-        throw new ErrorDeJev("sin_acceso", `JEV negó el acceso (${respuesta.status})`);
+        throw new ErrorDeJev(
+          "sin_acceso",
+          `JEV negó el acceso (${respuesta.status})`,
+        );
       }
       if (!respuesta.ok) {
         await respuesta.body?.cancel();
@@ -94,7 +108,10 @@ export class JevTypeSafe implements ProveedorDeJev {
       }
       const analizado = esquemaDeRespuestaJev.safeParse(cuerpo);
       if (!analizado.success) {
-        throw new ErrorDeJev("formato", "La respuesta de JEV no tiene la forma esperada");
+        throw new ErrorDeJev(
+          "formato",
+          "La respuesta de JEV no tiene la forma esperada",
+        );
       }
       return analizado.data;
     }

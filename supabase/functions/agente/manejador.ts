@@ -3,7 +3,7 @@
 // Solo acepta el secreto interno, que envía el trabajo `ciclo_agente` de pg_cron. Cada llamada
 // corre un ciclo: verifica los datos, calcula métricas y Q, elige las candidatas, consulta a JEV
 // (una llamada por candidata), calcula el puntaje compuesto y guarda cada evaluación con su
-// explicación. NO importa `_shared/broker/`: la IA no compra ni vende (invariante).
+// explicación. No importa el módulo del broker: la IA no compra ni vende (invariante).
 //
 // Respuestas:
 //   200  { ciclo, estado, evaluadas, excluidas, elegidas }   el ciclo terminó (completado u omitido)
@@ -21,9 +21,9 @@ import type { Bd } from "../_shared/bd.ts";
 import {
   armarExplicacion,
   elegirMejor,
+  type Evaluacion,
   evaluar,
   explicacionDeExclusion,
-  type Evaluacion,
   type Pesos,
   type Umbrales,
 } from "../_shared/decision.ts";
@@ -60,7 +60,11 @@ const SIN_PERSONAS: Identidad = {
   rolDe: () => Promise.resolve(null),
 };
 
-function responder(estado: number, cuerpo: unknown, cabeceras: HeadersInit = {}): Response {
+function responder(
+  estado: number,
+  cuerpo: unknown,
+  cabeceras: HeadersInit = {},
+): Response {
   return new Response(JSON.stringify(cuerpo), {
     status: estado,
     headers: { "Content-Type": "application/json", ...cabeceras },
@@ -130,7 +134,9 @@ export async function correrCiclo(
   jev: ProveedorDeJev,
   concurrencia = 4,
 ): Promise<ResumenDeCiclo | null> {
-  const [{ registrar_ciclo: ciclo }] = await bd.llamar<{ registrar_ciclo: string | null }>(
+  const [{ registrar_ciclo: ciclo }] = await bd.llamar<
+    { registrar_ciclo: string | null }
+  >(
     "registrar_ciclo",
     ["programado"],
   );
@@ -144,11 +150,15 @@ export async function correrCiclo(
     version = Number(config.version);
     const etiquetas = config.etiquetas as ConfiguracionDeEtiquetas;
     const pesos = config.pesos as Record<"usuarios" | "arriesgadas", Pesos>;
-    const preguntas = (config.preguntas as { entrada: Record<string, PreguntaJev & { requiere_contexto?: boolean }> })
+    const preguntas = (config.preguntas as {
+      entrada: Record<string, PreguntaJev & { requiere_contexto?: boolean }>;
+    })
       .entrada;
 
     const parametros = new Map(
-      (await bd.llamar<{ clave: string; valor: unknown }>("parametros_del_agente"))
+      (await bd.llamar<{ clave: string; valor: unknown }>(
+        "parametros_del_agente",
+      ))
         .map((p) => [p.clave, p.valor]),
     );
     const numero = (clave: string, defecto: number) => {
@@ -173,10 +183,18 @@ export async function correrCiclo(
       { ahora: Date; mercado_en_ventana: boolean }
     >("estado_del_agente");
     const universo = await bd.llamar<
-      { bolsillo: "reserva" | "arriesgadas" | "usuarios"; simbolo: string; sector: string | null }
+      {
+        bolsillo: "reserva" | "arriesgadas" | "usuarios";
+        simbolo: string;
+        sector: string | null;
+      }
     >("universo_del_agente");
-    const filasDeBarras = await bd.llamar<Fila>("barras_del_agente", [DIAS_DE_BARRAS]);
-    const filasDeCotizaciones = await bd.llamar<Fila>("cotizaciones_del_agente");
+    const filasDeBarras = await bd.llamar<Fila>("barras_del_agente", [
+      DIAS_DE_BARRAS,
+    ]);
+    const filasDeCotizaciones = await bd.llamar<Fila>(
+      "cotizaciones_del_agente",
+    );
 
     const barras = new Map<string, BarraDia[]>();
     for (const f of filasDeBarras) {
@@ -191,11 +209,15 @@ export async function correrCiclo(
         volumen: Number(f.volumen),
       });
     }
-    const cotizaciones = new Map<string, { precio: number; antiguedadSeg: number }>();
+    const cotizaciones = new Map<
+      string,
+      { precio: number; antiguedadSeg: number }
+    >();
     for (const f of filasDeCotizaciones) {
       cotizaciones.set(String(f.simbolo), {
         precio: Number(f.precio),
-        antiguedadSeg: (ahora.getTime() - new Date(String(f.recibido_en)).getTime()) / 1000,
+        antiguedadSeg:
+          (ahora.getTime() - new Date(String(f.recibido_en)).getTime()) / 1000,
       });
     }
 
@@ -212,15 +234,19 @@ export async function correrCiclo(
     const metricas = new Map<string, Metricas>();
     for (const simbolo of simbolos) {
       const serie = barras.get(simbolo) ?? [];
-      const motivo = serie.length === 0 ? "barras_insuficientes" : verificarCalidad(serie, {
-        ultimaSesion,
-        precioEnVivo: cotizaciones.get(simbolo) ?? null,
-        maxAntiguedadSeg: maxAntiguedad,
-        exigirPrecioEnVivo: mercadoAbierto,
-      });
+      const motivo = serie.length === 0
+        ? "barras_insuficientes"
+        : verificarCalidad(serie, {
+          ultimaSesion,
+          precioEnVivo: cotizaciones.get(simbolo) ?? null,
+          maxAntiguedadSeg: maxAntiguedad,
+          exigirPrecioEnVivo: mercadoAbierto,
+        });
       calidad.set(simbolo, motivo);
       if (motivo === "ok") {
-        const vivo = mercadoAbierto ? cotizaciones.get(simbolo)?.precio : undefined;
+        const vivo = mercadoAbierto
+          ? cotizaciones.get(simbolo)?.precio
+          : undefined;
         metricas.set(simbolo, calcularMetricas(serie, vivo));
       }
     }
@@ -230,12 +256,26 @@ export async function correrCiclo(
 
     // 2. Puntaje cuantitativo y candidatas.
     const q = puntajesCuantitativos(metricas);
-    const deBolsillo = (b: string) => universo.filter((u) => u.bolsillo === b).map((u) => u.simbolo);
-    const elegidas = elegirCandidatas(deBolsillo("arriesgadas"), deBolsillo("usuarios"), q, candidatosMax);
+    const deBolsillo = (b: string) =>
+      universo.filter((u) => u.bolsillo === b).map((u) => u.simbolo);
+    const elegidas = elegirCandidatas(
+      deBolsillo("arriesgadas"),
+      deBolsillo("usuarios"),
+      q,
+      candidatosMax,
+    );
     const sectorDe = new Map(universo.map((u) => [u.simbolo, u.sector]));
     const candidatas: Candidata[] = [
-      ...elegidas.arriesgadas.map((s) => ({ bolsillo: "arriesgadas" as const, simbolo: s, sector: sectorDe.get(s) ?? null })),
-      ...elegidas.usuarios.map((s) => ({ bolsillo: "usuarios" as const, simbolo: s, sector: sectorDe.get(s) ?? null })),
+      ...elegidas.arriesgadas.map((s) => ({
+        bolsillo: "arriesgadas" as const,
+        simbolo: s,
+        sector: sectorDe.get(s) ?? null,
+      })),
+      ...elegidas.usuarios.map((s) => ({
+        bolsillo: "usuarios" as const,
+        simbolo: s,
+        sector: sectorDe.get(s) ?? null,
+      })),
     ];
 
     // 3. JEV: una llamada por candidata, con todas las preguntas.
@@ -247,34 +287,45 @@ export async function correrCiclo(
       const { requiere_contexto: _omitida, ...limpia } = p;
       aEnviar[clave] = limpia;
     }
-    const mercadoRef = { metricas: metricas.get("QQQ")!, percentilVolatilidad: q.get("QQQ")!.v };
-    const resultadosJev = await enParalelo(candidatas, concurrencia, async (c) => {
-      const lista = candidatas.filter((x) => x.bolsillo === c.bolsillo)
-        .sort((a, b) => q.get(b.simbolo)!.q - q.get(a.simbolo)!.q);
-      const estado = armarEstado({
-        bolsillo: c.bolsillo,
-        simbolo: c.simbolo,
-        sector: c.sector,
-        metricas: metricas.get(c.simbolo)!,
-        percentilVolatilidad: q.get(c.simbolo)!.v,
-        posicion: lista.findIndex((x) => x.simbolo === c.simbolo) + 1,
-        totalCandidatas: lista.length,
-        mercado: mercadoRef,
-        mercadoAbierto,
-      }, etiquetas);
-      let respuesta: RespuestaJev | null = null;
-      let fallo: string | null = null;
-      try {
-        respuesta = await jev.consultar(
-          { state: JSON.stringify(estado), model: modeloJev, questions: aEnviar },
-          { timeoutMs },
-        );
-      } catch (error) {
-        fallo = error instanceof ErrorDeJev ? error.codigo : "desconocido";
-        console.warn(`agente: JEV falló en ${c.simbolo}: ${fallo}`);
-      }
-      return { estado, respuesta, fallo };
-    });
+    const mercadoRef = {
+      metricas: metricas.get("QQQ")!,
+      percentilVolatilidad: q.get("QQQ")!.v,
+    };
+    const resultadosJev = await enParalelo(
+      candidatas,
+      concurrencia,
+      async (c) => {
+        const lista = candidatas.filter((x) => x.bolsillo === c.bolsillo)
+          .sort((a, b) => q.get(b.simbolo)!.q - q.get(a.simbolo)!.q);
+        const estado = armarEstado({
+          bolsillo: c.bolsillo,
+          simbolo: c.simbolo,
+          sector: c.sector,
+          metricas: metricas.get(c.simbolo)!,
+          percentilVolatilidad: q.get(c.simbolo)!.v,
+          posicion: lista.findIndex((x) => x.simbolo === c.simbolo) + 1,
+          totalCandidatas: lista.length,
+          mercado: mercadoRef,
+          mercadoAbierto,
+        }, etiquetas);
+        let respuesta: RespuestaJev | null = null;
+        let fallo: string | null = null;
+        try {
+          respuesta = await jev.consultar(
+            {
+              state: JSON.stringify(estado),
+              model: modeloJev,
+              questions: aEnviar,
+            },
+            { timeoutMs },
+          );
+        } catch (error) {
+          fallo = error instanceof ErrorDeJev ? error.codigo : "desconocido";
+          console.warn(`agente: JEV falló en ${c.simbolo}: ${fallo}`);
+        }
+        return { estado, respuesta, fallo };
+      },
+    );
 
     // 4. Puntaje compuesto y reglas por candidata; la mejor de cada bolsillo es la recomendación.
     const evaluaciones = candidatas.map((c, i) => ({
@@ -295,7 +346,9 @@ export async function correrCiclo(
         bolsillo,
         elegirMejor(
           evaluaciones
-            .filter((e) => e.c.bolsillo === bolsillo && e.evaluacion.motivo === null)
+            .filter((e) =>
+              e.c.bolsillo === bolsillo && e.evaluacion.motivo === null
+            )
             .map((e) => ({
               simbolo: e.c.simbolo,
               puntaje: e.evaluacion.puntaje,
@@ -318,13 +371,16 @@ export async function correrCiclo(
         ? "elegida"
         : "elegible_no_elegida";
       if (resultado === "elegida") recomendadas.push(e.c.simbolo);
-      tokens += (e.respuesta?.usage?.input_tokens ?? 0) + (e.respuesta?.usage?.output_tokens ?? 0);
+      tokens += (e.respuesta?.usage?.input_tokens ?? 0) +
+        (e.respuesta?.usage?.output_tokens ?? 0);
       modelo ??= e.respuesta?.model ?? null;
       const explicacion = armarExplicacion({
         simbolo: e.c.simbolo,
         evaluacion: e.evaluacion,
         resultado,
-        horizonte: e.c.bolsillo === "arriesgadas" ? "unos días" : "unas semanas",
+        horizonte: e.c.bolsillo === "arriesgadas"
+          ? "unos días"
+          : "unas semanas",
         mercadoAbierto,
         umbrales,
         fallosJev: e.fallo,
@@ -343,7 +399,9 @@ export async function correrCiclo(
         puntaje_compuesto: redondear(e.evaluacion.puntaje),
         aportes: redondear(e.evaluacion.aportes),
         contradiccion: redondear(e.evaluacion.contradiccion, 3),
-        confianza: e.evaluacion.confianza === null ? null : redondear(e.evaluacion.confianza, 3),
+        confianza: e.evaluacion.confianza === null
+          ? null
+          : redondear(e.evaluacion.confianza, 3),
         resultado,
         explicacion,
       });
@@ -365,17 +423,38 @@ export async function correrCiclo(
 
     await bd.llamar("registrar_evaluaciones", [ciclo, version, filas]);
     await bd.llamar("cerrar_ciclo", [
-      ciclo, "completado", version, modelo, candidatas.length, excluidas,
-      tokens, Date.now() - inicio, null, null,
+      ciclo,
+      "completado",
+      version,
+      modelo,
+      candidatas.length,
+      excluidas,
+      tokens,
+      Date.now() - inicio,
+      null,
+      null,
     ]);
     return {
-      ciclo, estado: "completado", evaluadas: candidatas.length, excluidas, elegidas: recomendadas,
+      ciclo,
+      estado: "completado",
+      evaluadas: candidatas.length,
+      excluidas,
+      elegidas: recomendadas,
     };
   } catch (error) {
     const mensaje = error instanceof Error ? error.message : String(error);
     try {
       await bd.llamar("cerrar_ciclo", [
-        ciclo, "fallido", version || null, null, null, null, null, Date.now() - inicio, null, mensaje,
+        ciclo,
+        "fallido",
+        version || null,
+        null,
+        null,
+        null,
+        null,
+        Date.now() - inicio,
+        null,
+        mensaje,
       ]);
     } catch {
       console.error("agente: no se pudo cerrar el ciclo fallido");
@@ -392,9 +471,25 @@ async function cerrarOmitido(
   motivo: string,
 ): Promise<ResumenDeCiclo> {
   await bd.llamar("cerrar_ciclo", [
-    ciclo, "omitido", version, null, 0, 0, 0, Date.now() - inicio, motivo, null,
+    ciclo,
+    "omitido",
+    version,
+    null,
+    0,
+    0,
+    0,
+    Date.now() - inicio,
+    motivo,
+    null,
   ]);
-  return { ciclo, estado: "omitido", evaluadas: 0, excluidas: 0, elegidas: [], motivo };
+  return {
+    ciclo,
+    estado: "omitido",
+    evaluadas: 0,
+    excluidas: 0,
+    elegidas: [],
+    motivo,
+  };
 }
 
 export function crearManejador(
@@ -402,7 +497,9 @@ export function crearManejador(
 ): (peticion: Request) => Promise<Response> {
   return async (peticion) => {
     if (peticion.method !== "POST") {
-      return responder(405, { error: "método no permitido" }, { Allow: "POST" });
+      return responder(405, { error: "método no permitido" }, {
+        Allow: "POST",
+      });
     }
     try {
       await autenticar(
@@ -420,11 +517,19 @@ export function crearManejador(
     let bd: Bd | undefined;
     try {
       bd = dependencias.abrirBd();
-      const resumen = await correrCiclo(bd, dependencias.jev, dependencias.concurrencia);
+      const resumen = await correrCiclo(
+        bd,
+        dependencias.jev,
+        dependencias.concurrencia,
+      );
       if (!resumen) return responder(200, { omitida: true });
       return responder(200, resumen);
     } catch (error) {
-      console.error(`agente: fallo interno: ${error instanceof Error ? error.message : error}`);
+      console.error(
+        `agente: fallo interno: ${
+          error instanceof Error ? error.message : error
+        }`,
+      );
       return responder(500, { error: "interno" });
     } finally {
       try {

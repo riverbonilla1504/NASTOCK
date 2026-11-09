@@ -61,7 +61,9 @@ class _PaginaOportunidadesState extends ConsumerState<PaginaOportunidades> {
 
   Future<void> _recargar() async {
     ref.invalidate(oportunidadesProvider);
-    await ref.read(oportunidadesProvider.future).catchError((_) => <Oportunidad>[]);
+    await ref
+        .read(oportunidadesProvider.future)
+        .catchError((_) => <Oportunidad>[]);
   }
 
   @override
@@ -165,7 +167,8 @@ class _PaginaOportunidadesState extends ConsumerState<PaginaOportunidades> {
       if (evaluadas.isEmpty)
         const EstadoVacio(
           titulo: 'Sin candidatas',
-          mensaje: 'Este bolsillo no tiene candidatas evaluadas en el último ciclo.',
+          mensaje:
+              'Este bolsillo no tiene candidatas evaluadas en el último ciclo.',
         ),
       for (final o in evaluadas) ...[
         TarjetaDeOportunidad(

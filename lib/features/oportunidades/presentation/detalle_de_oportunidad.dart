@@ -42,13 +42,14 @@ class DetalleDeOportunidad extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(
-                child: Text(o.simbolo, style: textos.headlineSmall),
-              ),
+              Expanded(child: Text(o.simbolo, style: textos.headlineSmall)),
               ChipDelResultado(resultado: o.resultado),
             ],
           ),
-          Text(o.bolsillo.etiqueta, style: textos.bodySmall!.copyWith(color: tenue)),
+          Text(
+            o.bolsillo.etiqueta,
+            style: textos.bodySmall!.copyWith(color: tenue),
+          ),
           const SizedBox(height: Espacio.x4),
           Row(
             children: [
@@ -87,7 +88,9 @@ class DetalleDeOportunidad extends StatelessWidget {
             const SizedBox(height: Espacio.x2),
             for (final a in o.aportes) _FilaDeAporte(aporte: a),
           ],
-          if (o.rendimiento20d != null || o.volatilidad20d != null || o.rsi != null) ...[
+          if (o.rendimiento20d != null ||
+              o.volatilidad20d != null ||
+              o.rsi != null) ...[
             const SizedBox(height: Espacio.x5),
             Text('Datos del mercado', style: textos.titleSmall),
             const SizedBox(height: Espacio.x2),
@@ -195,10 +198,7 @@ class _FilaDeAporte extends StatelessWidget {
                   style: textos.bodySmall,
                 ),
               ),
-              Text(
-                formatearPuntaje(aporte.aporte),
-                style: textos.labelMedium,
-              ),
+              Text(formatearPuntaje(aporte.aporte), style: textos.labelMedium),
             ],
           ),
           const SizedBox(height: Espacio.x1),

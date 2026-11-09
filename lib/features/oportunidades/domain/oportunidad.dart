@@ -83,7 +83,8 @@ class Explicacion {
   factory Explicacion.desdeJson(Object? json) {
     if (json is! Map<String, dynamic>) return vacia;
     List<String> lista(Object? v) => [
-      if (v is List) for (final e in v) e.toString(),
+      if (v is List)
+        for (final e in v) e.toString(),
     ];
     return Explicacion(
       que: (json['que'] ?? '').toString(),
@@ -169,8 +170,12 @@ class Oportunidad {
       modeloJev: json['modelo_jev'] as String?,
       explicacion: Explicacion.desdeJson(json['explicacion']),
       aportes: aportes,
-      rendimiento20d: metricas is Map ? numero(metricas['rendimiento_20d']) : null,
-      volatilidad20d: metricas is Map ? numero(metricas['volatilidad_20d']) : null,
+      rendimiento20d: metricas is Map
+          ? numero(metricas['rendimiento_20d'])
+          : null,
+      volatilidad20d: metricas is Map
+          ? numero(metricas['volatilidad_20d'])
+          : null,
       rsi: metricas is Map ? numero(metricas['rsi_14']) : null,
     );
   }

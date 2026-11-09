@@ -46,7 +46,10 @@ export function verificarCalidad(
     if (valores.some((v) => typeof v !== "number" || !Number.isFinite(v))) {
       return "valores_invalidos";
     }
-    if (b.apertura <= 0 || b.maximo <= 0 || b.minimo <= 0 || b.cierre <= 0 || b.volumen < 0) {
+    if (
+      b.apertura <= 0 || b.maximo <= 0 || b.minimo <= 0 || b.cierre <= 0 ||
+      b.volumen < 0
+    ) {
       return "valores_invalidos";
     }
   }
@@ -54,14 +57,19 @@ export function verificarCalidad(
   if (ultima.fecha !== contexto.ultimaSesion) return "datos_viejos";
 
   const previa = barras[barras.length - 2].cierre;
-  if (Math.abs(ultima.cierre / previa - 1) > SALTO_MAXIMO) return "salto_anomalo";
+  if (Math.abs(ultima.cierre / previa - 1) > SALTO_MAXIMO) {
+    return "salto_anomalo";
+  }
 
   if (contexto.exigirPrecioEnVivo) {
     const vivo = contexto.precioEnVivo;
     if (!vivo || vivo.antiguedadSeg > contexto.maxAntiguedadSeg) {
       return "precio_en_vivo_viejo";
     }
-    if (!(vivo.precio > 0) || Math.abs(vivo.precio / ultima.cierre - 1) > SALTO_MAXIMO) {
+    if (
+      !(vivo.precio > 0) ||
+      Math.abs(vivo.precio / ultima.cierre - 1) > SALTO_MAXIMO
+    ) {
       return "salto_anomalo";
     }
   }
@@ -170,8 +178,12 @@ export function calcularMetricas(
   }
   const cierres = barras.map((b) => b.cierre);
   const n = cierres.length;
-  const precio = precioEnVivo && precioEnVivo > 0 ? precioEnVivo : cierres[n - 1];
-  const serie = precio === cierres[n - 1] ? cierres : [...cierres.slice(0, -1), precio];
+  const precio = precioEnVivo && precioEnVivo > 0
+    ? precioEnVivo
+    : cierres[n - 1];
+  const serie = precio === cierres[n - 1]
+    ? cierres
+    : [...cierres.slice(0, -1), precio];
   const atras = (k: number) => serie[n - 1] / serie[n - 1 - k] - 1;
 
   const vol20Diaria = desviacion(rendimientosDiarios(serie, 20));
@@ -181,7 +193,10 @@ export function calcularMetricas(
   const sma20 = media(serie.slice(-20));
   const sma50 = media(serie.slice(-50));
   const sma200 = n >= BARRAS_PARA_MEDIA_200 ? media(serie.slice(-200)) : null;
-  const maximo52 = Math.max(...barras.slice(-DIAS_POR_ANIO).map((b) => b.maximo), precio);
+  const maximo52 = Math.max(
+    ...barras.slice(-DIAS_POR_ANIO).map((b) => b.maximo),
+    precio,
+  );
   const volumenPrevio = media(barras.slice(-21, -1).map((b) => b.volumen));
   const rend30 = atras(30);
   const atr14 = atr(barras, 14);
@@ -204,8 +219,14 @@ export function calcularMetricas(
     sobre_sma_50: precio > sma50,
     sobre_sma_200: sma200 === null ? null : precio > sma200,
     distancia_maximo_52s: precio / maximo52 - 1,
-    volumen_relativo: volumenPrevio > 0 ? barras[n - 1].volumen / volumenPrevio : 1,
-    tendencia_30d: rend30 > 0.02 ? "alcista" : rend30 < -0.02 ? "bajista" : "lateral",
+    volumen_relativo: volumenPrevio > 0
+      ? barras[n - 1].volumen / volumenPrevio
+      : 1,
+    tendencia_30d: rend30 > 0.02
+      ? "alcista"
+      : rend30 < -0.02
+      ? "bajista"
+      : "lateral",
     ra_20d: vol20Diaria > 0 ? rend20 / (vol20Diaria * Math.sqrt(20)) : 0,
     ra_60d: vol60Diaria > 0 ? rend60 / (vol60Diaria * Math.sqrt(60)) : 0,
     ultima_fecha: barras[n - 1].fecha,

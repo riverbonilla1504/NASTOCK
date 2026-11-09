@@ -56,7 +56,9 @@ Map<String, dynamic> _fila({
   },
   'explicacion': {
     'que': que,
-    'por_que': ['Rendimiento frente al riesgo: rinde bien para el riesgo que asumió.'],
+    'por_que': [
+      'Rendimiento frente al riesgo: rinde bien para el riesgo que asumió.',
+    ],
     'frena': ['Volatilidad: se mueve con fuerza.'],
     'advertencias': ['Sin contexto: no se leyeron noticias.'],
     'resumen': que,
@@ -68,11 +70,10 @@ Future<void> _montar(WidgetTester tester, _RepositorioFalso repositorio) async {
   addTearDown(() => tester.binding.setSurfaceSize(null));
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [oportunidadesRepositorioProvider.overrideWithValue(repositorio)],
-      child: MaterialApp(
-        theme: crearTema(),
-        home: const PaginaOportunidades(),
-      ),
+      overrides: [
+        oportunidadesRepositorioProvider.overrideWithValue(repositorio),
+      ],
+      child: MaterialApp(theme: crearTema(), home: const PaginaOportunidades()),
     ),
   );
   await tester.pumpAndSettle();
@@ -93,22 +94,26 @@ void main() {
     expect(find.text('Aprobar'), findsNothing);
   });
 
-  testWidgets('al tocar abre el detalle con por qué, qué la frena y advertencias', (
-    tester,
-  ) async {
-    await _montar(tester, _RepositorioFalso([_fila()]));
+  testWidgets(
+    'al tocar abre el detalle con por qué, qué la frena y advertencias',
+    (tester) async {
+      await _montar(tester, _RepositorioFalso([_fila()]));
 
-    await tester.tap(find.text('NVDA'));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text('NVDA'));
+      await tester.pumpAndSettle();
 
-    expect(find.text('Por qué'), findsOneWidget);
-    expect(find.text('Qué la frena'), findsOneWidget);
-    expect(find.text('Cómo se compone el puntaje'), findsOneWidget);
-    expect(find.text('Contexto (neutro)'), findsOneWidget);
-    expect(find.textContaining('Sin contexto: no se leyeron noticias'), findsOneWidget);
-    expect(find.text('Modelo: jev-1.13.0'), findsOneWidget);
-    expect(find.text('Rendimiento a 20 días: +8,32 %'), findsOneWidget);
-  });
+      expect(find.text('Por qué'), findsOneWidget);
+      expect(find.text('Qué la frena'), findsOneWidget);
+      expect(find.text('Cómo se compone el puntaje'), findsOneWidget);
+      expect(find.text('Contexto (neutro)'), findsOneWidget);
+      expect(
+        find.textContaining('Sin contexto: no se leyeron noticias'),
+        findsOneWidget,
+      );
+      expect(find.text('Modelo: jev-1.13.0'), findsOneWidget);
+      expect(find.text('Rendimiento a 20 días: +8,32 %'), findsOneWidget);
+    },
+  );
 
   testWidgets('sin evaluaciones muestra el estado vacío', (tester) async {
     await _montar(tester, _RepositorioFalso([]));
@@ -168,6 +173,9 @@ void main() {
     );
 
     expect(find.text('Excluidas por la calidad de sus datos'), findsOneWidget);
-    expect(find.textContaining('XYZ quedó fuera de este ciclo'), findsOneWidget);
+    expect(
+      find.textContaining('XYZ quedó fuera de este ciclo'),
+      findsOneWidget,
+    );
   });
 }

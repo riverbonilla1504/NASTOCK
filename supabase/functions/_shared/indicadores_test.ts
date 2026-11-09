@@ -9,7 +9,13 @@ import {
 } from "./indicadores.ts";
 
 /** Serie de `n` días terminando en `ultima`, con cierres que crecen `paso` por día. */
-export function serie(n: number, inicio = 100, paso = 1, ultima = "2026-11-06", ruido = 0): BarraDia[] {
+export function serie(
+  n: number,
+  inicio = 100,
+  paso = 1,
+  ultima = "2026-11-06",
+  ruido = 0,
+): BarraDia[] {
   const fin = new Date(`${ultima}T00:00:00Z`);
   return Array.from({ length: n }, (_, i) => {
     const d = new Date(fin);
@@ -55,7 +61,11 @@ Deno.test("calidad: valores inválidos", () => {
 
 Deno.test("calidad: salto de más de 25 % en el día", () => {
   const barras = serie(80);
-  barras[79] = { ...barras[79], cierre: barras[78].cierre * 1.3, maximo: barras[78].cierre * 1.4 };
+  barras[79] = {
+    ...barras[79],
+    cierre: barras[78].cierre * 1.3,
+    maximo: barras[78].cierre * 1.4,
+  };
   assertEquals(verificarCalidad(barras, contexto), "salto_anomalo");
 });
 
@@ -63,11 +73,17 @@ Deno.test("calidad: con el mercado abierto exige un precio en vivo de menos de 6
   const abierto = { ...contexto, exigirPrecioEnVivo: true };
   assertEquals(verificarCalidad(serie(80), abierto), "precio_en_vivo_viejo");
   assertEquals(
-    verificarCalidad(serie(80), { ...abierto, precioEnVivo: { precio: 180, antiguedadSeg: 120 } }),
+    verificarCalidad(serie(80), {
+      ...abierto,
+      precioEnVivo: { precio: 180, antiguedadSeg: 120 },
+    }),
     "precio_en_vivo_viejo",
   );
   assertEquals(
-    verificarCalidad(serie(80), { ...abierto, precioEnVivo: { precio: 180, antiguedadSeg: 15 } }),
+    verificarCalidad(serie(80), {
+      ...abierto,
+      precioEnVivo: { precio: 180, antiguedadSeg: 15 },
+    }),
     "ok",
   );
 });
@@ -108,7 +124,9 @@ Deno.test("Q: percentil de 0,6·ra20 + 0,4·ra60 con 0,1 de bonificación sobre 
   const sube = calcularMetricas(serie(80, 100, 1, "2026-11-06", 2));
   const baja = calcularMetricas(serie(80, 200, -1, "2026-11-06", 2));
   const plana = calcularMetricas(serie(80, 100, 0.01, "2026-11-06", 2));
-  const q = puntajesCuantitativos(new Map([["SUBE", sube], ["BAJA", baja], ["PLANA", plana]]));
+  const q = puntajesCuantitativos(
+    new Map([["SUBE", sube], ["BAJA", baja], ["PLANA", plana]]),
+  );
   assert(q.get("SUBE")!.q >= q.get("PLANA")!.q);
   assert(q.get("PLANA")!.q > q.get("BAJA")!.q);
   assertEquals(q.get("SUBE")!.q, 1); // 1 + 0,1 se acota a 1
@@ -117,7 +135,10 @@ Deno.test("Q: percentil de 0,6·ra20 + 0,4·ra60 con 0,1 de bonificación sobre 
 
 Deno.test("candidatas: las N mejores de Arriesgadas y todas las de Usuarios", () => {
   const q = new Map(
-    ["A", "B", "C", "D", "QLD", "QQQ"].map((s, i) => [s, { q: i / 10, v: 0.5 }]),
+    ["A", "B", "C", "D", "QLD", "QQQ"].map((
+      s,
+      i,
+    ) => [s, { q: i / 10, v: 0.5 }]),
   );
   const c = elegirCandidatas(["A", "B", "C", "D", "ZZZ"], ["QLD", "QQQ"], q, 2);
   assertEquals(c.arriesgadas, ["D", "C"]);
