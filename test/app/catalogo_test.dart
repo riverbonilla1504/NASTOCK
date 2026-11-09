@@ -102,15 +102,13 @@ void main() {
     );
   });
 
-  testWidgets('la pantalla de inicio enlaza el catálogo cuando existe', (
+  testWidgets('la pantalla de inicio no muestra ningún enlace al catálogo', (
     tester,
   ) async {
     await _abrir(tester, conCatalogo: true);
 
-    expect(find.text('Catálogo de componentes'), findsOneWidget);
-    await tester.tap(find.text('Catálogo de componentes'));
-    await tester.pumpAndSettle();
-    expect(find.byType(PaginaCatalogo), findsOneWidget);
+    expect(find.text('Catálogo de componentes'), findsNothing);
+    expect(find.byType(PaginaCatalogo), findsNothing);
   });
 
   testWidgets('los componentes muestran la gráfica con su selector de rango', (
