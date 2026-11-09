@@ -175,7 +175,7 @@ class _BloqueDeJornada extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colores;
     final textos = Theme.of(context).textTheme;
-    final suave = textos.bodySmall!.copyWith(color: c.sobreGrafitoSuave);
+    final suave = textos.bodySmall!.copyWith(color: c.tintaSuave);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -185,11 +185,11 @@ class _BloqueDeJornada extends StatelessWidget {
             Expanded(
               child: Text('Jornada de hoy · viernes 6 nov', style: suave),
             ),
-            TrazoDeLinea(forma: FormaDeLinea.solida, color: c.sobreGrafito),
+            TrazoDeLinea(forma: FormaDeLinea.solida, color: c.tinta),
             const SizedBox(width: Espacio.x2),
             Text(
               'ABIERTO',
-              style: textos.labelMedium!.copyWith(color: c.sobreGrafito),
+              style: textos.labelMedium!.copyWith(color: c.tinta),
             ),
           ],
         ),
@@ -205,7 +205,7 @@ class _BloqueDeJornada extends StatelessWidget {
               TextSpan(
                 text: 'Cierra en 4 h 14 min',
                 style: textos.bodyMedium!.copyWith(
-                  color: c.sobreGrafito,
+                  color: c.tinta,
                   fontWeight: FontWeight.w600,
                 ),
               ),

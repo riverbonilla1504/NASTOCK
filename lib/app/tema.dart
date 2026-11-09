@@ -1,8 +1,9 @@
-/// Tokens y tema de la app: dirección "Almanaque" en grises (D-67).
+/// Tokens y tema de la app: dirección visual estilo Alpaca (D-69).
 ///
-/// Lo visual lo gobierna `DESIGN.md`. La interfaz es gris y el color solo
-/// lleva datos: morado para las líneas de gráfica, la marca de "ahora", hoy y
-/// el foco; verde y rojo apagados solo para la dirección de un precio.
+/// Lo visual lo gobierna `DESIGN.md` (D-67). La interfaz es de grises con un
+/// único acento morado: botones principales, línea de gráfica, foco, avisos
+/// en franja y lo seleccionado; verde y rojo apagados solo para la dirección
+/// de un precio. Texto en Inter y todas las cifras en JetBrains Mono.
 /// Ninguna pantalla define colores, tamaños ni fuentes sueltos: usa estos
 /// tokens y los componentes de `lib/shared/widgets/` (docs/15 §12).
 library;
@@ -10,13 +11,13 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 
-/// Familias tipográficas empaquetadas (`assets/fonts/archivo/`).
+/// Familias tipográficas empaquetadas (`assets/fonts/`), ambas OFL.
 abstract final class Familias {
-  /// Archivo de ancho normal: texto, cifras y controles.
-  static const String texto = 'Archivo';
+  /// Inter: texto, títulos y controles.
+  static const String texto = 'Inter';
 
-  /// Archivo condensada: títulos y rótulos.
-  static const String condensada = 'ArchivoCondensado';
+  /// JetBrains Mono: montos, cantidades, horas y ejes de gráfica.
+  static const String cifras = 'JetBrainsMono';
 }
 
 /// Medidas en múltiplos de 4 dp.
@@ -35,10 +36,10 @@ abstract final class Espacio {
 
 /// Radios de las esquinas.
 abstract final class Radios {
-  /// Controles, tarjetas y avisos.
-  static const double control = 4;
+  /// Botones, campos, chips y avisos.
+  static const double control = 6;
 
-  /// Botón flotante, hojas y diálogos.
+  /// Tarjetas, botón flotante, hojas y diálogos.
   static const double hoja = 8;
 }
 
@@ -51,14 +52,18 @@ abstract final class Duracion {
 /// Cifras tabulares: las columnas de dinero se alinean.
 const List<FontFeature> cifrasTabulares = [FontFeature.tabularFigures()];
 
-/// Colores con nombre del Almanaque, en claro y en oscuro.
+/// Pasa un estilo a las cifras del sistema: JetBrains Mono tabular. Todo
+/// monto, cantidad, hora y eje de gráfica lo usa (D-69).
+TextStyle estiloDeCifra(TextStyle base) =>
+    base.copyWith(fontFamily: Familias.cifras, fontFeatures: cifrasTabulares);
+
+/// Colores con nombre del sistema, en claro y en oscuro.
 @immutable
-class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
-  const ColoresAlmanaque({
+class ColoresTema extends ThemeExtension<ColoresTema> {
+  const ColoresTema({
     required this.grafito,
     required this.sobreGrafito,
     required this.sobreGrafitoSuave,
-    required this.moradoSobreGrafito,
     required this.tinta,
     required this.tintaSuave,
     required this.tintaTenue,
@@ -66,6 +71,7 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
     required this.hoja,
     required this.regla,
     required this.reglaFuerte,
+    required this.relleno,
     required this.morado,
     required this.moradoTenue,
     required this.sobreMorado,
@@ -73,7 +79,7 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
     required this.baja,
   });
 
-  /// Barra superior y aviso temporal.
+  /// Aviso temporal y descripciones emergentes.
   final Color grafito;
 
   /// Texto sobre grafito.
@@ -81,9 +87,6 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
 
   /// Texto secundario sobre grafito.
   final Color sobreGrafitoSuave;
-
-  /// Aguja de "ahora" sobre grafito.
-  final Color moradoSobreGrafito;
 
   /// Texto, botón primario y bordes fuertes.
   final Color tinta;
@@ -106,10 +109,13 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
   /// Bordes de campos y chips.
   final Color reglaFuerte;
 
-  /// Líneas de gráfica, hoy y foco.
+  /// Gris suave: botón secundario, deshabilitado y menú elegido.
+  final Color relleno;
+
+  /// Acento: botón principal, línea de gráfica, hoy y foco.
   final Color morado;
 
-  /// Fondo de lo seleccionado.
+  /// Fondo tenue del acento: lo seleccionado, avisos en franja y chips.
   final Color moradoTenue;
 
   /// Texto sobre morado.
@@ -121,50 +127,49 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
   /// Variación a la baja (siempre con flecha y signo).
   final Color baja;
 
-  static const ColoresAlmanaque claro = ColoresAlmanaque(
+  static const ColoresTema claro = ColoresTema(
     grafito: Color(0xFF27272A),
     sobreGrafito: Color(0xFFF4F4F5),
     sobreGrafitoSuave: Color(0xFFB4B4BC),
-    moradoSobreGrafito: Color(0xFFC2B3FF),
     tinta: Color(0xFF18181B),
     tintaSuave: Color(0xFF52525B),
     tintaTenue: Color(0xFF6B6B74),
-    papel: Color(0xFFF2F2F3),
+    papel: Color(0xFFF7F7F8),
     hoja: Color(0xFFFFFFFF),
-    regla: Color(0x1F18181B),
-    reglaFuerte: Color(0x4D18181B),
+    regla: Color(0xFFE4E4E7),
+    reglaFuerte: Color(0xFF8E8E97),
+    relleno: Color(0xFFF1F1F3),
     morado: Color(0xFF6A45E0),
-    moradoTenue: Color(0xFFECE8FD),
+    moradoTenue: Color(0xFFEFEBFD),
     sobreMorado: Color(0xFFFFFFFF),
     alza: Color(0xFF2D6A4F),
     baja: Color(0xFFA3383C),
   );
 
-  static const ColoresAlmanaque oscuro = ColoresAlmanaque(
-    grafito: Color(0xFF26262A),
+  static const ColoresTema oscuro = ColoresTema(
+    grafito: Color(0xFF2E2E33),
     sobreGrafito: Color(0xFFF4F4F5),
     sobreGrafitoSuave: Color(0xFFA9A9B2),
-    moradoSobreGrafito: Color(0xFFC2B3FF),
     tinta: Color(0xFFEDEDEF),
     tintaSuave: Color(0xFFA1A1AA),
     tintaTenue: Color(0xFF8B8B94),
-    papel: Color(0xFF111113),
-    hoja: Color(0xFF1C1C1F),
-    regla: Color(0x1FEDEDEF),
-    reglaFuerte: Color(0x4DEDEDEF),
+    papel: Color(0xFF0E0E10),
+    hoja: Color(0xFF17171A),
+    regla: Color(0xFF2B2B30),
+    reglaFuerte: Color(0xFF6F6F78),
+    relleno: Color(0xFF222226),
     morado: Color(0xFFB3A1FF),
-    moradoTenue: Color(0xFF2E2850),
+    moradoTenue: Color(0xFF28224A),
     sobreMorado: Color(0xFF18181B),
     alza: Color(0xFF7FC9A0),
     baja: Color(0xFFF0908F),
   );
 
   @override
-  ColoresAlmanaque copyWith({
+  ColoresTema copyWith({
     Color? grafito,
     Color? sobreGrafito,
     Color? sobreGrafitoSuave,
-    Color? moradoSobreGrafito,
     Color? tinta,
     Color? tintaSuave,
     Color? tintaTenue,
@@ -172,17 +177,17 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
     Color? hoja,
     Color? regla,
     Color? reglaFuerte,
+    Color? relleno,
     Color? morado,
     Color? moradoTenue,
     Color? sobreMorado,
     Color? alza,
     Color? baja,
   }) {
-    return ColoresAlmanaque(
+    return ColoresTema(
       grafito: grafito ?? this.grafito,
       sobreGrafito: sobreGrafito ?? this.sobreGrafito,
       sobreGrafitoSuave: sobreGrafitoSuave ?? this.sobreGrafitoSuave,
-      moradoSobreGrafito: moradoSobreGrafito ?? this.moradoSobreGrafito,
       tinta: tinta ?? this.tinta,
       tintaSuave: tintaSuave ?? this.tintaSuave,
       tintaTenue: tintaTenue ?? this.tintaTenue,
@@ -190,6 +195,7 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
       hoja: hoja ?? this.hoja,
       regla: regla ?? this.regla,
       reglaFuerte: reglaFuerte ?? this.reglaFuerte,
+      relleno: relleno ?? this.relleno,
       morado: morado ?? this.morado,
       moradoTenue: moradoTenue ?? this.moradoTenue,
       sobreMorado: sobreMorado ?? this.sobreMorado,
@@ -199,14 +205,13 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
   }
 
   @override
-  ColoresAlmanaque lerp(ThemeExtension<ColoresAlmanaque>? other, double t) {
-    if (other is! ColoresAlmanaque) return this;
+  ColoresTema lerp(ThemeExtension<ColoresTema>? other, double t) {
+    if (other is! ColoresTema) return this;
     Color m(Color a, Color b) => Color.lerp(a, b, t)!;
-    return ColoresAlmanaque(
+    return ColoresTema(
       grafito: m(grafito, other.grafito),
       sobreGrafito: m(sobreGrafito, other.sobreGrafito),
       sobreGrafitoSuave: m(sobreGrafitoSuave, other.sobreGrafitoSuave),
-      moradoSobreGrafito: m(moradoSobreGrafito, other.moradoSobreGrafito),
       tinta: m(tinta, other.tinta),
       tintaSuave: m(tintaSuave, other.tintaSuave),
       tintaTenue: m(tintaTenue, other.tintaTenue),
@@ -214,6 +219,7 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
       hoja: m(hoja, other.hoja),
       regla: m(regla, other.regla),
       reglaFuerte: m(reglaFuerte, other.reglaFuerte),
+      relleno: m(relleno, other.relleno),
       morado: m(morado, other.morado),
       moradoTenue: m(moradoTenue, other.moradoTenue),
       sobreMorado: m(sobreMorado, other.sobreMorado),
@@ -223,39 +229,33 @@ class ColoresAlmanaque extends ThemeExtension<ColoresAlmanaque> {
   }
 }
 
-/// Profundidad del Almanaque: sombras suaves, el degradado gris de la barra
-/// superior y el velo traslúcido de lo que flota sobre el contenido.
-///
-/// Los degradados y difuminados son grises. El único degradado de color es el
-/// área morada bajo la línea de una gráfica, porque es dato (DESIGN.md).
+/// Profundidad: casi plana. Las tarjetas se separan con un borde fino y solo
+/// lo que flota (isla de navegación, aviso temporal, hojas) lleva sombra y
+/// velo traslúcido con desenfoque.
 @immutable
-class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
-  const ProfundidadAlmanaque({
+class ProfundidadTema extends ThemeExtension<ProfundidadTema> {
+  const ProfundidadTema({
     required this.sombraTarjeta,
     required this.sombraFlotante,
     required this.sombraHoja,
-    required this.degradadoGrafito,
     required this.velo,
     required this.veloHoja,
     required this.veloGrafito,
   });
 
-  /// Desenfoque detrás de la barra de pestañas, el aviso temporal y las hojas.
+  /// Desenfoque detrás de la isla de navegación, el aviso temporal y las hojas.
   static const double desenfoque = 18;
 
-  /// Tarjetas: una sombra corta y otra amplia, siempre desplazadas hacia abajo.
+  /// Tarjetas: una línea de sombra apenas visible, hacia abajo.
   final List<BoxShadow> sombraTarjeta;
 
-  /// Botón flotante y aviso temporal.
+  /// Botón flotante, isla y aviso temporal.
   final List<BoxShadow> sombraFlotante;
 
   /// Hojas inferiores.
   final List<BoxShadow> sombraHoja;
 
-  /// Barra superior: grafito un poco más claro arriba.
-  final LinearGradient degradadoGrafito;
-
-  /// Hoja traslúcida para superficies con desenfoque (barra de pestañas).
+  /// Hoja traslúcida para superficies con desenfoque (isla de navegación).
   final Color velo;
 
   /// Hoja inferior: casi opaca, porque va sobre la cortina oscura del modal.
@@ -264,18 +264,13 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
   /// Grafito traslúcido para el aviso temporal.
   final Color veloGrafito;
 
-  static const ProfundidadAlmanaque claro = ProfundidadAlmanaque(
+  static const ProfundidadTema claro = ProfundidadTema(
     sombraTarjeta: [
-      BoxShadow(color: Color(0x0F18181B), offset: Offset(0, 1), blurRadius: 2),
-      BoxShadow(color: Color(0x0D18181B), offset: Offset(0, 6), blurRadius: 16),
+      BoxShadow(color: Color(0x0A18181B), offset: Offset(0, 1), blurRadius: 2),
     ],
     sombraFlotante: [
-      BoxShadow(color: Color(0x1F18181B), offset: Offset(0, 2), blurRadius: 4),
-      BoxShadow(
-        color: Color(0x2418181B),
-        offset: Offset(0, 10),
-        blurRadius: 24,
-      ),
+      BoxShadow(color: Color(0x1A18181B), offset: Offset(0, 2), blurRadius: 4),
+      BoxShadow(color: Color(0x1F18181B), offset: Offset(0, 8), blurRadius: 20),
     ],
     sombraHoja: [
       BoxShadow(
@@ -284,20 +279,14 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
         blurRadius: 28,
       ),
     ],
-    degradadoGrafito: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFF35353A), Color(0xFF232326)],
-    ),
     velo: Color(0xE6FFFFFF),
     veloHoja: Color(0xF7FFFFFF),
     veloGrafito: Color(0xE027272A),
   );
 
-  static const ProfundidadAlmanaque oscuro = ProfundidadAlmanaque(
+  static const ProfundidadTema oscuro = ProfundidadTema(
     sombraTarjeta: [
-      BoxShadow(color: Color(0x66000000), offset: Offset(0, 1), blurRadius: 2),
-      BoxShadow(color: Color(0x4D000000), offset: Offset(0, 8), blurRadius: 20),
+      BoxShadow(color: Color(0x33000000), offset: Offset(0, 1), blurRadius: 2),
     ],
     sombraFlotante: [
       BoxShadow(color: Color(0x80000000), offset: Offset(0, 2), blurRadius: 6),
@@ -314,31 +303,24 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
         blurRadius: 32,
       ),
     ],
-    degradadoGrafito: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFF303035), Color(0xFF1E1E22)],
-    ),
-    velo: Color(0xE01C1C1F),
-    veloHoja: Color(0xF51C1C1F),
+    velo: Color(0xE017171A),
+    veloHoja: Color(0xF517171A),
     veloGrafito: Color(0xEB3A3A40),
   );
 
   @override
-  ProfundidadAlmanaque copyWith({
+  ProfundidadTema copyWith({
     List<BoxShadow>? sombraTarjeta,
     List<BoxShadow>? sombraFlotante,
     List<BoxShadow>? sombraHoja,
-    LinearGradient? degradadoGrafito,
     Color? velo,
     Color? veloHoja,
     Color? veloGrafito,
   }) {
-    return ProfundidadAlmanaque(
+    return ProfundidadTema(
       sombraTarjeta: sombraTarjeta ?? this.sombraTarjeta,
       sombraFlotante: sombraFlotante ?? this.sombraFlotante,
       sombraHoja: sombraHoja ?? this.sombraHoja,
-      degradadoGrafito: degradadoGrafito ?? this.degradadoGrafito,
       velo: velo ?? this.velo,
       veloHoja: veloHoja ?? this.veloHoja,
       veloGrafito: veloGrafito ?? this.veloGrafito,
@@ -346,12 +328,9 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
   }
 
   @override
-  ProfundidadAlmanaque lerp(
-    ThemeExtension<ProfundidadAlmanaque>? other,
-    double t,
-  ) {
-    if (other is! ProfundidadAlmanaque) return this;
-    return ProfundidadAlmanaque(
+  ProfundidadTema lerp(ThemeExtension<ProfundidadTema>? other, double t) {
+    if (other is! ProfundidadTema) return this;
+    return ProfundidadTema(
       sombraTarjeta: BoxShadow.lerpList(sombraTarjeta, other.sombraTarjeta, t)!,
       sombraFlotante: BoxShadow.lerpList(
         sombraFlotante,
@@ -359,11 +338,6 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
         t,
       )!,
       sombraHoja: BoxShadow.lerpList(sombraHoja, other.sombraHoja, t)!,
-      degradadoGrafito: LinearGradient.lerp(
-        degradadoGrafito,
-        other.degradadoGrafito,
-        t,
-      )!,
       velo: Color.lerp(velo, other.velo, t)!,
       veloHoja: Color.lerp(veloHoja, other.veloHoja, t)!,
       veloGrafito: Color.lerp(veloGrafito, other.veloGrafito, t)!,
@@ -373,23 +347,22 @@ class ProfundidadAlmanaque extends ThemeExtension<ProfundidadAlmanaque> {
 
 /// Atajos a los tokens del tema actual.
 extension ColoresDelContexto on BuildContext {
-  ColoresAlmanaque get colores =>
-      Theme.of(this).extension<ColoresAlmanaque>() ?? ColoresAlmanaque.claro;
+  ColoresTema get colores =>
+      Theme.of(this).extension<ColoresTema>() ?? ColoresTema.claro;
 
-  ProfundidadAlmanaque get profundidad =>
-      Theme.of(this).extension<ProfundidadAlmanaque>() ??
-      ProfundidadAlmanaque.claro;
+  ProfundidadTema get profundidad =>
+      Theme.of(this).extension<ProfundidadTema>() ?? ProfundidadTema.claro;
 }
 
 // Construir un ThemeData es caro y el resultado no cambia: se arma una vez.
 final ThemeData _temaClaro = _construir(
-  ColoresAlmanaque.claro,
-  ProfundidadAlmanaque.claro,
+  ColoresTema.claro,
+  ProfundidadTema.claro,
   Brightness.light,
 );
 final ThemeData _temaOscuro = _construir(
-  ColoresAlmanaque.oscuro,
-  ProfundidadAlmanaque.oscuro,
+  ColoresTema.oscuro,
+  ProfundidadTema.oscuro,
   Brightness.dark,
 );
 
@@ -418,52 +391,18 @@ TextStyle _estilo(
   );
 }
 
-TextTheme _textos(ColoresAlmanaque c) {
-  const cond = Familias.condensada;
+TextTheme _textos(ColoresTema c) {
   return TextTheme(
-    displayLarge: _estilo(
-      44,
-      FontWeight.w800,
-      c.tinta,
-      familia: cond,
-      alto: 1.05,
+    displayLarge: _estilo(40, FontWeight.w700, c.tinta, alto: 1.1),
+    displayMedium: _estilo(32, FontWeight.w700, c.tinta, alto: 1.15),
+    // Cifra grande: el valor principal de una pantalla, en monoespaciada.
+    displaySmall: estiloDeCifra(
+      _estilo(30, FontWeight.w600, c.tinta, alto: 1.15),
     ),
-    displayMedium: _estilo(
-      36,
-      FontWeight.w800,
-      c.tinta,
-      familia: cond,
-      alto: 1.1,
-    ),
-    displaySmall: _estilo(30, FontWeight.w600, c.tinta, alto: 1.15),
-    headlineLarge: _estilo(
-      32,
-      FontWeight.w800,
-      c.tinta,
-      familia: cond,
-      alto: 1.1,
-    ),
-    headlineMedium: _estilo(
-      28,
-      FontWeight.w800,
-      c.tinta,
-      familia: cond,
-      alto: 1.15,
-    ),
-    headlineSmall: _estilo(
-      24,
-      FontWeight.w800,
-      c.tinta,
-      familia: cond,
-      alto: 1.2,
-    ),
-    titleLarge: _estilo(
-      20,
-      FontWeight.w700,
-      c.tinta,
-      familia: cond,
-      alto: 1.25,
-    ),
+    headlineLarge: _estilo(28, FontWeight.w700, c.tinta, alto: 1.15),
+    headlineMedium: _estilo(24, FontWeight.w600, c.tinta, alto: 1.2),
+    headlineSmall: _estilo(20, FontWeight.w600, c.tinta, alto: 1.25),
+    titleLarge: _estilo(18, FontWeight.w600, c.tinta, alto: 1.3),
     titleMedium: _estilo(16, FontWeight.w600, c.tinta, alto: 1.35),
     titleSmall: _estilo(14, FontWeight.w600, c.tinta, alto: 1.35),
     bodyLarge: _estilo(16, FontWeight.w400, c.tinta, alto: 1.45),
@@ -472,30 +411,25 @@ TextTheme _textos(ColoresAlmanaque c) {
     labelLarge: _estilo(15, FontWeight.w600, c.tinta, alto: 1.2),
     labelMedium: _estilo(
       12,
-      FontWeight.w700,
+      FontWeight.w600,
       c.tintaSuave,
-      familia: cond,
       alto: 1.2,
-      espaciado: 0.6,
+      espaciado: 0.2,
     ),
     labelSmall: _estilo(
       11,
-      FontWeight.w700,
+      FontWeight.w600,
       c.tintaSuave,
-      familia: cond,
       alto: 1.2,
-      espaciado: 0.5,
+      espaciado: 0.2,
     ),
   );
 }
 
-ThemeData _construir(
-  ColoresAlmanaque c,
-  ProfundidadAlmanaque p,
-  Brightness brillo,
-) {
+ThemeData _construir(ColoresTema c, ProfundidadTema p, Brightness brillo) {
   final textos = _textos(c);
   final esquina = BorderRadius.circular(Radios.control);
+  final esquinaTarjeta = BorderRadius.circular(Radios.hoja);
   OutlineInputBorder borde(Color color, [double ancho = 1]) =>
       OutlineInputBorder(
         borderRadius: esquina,
@@ -506,8 +440,8 @@ ThemeData _construir(
 
   final esquema = ColorScheme(
     brightness: brillo,
-    primary: c.tinta,
-    onPrimary: c.papel,
+    primary: c.morado,
+    onPrimary: c.sobreMorado,
     primaryContainer: c.moradoTenue,
     onPrimaryContainer: c.tinta,
     secondary: c.tintaSuave,
@@ -527,12 +461,12 @@ ThemeData _construir(
     surfaceContainerLow: c.hoja,
     surfaceContainer: c.hoja,
     surfaceContainerHigh: c.hoja,
-    surfaceContainerHighest: c.papel,
+    surfaceContainerHighest: c.relleno,
     outline: c.reglaFuerte,
     outlineVariant: c.regla,
     inverseSurface: c.grafito,
     onInverseSurface: c.sobreGrafito,
-    inversePrimary: c.moradoSobreGrafito,
+    inversePrimary: c.morado,
     shadow: const Color(0xFF000000),
     scrim: const Color(0xFF000000),
     surfaceTint: const Color(0x00000000),
@@ -560,16 +494,19 @@ ThemeData _construir(
       selectionHandleColor: c.morado,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: c.grafito,
-      foregroundColor: c.sobreGrafito,
+      backgroundColor: c.hoja,
+      foregroundColor: c.tinta,
       surfaceTintColor: const Color(0x00000000),
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
-      systemOverlayStyle: SystemUiOverlayStyle.light,
-      iconTheme: IconThemeData(color: c.sobreGrafito),
-      actionsIconTheme: IconThemeData(color: c.sobreGrafito),
-      titleTextStyle: textos.headlineSmall!.copyWith(color: c.sobreGrafito),
+      shape: Border(bottom: BorderSide(color: c.regla)),
+      systemOverlayStyle: brillo == Brightness.light
+          ? SystemUiOverlayStyle.dark
+          : SystemUiOverlayStyle.light,
+      iconTheme: IconThemeData(color: c.tinta),
+      actionsIconTheme: IconThemeData(color: c.tinta),
+      titleTextStyle: textos.headlineSmall,
     ),
     cardTheme: CardThemeData(
       color: c.hoja,
@@ -577,31 +514,43 @@ ThemeData _construir(
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        borderRadius: esquina,
+        borderRadius: esquinaTarjeta,
         side: BorderSide(color: c.regla),
       ),
     ),
     dividerTheme: DividerThemeData(color: c.regla, thickness: 1, space: 1),
+    // Primario: sólido en el acento. Deshabilitado: gris con borde.
     filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        backgroundColor: c.tinta,
-        foregroundColor: c.papel,
-        disabledBackgroundColor: c.regla,
-        disabledForegroundColor: c.tintaTenue,
-        minimumSize: alturaBoton,
-        padding: rellenoBoton,
-        shape: RoundedRectangleBorder(borderRadius: esquina),
-        textStyle: textos.labelLarge,
-      ),
+      style:
+          FilledButton.styleFrom(
+            backgroundColor: c.morado,
+            foregroundColor: c.sobreMorado,
+            disabledBackgroundColor: c.relleno,
+            disabledForegroundColor: c.tintaTenue,
+            minimumSize: alturaBoton,
+            padding: rellenoBoton,
+            shape: RoundedRectangleBorder(borderRadius: esquina),
+            textStyle: textos.labelLarge,
+          ).copyWith(
+            side: WidgetStateProperty.resolveWith(
+              (s) => s.contains(WidgetState.disabled)
+                  ? BorderSide(color: c.regla)
+                  : null,
+            ),
+          ),
     ),
+    // Secundario: fondo gris claro, sin contorno.
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(c.relleno),
         foregroundColor: WidgetStateProperty.resolveWith(
           (s) => s.contains(WidgetState.disabled) ? c.tintaTenue : c.tinta,
         ),
         side: WidgetStateProperty.resolveWith(
           (s) => BorderSide(
-            color: s.contains(WidgetState.disabled) ? c.reglaFuerte : c.tinta,
+            color: s.contains(WidgetState.disabled)
+                ? c.regla
+                : const Color(0x00000000),
           ),
         ),
         overlayColor: WidgetStatePropertyAll(c.regla),
@@ -613,22 +562,20 @@ ThemeData _construir(
         textStyle: WidgetStatePropertyAll(textos.labelLarge),
       ),
     ),
+    // Texto: seminegrita en el acento, sin subrayado.
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: c.tinta,
+        foregroundColor: c.morado,
         disabledForegroundColor: c.tintaTenue,
         minimumSize: alturaBoton,
         padding: const EdgeInsets.symmetric(horizontal: Espacio.x3),
         shape: RoundedRectangleBorder(borderRadius: esquina),
-        textStyle: textos.labelLarge!.copyWith(
-          decoration: TextDecoration.underline,
-          decorationThickness: 1.5,
-        ),
+        textStyle: textos.labelLarge,
       ),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: c.tinta,
-      foregroundColor: c.papel,
+      backgroundColor: c.morado,
+      foregroundColor: c.sobreMorado,
       elevation: 3,
       focusElevation: 3,
       hoverElevation: 4,
@@ -665,11 +612,8 @@ ThemeData _construir(
       height: 80,
       indicatorColor: c.moradoTenue,
       indicatorShape: const StadiumBorder(),
-      // Rótulos condensados: "Oportunidades" cabe en una línea con texto
-      // grande.
       labelTextStyle: WidgetStateProperty.resolveWith(
         (s) => textos.bodySmall!.copyWith(
-          fontFamily: Familias.condensada,
           fontSize: 12,
           color: s.contains(WidgetState.selected) ? c.tinta : c.tintaSuave,
           fontWeight: s.contains(WidgetState.selected)
@@ -685,7 +629,7 @@ ThemeData _construir(
     ),
     navigationRailTheme: NavigationRailThemeData(
       backgroundColor: c.hoja,
-      indicatorColor: c.moradoTenue,
+      indicatorColor: c.relleno,
       selectedIconTheme: IconThemeData(color: c.tinta),
       unselectedIconTheme: IconThemeData(color: c.tintaSuave),
       selectedLabelTextStyle: textos.bodySmall!.copyWith(
@@ -722,15 +666,15 @@ ThemeData _construir(
     ),
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith(
-        (s) => s.contains(WidgetState.selected) ? c.hoja : c.tintaSuave,
+        (s) => s.contains(WidgetState.selected) ? c.sobreMorado : c.tintaSuave,
       ),
       trackColor: WidgetStateProperty.resolveWith(
-        (s) => s.contains(WidgetState.selected) ? c.tinta : c.regla,
+        (s) => s.contains(WidgetState.selected) ? c.morado : c.relleno,
       ),
       trackOutlineColor: WidgetStatePropertyAll(c.reglaFuerte),
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
-      color: c.tinta,
+      color: c.morado,
       linearTrackColor: c.regla,
       circularTrackColor: c.regla,
     ),

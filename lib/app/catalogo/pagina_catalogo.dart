@@ -110,7 +110,7 @@ class PaginaCatalogo extends StatelessWidget {
         padding: const EdgeInsets.all(Espacio.x4),
         children: [
           Text(
-            'Sistema de diseño Almanaque (DESIGN.md). Datos de ejemplo.',
+            'Sistema de diseño estilo Alpaca (DESIGN.md, D-69). Datos de ejemplo.',
             style: textos.bodyMedium!.copyWith(color: c.tintaSuave),
           ),
           const SizedBox(height: Espacio.x4),

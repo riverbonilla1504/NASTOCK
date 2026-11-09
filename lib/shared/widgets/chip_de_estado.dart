@@ -1,5 +1,7 @@
-/// Chip de estado: la línea dice el estado (sólida en vivo, discontinua
-/// pendiente, punteada desactualizado, tachada deshabilitado), no el color.
+/// Chip de estado: píldora con borde fino. La línea dice el estado (sólida
+/// en vivo, discontinua pendiente, punteada desactualizado, tachada
+/// deshabilitado), no el color. El destacado lleva borde y texto en el acento
+/// (como la insignia "Recommended" de Alpaca).
 library;
 
 import 'package:flutter/material.dart';
@@ -44,13 +46,13 @@ class ChipDeEstado extends StatelessWidget {
   /// Deshabilitado: texto tachado y tenue.
   final bool tachado;
 
-  /// Lo vigente (p. ej. "Abierto · hoy"): fondo morado tenue y línea morada.
+  /// Lo vigente (p. ej. "Abierto · hoy"): fondo tenue y borde y texto morados.
   final bool destacado;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colores;
-    final color = tachado ? c.tintaTenue : c.tinta;
+    final color = tachado ? c.tintaTenue : (destacado ? c.morado : c.tinta);
     final estilo = Theme.of(context).textTheme.labelMedium!.copyWith(
       color: color,
       decoration: tachado ? TextDecoration.lineThrough : null,
@@ -64,17 +66,15 @@ class ChipDeEstado extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: Espacio.x3),
         decoration: BoxDecoration(
           color: destacado ? c.moradoTenue : c.hoja,
-          borderRadius: BorderRadius.circular(Radios.control),
-          border: Border.all(
-            color: destacado ? const Color(0x00000000) : c.reglaFuerte,
-          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: destacado ? c.morado : c.reglaFuerte),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             TrazoDeLinea(forma: forma, color: destacado ? c.morado : color),
             const SizedBox(width: Espacio.x2),
-            Text(etiqueta.toUpperCase(), style: estilo),
+            Text(etiqueta, style: estilo),
           ],
         ),
       ),

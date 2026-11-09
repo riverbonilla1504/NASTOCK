@@ -63,7 +63,7 @@ void main() {
 
     final borde = tester.widget<BordeConForma>(find.byType(BordeConForma));
     expect(borde.forma, FormaDeLinea.doble);
-    expect(borde.color, ColoresAlmanaque.claro.tinta);
+    expect(borde.color, ColoresTema.claro.tinta);
   });
 
   testWidgets(

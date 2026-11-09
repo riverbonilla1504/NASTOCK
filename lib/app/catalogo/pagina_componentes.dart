@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../../core/errores/traduccion_de_errores.dart';
+import '../../core/formato/formato_dinero.dart';
 import '../../shared/widgets/avisos.dart';
 import '../../shared/widgets/barra_superior.dart';
 import '../../shared/widgets/botones.dart';
@@ -18,7 +19,9 @@ import '../../shared/widgets/franja_de_la_jornada.dart';
 import '../../shared/widgets/grafica_de_linea.dart';
 import '../../shared/widgets/mensaje_de_error.dart';
 import '../../shared/widgets/opciones_excluyentes.dart';
+import '../../shared/widgets/selector_de_rango.dart';
 import '../../shared/widgets/tarjeta.dart';
+import '../../shared/widgets/tarjeta_de_grafica.dart';
 import '../../shared/widgets/tarjeta_de_cotizacion.dart';
 import '../tema.dart';
 import 'datos_de_ejemplo.dart';
@@ -43,6 +46,7 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
   );
   bool _enviando = false;
   String _rol = 'usuario';
+  RangoDeGrafica _rango = RangoDeGrafica.dia;
   final TextEditingController _fueraDeRango = TextEditingController(
     text: '900',
   );
@@ -329,6 +333,26 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
             ],
           ),
           _Seccion(
+            titulo: 'Gráfica con rango',
+            children: [
+              TarjetaDeGrafica(
+                titulo: 'Valor del portafolio',
+                valor: 10000,
+                cambio: 0.62,
+                fecha: '06/11/2026 11:46',
+                serie: _serieDelRango(_rango),
+                etiquetasX: const ['7 AM', '10 AM', '1 PM'],
+                formatoY: formatearCifraCorta,
+                descripcion:
+                    'Valor del portafolio en el rango ${_rango.lectura}: '
+                    'sube de 9.940 a 10.000 dólares',
+                rango: _rango,
+                alElegirRango: (r) => setState(() => _rango = r),
+                alRefrescar: () {},
+              ),
+            ],
+          ),
+          _Seccion(
             titulo: 'Cotización',
             children: [
               TarjetaDeCotizacion(
@@ -350,22 +374,23 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
             children: [
               DecoratedBox(
                 decoration: BoxDecoration(
-                  gradient: context.profundidad.degradadoGrafito,
-                  borderRadius: BorderRadius.circular(Radios.control),
+                  color: c.hoja,
+                  border: Border.all(color: c.regla),
+                  borderRadius: BorderRadius.circular(Radios.hoja),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(Espacio.x4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const _RotuloSobreGrafito('Abierta · ahora 11:46'),
+                      const _RotuloDeFranja('Abierta · ahora 11:46'),
                       FranjaDeLaJornada(
                         apertura: Ejemplo.apertura,
                         cierre: Ejemplo.cierre,
                         ahora: Ejemplo.ahora,
                       ),
                       const SizedBox(height: Espacio.x4),
-                      const _RotuloSobreGrafito(
+                      const _RotuloDeFranja(
                         'Media jornada · cierra a las 13:00',
                       ),
                       FranjaDeLaJornada(
@@ -374,7 +399,7 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
                         ahora: Ejemplo.ahora,
                       ),
                       const SizedBox(height: Espacio.x4),
-                      const _RotuloSobreGrafito('Cerrada · después del cierre'),
+                      const _RotuloDeFranja('Cerrada · después del cierre'),
                       FranjaDeLaJornada(
                         apertura: Ejemplo.apertura,
                         cierre: Ejemplo.cierre,
@@ -446,6 +471,19 @@ class _PaginaComponentesState extends State<PaginaComponentes> {
         ],
       ),
     );
+  }
+
+  /// Una serie de ejemplo distinta por rango, de la misma forma que la curva
+  /// de QLD pero en dólares del portafolio.
+  static List<double> _serieDelRango(RangoDeGrafica rango) {
+    final factor = switch (rango) {
+      RangoDeGrafica.dia => 1.0,
+      RangoDeGrafica.mes => 2.5,
+      RangoDeGrafica.anio => 6.0,
+      RangoDeGrafica.todo => 9.0,
+    };
+    final base = Ejemplo.curvaQld;
+    return [for (final p in base) 10000 + (p - base.last) * 100 * factor];
   }
 
   static List<double> _variacionDesdeApertura(List<double> precios) => [
@@ -568,9 +606,9 @@ class _CampoConFoco extends StatelessWidget {
   }
 }
 
-/// Rótulo sobre grafito para los estados de la franja.
-class _RotuloSobreGrafito extends StatelessWidget {
-  const _RotuloSobreGrafito(this.texto);
+/// Rótulo de los estados de la franja.
+class _RotuloDeFranja extends StatelessWidget {
+  const _RotuloDeFranja(this.texto);
 
   final String texto;
 
@@ -582,7 +620,7 @@ class _RotuloSobreGrafito extends StatelessWidget {
       child: Text(
         texto,
         style: Theme.of(context).textTheme.bodySmall!
-            .copyWith(color: c.sobreGrafitoSuave),
+            .copyWith(color: c.tintaSuave),
       ),
     );
   }

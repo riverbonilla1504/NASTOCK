@@ -1,8 +1,9 @@
 /// Avisos del sistema: en línea y temporales.
 ///
-/// Ningún aviso es una caja tintada de color con su ícono del mismo color.
-/// Todos van en hoja con texto en tinta; cada tipo se reconoce por la forma de
-/// su marca y la forma de su borde (DESIGN.md). El texto de un error siempre
+/// Ningún aviso es una caja tintada de rojo con su ícono rojo. El de
+/// información es la franja tenue del acento con su ícono "i" (D-69); los
+/// demás van en hoja con texto en tinta. Cada tipo se reconoce por la forma
+/// de su marca y la forma de su borde (DESIGN.md). El texto de un error siempre
 /// sale de `traducirError` (docs/06 §9).
 library;
 
@@ -70,14 +71,17 @@ class AvisoEnLinea extends StatelessWidget {
     final c = context.colores;
     final textos = Theme.of(context).textTheme;
     final forma = formaDeAviso(tipo);
-    final colorBorde = forma == FormaDeLinea.fina ? c.reglaFuerte : c.tinta;
+    final franja = tipo == TipoAviso.informacion;
+    final colorBorde = franja
+        ? const Color(0x00000000)
+        : (forma == FormaDeLinea.fina ? c.reglaFuerte : c.tinta);
     return Semantics(
       container: true,
       liveRegion: tipo == TipoAviso.error,
       label: lecturaDeTipo(tipo),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: c.hoja,
+          color: franja ? c.moradoTenue : c.hoja,
           borderRadius: BorderRadius.circular(Radios.control),
         ),
         child: BordeConForma(
@@ -152,7 +156,7 @@ class MarcaDeAviso extends StatelessWidget {
       TipoAviso.informacion => Icon(
         Icons.info_outline,
         size: tamano * 0.86,
-        color: c.tinta,
+        color: c.morado,
       ),
       TipoAviso.exito => DecoratedBox(
         decoration: BoxDecoration(color: c.tinta, shape: BoxShape.circle),
@@ -287,8 +291,8 @@ class AvisoTemporal extends StatelessWidget {
         borderRadius: esquina,
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(
-            sigmaX: ProfundidadAlmanaque.desenfoque,
-            sigmaY: ProfundidadAlmanaque.desenfoque,
+            sigmaX: ProfundidadTema.desenfoque,
+            sigmaY: ProfundidadTema.desenfoque,
           ),
           child: ColoredBox(
             color: p.veloGrafito,

@@ -41,8 +41,8 @@ class HojaConVelo extends StatelessWidget {
         borderRadius: esquina,
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(
-            sigmaX: ProfundidadAlmanaque.desenfoque,
-            sigmaY: ProfundidadAlmanaque.desenfoque,
+            sigmaX: ProfundidadTema.desenfoque,
+            sigmaY: ProfundidadTema.desenfoque,
           ),
           child: ColoredBox(
             color: p.veloHoja,
