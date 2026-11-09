@@ -134,12 +134,13 @@ select throws_ok($$select private.aplicar_llenado((select id from e2), 50, 100, 
 select is(pg_temp.est((select id from e2)), 'aceptada', 'y la orden queda como estaba');
 
 -- Venta con ganancia (RN-27, docs/02 §7.1). La posición del cupo 1 tiene 4 acciones con costo 410,20.
--- El reparto 50/25/25 de la ganancia lo agrega HU-023: aquí la ganancia queda entera en el cupo.
+-- El reparto 50/25/25 de la ganancia (HU-023) se prueba en 21_reparto_de_la_ganancia_test.sql; aquí solo se
+-- mide lo que no depende de él.
 create temp table g_antes as select pg_temp.ef(pg_temp.cupo('1')) as cupo, pg_temp.ef(pg_temp.sub('resultados')) as resultados;
 create temp table s0 as select pg_temp.orden(pg_temp.cupo('1'), 'venta', 4, 123.20) as id;
 select private.aplicar_llenado((select id from s0), 4, 123.20, 'filled');
 select is(pg_temp.pos(pg_temp.cupo('1')), '(0.000000000,102.550000,0.00,cerrada,82.60)', 'la posición se cierra y acumula el resultado (4 × 123,20 − 410,20)');
-select is(pg_temp.ef(pg_temp.cupo('1')) - (select cupo from g_antes), 492.80, 'el cupo recibe lo vendido');
+select is(pg_temp.ef(pg_temp.cupo('1')) - (select cupo from g_antes), 430.85, 'el cupo recibe lo vendido menos lo que reparte a Reserva y Arriesgadas (61,95)');
 select is(pg_temp.inv(pg_temp.cupo('1')), 0.00, 'RN-27 · el costo de lo vendido sale de invertido completo');
 select is(pg_temp.ef(pg_temp.sub('resultados')) - (select resultados from g_antes), -82.60, 'resultados registra la ganancia');
 select is((select count(*)::int from public.movimientos where tipo = 'venta' and referencia_id = (select id from s0)), 1, 'un movimiento de venta');

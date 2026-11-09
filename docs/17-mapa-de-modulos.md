@@ -63,6 +63,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Qué hace**: aportes, retiros, cupos, reparto 50/25/25 de aportes y ganancias, rebalanceo.
 - **Docs**: 02 §3–§5, §7, §8, §14 · 08 §4 · 12 §2
 - **BD**: `movimientos_capital`; RPC `registrar_aporte`, `anular_aporte`, `registrar_retiro`, `asignar_cupo`, `reducir_cupo`, `solicitar_liquidacion`; `private.crear_cupo`, `private.mover_cupo`, `private.publicar_evento_subcuenta`, `private.proponer_rebalanceo`, reparto dentro de `private.aplicar_llenado`
+  · HU-023: migración `20261110140000_reparto_de_la_ganancia.sql` (`private.porcentajes_de_reparto` y `private.aplicar_venta` con el movimiento `reparto_ganancia`, RN-26 a RN-30); pruebas `supabase/tests/database/21_reparto_de_la_ganancia_test.sql`
 - **Funciones**: `conciliacion` (confirma aportes), `cierre-diario` (rebalanceo)
 - **App**: `lib/features/admin/capital/` (HU-099: `domain/movimiento_de_capital.dart`, `data/capital_repositorio.dart` sobre `movimientos_capital` y las RPC, `presentation/`: `capital_provider.dart` que se actualiza con el evento `capital` del canal `admin`, `formulario_de_aporte.dart`, `lista_de_aportes.dart` y `pagina_capital.dart`; ruta `/admin/capital`), `lib/features/admin/cupos/`
 - **Rutas**: `supabase/migrations/20261109130000_capital_tabla_y_evento.sql` (tabla, RLS, evento `capital`), `20261109130002_capital_registrar_y_anular_aporte.sql` (`registrar_aporte`, `anular_aporte`)
