@@ -102,7 +102,7 @@ function responder(
 function detalleDeOrden(orden: OrdenDelBroker): Record<string, unknown> {
   return {
     id_broker: orden.idBroker,
-    estado: orden.estado,
+    estado: orden.estadoBroker,
     cantidad_llenada: orden.cantidadLlenada,
     patas: orden.patas.map((p) => ({
       id_broker: p.idBroker,
@@ -162,7 +162,7 @@ async function procesar(
       id,
       orden.idBroker,
       "aceptada",
-      orden.estado,
+      orden.estadoBroker,
       detalleDeOrden(orden),
     ]);
     await confirmar();

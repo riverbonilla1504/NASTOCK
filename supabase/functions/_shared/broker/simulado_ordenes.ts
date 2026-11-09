@@ -59,6 +59,23 @@ function promedio(
   ) / 1e6;
 }
 
+/** Estado crudo que Alpaca usaría para cada estado nuestro (docs/08 §2.1). */
+const ESTADO_CRUDO: Record<EstadoDeOrdenBroker, string> = {
+  aceptada: "new",
+  parcial: "partially_filled",
+  llena: "filled",
+  cancelada: "canceled",
+  expirada: "expired",
+  rechazada: "rejected",
+};
+
+/** Copia de una orden para entregarla: modificarla no cambia al broker. */
+function copia(orden: OrdenDelBroker): OrdenDelBroker {
+  const clon = structuredClone(orden);
+  clon.estadoBroker = ESTADO_CRUDO[clon.estado];
+  return clon;
+}
+
 export class OrdenesSimuladas {
   escenario: EscenarioDeOrden;
   #secuencia = 0;
@@ -131,6 +148,7 @@ export class OrdenesSimuladas {
       cantidad: orden.cantidad,
       precioLimite: orden.precioLimite,
       estado: "aceptada",
+      estadoBroker: "",
       cantidadLlenada: 0,
       precioPromedio: null,
       patas,
@@ -139,7 +157,7 @@ export class OrdenesSimuladas {
     if (this.escenario === "sin_respuesta") {
       throw new ErrorDeProveedor("El broker simulado no respondió a tiempo");
     }
-    return structuredClone(creada);
+    return copia(creada);
   }
 
   consultar(referencia: ReferenciaDeOrden): OrdenDelBroker | null {
@@ -147,7 +165,7 @@ export class OrdenesSimuladas {
       const coincide = "idBroker" in referencia
         ? orden.idBroker === referencia.idBroker
         : orden.idCliente === referencia.idCliente;
-      if (coincide) return structuredClone(orden);
+      if (coincide) return copia(orden);
     }
     return null;
   }

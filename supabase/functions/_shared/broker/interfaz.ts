@@ -94,6 +94,8 @@ export interface OrdenDelBroker {
   cantidad: number;
   precioLimite: number | null;
   estado: EstadoDeOrdenBroker;
+  /** Estado crudo del broker (`filled`, `partially_filled`…): se guarda tal cual en `ordenes.broker_estado`. */
+  estadoBroker: string;
   cantidadLlenada: number;
   /** Precio promedio de lo llenado; null si no se ha llenado nada. */
   precioPromedio: number | null;

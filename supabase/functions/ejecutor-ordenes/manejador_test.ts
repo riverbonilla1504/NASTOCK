@@ -152,7 +152,7 @@ Deno.test("CA-1: toma, envía con client_order_id igual al id, cierra y confirma
     ORDEN,
     enviada?.idBroker ?? null,
     "aceptada",
-    "aceptada",
+    "new",
   ]);
   assertEquals(llamada(llamadas, "registrar_salud")?.argumentos, [
     "alpaca_trading",
