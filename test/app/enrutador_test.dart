@@ -174,12 +174,13 @@ void main() {
     testWidgets('tocar un destino del menú abre su pantalla', (tester) async {
       final enrutador = await _abrir(tester, _conSesion('usuario'));
 
-      await tester.tap(find.byKey(claveDeDestino(Rutas.cupo)));
+      // Mi cupo ya tiene pantalla propia (HU-019) y se prueba en test/features/cupo.
+      await tester.tap(find.byKey(claveDeDestino(Rutas.alertas)));
       await tester.pumpAndSettle();
 
-      expect(_ruta(enrutador), Rutas.cupo);
+      expect(_ruta(enrutador), Rutas.alertas);
       expect(find.byType(PaginaMarcador), findsOneWidget);
-      expect(find.text('Mi cupo'), findsWidgets);
+      expect(find.text('Alertas'), findsWidgets);
     });
 
     testWidgets('el Administrador entra a Administración', (tester) async {
