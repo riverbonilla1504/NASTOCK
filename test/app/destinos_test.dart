@@ -81,8 +81,13 @@ void main() {
       expect(rutas.first, Rutas.inicio);
     });
 
-    test('Mercado, Oportunidades y Administración tienen pantalla propia; el resto, marcador', () {
-      const conPantalla = {Rutas.inicio, Rutas.oportunidades, Rutas.admin};
+    test('Mercado, Oportunidades, Mi cupo y Administración tienen pantalla propia; el resto, marcador', () {
+      const conPantalla = {
+        Rutas.inicio,
+        Rutas.oportunidades,
+        Rutas.cupo,
+        Rutas.admin,
+      };
       for (final destino in destinosDelMvp) {
         expect(
           destino.pantalla == null,

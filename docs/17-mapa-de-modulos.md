@@ -165,7 +165,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 ### M-15 · Cartera, fondo y reportes
 - **Qué hace**: mi cupo, resumen y detalle del fondo, fotos diarias, rendimiento TWR, historial, exportación CSV, línea ×2 teórico.
 - **Docs**: 02 §13 · 03 §3
-- **BD**: `patrimonio_diario`; RPC `mi_cupo`, `resumen_fondo`; `private.tomar_foto_patrimonio`
+- **BD**: `patrimonio_diario`; RPC `mi_cupo` (lista), `resumen_fondo`; `private.tomar_foto_patrimonio`
 - **Funciones**: `cierre-diario`
 - **App**: `lib/features/cupo/`, `lib/features/fondo/`, `lib/features/reportes/`
 - **Pruebas**: pruebas de exportación y del motor ×2 (copiadas de la v2) · E2E-04
