@@ -15,6 +15,7 @@ import '../../../shared/widgets/lista_desplegable.dart';
 import '../../../shared/widgets/selector_de_rango.dart';
 import '../../../shared/widgets/tarjeta.dart';
 import '../../../shared/widgets/tarjeta_de_cotizacion.dart';
+import '../../ordenes/presentation/botones_de_orden.dart';
 import '../domain/mercado.dart';
 import 'encabezado_del_mercado.dart';
 import 'grafica_de_mercado.dart';
@@ -523,6 +524,16 @@ class _TarjetaDeGrafica extends ConsumerWidget {
               descripcion:
                   '$simbolo, ${rango.etiqueta}: de ${etiquetaDePrecio(puntos.first.valor)} a ${etiquetaDePrecio(puntos.last.valor)}',
             ),
+          // Comprar y Vender: solo el rol Usuario los ve (HU-075).
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              0,
+              Espacio.x2,
+              Espacio.x1,
+              Espacio.x2,
+            ),
+            child: BotonesDeOrden(simbolo: simbolo, precio: precio),
+          ),
         ],
       ),
     );
