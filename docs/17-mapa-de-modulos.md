@@ -176,8 +176,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 03 §2–§3
 - **BD**: RPC de administración de los demás módulos
 - **Funciones**: `admin-usuarios`
-- **App**: `lib/features/admin/` (`presentation/pagina_administracion.dart`: la pantalla de `/admin`, donde cada sección agrega su entrada; cada sección tiene su carpeta, como `usuarios/`)
-- **Pruebas**: widget tests de administración, `test/app/entrada_a_invitaciones_test.dart` · E2E-01
+- **App**: `lib/features/admin/` (`presentation/pagina_administracion.dart`: la pantalla de `/admin`, donde cada sección agrega su entrada; cada sección tiene su carpeta, como `usuarios/`; solo las cuatro entradas del MVP corto, deshabilitadas hasta que su historia registra la subruta en `destinos.dart` (`seccionDeAdministracionDisponible`); `presentation/guia_de_primeros_pasos.dart` y `data/fondo_repositorio.dart` con `fondoConCapitalProvider`: la guía de CB-80 mientras no hay un aporte confirmado)
+- **Pruebas**: widget tests de administración, `test/app/entrada_a_invitaciones_test.dart`, `test/features/admin/pagina_administracion_test.dart` · E2E-01
 - **Depende de**: M-02, M-04, M-07, M-08, M-17, M-18 · **Lo usan**: —
 
 ### M-17 · Auditoría

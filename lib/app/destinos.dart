@@ -95,6 +95,19 @@ final List<Destino> destinosDelMvp = [
   ),
 ];
 
+/// Si la sección [ruta] de Administración (`/admin/capital`…) ya tiene
+/// pantalla. Cada historia de E-11 registra su subruta en [destinosDelMvp] y
+/// con eso su entrada de Administración deja de estar deshabilitada.
+bool seccionDeAdministracionDisponible(String ruta) {
+  for (final destino in destinosDelMvp) {
+    if (destino.ruta != Rutas.admin) continue;
+    for (final subruta in destino.subrutas) {
+      if ('${Rutas.admin}/${subruta.path}' == ruta) return true;
+    }
+  }
+  return false;
+}
+
 /// El menú de [rol], en orden. Sin rol (o con un rol desconocido) solo queda
 /// Mercado, que es de todos y nunca deja a nadie sin a dónde ir.
 List<Destino> destinosDeRol(RolApp? rol) => [
