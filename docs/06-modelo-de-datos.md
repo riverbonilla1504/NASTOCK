@@ -844,8 +844,8 @@ Reglas generales:
 | `registrar_dispositivo(token, plataforma)` / `eliminar_dispositivo(token)` | Todos | Push. |
 | `marcar_notificaciones_leidas(ids)` | Todos | Solo las propias. |
 | `resumen_fondo()`, `mi_cupo()`, `estado_mercado()` | Según §6 | Lectura. |
-| `activar_freno(interruptor, motivo)` | Analista, Admin | Apaga `ia_activa` o `trading_activo` (PM-56). |
-| `reanudar(interruptor)` | Admin | PM-57. |
+| `activar_freno(interruptor, motivo)` | Analista, Admin | Apaga `ia_activa` o `trading_activo` (PM-56). El motivo es obligatorio; guarda `motivo_pausa`, `pausado_por` y `pausado_en`. `ESTADO_INVALIDO` si ya estaba apagado. |
+| `reanudar(interruptor)` | Admin | PM-57. `FONDO_SIN_CAPITAL` sin un aporte confirmado (RN-11); `ESTADO_INVALIDO` si ya estaba encendido. Publica `interruptor` en el canal `admin`. |
 | `invitar_usuario(email, rol, cupo_inicial)` / `revocar_invitacion(id)` | Admin | PM-50. |
 | `cambiar_rol(usuario_id, rol)` | Admin | PM-51 con RN-50, RN-51, RN-54 a RN-56. |
 | `registrar_aporte(monto, referencia, nota)` / `anular_aporte(id, motivo)` | Admin | §3 de [02](02-logica-de-negocio.md#3-de-dónde-sale-el-dinero-aportes). |
