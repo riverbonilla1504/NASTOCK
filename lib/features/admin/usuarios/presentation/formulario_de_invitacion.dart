@@ -1,8 +1,9 @@
 /// Formulario para invitar a una persona: correo de Google, rol y, solo para
 /// Usuario, cupo inicial (HU-003, PM-50).
 ///
-/// El sistema no envía correos: al crear la invitación, el aviso recuerda que el
-/// Administrador debe avisar por los canales internos (docs/04 §4.1). El cupo
+/// La app no envía correos (docs/04 §4.1): una ayuda fija lo dice antes de invitar y,
+/// al crear la invitación, el aviso de éxito repite a quién y con qué rol se invitó y
+/// recuerda que el Administrador debe avisar a la persona. El cupo
 /// inicial es solo una intención hasta que la persona entra (docs/02 §11, RN-18).
 library;
 
@@ -14,7 +15,7 @@ import '../../../../core/perfil/perfil.dart';
 import '../../../../shared/widgets/avisos.dart';
 import '../../../../shared/widgets/botones.dart';
 import '../../../../shared/widgets/campo.dart';
-import '../../../../shared/widgets/opciones_excluyentes.dart';
+import '../../../../shared/widgets/lista_desplegable.dart';
 import '../../../../app/tema.dart';
 import '../domain/invitacion.dart';
 import 'etiquetas.dart';
@@ -38,6 +39,9 @@ class FormularioDeInvitacion extends ConsumerStatefulWidget {
   static const Key claveDelAvisoDeCreada = Key('invitacion-creada');
   static const Key claveDelAvisoDeError = Key('invitacion-error');
 
+  /// Ayuda fija del formulario: la app no envía correos (docs/04 §4.1).
+  static const Key claveDeLaAyuda = Key('invitacion-ayuda');
+
   @override
   ConsumerState<FormularioDeInvitacion> createState() =>
       _FormularioDeInvitacionState();
@@ -53,6 +57,9 @@ class _FormularioDeInvitacionState
   String? _errorDelCupo;
   Object? _error;
   Invitacion? _creada;
+
+  /// El lugar donde salen el resultado y el error, para llevarlo a la vista.
+  final _claveDelResultado = GlobalKey();
 
   @override
   void dispose() {
@@ -111,12 +118,28 @@ class _FormularioDeInvitacionState
       _correo.clear();
       _cupo.clear();
       setState(() => _creada = invitacion);
+      _llevarElResultadoALaVista();
     } catch (error) {
       if (!mounted) return;
       setState(() => _error = error);
+      _llevarElResultadoALaVista();
     } finally {
       if (mounted) setState(() => _enviando = false);
     }
+  }
+
+  /// En el teléfono el resultado queda debajo del botón y, con el teclado abierto o
+  /// la pantalla corta, fuera de la vista: se baja hasta él para que se lea.
+  void _llevarElResultadoALaVista() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final contexto = _claveDelResultado.currentContext;
+      if (!mounted || contexto == null) return;
+      Scrollable.ensureVisible(
+        contexto,
+        duration: Duration.zero,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    });
   }
 
   @override
@@ -129,6 +152,15 @@ class _FormularioDeInvitacionState
         Semantics(
           header: true,
           child: Text('Invitar a una persona', style: textos.titleLarge),
+        ),
+        const SizedBox(height: Espacio.x3),
+        const AvisoEnLinea(
+          key: FormularioDeInvitacion.claveDeLaAyuda,
+          tipo: TipoAviso.informacion,
+          mensaje:
+              'La app no envía correos. Después de invitar, avisa a la persona '
+              'que entre con Google con ese Gmail. En modo de prueba, su Gmail '
+              'también debe estar en los usuarios de prueba de Google.',
         ),
         const SizedBox(height: Espacio.x4),
         Campo(
@@ -150,7 +182,7 @@ class _FormularioDeInvitacionState
           },
         ),
         const SizedBox(height: Espacio.x4),
-        OpcionesExcluyentes<RolApp>(
+        ListaDesplegable<RolApp>(
           etiqueta: 'Rol',
           opciones: [
             for (final rol in RolApp.values)
@@ -186,25 +218,32 @@ class _FormularioDeInvitacionState
             alPresionar: _enviar,
           ),
         ),
-        if (_error != null) ...[
-          const SizedBox(height: Espacio.x4),
-          AvisoEnLinea.deError(
-            _error,
-            key: FormularioDeInvitacion.claveDelAvisoDeError,
-          ),
-        ],
-        if (_creada != null) ...[
-          const SizedBox(height: Espacio.x4),
-          AvisoEnLinea(
-            key: FormularioDeInvitacion.claveDelAvisoDeCreada,
-            tipo: TipoAviso.exito,
-            titulo: 'Invitación creada',
-            mensaje:
-                '${_creada!.email} puede entrar con su cuenta de Google hasta '
-                'el ${formatearFechaHora(_creada!.expiraEn)}. El sistema no '
-                'envía correos: avísale por los canales internos.',
-          ),
-        ],
+        Column(
+          key: _claveDelResultado,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (_error != null) ...[
+              const SizedBox(height: Espacio.x4),
+              AvisoEnLinea.deError(
+                _error,
+                key: FormularioDeInvitacion.claveDelAvisoDeError,
+              ),
+            ],
+            if (_creada != null) ...[
+              const SizedBox(height: Espacio.x4),
+              AvisoEnLinea(
+                key: FormularioDeInvitacion.claveDelAvisoDeCreada,
+                tipo: TipoAviso.exito,
+                titulo: 'Invitación creada',
+                mensaje:
+                    'Invitación creada para ${_creada!.email} como '
+                    '${etiquetaDeRol(_creada!.rol)}. La app no envía correos: '
+                    'avísale que entre con Google con ese Gmail antes del '
+                    '${formatearFechaHora(_creada!.expiraEn)}.',
+              ),
+            ],
+          ],
+        ),
       ],
     );
   }

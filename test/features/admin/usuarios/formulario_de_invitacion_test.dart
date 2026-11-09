@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/core/perfil/perfil.dart';
 import 'package:inversiones/features/admin/usuarios/presentation/formulario_de_invitacion.dart';
 import 'package:inversiones/shared/widgets/botones.dart';
+import 'package:inversiones/shared/widgets/lista_desplegable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException;
 
 import 'ayudas.dart';
@@ -21,6 +22,18 @@ Finder get _cupo => find.descendant(
 
 Finder get _invitar => find.widgetWithText(FilledButton, textoInvitar);
 
+/// Abre la lista de roles con el rol [actual] y elige [nuevo].
+Future<void> _elegirRol(
+  WidgetTester tester,
+  String actual,
+  String nuevo,
+) async {
+  await tester.tap(find.text(actual));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text(nuevo).last);
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets('pide el correo, el rol y, para Usuario, el cupo inicial', (
     tester,
@@ -30,22 +43,56 @@ void main() {
     expect(find.text('Invitar a una persona'), findsOneWidget);
     expect(find.text('Correo de Google'), findsOneWidget);
     expect(find.text('Rol'), findsOneWidget);
+    // El rol es una lista desplegable: cerrada solo muestra el elegido y,
+    // abierta, los tres roles.
+    expect(find.byType(ListaDesplegable<RolApp>), findsOneWidget);
+    expect(find.text('Usuario'), findsOneWidget);
+    expect(find.text('Analista'), findsNothing);
+    await tester.tap(find.text('Usuario'));
+    await tester.pumpAndSettle();
     for (final rol in ['Usuario', 'Analista', 'Administrador']) {
-      expect(find.text(rol), findsOneWidget);
+      expect(find.text(rol), findsWidgets);
     }
+    await tester.tap(find.text('Usuario').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Analista'), findsNothing);
     expect(find.text('Cupo inicial (USD)'), findsOneWidget);
     expect(_invitar, findsOneWidget);
+  });
+
+  testWidgets('una ayuda fija dice que la app no envía correos y que el Gmail '
+      'debe estar en los usuarios de prueba', (tester) async {
+    await montarPantalla(tester, RepositorioFalso());
+
+    expect(find.byKey(FormularioDeInvitacion.claveDeLaAyuda), findsOneWidget);
+    expect(find.textContaining('La app no envía correos.'), findsOneWidget);
+    expect(find.textContaining('usuarios de prueba de Google'), findsOneWidget);
+  });
+
+  testWidgets('el resultado de invitar se lleva a la vista en una pantalla '
+      'corta', (tester) async {
+    await montarPantalla(tester, RepositorioFalso(), ancho: 360, alto: 640);
+
+    await tester.enterText(_correo, 'ana@gmail.com');
+    await tester.ensureVisible(_invitar);
+    await tester.pumpAndSettle();
+    await tester.tap(_invitar);
+    await tester.pumpAndSettle();
+
+    final aviso = find.byKey(FormularioDeInvitacion.claveDelAvisoDeCreada);
+    expect(aviso, findsOneWidget);
+    final caja = tester.getRect(aviso);
+    expect(caja.top, greaterThanOrEqualTo(0));
+    expect(caja.bottom, lessThanOrEqualTo(640));
   });
 
   testWidgets('el cupo solo se pide al invitar a un Usuario', (tester) async {
     await montarPantalla(tester, RepositorioFalso());
 
-    await tester.tap(find.text('Analista'));
-    await tester.pumpAndSettle();
+    await _elegirRol(tester, 'Usuario', 'Analista');
     expect(find.text('Cupo inicial (USD)'), findsNothing);
 
-    await tester.tap(find.text('Usuario'));
-    await tester.pumpAndSettle();
+    await _elegirRol(tester, 'Analista', 'Usuario');
     expect(find.text('Cupo inicial (USD)'), findsOneWidget);
   });
 
@@ -132,9 +179,14 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Invitación creada'), findsOneWidget);
-    expect(find.textContaining('ana@gmail.com puede entrar'), findsOneWidget);
-    expect(find.textContaining('hasta el 15/11/2026 10:00'), findsOneWidget);
-    expect(find.textContaining('El sistema no envía correos'), findsOneWidget);
+    expect(
+      find.text(
+        'Invitación creada para ana@gmail.com como Usuario. La app no envía '
+        'correos: avísale que entre con Google con ese Gmail antes del '
+        '15/11/2026 10:00.',
+      ),
+      findsOneWidget,
+    );
     expect(tester.widget<TextField>(_correo).controller!.text, isEmpty);
     expect(tester.widget<TextField>(_cupo).controller!.text, isEmpty);
     // La lista se volvió a pedir y muestra la invitación nueva.
@@ -159,8 +211,7 @@ void main() {
 
     await tester.enterText(_correo, 'ana@gmail.com');
     await tester.enterText(_cupo, '500');
-    await tester.tap(find.text('Analista'));
-    await tester.pumpAndSettle();
+    await _elegirRol(tester, 'Usuario', 'Analista');
     await tester.tap(_invitar);
     await tester.pumpAndSettle();
 
