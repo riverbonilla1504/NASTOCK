@@ -215,3 +215,80 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Causa: desde HU-017 el alta de un Usuario crea su cupo (una subcuenta). La limpieza de las pruebas borraba el perfil sin contar con ella. No es un error del producto: la app nunca borra perfiles (se da de baja).
 - Solución: la limpieza de pruebas borra primero la subcuenta de cupo del usuario de prueba (en 0 y sin asientos). No se agregó `on delete cascade` al modelo; si el cupo tuviera asientos, la llave foránea sigue fallando y avisa.
 - Para no repetirlo: toda limpieza de pruebas que borre perfiles debe quitar antes lo que cuelga de ellos (cupos).
+
+### EC-027 · El despliegue de Hosting falla con "Permission denied to get service [firebasehosting.googleapis.com]"
+- Fecha: 2026-11-08 · Módulos: M-20 · Origen: primer despliegue de TT-08 (#157)
+- Síntoma: el trabajo `Web` de `despliegue.yml` termina con `Request to https://serviceusage.googleapis.com/v1/projects/<proyecto>/services/firebasehosting.googleapis.com had HTTP Error: 403, Permission denied to get service [firebasehosting.googleapis.com]`.
+- Causa: la cuenta de servicio `ci-despliegue` tenía *Firebase Hosting Admin* y *Firebase App Distribution Admin*, pero `firebase-tools` consulta Service Usage antes de publicar y eso exige el rol *Service Usage Consumer* (`roles/serviceusage.serviceUsageConsumer`), que las guías no mencionaban.
+- Solución: en Google Cloud → IAM, agregar a `ci-despliegue` el rol *Service Usage Consumer* (a mano; no hay cambio de código).
+- Para no repetirlo: `docs/16` §3.3 lista los tres roles de la cuenta de servicio de CI.
+
+### EC-028 · La CI falla en `supabase start` con 429 de `public.ecr.aws` y luego "port 54322 address already in use"
+- Fecha: 2026-11-08 · Módulos: M-20 · Origen: CI de HU-005 (PR #165, ejecución 42453681503, intento 1; el intento 2 pasó)
+- Síntoma: el trabajo `Base de datos y funciones` imprime `unexpected status from HEAD request to https://public.ecr.aws/v2/supabase/storage-api/manifests/…: 429 Too Many Requests` y `error from registry: Rate exceeded`, y al final `failed to start docker container "supabase_db_NASTOCK": … failed to bind host port 0.0.0.0:54322/tcp: address already in use`.
+- Causa: son dos cosas distintas. (1) El 429 es la limitación de descargas anónimas de ECR Public (los ejecutores comparten IP); la CLI 2.122.0 lo reintenta sola ("Retrying after 4s") y en este caso todas las imágenes se bajaron bien, así que **no** es lo que falló. (2) La falla real es el puerto 54322, ocupado justo después de bajar ~12 imágenes en paralelo. **Causa probable, no confirmada:** los puertos 54320 a 54329 de Supabase están dentro del rango de puertos efímeros de Linux (32768 a 60999), y una de las muchas conexiones salientes de las descargas pudo tomar ese puerto de origen. Se repitió el 2026-11-09 en el E2E del PR #194 (ejecución 42705695618) con el puerto 54324 de `supabase_inbucket_NASTOCK`.
+- Solución: volver a lanzar el trabajo (pasó al segundo intento). No se agregan reintentos al flujo.
+- Para no repetirlo: si se repite, probar antes de `supabase start` `sudo sysctl -w net.ipv4.ip_local_reserved_ports=54320-54329` (reserva esos puertos para quien haga `bind`) y, para quitar el 429, `SUPABASE_INTERNAL_IMAGE_REGISTRY=ghcr.io` en el entorno del paso. Ninguno está aplicado: hay que verlos fallar y pasar en una ejecución real antes de dejarlos.
+
+### EC-029 · La app o el despliegue usan una llave publicable de otro proyecto de Supabase
+- Fecha: 2026-11-08 · Módulos: M-20 · Origen: primer despliegue de TT-08 (#157)
+- Síntoma: la prueba de humo falla con `/auth/v1/settings respondió 401`.
+- Causa: la variable `SUPABASE_PUBLISHABLE_KEY` de GitHub era la del proyecto anterior, no la de NasTock.
+- Solución: cargar la llave publicable del proyecto MVP (`sb_publishable_…`) en la variable.
+- Para no repetirlo: tras cambiar de proyecto, correr "Despliegue" a mano; la prueba de humo lo detecta.
+
+### EC-030 · El APK firmado falla con "keystore password was incorrect"
+- Fecha: 2026-11-08 · Módulos: M-20 · Origen: primer despliegue de TT-08 (#157)
+- Síntoma: `Failed to read key *** from store ".../android/app/upload-keystore.jks": keystore password was incorrect` en `:app:packageRelease`.
+- Causa: `ANDROID_KEYSTORE_PASSWORD` y `ANDROID_KEY_PASSWORD` no eran la contraseña real del `.jks` (se habían cargado otros datos del certificado).
+- Solución: cargar las dos con la contraseña del `.jks` (la misma en ambas).
+- Para no repetirlo: comprobarla en local con `keytool -list -keystore <archivo>` antes de cargarla.
+
+### EC-031 · `deno test --filter "/regex/"` no filtra en Git Bash y sale en verde sin probar nada
+- Fecha: 2026-11-07 · Módulos: M-20 · Origen: TT-08
+- Síntoma: `3 filtered out` y todas las pruebas descartadas, con salida 0.
+- Causa: MSYS convierte el argumento `/ping|CB-91/` en una ruta de Windows.
+- Solución: usar texto simple (`--filter CB-91`) o `MSYS_NO_PATHCONV=1`.
+- Para no repetirlo: leer el conteo de pruebas ejecutadas, no solo el código de salida.
+
+### EC-032 · `fork: Resource temporarily unavailable` en Git Bash al correr `verificar.sh`
+- Fecha: 2026-11-07 · Módulos: M-20 · Origen: TT-08
+- Síntoma: el shell no puede crear procesos y `verificar.sh` ni arranca; Docker Desktop llegó a reiniciarse solo.
+- Causa: con unos 49 MB de RAM libres (varias sesiones, Gradle y Docker) Windows no da más procesos.
+- Solución: cerrar sesiones o procesos pesados y reintentar.
+- Para no repetirlo: máximo 3 agentes a la vez y revisar que haya al menos 2 GB libres antes de `verificar.sh`.
+
+### EC-033 · `taskkill /IM supabase.exe` mata también el stack y las funciones de otras sesiones
+- Fecha: 2026-11-07 · Módulos: M-20 · Origen: TT-08
+- Síntoma: otra sesión pierde `supabase functions serve` o su `supabase start`.
+- Causa: el nombre de imagen es el mismo para todas las sesiones.
+- Solución: parar solo el proceso propio, por PID o filtrando la línea de comandos.
+- Para no repetirlo: una sola sesión a la vez corre la base local (se coordinó con un candado fuera del repo) y nunca se mata por nombre.
+
+### EC-034 · Cambiar `ADMIN_INICIAL_EMAIL` en GitHub no cambia Vault
+- Fecha: 2026-11-08 · Módulos: M-01, M-20 · Origen: HU-004 (#21)
+- Síntoma: se cambia el secreto y el valor en Vault sigue igual.
+- Causa: `supabase db push` solo sube lo de `[db.vault]` cuando hay migraciones pendientes, y omite los valores vacíos sin avisar.
+- Solución: la migración de arranque corre una sola vez; si hay que repetirla, una migración nueva que vuelva a llamar a `private.crear_invitacion_inicial()` (reemite la pendiente vencida).
+- Para no repetirlo: para ensayar el despliegue en local, `supabase db reset --no-seed --version <última anterior>` y `ADMIN_INICIAL_EMAIL=<correo de prueba> supabase db push --db-url postgresql://postgres:postgres@127.0.0.1:54322/postgres`; después un `supabase db reset` completo para devolver la semilla.
+
+### EC-035 · El rechazo del hook de Auth no trae un código que la app pueda distinguir
+- Fecha: 2026-11-08 · Módulos: M-01 · Origen: HU-005 (#22)
+- Síntoma: la app no sabe si el rechazo fue "sin invitación", "dominio no permitido" o "proveedor no permitido".
+- Causa: `private.error_auth` devuelve `{"error":{"http_code":403,"message":…}}` y Auth lo entrega como `AuthApiException` con estado 403 y el mensaje, sin `code` propio.
+- Solución: la app reconoce el rechazo por el prefijo del mensaje y muestra el texto del servidor (`clasificador_de_fallos.dart`).
+- Para no repetirlo: si cambia la redacción del hook, conservar el prefijo o actualizar el clasificador; su prueba lee la migración más reciente del hook.
+
+### EC-036 · Riverpod 3: `invalid_use_of_internal_member` al usar `copyWithPrevious`
+- Fecha: 2026-11-08 · Módulos: M-16 · Origen: HU-003 (#20)
+- Síntoma: el análisis marca `invalid_use_of_internal_member` al conservar la lista anterior en un `AsyncNotifier`.
+- Causa: en Riverpod 3 `AsyncValue.copyWithPrevious` es `@internal`.
+- Solución: asignar `state = const AsyncLoading()` o `state = AsyncError(...)`; el valor ya conserva los datos anteriores.
+- Para no repetirlo: no llamar `copyWithPrevious` desde la app.
+
+### EC-037 · El respaldo diario falla con "Your network does not support IPv6, which is required for direct connections to the database"
+- Fecha: 2026-11-13 · Módulos: M-20 · Origen: `mantenimiento.yml`, trabajo "Respaldo cifrado" (ejecuciones del 2026-11-10 al 2026-11-13)
+- Síntoma: `supabase db dump` termina con `Your network does not support IPv6, which is required for direct connections to the database. Retry with your project's IPv4 transaction pooler connection string via --db-url.` y el flujo "Mantenimiento" queda en rojo todos los días.
+- Causa: el secreto `SUPABASE_DB_URL` de GitHub tiene la conexión directa (`db.<ref>.supabase.co:5432`), que en Supabase es solo IPv6; los ejecutores de GitHub solo tienen IPv4.
+- Solución: cargar en el secreto la cadena del **Session pooler** (panel de Supabase → Connect → Session pooler, puerto 5432, usuario `postgres.<ref>`, con la contraseña de la base). Es IPv4 y sirve para `pg_dump`. No hay cambio de código.
+- Para no repetirlo: `docs/16` §4.1 dice de dónde sale `SUPABASE_DB_URL`; tras cambiarlo, correr "Mantenimiento" a mano y ver el artefacto `respaldo-*`.
