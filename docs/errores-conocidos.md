@@ -293,3 +293,10 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Solución: cargar en el secreto la cadena del **Session pooler** (panel de Supabase → Connect → Session pooler, puerto 5432, usuario `postgres.<ref>`, con la contraseña de la base). Es IPv4 y sirve para `pg_dump`. No hay cambio de código.
 - Segundo intento: con el pooler ya conecta, pero puede fallar con `FATAL: password authentication failed for user "postgres"`. Pasa si quedan los corchetes de `[YOUR-PASSWORD]`, si la clave tiene símbolos sin codificar (`@`, `#`, `/`, `?`, `%`, `:`) o si no es la clave vigente. Se resolvió con **Reset database password** usando una clave larga solo de letras y números, y actualizando **los dos** secretos: `SUPABASE_DB_URL` y `SUPABASE_DB_PASSWORD` (el despliegue usa el segundo). Cambiar la clave no afecta a la app ni a las Edge Functions.
 - Para no repetirlo: `docs/16` §4.1 dice de dónde sale `SUPABASE_DB_URL`; tras cambiarlo, correr "Mantenimiento" a mano y ver el artefacto `respaldo-*` (quedó en verde el 2026-11-13, ejecución 43504106440).
+
+### EC-038 · `flutter analyze` falla en la CI con "'package:flutter/material.dart' is deprecated … Use package:material_ui/material_ui.dart instead"
+- Fecha: 2026-11-13 · Módulos: M-20, M-16 · Origen: CI del PR #195
+- Síntoma: el trabajo "App Flutter" termina con exit 1 y un aviso `deprecated_member_use` en cada archivo que importa `package:flutter/material.dart` (`lib/`, `test/` e `integration_test/`). En local, con Flutter 3.47.9, `flutter analyze` sale limpio.
+- Causa: los flujos instalaban `channel: stable` sin versión, así que tomaron la versión estable nueva, que declara obsoleto `material.dart` a favor del paquete `material_ui`. El análisis falla con los avisos de tipo info.
+- Solución: fijar `flutter-version: 3.47.9` en `subosito/flutter-action` de `ci.yml` y `despliegue.yml`, la misma versión de los equipos de desarrollo (`docs/16` §3.7). No se cambió ninguna regla del análisis.
+- Para no repetirlo: subir Flutter es un cambio aparte, en su propia rama: actualizar la versión fijada y la de los equipos, y migrar los imports a `material_ui` en el mismo PR.
