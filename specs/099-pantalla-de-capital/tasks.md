@@ -6,4 +6,4 @@
 - [X] T004 [US1] Subruta `/admin/capital` en `destinos.dart`
 - [X] T005 [US1] Pruebas `capital_test.dart` y ajuste de `destinos_test.dart`
 - [X] T006 [US1] Actualizar `docs/17` (M-04)
-- [ ] T007 [US1] Retiros (HU-016), ajustes (HU-022) y biometría (HU-009): fuera del MVP corto
+- [ ] T007 [US1] Retiros (HU-016), ajustes (HU-022) y biometría (HU-009): fuera del MVP corto · Fuera del MVP corto (D-73).

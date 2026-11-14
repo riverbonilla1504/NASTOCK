@@ -82,6 +82,8 @@ equipo. Cada una tiene su issue y su archivo en `backlog/`.
 | HU-035 · Salud de las integraciones | El registro de la salud | La alerta cuando una integración cae (HU-085) |
 | HU-091 · Mis posiciones | La pantalla con la protección | La prueba pgTAP de `protecciones` (HU-077) |
 | HU-097 · Sección de administración | La sección y la guía de primeros pasos | Ajustar el E2E-01 |
+| HU-045 · Adaptador de JEV | Consultas a JEV con reintentos y corte por tiempo | Registrar la salud de `jev` con `_shared/salud.ts` (hoy no se registra) |
+| HU-048 · Oportunidades | La pantalla con nivel, probabilidades y explicación | Actualizarse por el evento `ciclo_agente` del canal `supervision`; hoy se refresca cada minuto |
 
 ### 3.3 Escenarios E2E que faltan
 
