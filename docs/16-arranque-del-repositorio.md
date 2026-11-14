@@ -81,7 +81,7 @@ Un mismo proyecto de Google Cloud sirve para OAuth y Firebase.
 - [ ] Hosting habilitado (sitio web de la app).
 - [ ] App Distribution: grupo de testers `ritech-equipo` con los correos del equipo.
 - [ ] Crashlytics habilitado.
-- [ ] Cuenta de servicio para CI con roles de Hosting y App Distribution → `FIREBASE_SERVICE_ACCOUNT`.
+- [ ] Cuenta de servicio para CI (`ci-despliegue`) con los roles *Firebase Hosting Admin*, *Firebase App Distribution Admin* y *Service Usage Consumer* → `FIREBASE_SERVICE_ACCOUNT`. Sin el último, Hosting falla con 403 (EC-027).
 - [ ] Llave de firma de Android (keystore) generada y guardada fuera del repositorio → secretos `ANDROID_*`.
 
 ### 3.4 Alpaca
@@ -123,7 +123,7 @@ curl -s -X POST https://api.typesafe.ai/v1/systemone \
 
 | Herramienta | Para qué |
 |---|---|
-| Flutter (canal estable), SDK de Android y Java 17, con Android Studio o con VS Code y sus extensiones de Flutter y Dart | App |
+| Flutter **3.47.9** (canal estable, versión fijada; es la que usan los flujos de GitHub: EC-038), SDK de Android y Java 17, con Android Studio o con VS Code y sus extensiones de Flutter y Dart | App |
 | Docker Desktop | Supabase local |
 | Supabase CLI | Base de datos, funciones, pruebas |
 | Deno 2 | Edge Functions y E2E de backend |
@@ -166,7 +166,7 @@ curl -s -X POST https://api.typesafe.ai/v1/systemone \
 | `FIREBASE_PROJECT_ID`, `FIREBASE_ANDROID_APP_ID` | Variable | Firebase | despliegue |
 | `SUPABASE_ACCESS_TOKEN` | Secreto | Cuenta de Supabase | despliegue |
 | `SUPABASE_DB_PASSWORD` | Secreto | Creación del proyecto | despliegue |
-| `SUPABASE_DB_URL` | Secreto | Panel de Supabase (cadena de conexión) | respaldo |
+| `SUPABASE_DB_URL` | Secreto | Panel de Supabase → Connect → **Session pooler**, con la contraseña de la base (la conexión directa es solo IPv6 y GitHub no llega a ella: EC-037) | respaldo |
 | `ADMIN_INICIAL_EMAIL` | Secreto | Gmail del primer administrador (Q-08); cargarlo **antes** de integrar HU-004 | despliegue (→ Vault, 04 §9) |
 | `ALPACA_KEY_ID`, `ALPACA_SECRET_KEY` | Secreto | Alpaca (paper) | despliegue (→ funciones), prueba semanal |
 | `DEEPSEEK_API_KEY` | Secreto | DeepSeek | despliegue (→ funciones), prueba semanal |
