@@ -24,5 +24,5 @@
 ## Fase 4: Cierre
 
 - [x] T011 Actualizar `docs/17-mapa-de-modulos.md`: M-01 (archivos de las dos migraciones y la prueba pgTAP), M-02 (`lib/features/admin/usuarios/` y la ruta `/admin/usuarios`) y M-13 (el trigger del evento `invitacion`)
-- [ ] T012 Rebase sobre `origin/main` (y HU-004 si ya llegó) y `scripts/verificar.sh` completo en verde
-- [ ] T013 Cuerpo del PR y relevo en `C:\Users\Javier\Desktop\Nastock.md\`
+- [X] T012 Rebase sobre `origin/main` (y HU-004 si ya llegó) y `scripts/verificar.sh` completo en verde
+- [X] T013 Cuerpo del PR y relevo en `C:\Users\Javier\Desktop\Nastock.md\`

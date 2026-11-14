@@ -5,4 +5,4 @@
 - [X] T003 Ruta `/admin/cupos` y entrada en Administración
 - [X] T004 Pruebas de widget (`test/features/admin/cupos/cupos_test.dart`) y guarda (`acceso_por_rol_test.dart`)
 - [X] T005 `flutter analyze` y `flutter test` en verde
-- [ ] T006 E2E-04: pendiente, el escenario no existe aún
+- [ ] T006 E2E-04: pendiente, el escenario no existe aún · **Pendiente**: ver `docs/18` §3.
