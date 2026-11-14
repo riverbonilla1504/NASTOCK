@@ -63,6 +63,62 @@ class AporteDeDimension {
   final bool neutral;
 }
 
+/// Nivel de una evaluación, coherente con su puntaje (docs/07 §6.3, D-72).
+/// Solo [favorable] cuenta como recomendación.
+enum NivelIa {
+  favorable('Favorable'),
+  vigilar('Vigilar'),
+  desfavorable('Desfavorable');
+
+  const NivelIa(this.etiqueta);
+
+  final String etiqueta;
+
+  static NivelIa? desdeTexto(Object? texto) {
+    for (final n in values) {
+      if (n.name == texto) return n;
+    }
+    return null;
+  }
+}
+
+/// Lo que respondió JEV, tal cual (docs/07 §14, D-72).
+class RespuestaDeJev {
+  const RespuestaDeJev({
+    this.comprar,
+    this.esperar,
+    this.evitar,
+    this.riesgoDeReversion,
+    this.riesgoDeEvento,
+  });
+
+  static RespuestaDeJev? desdeJson(Object? json) {
+    if (json is! Map<String, dynamic>) return null;
+    double? numero(Object? v) => v is num ? v.toDouble() : null;
+    String? texto(Object? v) => v is String ? v : null;
+    final p = json['probabilidades'];
+    return RespuestaDeJev(
+      comprar: p is Map ? numero(p['comprar']) : null,
+      esperar: p is Map ? numero(p['esperar']) : null,
+      evitar: p is Map ? numero(p['evitar']) : null,
+      riesgoDeReversion: texto(json['riesgo_reversion']),
+      riesgoDeEvento: texto(json['riesgo_evento']),
+    );
+  }
+
+  /// Probabilidades de comprar ahora, esperar y evitar (suman 1).
+  final double? comprar;
+  final double? esperar;
+  final double? evitar;
+
+  /// `bajo`, `medio` o `alto`.
+  final String? riesgoDeReversion;
+  final String? riesgoDeEvento;
+
+  bool get tieneProbabilidades =>
+      comprar != null && esperar != null && evitar != null;
+}
+
 class Explicacion {
   const Explicacion({
     required this.que,
@@ -70,6 +126,8 @@ class Explicacion {
     required this.frena,
     required this.advertencias,
     required this.resumen,
+    this.nivel,
+    this.jev,
   });
 
   static const Explicacion vacia = Explicacion(
@@ -92,6 +150,8 @@ class Explicacion {
       frena: lista(json['frena']),
       advertencias: lista(json['advertencias']),
       resumen: (json['resumen'] ?? '').toString(),
+      nivel: NivelIa.desdeTexto(json['nivel']),
+      jev: RespuestaDeJev.desdeJson(json['jev']),
     );
   }
 
@@ -100,6 +160,10 @@ class Explicacion {
   final List<String> frena;
   final List<String> advertencias;
   final String resumen;
+
+  /// Nulo en evaluaciones anteriores a D-72, sin JEV o excluidas.
+  final NivelIa? nivel;
+  final RespuestaDeJev? jev;
 }
 
 class Oportunidad {

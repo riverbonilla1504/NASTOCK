@@ -113,6 +113,19 @@ async function enParalelo<T, R>(
   return resultados;
 }
 
+/** Con qué disparador corre el ciclo: pg_cron o `lanzar_ciclo()` (D-72). */
+export type Disparador = "programado" | "manual";
+
+/** Lee el disparador del cuerpo que envía `private.despertar_funcion`. */
+export async function disparadorDe(peticion: Request): Promise<Disparador> {
+  try {
+    const cuerpo = await peticion.json();
+    return cuerpo?.disparador === "manual" ? "manual" : "programado";
+  } catch {
+    return "programado";
+  }
+}
+
 interface Candidata {
   bolsillo: "arriesgadas" | "usuarios";
   simbolo: string;
@@ -133,12 +146,13 @@ export async function correrCiclo(
   bd: Bd,
   jev: ProveedorDeJev,
   concurrencia = 4,
+  disparador: Disparador = "programado",
 ): Promise<ResumenDeCiclo | null> {
   const [{ registrar_ciclo: ciclo }] = await bd.llamar<
     { registrar_ciclo: string | null }
   >(
     "registrar_ciclo",
-    ["programado"],
+    [disparador],
   );
   if (!ciclo) return null;
   const inicio = Date.now();
@@ -179,9 +193,14 @@ export async function correrCiclo(
     const modeloJev = texto("ia.modelo_jev", "jev-1.13.0");
     const maxAntiguedad = numero("mercado.max_antiguedad_cotizacion_seg", 60);
 
-    const [{ ahora, mercado_en_ventana: mercadoAbierto }] = await bd.llamar<
-      { ahora: Date; mercado_en_ventana: boolean }
-    >("estado_del_agente");
+    const [{ ahora, mercado_en_ventana: mercadoAbierto, ia_activa }] = await bd
+      .llamar<
+        { ahora: Date; mercado_en_ventana: boolean; ia_activa: boolean }
+      >("estado_del_agente");
+    // HU-046 CA-3 (D-72): con el interruptor de la IA apagado el ciclo no evalúa.
+    if (!ia_activa) {
+      return await cerrarOmitido(bd, ciclo, version, inicio, "ia_apagada");
+    }
     const universo = await bd.llamar<
       {
         bolsillo: "reserva" | "arriesgadas" | "usuarios";
@@ -384,6 +403,8 @@ export async function correrCiclo(
         mercadoAbierto,
         umbrales,
         fallosJev: e.fallo,
+        jev: e.respuesta,
+        niveles,
       });
       filas.push({
         bolsillo: e.c.bolsillo,
@@ -516,11 +537,13 @@ export function crearManejador(
 
     let bd: Bd | undefined;
     try {
+      const disparador = await disparadorDe(peticion);
       bd = dependencias.abrirBd();
       const resumen = await correrCiclo(
         bd,
         dependencias.jev,
         dependencias.concurrencia,
+        disparador,
       );
       if (!resumen) return responder(200, { omitida: true });
       return responder(200, resumen);

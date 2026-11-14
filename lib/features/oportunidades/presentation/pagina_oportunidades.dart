@@ -225,7 +225,10 @@ class TarjetaDeOportunidad extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text(o.simbolo, style: textos.titleMedium)),
-              ChipDelResultado(resultado: o.resultado),
+              ChipDelResultado(
+                resultado: o.resultado,
+                nivel: o.explicacion.nivel,
+              ),
             ],
           ),
           const SizedBox(height: Espacio.x3),
@@ -244,6 +247,14 @@ class TarjetaDeOportunidad extends StatelessWidget {
               ),
             ],
           ),
+          if (o.explicacion.jev case final jev?
+              when jev.tieneProbabilidades) ...[
+            const SizedBox(height: Espacio.x3),
+            Text(
+              textoDeProbabilidades(jev),
+              style: estiloDeCifra(textos.bodySmall!.copyWith(color: tenue)),
+            ),
+          ],
           if (o.explicacion.que.isNotEmpty) ...[
             const SizedBox(height: Espacio.x3),
             Text(
@@ -259,27 +270,44 @@ class TarjetaDeOportunidad extends StatelessWidget {
   }
 }
 
+/// "JEV: 30 % comprar ahora · 60 % esperar · 10 % evitar" (docs/07 §14, D-72).
+String textoDeProbabilidades(RespuestaDeJev jev) =>
+    'JEV: ${formatearConfianza(jev.comprar!)} comprar ahora · '
+    '${formatearConfianza(jev.esperar!)} esperar · '
+    '${formatearConfianza(jev.evitar!)} evitar';
+
+/// El estado de una candidata. Con [nivel] (D-72), las evaluadas y sin
+/// recomendar dicen si conviene vigilarla o no, en vez de un "sin recomendar"
+/// igual para todas.
 class ChipDelResultado extends StatelessWidget {
-  const ChipDelResultado({required this.resultado, super.key});
+  const ChipDelResultado({required this.resultado, this.nivel, super.key});
 
   final ResultadoIa resultado;
+  final NivelIa? nivel;
 
   @override
-  Widget build(BuildContext context) => switch (resultado) {
-    ResultadoIa.elegida => const ChipDeEstado(
+  Widget build(BuildContext context) => switch ((resultado, nivel)) {
+    (ResultadoIa.elegida, _) => const ChipDeEstado(
       etiqueta: 'Recomendada',
       forma: FormaDeLinea.solida,
       destacado: true,
     ),
-    ResultadoIa.elegibleNoElegida => const ChipDeEstado(
-      etiqueta: 'Elegible',
+    (ResultadoIa.elegibleNoElegida, _) => const ChipDeEstado(
+      etiqueta: 'Favorable',
       forma: FormaDeLinea.discontinua,
     ),
-    ResultadoIa.noElegible => const ChipDeEstado(
+    (ResultadoIa.noElegible, NivelIa.vigilar) => const ChipDeEstado.pendiente(
+      etiqueta: 'Vigilar',
+    ),
+    (ResultadoIa.noElegible, NivelIa.desfavorable) => const ChipDeEstado(
+      etiqueta: 'Desfavorable',
+      forma: FormaDeLinea.fina,
+    ),
+    (ResultadoIa.noElegible, _) => const ChipDeEstado(
       etiqueta: 'Sin recomendar',
       forma: FormaDeLinea.fina,
     ),
-    ResultadoIa.excluida => const ChipDeEstado.desactualizado(
+    (ResultadoIa.excluida, _) => const ChipDeEstado.desactualizado(
       etiqueta: 'Excluida',
     ),
   };

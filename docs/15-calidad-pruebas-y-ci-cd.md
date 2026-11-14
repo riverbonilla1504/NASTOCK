@@ -78,7 +78,9 @@ actualiza.
 >
 > - **Se construyen** E2E-01 a E2E-08 y E2E-11. Tres se achican:
 >   - **E2E-06:** sin contexto ni alerta de contradicción. Toda candidata
->     sale "sin contexto" (D-59).
+>     sale "sin contexto" (D-59). Solo la parte de backend: ciclo con JEV
+>     simulado, nivel y explicación por `oportunidades()`, interruptor
+>     apagado y lanzamiento manual; la pantalla se prueba con widgets (D-72).
 >   - **E2E-08:** empieza con una orden manual en vez de una sugerencia, y
 >     lo crea HU-075 (D-65).
 >   - **E2E-11:** orden manual sin opinión de JEV (D-60).

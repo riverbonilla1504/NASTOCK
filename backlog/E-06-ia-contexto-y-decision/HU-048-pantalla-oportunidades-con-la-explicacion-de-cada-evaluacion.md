@@ -21,6 +21,8 @@ Sin contexto (D-59, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-co
 - Tareas: la RPC `oportunidades(bolsillo)` y el detalle de la app van sin contexto ni titulares. E2E-06 queda así: ciclo con JEV simulado → Oportunidades con explicación, y toda candidata sale "sin contexto" (15 §4).
 
 - La candidata elegida se muestra como **recomendación**, sin botón para aprobarla: la persona decide creando una orden manual (D-65).
+D-72: cada candidata muestra su nivel (favorable, vigilar o desfavorable) y lo que respondió JEV: probabilidades de comprar ahora, esperar y evitar, y sus juicios de riesgo en palabras (07 §14).
+
 ## Historia
 
 **Como** Usuario, Analista o Administrador,  

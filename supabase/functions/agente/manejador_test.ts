@@ -6,7 +6,7 @@ import {
   type ProveedorDeJev,
   type RespuestaJev,
 } from "../_shared/ia/tipos.ts";
-import { correrCiclo, crearManejador } from "./manejador.ts";
+import { correrCiclo, crearManejador, disparadorDe } from "./manejador.ts";
 
 const PREGUNTAS = {
   entrada: {
@@ -88,7 +88,9 @@ interface Llamada {
 }
 
 /** Base de datos falsa: devuelve datos fijos y anota cada llamada. */
-function bdFalsa(opciones: { sinQqq?: boolean; cicloNulo?: boolean } = {}) {
+function bdFalsa(
+  opciones: { sinQqq?: boolean; cicloNulo?: boolean; iaApagada?: boolean } = {},
+) {
   const llamadas: Llamada[] = [];
   const simbolos = [
     "QQQ",
@@ -125,6 +127,7 @@ function bdFalsa(opciones: { sinQqq?: boolean; cicloNulo?: boolean } = {}) {
           filas = [{
             ahora: new Date("2026-11-07T20:00:00Z"),
             mercado_en_ventana: false,
+            ia_activa: !opciones.iaApagada,
           }];
           break;
         case "universo_del_agente":
@@ -255,6 +258,88 @@ Deno.test("ciclo: sin barras de QQQ el ciclo se omite (CB-87)", async () => {
   assertEquals(resumen?.motivo, "qqq_sin_datos");
   assertEquals(de("registrar_evaluaciones").length, 0);
   assertEquals(de("cerrar_ciclo")[0].argumentos[1], "omitido");
+});
+
+Deno.test("ciclo: con la IA apagada queda omitido sin preguntar a JEV (HU-046 CA-3, D-72)", async () => {
+  const { bd, de } = bdFalsa({ iaApagada: true });
+  let preguntas = 0;
+  const resumen = await correrCiclo(
+    bd,
+    jevQue(() => {
+      preguntas++;
+      return comprarYa;
+    }),
+  );
+  assertEquals(resumen?.estado, "omitido");
+  assertEquals(resumen?.motivo, "ia_apagada");
+  assertEquals(preguntas, 0);
+  assertEquals(de("registrar_evaluaciones").length, 0);
+  assertEquals(de("cerrar_ciclo")[0].argumentos[8], "ia_apagada");
+});
+
+Deno.test("ciclo: con JEV esperando, el nivel es vigilar y la explicación dice lo que respondió (D-72)", async () => {
+  const { bd, de } = bdFalsa();
+  const esperar: RespuestaJev = {
+    model: "jev-1.13.0",
+    answers: {
+      entry_timing: {
+        type: "choice",
+        choice: "wait",
+        confidence: 0.6,
+        probabilities: { buy_now: 0.3, wait: 0.6, avoid: 0.1 },
+      },
+      event_risk: { type: "score", score: 0 },
+      reversal_risk: { type: "score", score: 2 },
+    },
+  };
+  await correrCiclo(bd, jevQue(() => esperar));
+  const filas = de("registrar_evaluaciones")[0].argumentos[2] as {
+    resultado: string;
+    explicacion: {
+      que: string;
+      resumen: string;
+      nivel: string | null;
+      jev: {
+        probabilidades: { comprar: number };
+        riesgo_reversion: string;
+        riesgo_evento: string;
+      };
+    };
+  }[];
+  for (const f of filas) {
+    assertEquals(f.resultado, "no_elegible:espera");
+    // jev.puntaje_minimo es 0 en esta base falsa: el puntaje siempre alcanza.
+    assertEquals(f.explicacion.nivel, "vigilar");
+    assert(f.explicacion.que.startsWith("Vigilar"));
+    assert(
+      f.explicacion.resumen.includes(
+        "JEV: 30 % comprar ahora · 60 % esperar · 10 % evitar.",
+      ),
+    );
+    assertEquals(f.explicacion.jev.riesgo_reversion, "alto");
+    assertEquals(f.explicacion.jev.riesgo_evento, "bajo");
+  }
+});
+
+Deno.test("ciclo: el disparador se registra tal cual (manual con lanzar_ciclo, D-72)", async () => {
+  const { bd, de } = bdFalsa();
+  await correrCiclo(bd, jevQue(() => comprarYa), 4, "manual");
+  assertEquals(de("registrar_ciclo")[0].argumentos, ["manual"]);
+});
+
+Deno.test("manejador: el cuerpo {disparador: manual} corre un ciclo manual; sin cuerpo, programado", async () => {
+  const peticion = (cuerpo?: string) =>
+    new Request("http://x/agente", { method: "POST", body: cuerpo });
+  assertEquals(
+    await disparadorDe(peticion('{"disparador":"manual"}')),
+    "manual",
+  );
+  assertEquals(await disparadorDe(peticion("{}")), "programado");
+  assertEquals(await disparadorDe(peticion()), "programado");
+  assertEquals(
+    await disparadorDe(peticion('{"disparador":"otro"}')),
+    "programado",
+  );
 });
 
 Deno.test("ciclo: con otro ciclo en curso no hace nada", async () => {

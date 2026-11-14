@@ -139,7 +139,7 @@ export function armarEstado(
   return {
     as_of_session: e.mercadoAbierto
       ? "regular session"
-      : "market closed, using the last completed session",
+      : "market closed: judge as if the next regular session opened under these conditions (data from the last completed session)",
     bucket: horizonte,
     market: mercado,
     candidate: candidata,
