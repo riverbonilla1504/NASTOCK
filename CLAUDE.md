@@ -170,6 +170,10 @@ specify version · specify self check   # línea de comandos de spec-kit (versi�
 - Backlog completo en `backlog/` (227 requisitos, 13 épicas, 117 historias y
   9 tareas técnicas), publicado como issues y en el proyecto de GitHub
   "RiTech SAS · MVP" con `scripts/github/publicar-backlog.py` (`docs/16` §6).
-  **Pendiente**: conectar los servicios (`docs/16-arranque-del-repositorio.md` §3–§4).
-- spec-kit adoptado (D-56). Las specs se generan por entrega; la primera es R1.
-- Aún no hay código: la primera épica es E-01 (cimientos y calidad continua).
+  Los servicios están conectados (Supabase NasTock, Google, Firebase, Alpaca
+  paper, JEV) y el despliegue continuo publica en la nube.
+- spec-kit adoptado (D-56). Cada historia construida tiene su carpeta en `specs/`.
+- **El MVP corto funciona de punta a punta** (corte al 2026-11-14). El
+  alcance de la entrega y los Non-Goals están en **D-73**. **Antes de tomar
+  trabajo, lee `docs/18-estado-y-traspaso.md`**: qué está hecho, qué falta
+  (§3), el orden sugerido y a quién pedir cada acceso.

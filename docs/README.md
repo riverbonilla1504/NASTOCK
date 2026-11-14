@@ -48,8 +48,11 @@ gratuitas (solo se pagan las IAs) para probar si el enfoque funciona.
 | 15 | [Calidad, pruebas y CI/CD](15-calidad-pruebas-y-ci-cd.md) | Cómo el sistema queda siempre funcionando de punta a punta |
 | 16 | [Arranque del repositorio](16-arranque-del-repositorio.md) | Conexiones, secretos, GitHub y **el backlog pendiente de crear** |
 | 17 | [Mapa de módulos](17-mapa-de-modulos.md) | Qué leer para cada historia sin analizar todo el proyecto |
+| 18 | [Estado y traspaso](18-estado-y-traspaso.md) | Qué funciona, qué falta, cómo arrancar y a quién pedir cada acceso |
+| 19 | [Registro de pruebas](19-registro-de-pruebas.md) | Qué se probó, cómo y con qué resultado |
 | — | [Errores conocidos](errores-conocidos.md) | Problemas ya resueltos, para no repetirlos |
 
+**Para continuar el proyecto**: 18 → `CLAUDE.md` → 17.
 **Para empezar**: 01 → 02 → 07 → 03 → 08 → 05.
 **Para implementar una historia**: `CLAUDE.md` → 17 → solo las secciones de
 los módulos afectados.
