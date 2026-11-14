@@ -160,6 +160,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: 3.47.9 # fija: ver EC-038
           cache: true
       - run: flutter pub get
       - name: Compilar la web
@@ -200,6 +201,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: 3.47.9 # fija: ver EC-038
           cache: true
       - name: Llave de firma
         env:
