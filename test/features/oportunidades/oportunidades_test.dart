@@ -178,4 +178,79 @@ void main() {
       findsOneWidget,
     );
   });
+
+  // D-72: el nivel y lo que respondió JEV hacen coherente la tarjeta con su
+  // puntaje, en vez de un "sin recomendar" igual para todas.
+  Map<String, dynamic> conNivel(
+    Map<String, dynamic> fila,
+    String nivel, {
+    String reversion = 'alto',
+  }) {
+    (fila['explicacion'] as Map<String, dynamic>)
+      ..['nivel'] = nivel
+      ..['jev'] = {
+        'probabilidades': {'comprar': 0.3, 'esperar': 0.6, 'evitar': 0.1},
+        'riesgo_reversion': reversion,
+        'riesgo_evento': 'bajo',
+      };
+    return fila;
+  }
+
+  testWidgets(
+    'D-72: una candidata que JEV prefiere esperar dice Vigilar y sus probabilidades',
+    (tester) async {
+      await _montar(
+        tester,
+        _RepositorioFalso([
+          conNivel(
+            _fila(
+              simbolo: 'AAPL',
+              resultado: 'no_elegible:espera',
+              que: 'Vigilar AAPL: su puntaje (0,78) alcanza el mínimo.',
+            ),
+            'vigilar',
+          ),
+          conNivel(
+            _fila(
+              simbolo: 'TSLA',
+              resultado: 'no_elegible:evitar',
+              puntaje: 0.31,
+              que: 'No se recomienda comprar TSLA por ahora.',
+            ),
+            'desfavorable',
+          ),
+        ]),
+      );
+
+      expect(find.text('Vigilar'), findsOneWidget);
+      expect(find.text('Desfavorable'), findsOneWidget);
+      expect(find.text('Sin recomendar'), findsNothing);
+      expect(
+        find.text('JEV: 30 % comprar ahora · 60 % esperar · 10 % evitar'),
+        findsNWidgets(2),
+      );
+    },
+  );
+
+  testWidgets('D-72: el detalle muestra lo que respondió JEV', (tester) async {
+    await _montar(
+      tester,
+      _RepositorioFalso([
+        conNivel(
+          _fila(resultado: 'no_elegible:espera', que: 'Vigilar NVDA.'),
+          'vigilar',
+        ),
+      ]),
+    );
+
+    await tester.tap(find.text('NVDA'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Lo que respondió JEV'), findsOneWidget);
+    expect(
+      find.text('Riesgo de que la tendencia se revierta: alto'),
+      findsOneWidget,
+    );
+    expect(find.text('Riesgo de un evento: bajo'), findsOneWidget);
+  });
 }

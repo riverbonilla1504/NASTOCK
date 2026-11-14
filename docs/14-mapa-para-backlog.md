@@ -157,6 +157,9 @@ ajusta a estas decisiones:
   HU-074 depende de HU-075 para extenderlo. HU-075 también depende de
   HU-032: con el precio desactualizado se deshabilita la compra (D-65).
 - HU-046, HU-047 y HU-048 trabajan siempre "sin contexto".
+- D-72 cierra la IA del MVP: HU-046 sin el ciclo por evento de QQQ (CA-4),
+  HU-047 sin señales ni motor de políticas (CA-5 y CA-6), HU-045 sin
+  Cloudflare (CA-4) y HU-048 con el nivel favorable, vigilar o desfavorable.
 - HU-075, HU-099 y HU-100 confirman con el diálogo.
 - HU-073, HU-074 y HU-077 no envían notificaciones. Cada pantalla muestra
   el estado en vivo por sus eventos.

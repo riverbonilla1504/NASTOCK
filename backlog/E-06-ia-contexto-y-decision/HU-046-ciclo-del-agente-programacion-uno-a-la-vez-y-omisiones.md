@@ -15,6 +15,8 @@
 
 Sin contexto (D-59, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): el ciclo no busca contexto ni encola su regeneración (paso 4 de 07 §3). Cada candidata pasa a JEV "sin contexto". Los criterios de aceptación no cambian.
 
+D-72: el ciclo respeta `ia_activa` (CA-3, motivo `ia_apagada`) y el Administrador lanza ciclos con `lanzar_ciclo()` (CA-5). Con la bolsa cerrada evalúa con la última sesión y JEV juzga para la próxima sesión (D-70, D-72). Sin ciclo por evento de QQQ (CA-4 queda para la fase siguiente).
+
 ## Historia
 
 **Como** Analista,  

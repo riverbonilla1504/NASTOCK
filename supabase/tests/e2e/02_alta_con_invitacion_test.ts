@@ -28,8 +28,7 @@ import { entorno } from "./utilidades/entorno.ts";
 const SIN_INVITACION =
   "Tu correo no tiene una invitación vigente. Pídele una al administrador.";
 const DOMINIO_NO_PERMITIDO = "Solo se admiten cuentas de Google invitadas.";
-const PROVEEDOR_NO_PERMITIDO =
-  "Solo puedes ingresar con tu cuenta de Google.";
+const PROVEEDOR_NO_PERMITIDO = "Solo puedes ingresar con tu cuenta de Google.";
 
 function correoNuevo(prefijo: string, dominio = "prueba.local"): string {
   return `e2e02-${prefijo}-${crypto.randomUUID().slice(0, 8)}@${dominio}`;

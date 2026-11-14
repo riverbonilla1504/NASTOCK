@@ -186,6 +186,91 @@ export interface Explicacion {
   advertencias: string[];
   /** Todo junto, para quien no abre el detalle. */
   resumen: string;
+  /** Favorable, vigilar o desfavorable (docs/07 §6.3, D-72); nulo sin JEV o excluida. */
+  nivel: Nivel | null;
+  /** Lo que respondió JEV, tal cual (docs/07 §14, D-72); nulo sin JEV. */
+  jev: LoQueRespondioJev | null;
+}
+
+export type Nivel = "favorable" | "vigilar" | "desfavorable";
+
+/**
+ * Nivel de una evaluación, coherente con su puntaje (docs/07 §6.3, D-72). Solo `favorable`
+ * cuenta como recomendación; `vigilar` es puntaje suficiente con JEV esperando o sin confianza.
+ */
+export function nivelDe(ev: Evaluacion, u: Umbrales): Nivel | null {
+  if (ev.sinJev) return null;
+  if (ev.motivo === null) return "favorable";
+  if (
+    (ev.motivo === "espera" || ev.motivo === "confianza") &&
+    ev.puntaje >= u.puntajeMinimo
+  ) {
+    return "vigilar";
+  }
+  return "desfavorable";
+}
+
+export type NivelDeRiesgo = "bajo" | "medio" | "alto";
+
+export interface LoQueRespondioJev {
+  /** Probabilidades de `entry_timing`, normalizadas para que sumen 1. */
+  probabilidades: { comprar: number; esperar: number; evitar: number } | null;
+  riesgo_reversion: NivelDeRiesgo | null;
+  riesgo_evento: NivelDeRiesgo | null;
+}
+
+/** Lee las probabilidades de `entry_timing`: objeto opción→valor o lista de {choice, probability}. */
+function probabilidadesDeEntrada(
+  crudo: unknown,
+): LoQueRespondioJev["probabilidades"] {
+  const valores: Record<string, number> = {};
+  if (Array.isArray(crudo)) {
+    for (const x of crudo) {
+      if (!x || typeof x !== "object") continue;
+      const o = x as Record<string, unknown>;
+      const clave = o.choice ?? o.label ?? o.option;
+      const valor = o.probability ?? o.p ?? o.value;
+      if (typeof clave === "string" && typeof valor === "number") {
+        valores[clave] = valor;
+      }
+    }
+  } else if (crudo && typeof crudo === "object") {
+    for (const [k, v] of Object.entries(crudo as Record<string, unknown>)) {
+      if (typeof v === "number") valores[k] = v;
+    }
+  }
+  const comprar = Math.max(0, valores.buy_now ?? 0);
+  const esperar = Math.max(0, valores.wait ?? 0);
+  const evitar = Math.max(0, valores.avoid ?? 0);
+  const total = comprar + esperar + evitar;
+  if (!(total > 0)) return null;
+  return {
+    comprar: comprar / total,
+    esperar: esperar / total,
+    evitar: evitar / total,
+  };
+}
+
+function nivelDeRiesgo(valor: number | null): NivelDeRiesgo | null {
+  if (valor === null) return null;
+  return valor < 1 / 3 ? "bajo" : valor < 2 / 3 ? "medio" : "alto";
+}
+
+/** Las respuestas de JEV en una forma que la pantalla puede mostrar (docs/07 §14, D-72). */
+export function loQueRespondioJev(
+  jev: RespuestaJev | null,
+  niveles: Readonly<Record<string, number>>,
+): LoQueRespondioJev | null {
+  if (!jev) return null;
+  return {
+    probabilidades: probabilidadesDeEntrada(
+      jev.answers["entry_timing"]?.probabilities,
+    ),
+    riesgo_reversion: nivelDeRiesgo(
+      normalizado(jev, "reversal_risk", niveles),
+    ),
+    riesgo_evento: nivelDeRiesgo(normalizado(jev, "event_risk", niveles)),
+  };
 }
 
 const NOMBRE: Record<Dimension, string> = {
@@ -221,6 +306,15 @@ const MALO: Record<Dimension, string> = {
 const coma = (x: number, d = 2) => x.toFixed(d).replace(".", ",");
 const porcentaje = (x: number) => `${Math.round(x * 100)} %`;
 
+/** "JEV: 30 % comprar ahora · 60 % esperar · 10 % evitar." */
+export function textoDeProbabilidades(
+  p: NonNullable<LoQueRespondioJev["probabilidades"]>,
+): string {
+  return `JEV: ${porcentaje(p.comprar)} comprar ahora · ${
+    porcentaje(p.esperar)
+  } esperar · ${porcentaje(p.evitar)} evitar.`;
+}
+
 export interface EntradaDeExplicacion {
   simbolo: string;
   evaluacion: Evaluacion;
@@ -231,6 +325,9 @@ export interface EntradaDeExplicacion {
   umbrales: Umbrales;
   /** Fallo de JEV, si lo hubo (sin_llave, tiempo_agotado…). */
   fallosJev?: string | null;
+  /** Respuesta de JEV y niveles de las preguntas tipo score, para mostrar lo que respondió. */
+  jev?: RespuestaJev | null;
+  niveles?: Readonly<Record<string, number>>;
 }
 
 export function armarExplicacion(e: EntradaDeExplicacion): Explicacion {
@@ -255,6 +352,8 @@ export function armarExplicacion(e: EntradaDeExplicacion): Explicacion {
     .map((d) => `${capital(NOMBRE[d])}: ${MALO[d]}.`);
 
   const horizonteEs = e.horizonte;
+  const nivel = nivelDe(ev, e.umbrales);
+  const jev = loQueRespondioJev(e.jev ?? null, e.niveles ?? {});
   let que: string;
   if (e.resultado === "elegida") {
     que =
@@ -268,18 +367,27 @@ export function armarExplicacion(e: EntradaDeExplicacion): Explicacion {
       `Puntaje ${coma(ev.puntaje)}, confianza ${
         porcentaje(ev.confianza ?? 0)
       }.`;
+  } else if (nivel === "vigilar") {
+    que = `Vigilar ${e.simbolo}: su puntaje (${
+      coma(ev.puntaje)
+    }) alcanza el mínimo, pero ${
+      motivoEnPalabras(e.resultado, ev, e.umbrales)
+    }`;
   } else {
     que = `No se recomienda comprar ${e.simbolo} por ahora: ${
       motivoEnPalabras(e.resultado, ev, e.umbrales)
     }`;
   }
+  const respondio = jev?.probabilidades
+    ? [textoDeProbabilidades(jev.probabilidades)]
+    : [];
 
   const advertencias = [
     "Sin contexto: no se leyeron noticias, así que el contexto, el sentimiento y el sector valen lo mismo (neutros).",
   ];
   if (!e.mercadoAbierto) {
     advertencias.push(
-      "Mercado cerrado: se evaluó con los datos de la última sesión.",
+      "Mercado cerrado: se evaluó con los datos de la última sesión, pensando en la próxima apertura.",
     );
   }
   if (ev.sinJev) {
@@ -295,11 +403,12 @@ export function armarExplicacion(e: EntradaDeExplicacion): Explicacion {
 
   const resumen = [
     que,
+    ...respondio,
     ...por_que,
     ...(frena.length ? ["Lo que la frena: " + frena.join(" ")] : []),
   ]
     .join(" ");
-  return { que, por_que, frena, advertencias, resumen };
+  return { que, por_que, frena, advertencias, resumen, nivel, jev };
 }
 
 function motivoEnPalabras(
@@ -353,5 +462,13 @@ export function explicacionDeExclusion(
   const que = `${simbolo} quedó fuera de este ciclo: ${
     texto[motivo] ?? motivo
   }.`;
-  return { que, por_que: [], frena: [], advertencias: [], resumen: que };
+  return {
+    que,
+    por_que: [],
+    frena: [],
+    advertencias: [],
+    resumen: que,
+    nivel: null,
+    jev: null,
+  };
 }

@@ -71,12 +71,15 @@ export class JevSimulado implements ProveedorDeJev {
           type: "choice",
           choice: eleccion,
           confidence: Math.round(confianza * 100) / 100,
-          probabilities: {
-            buy_now: 0.33,
-            wait: 0.33,
-            avoid: 0.34,
-            [eleccion]: Math.round(confianza * 100) / 100,
-          },
+          // La elegida se lleva la confianza y el resto se reparte parejo: suman 1.
+          probabilities: Object.fromEntries(
+            ["buy_now", "wait", "avoid"].map((o) => [
+              o,
+              o === eleccion
+                ? Math.round(confianza * 100) / 100
+                : Math.round(((1 - confianza) / 2) * 100) / 100,
+            ]),
+          ),
         };
       } else if (clave === "reversal_risk") {
         const nivel = sobrecomprada

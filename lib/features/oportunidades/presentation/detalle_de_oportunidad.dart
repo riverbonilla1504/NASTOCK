@@ -2,6 +2,7 @@
 /// no, qué la frena, cuánto aporta cada dimensión y las advertencias.
 ///
 /// Sin contexto ni titulares: el corte de demo (D-59, D-70) no lee noticias.
+/// Muestra el nivel y lo que respondió JEV, tal cual (D-72).
 library;
 
 import 'package:flutter/material.dart';
@@ -43,7 +44,10 @@ class DetalleDeOportunidad extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text(o.simbolo, style: textos.headlineSmall)),
-              ChipDelResultado(resultado: o.resultado),
+              ChipDelResultado(
+                resultado: o.resultado,
+                nivel: o.explicacion.nivel,
+              ),
             ],
           ),
           Text(
@@ -69,6 +73,20 @@ class DetalleDeOportunidad extends StatelessWidget {
           if (o.explicacion.que.isNotEmpty) ...[
             const SizedBox(height: Espacio.x4),
             Text(o.explicacion.que, style: textos.bodyLarge),
+          ],
+          if (o.explicacion.jev case final jev?) ...[
+            const SizedBox(height: Espacio.x5),
+            Text('Lo que respondió JEV', style: textos.titleSmall),
+            const SizedBox(height: Espacio.x2),
+            if (jev.tieneProbabilidades)
+              _Linea(texto: textoDeProbabilidades(jev)),
+            if (jev.riesgoDeReversion != null)
+              _Linea(
+                texto:
+                    'Riesgo de que la tendencia se revierta: ${jev.riesgoDeReversion}',
+              ),
+            if (jev.riesgoDeEvento != null)
+              _Linea(texto: 'Riesgo de un evento: ${jev.riesgoDeEvento}'),
           ],
           if (o.explicacion.porQue.isNotEmpty) ...[
             const SizedBox(height: Espacio.x5),

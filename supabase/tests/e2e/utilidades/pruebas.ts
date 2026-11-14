@@ -48,6 +48,28 @@ export async function elegirEscenario(
   await sql`select pruebas.elegir_escenario(${proveedor}, ${escenario})`;
 }
 
+/**
+ * Pausa trabajos de `pg_cron` mientras dura la prueba y devuelve con qué reanudarlos (EC-040).
+ * Un trabajo que despierta una función mientras la prueba mueve el reloj escribe con la hora que
+ * ya cambió: la prueba debe ser la única que dispara esa función. Llamarla **antes** de fijar el
+ * reloj en una hora que active el trabajo; con el reloj real no hay corridas a medias.
+ */
+export async function pausarTrabajos(
+  sql: Sql,
+  nombres: readonly string[],
+): Promise<() => Promise<void>> {
+  const pausados = await sql<{ jobid: number }[]>`
+    select jobid from cron.job where jobname in ${sql(nombres)} and active`;
+  for (const { jobid } of pausados) {
+    await sql`select cron.alter_job(${jobid}::bigint, active := false)`;
+  }
+  return async () => {
+    for (const { jobid } of pausados) {
+      await sql`select cron.alter_job(${jobid}::bigint, active := true)`;
+    }
+  };
+}
+
 /** Deja el reloj real y todos los proveedores en su comportamiento normal. */
 export async function restablecer(sql: Sql): Promise<void> {
   await fijarReloj(sql, null);

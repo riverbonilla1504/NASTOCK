@@ -59,6 +59,12 @@ No corre con el mercado cerrado, con `ia_activa = false`, con el presupuesto
 agotado, sin capital en el fondo o con los datos desactualizados. En esos
 casos el ciclo queda `omitido` con el motivo.
 
+> **MVP corto (D-70, D-72).** Con el mercado cerrado el ciclo **no** se
+> omite: evalúa con la última sesión (cada 6 h) para que Oportunidades
+> tenga contenido. Con `ia_activa = false` sí queda `omitido`
+> (`ia_apagada`). No hay ciclo por evento de mercado ni presupuesto; el
+> Administrador lanza uno a mano con `lanzar_ciclo()`.
+
 ---
 
 ## 3. El ciclo paso a paso
@@ -202,6 +208,11 @@ semánticas**, no cifras:
 Los cortes de cada etiqueta (qué es "strong gain" o "high volatility") son
 **código versionado** dentro de la configuración de decisión (§11).
 
+> **Con la bolsa cerrada (D-70, D-72).** El ciclo evalúa con la última
+> sesión y `as_of_session` le pide a JEV juzgar **para la próxima sesión
+> regular** ("market closed: judge as if the next regular session opened
+> under these conditions"), no para "ahora".
+
 ### 4.4 Memoria
 
 El ciclo también registra señales vivas (para no repetirlas) y descartes
@@ -316,6 +327,18 @@ Una candidata **puede** convertirse en señal de compra si cumple todo:
 **La mejor opción** de cada bolsillo es la candidata elegible con mayor
 puntaje (desempate: mayor confianza; luego menor volatilidad). Si ninguna es
 elegible, **no se propone nada**, que es el resultado más frecuente.
+
+> **Nivel de cada evaluación (D-72).** Además del resultado, toda candidata
+> evaluada con JEV lleva un nivel coherente con su puntaje, para que la
+> pantalla no muestre solo "sin recomendar":
+>
+> | Nivel | Cuándo |
+> |---|---|
+> | **Favorable** | Cumple todas las condiciones de arriba. Es la única que cuenta como recomendación. |
+> | **Vigilar** | El puntaje alcanza `jev.puntaje_minimo`, pero JEV prefiere esperar (`wait`) o su confianza no llega a la mínima. |
+> | **Desfavorable** | JEV desaconseja entrar (`avoid`), hay contradicción o el puntaje no alcanza el mínimo. |
+>
+> Sin respuesta de JEV no hay nivel: la candidata lo dice ("sin JEV").
 
 **Contradicciones** (consideración "datos contra contexto"): si
 `data_context_conflict` ≥ 0,5 en una candidata que por números estaría entre
@@ -597,6 +620,12 @@ con piezas verificables:
    y los botones Aprobar (con biometría) y Rechazar (con motivo).
 7. **Aviso fijo**: *"Sugerencia generada por un sistema automático con fines
    informativos. No constituye asesoría financiera. La decisión es tuya."*
+
+> **Lo que respondió JEV (D-72).** La explicación incluye el nivel (§6.3),
+> las probabilidades de `entry_timing` ("JEV: 30 % comprar ahora · 60 %
+> esperar · 10 % evitar") y los juicios de `reversal_risk` y `event_risk`
+> en palabras (bajo, medio, alto). Son las respuestas de JEV tal cual, no
+> texto inventado.
 
 Todo queda guardado en la evaluación para revisarlo después.
 

@@ -11,6 +11,11 @@
 | Estimación | Por definir al refinar |
 | Etiquetas | `historia` · `E-06` · `M-07` · `prioridad-alta` |
 
+
+## MVP corto
+
+D-72: sin Cloudflare como respaldo de JEV (CA-4 queda para la fase siguiente).
+
 ## Historia
 
 **Como** Analista,  

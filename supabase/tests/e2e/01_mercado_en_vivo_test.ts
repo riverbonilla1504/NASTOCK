@@ -7,7 +7,12 @@
 
 import { assert, assertEquals } from "@std/assert";
 import { despertarFuncion, esperarFunciones } from "./utilidades/funciones.ts";
-import { conBd, fijarReloj, restablecer } from "./utilidades/pruebas.ts";
+import {
+  conBd,
+  fijarReloj,
+  pausarTrabajos,
+  restablecer,
+} from "./utilidades/pruebas.ts";
 
 const DIA = "2031-03-04"; // martes
 const ABIERTO = new Date("2031-03-04T15:00:00Z");
@@ -24,6 +29,9 @@ Deno.test("E2E-03: la ingesta simulada publica precios con el mercado en ventana
   );
 
   await conBd(async (sql) => {
+    // EC-040: con el reloj en hora de mercado, pg_cron también despertaría la ingesta y su
+    // corrida podría escribir después de pasar el reloj al cierre. Solo la prueba la dispara.
+    const reanudar = await pausarTrabajos(sql, ["ingesta_mercado"]);
     try {
       await sql`delete from public.cotizaciones`;
       await sql`
@@ -72,6 +80,7 @@ Deno.test("E2E-03: la ingesta simulada publica precios con el mercado en ventana
          where topic = 'mercado' and event = 'cotizaciones'`;
       assertEquals(despuesDeCerrar, despues);
     } finally {
+      await reanudar();
       await restablecer(sql);
       await sql`delete from public.cotizaciones`;
       await sql`delete from public.barras_minuto where momento >= '2031-01-01'`;

@@ -20,6 +20,8 @@ Sin contexto (D-59, [docs/14 §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-co
 - La dependencia de HU-043 no aplica.
 
 - Las señales se registran y **no** se convierten en sugerencias (D-65). Lo que las notas técnicas dicen de HU-058 y HU-059 queda para la fase siguiente.
+D-72: sin señales ni validación con el motor de políticas (CA-5 y CA-6 quedan para la fase siguiente; con D-65 nadie las usa). Cada evaluación lleva un nivel: favorable, vigilar o desfavorable (07 §6.3).
+
 ## Historia
 
 **Como** Analista,  
