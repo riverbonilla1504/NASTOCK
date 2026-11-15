@@ -38,7 +38,7 @@ class _Repo implements MisOrdenesRepositorio {
   }
 }
 
-Future<void> montar(WidgetTester tester, _Repo repo) async {
+Future<void> _montar(WidgetTester tester, _Repo repo) async {
   tester.view.physicalSize = const Size(360, 900);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
@@ -56,14 +56,14 @@ Future<void> montar(WidgetTester tester, _Repo repo) async {
 
 void main() {
   testWidgets('lista vacía explica dónde aparecen las órdenes', (tester) async {
-    await montar(tester, _Repo());
+    await _montar(tester, _Repo());
     expect(find.text('Aún no tienes órdenes'), findsOneWidget);
   });
   testWidgets(
     'solicita tras confirmar y muestra pendiente sin cancelar falsamente',
     (tester) async {
       final repo = _Repo()..filas = [orden()];
-      await montar(tester, repo);
+      await _montar(tester, repo);
       await tester.tap(find.text('Cancelar orden'));
       await tester.pumpAndSettle();
       expect(repo.cancelaciones, 0);
@@ -78,7 +78,7 @@ void main() {
   testWidgets(
     'un llenado que gana informa el resultado y no permite cancelar',
     (tester) async {
-      await montar(
+      await _montar(
         tester,
         _Repo()
           ..filas = [orden(estado: 'llenada', pendiente: true, llenada: 2)],
@@ -91,7 +91,7 @@ void main() {
   testWidgets(
     'parcial muestra cantidad conservada y permite pedir cancelar el resto',
     (tester) async {
-      await montar(
+      await _montar(
         tester,
         _Repo()..filas = [orden(estado: 'parcialmente_llenada', llenada: 1)],
       );
