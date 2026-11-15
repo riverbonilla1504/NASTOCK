@@ -20,6 +20,7 @@ import '../features/admin/capital/presentation/pagina_capital.dart';
 import '../features/admin/parametros/presentation/pagina_parametros.dart';
 import '../features/admin/usuarios/presentation/pagina_invitaciones.dart';
 import '../features/cupo/presentation/pagina_mi_cupo.dart';
+import '../features/ordenes/presentation/pagina_mis_ordenes.dart';
 import '../features/oportunidades/presentation/pagina_oportunidades.dart';
 import 'pagina_inicio.dart';
 import 'rutas.dart';
@@ -78,6 +79,9 @@ final List<Destino> destinosDelMvp = [
     icono: Icons.account_balance_wallet_outlined,
     roles: {RolApp.usuario},
     pantalla: (_) => const PaginaMiCupo(),
+    subrutas: [
+      GoRoute(path: 'ordenes', builder: (_, _) => const PaginaMisOrdenes()),
+    ],
   ),
   Destino(
     ruta: Rutas.alertas,

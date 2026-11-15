@@ -38,6 +38,7 @@ import 'package:inversiones/features/admin/presentation/pagina_administracion.da
 import 'package:inversiones/features/auth/presentation/pagina_cuenta_suspendida.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
 import 'package:inversiones/features/mercado/presentation/pagina_mercado.dart';
+import 'package:inversiones/features/ordenes/presentation/pagina_mis_ordenes.dart';
 import 'package:inversiones/main.dart' as app;
 import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
 
@@ -228,6 +229,18 @@ void main() {
             reason: '$nombre en $prohibida',
           );
           expect(find.byType(PaginaInicio), findsOneWidget);
+        }
+
+        // El Administrador sí entra a Administración.
+        if (nombre == 'usuario') {
+          enrutador.go('/cupo/ordenes');
+          await tester.pumpAndSettle();
+          expect(find.byType(PaginaMisOrdenes), findsOneWidget);
+          expect(_ruta(enrutador), '/cupo/ordenes');
+        } else {
+          enrutador.go('/cupo/ordenes');
+          await tester.pumpAndSettle();
+          expect(_ruta(enrutador), Rutas.inicio);
         }
 
         // El Administrador sí entra a Administración.

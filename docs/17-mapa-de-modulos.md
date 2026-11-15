@@ -119,6 +119,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Depende de**: M-02, M-03, M-07, M-08 · **Lo usan**: M-10, M-14
 
 ### M-10 · Ejecución y órdenes
+- **HU-076**: migración `20261115140000_cancelar_orden.sql` con `cancelar_orden(p_id)`, solicitud y auditoría terminal; `private.ordenes_por_cancelar()` reúne solicitudes y vencimientos para `sincronizar-ordenes`. App: `lib/features/ordenes/domain/mi_orden.dart`, `data/mis_ordenes_repositorio.dart`, `presentation/mis_ordenes_provider.dart` y `pagina_mis_ordenes.dart`; ruta `/cupo/ordenes` desde Mi cupo. Pruebas: `25_cancelar_orden_test.sql`, pruebas del manejador, `test/features/ordenes/mis_ordenes_test.dart` y E2E-01 para entrada/guardas. Las confirmaciones reutilizan `aplicar_llenado` y su retención, sin otro motor contable.
 - **Qué hace**: órdenes (aprobadas, manuales, de protección, de liquidación), cola, envío al broker, sincronización y aplicación de llenados.
 - **Docs**: 10 §3, §5, §7, §10 · 08 §2 · 12 §4
 - **BD**: `ordenes`, `ordenes_eventos`; RPC `crear_orden_manual`, `cancelar_orden`; `private.tomar_orden_para_envio`, `registrar_respuesta_envio`, `registrar_error_envio`, `aplicar_llenado`; cola `ordenes_por_enviar`

@@ -8,6 +8,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../app/tema.dart';
 import '../../../shared/widgets/avisos.dart';
@@ -152,6 +153,12 @@ class PaginaMiCupo extends ConsumerWidget {
         ),
       ),
       const SizedBox(height: Espacio.x6),
+      TextButton.icon(
+        onPressed: () => context.push('/cupo/ordenes'),
+        icon: const Icon(Icons.receipt_long_outlined),
+        label: const Text('Ver mis órdenes'),
+      ),
+      const SizedBox(height: Espacio.x3),
       Semantics(
         header: true,
         child: Text('Posiciones', style: textos.titleLarge),

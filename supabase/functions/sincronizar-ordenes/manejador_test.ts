@@ -51,7 +51,7 @@ function bdFalsa(datos: Datos = {}) {
       if (funcion === "ordenes_para_sincronizar") {
         return Promise.resolve((datos.vivas ?? []) as T[]);
       }
-      if (funcion === "ordenes_por_cancelar_por_tiempo") {
+      if (funcion === "ordenes_por_cancelar") {
         return Promise.resolve((datos.porCancelar ?? []) as T[]);
       }
       return Promise.resolve([] as T[]);
@@ -191,6 +191,44 @@ Deno.test("CA-4/CB-35: las compras que superan el tiempo máximo se cancelan en 
   );
 });
 
+Deno.test("HU-076 CA-3: el llenado gana a la solicitud y se aplica como llenada", async () => {
+  const { broker, orden } = await brokerConOrden(99);
+  const { bd, llamadas } = bdFalsa({
+    porCancelar: [{ orden_id: ORDEN, broker_order_id: orden.idBroker }],
+    vivas: [viva(orden.idBroker)],
+  });
+  const cuerpo = await pasada(bd, broker);
+  assertEquals(cuerpo.canceladas, [{
+    orden_id: ORDEN,
+    resultado: "ya_cerrada",
+  }]);
+  assertEquals(buscar(llamadas, "aplicar_llenado")?.argumentos, [
+    ORDEN,
+    4,
+    99,
+    "filled",
+    0,
+  ]);
+});
+
+Deno.test("HU-076 CA-4: una solicitud cancela el resto y conserva el parcial", async () => {
+  const broker = new BrokerSimulado({ escenario: "llenado_parcial" });
+  const orden = await broker.enviarOrden(COMPRA);
+  broker.avanzar({ QLD: 99 });
+  const { bd, llamadas } = bdFalsa({
+    porCancelar: [{ orden_id: ORDEN, broker_order_id: orden.idBroker }],
+    vivas: [viva(orden.idBroker, "parcialmente_llenada")],
+  });
+  await pasada(bd, broker);
+  assertEquals(buscar(llamadas, "aplicar_llenado")?.argumentos, [
+    ORDEN,
+    2,
+    99,
+    "canceled",
+    0,
+  ]);
+});
+
 Deno.test("CB-33: una orden desconocida se busca por client_order_id y queda aceptada", async () => {
   const { broker, orden } = await brokerConOrden();
   const { bd, llamadas } = bdFalsa({ vivas: [viva(null, "desconocida")] });
@@ -286,7 +324,7 @@ Deno.test("un fallo de base con una orden no frena a las demás", async () => {
 Deno.test("si la base falla al listar responde 500 sin detalles y cierra la conexión", async () => {
   const { bd, estado } = bdFalsa({
     fallan: {
-      ordenes_por_cancelar_por_tiempo: new Error("postgres://u:c@h/db"),
+      ordenes_por_cancelar: new Error("postgres://u:c@h/db"),
     },
   });
   const manejador = crearManejador({

@@ -218,6 +218,8 @@ POST /v2/orders
 
 `sincronizar-ordenes` corre cada 10 s mientras haya órdenes vivas:
 
+**HU-076**: `cancelar_orden(id)` verifica dueño/estado y registra la solicitud. `sincronizar-ordenes` lee `private.ordenes_por_cancelar()`, envía `cancelarOrden` al broker y consulta el estado real mediante el flujo de llenados existente. Pedir o recibir aceptación de la cancelación no libera la retención: se libera con el estado terminal confirmado. Una orden creada que aún no se envió se cancela localmente bajo el mismo bloqueo que usa el ejecutor. Si el llenado gana la carrera, se conserva y se informa como llenada; si fue parcial, se conserva lo llenado y solo se cancela el resto. Se registra `orden.cancelada` una sola vez al confirmar la cancelación. Aprobado por Yul Bastidas el 2026-11-15.
+
 ```
 1. GET /v2/orders?status=open&nested=true         → estado de las vivas (y sus patas)
 2. Para cada orden nuestra viva que ya no aparece:
