@@ -5,6 +5,7 @@ import 'package:inversiones/core/realtime/estado_conexion.dart';
 import 'package:inversiones/core/realtime/evento_de_tiempo_real.dart';
 import 'package:inversiones/core/realtime/fuente_de_tiempo_real.dart';
 import 'package:inversiones/core/realtime/reloj.dart';
+import 'package:inversiones/features/auth/data/renovacion_de_sesion.dart';
 
 /// Fuente de tiempo real en memoria: la prueba decide qué llega y cuándo.
 class FuenteFalsa implements FuenteDeTiempoReal {
@@ -89,7 +90,13 @@ class RelojRepositorioFalso implements RelojRepositorio {
 /// Lo que una prueba de la app entera necesita para no abrir un socket real:
 /// una fuente en memoria y un servidor de reloj que responde la hora del
 /// teléfono.
-List<Override> tiempoRealEnMemoria({FuenteFalsa? fuente}) => [
+List<Override> tiempoRealEnMemoria({
+  FuenteFalsa? fuente,
+  Future<void> Function(String)? renovarPerfil,
+}) => [
+  renovarSesionDePerfilProvider.overrideWithValue(
+    renovarPerfil ?? (_) async {},
+  ),
   fuenteDeTiempoRealProvider.overrideWithValue(fuente ?? FuenteFalsa()),
   relojRepositorioProvider.overrideWithValue(
     RelojRepositorioFalso(() => DateTime.now().toUtc()),
