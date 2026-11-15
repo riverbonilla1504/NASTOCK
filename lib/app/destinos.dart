@@ -10,6 +10,8 @@
 /// y su regla de acceso las crea la historia de la orden manual.
 library;
 
+import '../features/alertas/presentation/pagina_alertas.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -84,6 +86,7 @@ final List<Destino> destinosDelMvp = [
     etiqueta: 'Alertas',
     icono: Icons.notifications_none,
     roles: _todos,
+    pantalla: (_) => const PaginaAlertas(),
   ),
   Destino(
     ruta: Rutas.admin,

@@ -197,6 +197,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Depende de**: M-02 (`private.rol_actual`, tipo `rol_app`), M-19 (`private.ahora`) · **Lo usan**: casi todos
 
 ### M-18 · Salud, alertas e integraciones
+- **HU-085**: `20261115130000_alertas_por_audiencia.sql` crea `alertas`, tipos `severidad`/`audiencia`, RLS, `private.crear_alerta`, `resolver_alerta` y el trigger de símbolo no negociable de `lista_blanca`. App: `lib/features/alertas/` (dominio, repositorio, foto/eventos y `PaginaAlertas`). Pruebas: `24_alertas_test.sql`, `supabase/tests/e2e/05_alertas_por_audiencia_test.ts`, `test/features/alertas/alertas_test.dart` y la pestaña en E2E-01. Alertas personales solo para el destinatario (historial 3.29).
 - **Qué hace**: estado de cada integración, alertas operativas, presupuesto de IA.
 - **Docs**: 06 §5.6 · 08 §6 · 05 §13
 - **BD**: `salud_integraciones`, `alertas`; `private.registrar_salud`, `private.publicar_evento_salud` (la tabla `alertas` llega con HU-085)

@@ -29,7 +29,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:inversiones/app/cascaron_de_navegacion.dart';
 import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
-import 'package:inversiones/app/pagina_marcador.dart';
+import 'package:inversiones/features/alertas/presentation/pagina_alertas.dart';
 import 'package:inversiones/core/perfil/perfil.dart';
 import 'package:inversiones/core/realtime/canales.dart';
 import 'package:inversiones/core/realtime/estado_conexion.dart';
@@ -214,7 +214,7 @@ void main() {
         await tester.tap(find.byKey(claveDeDestino(Rutas.alertas)));
         await tester.pumpAndSettle();
         expect(_ruta(_enrutador(tester)), Rutas.alertas, reason: nombre);
-        expect(find.byType(PaginaMarcador), findsOneWidget, reason: nombre);
+        expect(find.byType(PaginaAlertas), findsOneWidget, reason: nombre);
 
         // E2E-01 · CA-2: las rutas de otro rol, o que no existen, vuelven al
         // inicio.
