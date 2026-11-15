@@ -42,37 +42,67 @@ accesos y cómo continuar están en
 
 Detalle en [docs/16 §3.7](docs/16-arranque-del-repositorio.md#37-herramientas-locales).
 
+**En Windows**, los comandos de abajo van en **Git Bash** (viene con Git para
+Windows), no en PowerShell ni en CMD: los scripts son de Bash.
+
 ## Instalación y ejecución en local (todo simulado, sin llaves)
 
+No hace falta ninguna cuenta ni llave: el mercado, el broker y JEV son
+simulados. Probado desde un clon limpio el 2026-11-15.
+
+**1. Una sola vez**, con **Docker Desktop abierto**:
+
 ```bash
-cp .env.example .env          # todos los proveedores en "simulado"
 flutter pub get
-supabase start                # base local en Docker
-supabase db reset             # migraciones + datos de prueba (supabase/seed.sql)
+supabase start                # base local en Docker (la primera vez baja imágenes: tarda)
+supabase db reset             # migraciones + usuarios de prueba (supabase/seed.sql)
 ```
 
-Las funciones, con los proveedores simulados y el secreto interno de prueba
-que siembra `supabase/seed.sql` (igual que `scripts/verificar.sh`):
+**2. Terminal A**: las funciones, con los proveedores simulados. Se queda
+corriendo; se detiene con Ctrl+C.
 
 ```bash
-mkdir -p supabase/.temp && { cat supabase/functions/.env.e2e; printf '\nSECRETO_INTERNO=solo-local-no-es-secreto\n'; } > supabase/.temp/env.e2e
-supabase functions serve --env-file supabase/.temp/env.e2e
+scripts/local/funciones.sh
 ```
 
-En otra terminal, la app contra la base local:
+**3. Terminal B**: los datos para ver la app con contenido (calendario,
+barras históricas, la IA encendida y un ciclo del agente). Tarda unos
+segundos. Sin este paso la app abre, pero se ve vacía: sin precios ni
+Oportunidades.
 
 ```bash
-flutter run -d chrome --dart-define=MODO_PRUEBAS=true --dart-define=SUPABASE_URL=http://127.0.0.1:54321 --dart-define=SUPABASE_PUBLISHABLE_KEY=<ANON_KEY de "supabase status">
+scripts/local/datos.sh
 ```
 
-Con `MODO_PRUEBAS` la pantalla de ingreso acepta correo y contraseña con los
-usuarios de la semilla (`admin@prueba.local`, `analista1@prueba.local`,
-`usuario1@prueba.local`; la contraseña de prueba está en `supabase/seed.sql`).
+**4. Terminal B**: la app en Chrome contra la base local. La primera carga
+tarda unos 20 segundos.
+
+```bash
+scripts/local/app.sh
+```
+
+**5. Entrar** con el formulario "Solo pruebas" de la pantalla de ingreso (no
+con Google): `admin@prueba.local`, `analista1@prueba.local` o
+`usuario1@prueba.local`, con la contraseña de prueba de `supabase/seed.sql`.
+
+Qué esperar:
+- Con la bolsa cerrada (noches y fines de semana), Mercado muestra el precio
+  del último cierre y la cuenta regresiva a la apertura; la gráfica 1D dice
+  "Sin datos del día". Los precios en vivo solo llegan con el mercado abierto.
+- Oportunidades muestra lo que evaluó la IA, con su nivel y lo que respondió
+  JEV (simulado).
+- El emulador de Android se usa contra la nube, no contra la base local (esta
+  va por HTTP sin cifrar).
+- `supabase db reset` deja la base como recién creada: después hay que volver
+  a correr `scripts/local/datos.sh`.
 
 ## Variables de entorno
 
-- [`.env.example`](.env.example): proveedores (`simulado` o el real) y las
-  llaves de Alpaca y JEV vacías. En local todo va en `simulado`.
+- En local **no hace falta crear ningún archivo**: los scripts usan
+  `supabase/functions/.env.e2e` y leen la llave local de `supabase status`.
+- [`.env.example`](.env.example): referencia de los proveedores (`simulado` o
+  el real) y las llaves de Alpaca y JEV. Sirve para saber qué variables usa la
+  nube; ningún script lee `.env`.
 - [`supabase/functions/.env.e2e`](supabase/functions/.env.e2e): lo que usan
   las funciones en local y en la CI, sin secretos.
 - La app recibe `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` y

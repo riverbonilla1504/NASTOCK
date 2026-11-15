@@ -137,7 +137,9 @@ python scripts/verificar_docs.py docs
 supabase start                    # stack local (Docker)
 supabase db reset                 # base local desde cero: migraciones + seed.sql
 supabase test db                  # pruebas pgTAP
-supabase functions serve --env-file supabase/functions/.env.e2e   # funciones con proveedores simulados
+scripts/local/funciones.sh        # funciones con proveedores simulados (deja la terminal ocupada)
+scripts/local/datos.sh            # calendario, barras, IA encendida y un ciclo: la app con contenido
+scripts/local/app.sh              # la app en Chrome contra la base local
 
 flutter test
 flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d web-server

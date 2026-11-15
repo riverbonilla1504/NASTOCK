@@ -111,14 +111,11 @@ módulos ([17](17-mapa-de-modulos.md)).
    tomar, solo las secciones de sus módulos en [17](17-mapa-de-modulos.md).
 2. Instalar las herramientas de [16 §3.7](16-arranque-del-repositorio.md#37-herramientas-locales).
    **Flutter 3.47.9**, la versión fijada en los flujos (EC-038).
-3. **En local, todo simulado y sin llaves**:
-
-   ```bash
-   cp .env.example .env
-   supabase start
-   supabase db reset
-   scripts/verificar.sh
-   ```
+3. **En local, todo simulado y sin llaves**: los pasos del
+   [README](../README.md#instalación-y-ejecución-en-local-todo-simulado-sin-llaves)
+   (`supabase start`, `supabase db reset` y los scripts de `scripts/local/`:
+   funciones, datos de prueba y app). Antes de abrir un PR,
+   `scripts/verificar.sh` completo en verde.
 
 4. **Contra la nube** (la demo): la app recibe `SUPABASE_URL`,
    `SUPABASE_PUBLISHABLE_KEY` y `GOOGLE_WEB_CLIENT_ID` con
