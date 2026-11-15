@@ -9,6 +9,8 @@
 - [x] T005 [US1] Agregar dominio, repositorio y pantalla en `lib/features/alertas/`; conectar `lib/app/destinos.dart` con foto/eventos.
 - [x] T006 [US1] Verificar estados y tamaños en `test/features/alertas/alertas_test.dart`.
 - [x] T007 [US1] Actualizar E2E en `integration_test/app_test.dart` y mapa en `docs/17-mapa-de-modulos.md`.
-- [ ] T008 Ejecutar `scripts/verificar.sh` y CI, revisar aislamiento y publicar PR con `Closes #109`.
+- [x] T008 Ejecutar `scripts/verificar.sh` y CI, revisar aislamiento y publicar PR con `Closes #109`.
 
 T001 → T002/T003 → T004 → T005 → T006/T007 → T008. Prueba independiente: cada rol solo recibe su audiencia y destinatario; duplicar no repite; resolver y volver a crear rearma. El símbolo desactivado produce alerta administrativa.
+
+Validación: script completo (sin omitir E2E) aprobado con las cuatro historias juntas el 2026-11-15: [ejecución](https://github.com/riverbonilla1504/NASTOCK/actions/runs/43740991487). PR #203.
