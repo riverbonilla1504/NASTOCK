@@ -8,7 +8,7 @@ import 'package:inversiones/app/catalogo/pagina_catalogo.dart';
 import 'package:inversiones/app/destinos.dart';
 import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
-import 'package:inversiones/app/pagina_marcador.dart';
+import 'package:inversiones/features/alertas/presentation/pagina_alertas.dart';
 import 'package:inversiones/app/tema.dart';
 import 'package:inversiones/core/configuracion/entorno.dart';
 import 'package:inversiones/features/admin/presentation/pagina_administracion.dart';
@@ -179,7 +179,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(_ruta(enrutador), Rutas.alertas);
-      expect(find.byType(PaginaMarcador), findsOneWidget);
+      expect(find.byType(PaginaAlertas), findsOneWidget);
       expect(find.text('Alertas'), findsWidgets);
     });
 
