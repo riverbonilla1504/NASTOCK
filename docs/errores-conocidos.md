@@ -308,6 +308,13 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Solución: `CambiosDeSesion` (`lib/core/perfil/perfil_repositorio.dart`) se suscribe a Supabase una sola vez y reparte por un `StreamController.broadcast` solo los cambios que llegan después; el repositorio la cierra al descartarse. Prueba: `test/core/perfil/cambios_de_sesion_test.dart`. Se encontró con un `ProviderObserver` temporal: el proveedor del perfil se descartaba 1.532 veces en 20 segundos.
 - Para no repetirlo: no suscribirse a `onAuthStateChange` dentro del `build` de un proveedor que se reconstruye; usar `cambiosDeSesion` del repositorio o `sesionProvider`, que se suscriben una sola vez.
 
+### EC-041 · El cambio de rol cierra también los canales recién abiertos
+- Fecha: 2026-11-15 · Módulos: M-02, M-13 · Origen: revisión de HU-011.
+- Síntoma: tras renovar el token y reconstruir la navegación, los canales del rol nuevo quedan cerrados.
+- Causa: el gestor anterior esperaba a cancelar sus suscripciones antes de pedir a la fuente que capturase y cerrase todos los canales; entretanto el gestor nuevo ya había abierto los suyos.
+- Solución: capturar/cerrar los canales anteriores antes del primer `await` y esperar conjuntamente la cancelación de las suscripciones. No cerrar la fuente compartida de eventos.
+- Para no repetirlo: prueba de regresión en `test/core/realtime/tiempo_real_provider_test.dart` que conserva el conjunto de canales realmente activos después del relevo; fallaba con el conjunto vacío antes de corregir el orden.
+
 ### EC-040 · E2E-03 falla a veces: el precio queda con la hora del cierre (`2031-03-04T23:00` en vez de `15:00`)
 - Fecha: 2026-11-14 · Módulos: M-05, M-20 · Origen: `scripts/verificar.sh` de la rama `048-cierre-de-la-ia` (D-72); en otra corrida igual pasó
 - Síntoma: `E2E-03 … calla con él cerrado` falla en `assertEquals(new Date(igual), ABIERTO)` con `Actual 2031-03-04T23:00:00.000Z / Expected 2031-03-04T15:00:00.000Z`. Es intermitente.

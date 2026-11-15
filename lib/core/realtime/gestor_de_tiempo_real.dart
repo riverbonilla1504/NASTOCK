@@ -68,10 +68,13 @@ class GestorDeTiempoReal {
   Future<void> cerrar() async {
     if (_cerrado) return;
     _cerrado = true;
-    for (final suscripcion in _suscripciones) {
-      await suscripcion.cancel();
-    }
-    await _fuente.cerrarCanales();
+    // La fuente captura y retira los canales actuales antes del primer await.
+    // Si el token cambia de rol, el gestor nuevo puede abrir los suyos sin que
+    // el cierre asíncrono del anterior los capture después (HU-011).
+    await Future.wait([
+      _fuente.cerrarCanales(),
+      for (final suscripcion in _suscripciones) suscripcion.cancel(),
+    ]);
     await _eventos.close();
     await _estados.close();
     await _reconexiones.close();
