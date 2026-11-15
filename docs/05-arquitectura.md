@@ -198,7 +198,7 @@ herramientas que ejecuten órdenes.
 | `agente` (IA principal) | Cron (cada `ia.minutos_entre_ciclos`), evento de mercado, admin, analista (análisis de un símbolo) | Secreto interno **o** JWT de analista/admin | Ciclo de decisión ([07 §3](07-agente-ia.md#3-el-ciclo-paso-a-paso)): calidad de datos → métricas → candidatas → JEV → puntaje → señales, sugerencias y alertas. | 60 s |
 | `opinion-ia` | App (Usuario, antes de enviar una orden manual) | JWT de usuario | Opinión de JEV sobre una orden manual. | 15 s |
 | `ejecutor-ordenes` | `pg_net` al aprobar + barrido por cron (10 s) | Secreto interno | Toma mensajes de `ordenes_por_enviar`; revalida; calcula cantidad; envía al broker con `client_order_id` idempotente. | 60 s |
-| `sincronizar-ordenes` | Cron (10 s si hay órdenes vivas) | Secreto interno | Consulta el estado de las órdenes vivas; aplica llenados con `aplicar_llenado`. | 60 s |
+| `sincronizar-ordenes` | Cron (10 s si hay órdenes vivas) | Secreto interno | Envía cancelaciones solicitadas por `cancelar_orden` o vencidas por tiempo y consulta el estado de las órdenes vivas; aplica llenados con `aplicar_llenado`. La retención solo se libera al confirmar un estado terminal. | 60 s |
 | `conciliacion` | Cron (cada `conciliacion.minutos_entre`) + tras el cierre | Secreto interno | Compara efectivo y posiciones del broker con el libro; ante descuadre crítico apaga `trading_activo`. | 60 s |
 | `notificador` | `pg_net` al encolar + barrido por cron (10 s) | Secreto interno | Envía push por FCM; elimina tokens inválidos. | 60 s |
 | `admin-usuarios` | App (Admin) | JWT de admin | Suspender, reactivar, dar de baja y reincorporar (API de administración de Auth). | 30 s |
