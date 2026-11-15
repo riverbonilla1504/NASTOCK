@@ -44,12 +44,12 @@ Sin escenario propio en el catálogo de 15 §4.
 
 ## Tareas
 
-- [ ] Migración: tipos `severidad` y `audiencia` y tabla `alertas` (06 §5.5) con el índice único de `clave_dedup` mientras está activa y RLS por audiencia.
-- [ ] Migración: función interna para crear y resolver alertas.
-- [ ] Conectar la alerta de símbolo no negociable de `calendario-mercado`.
-- [ ] App: pantalla Alertas en `lib/features/alertas/`.
-- [ ] Pruebas pgTAP (audiencias, deduplicación, rearme y lectura por rol) y prueba de widget.
-- [ ] Verificación: `scripts/verificar.sh` completo en verde.
+- [x] Migración: tipos `severidad` y `audiencia` y tabla `alertas` (06 §5.5) con el índice único de `clave_dedup` mientras está activa y RLS por audiencia.
+- [x] Migración: función interna para crear y resolver alertas.
+- [x] Conectar la alerta de símbolo no negociable de `calendario-mercado`.
+- [x] App: pantalla Alertas en `lib/features/alertas/`.
+- [x] Pruebas pgTAP (audiencias, deduplicación, rearme y lectura por rol) y prueba de widget.
+- [x] Verificación: `scripts/verificar.sh` completo en verde.
 
 ## Relaciones
 
@@ -81,11 +81,15 @@ Ninguna.
 
 Lista de `docs/14` §6, la misma del formulario de historia:
 
-- [ ] Criterios de aceptación y casos borde cumplidos
-- [ ] `scripts/verificar.sh` completo en verde (incluye E2E) y CI en verde
-- [ ] Escenario E2E agregado o actualizado
-- [ ] RLS y pruebas pgTAP si toca datos; escrituras solo por RPC
-- [ ] `docs/` actualizada (y historial 13 §4) si cambió una regla
-- [ ] `docs/17` actualizado si cambiaron rutas, tablas o funciones
-- [ ] Error no trivial registrado en `docs/errores-conocidos.md`
+- [x] Criterios de aceptación y casos borde cumplidos
+- [x] `scripts/verificar.sh` completo en verde (incluye E2E) y CI en verde
+- [x] Escenario E2E agregado o actualizado
+- [x] RLS y pruebas pgTAP si toca datos; escrituras solo por RPC
+- [x] `docs/` actualizada (y historial 13 §4) si cambió una regla
+- [x] `docs/17` actualizado si cambiaron rutas, tablas o funciones
+- [x] Error no trivial registrado en `docs/errores-conocidos.md`
 - [ ] Desplegada en el proyecto MVP con la prueba de humo en verde
+
+## Evidencia de implementación
+
+Rama `085-alertas-por-audiencia` · [PR #203](https://github.com/riverbonilla1504/NASTOCK/pull/203). Verificación conjunta completa, incluidos E2E de backend y Chrome, [aprobada el 2026-11-15](https://github.com/riverbonilla1504/NASTOCK/actions/runs/43740991487). La integración y el despliegue se comprueban en el PR y sus flujos; la casilla de despliegue permanece pendiente hasta la prueba de humo.

@@ -29,12 +29,14 @@ import 'package:integration_test/integration_test.dart';
 import 'package:inversiones/app/cascaron_de_navegacion.dart';
 import 'package:inversiones/app/enrutador.dart';
 import 'package:inversiones/app/pagina_inicio.dart';
-import 'package:inversiones/app/pagina_marcador.dart';
+import 'package:inversiones/features/alertas/presentation/pagina_alertas.dart';
 import 'package:inversiones/core/perfil/perfil.dart';
 import 'package:inversiones/core/realtime/canales.dart';
 import 'package:inversiones/core/realtime/estado_conexion.dart';
 import 'package:inversiones/core/realtime/tiempo_real_provider.dart';
 import 'package:inversiones/features/admin/presentation/pagina_administracion.dart';
+import 'package:inversiones/features/admin/data/fondo_repositorio.dart';
+import 'package:inversiones/features/admin/presentation/guia_de_primeros_pasos.dart';
 import 'package:inversiones/features/auth/presentation/pagina_cuenta_suspendida.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
 import 'package:inversiones/features/mercado/presentation/pagina_mercado.dart';
@@ -73,12 +75,29 @@ const _roles = {
   'usuario': _Rol(
     'usuario1@prueba.local',
     [Rutas.inicio, Rutas.oportunidades, Rutas.cupo, Rutas.alertas],
-    ['/admin', '/admin/usuarios', '/riesgo/bandeja', '/no-existe'],
+    [
+      '/admin',
+      '/admin/usuarios',
+      '/admin/capital',
+      '/admin/cupos',
+      '/admin/parametros',
+      '/riesgo/bandeja',
+      '/no-existe',
+    ],
   ),
   'analista': _Rol(
     'analista1@prueba.local',
     [Rutas.inicio, Rutas.oportunidades, Rutas.alertas],
-    ['/admin', '/cupo', '/riesgo/bandeja', '/no-existe'],
+    [
+      '/admin',
+      '/admin/usuarios',
+      '/admin/capital',
+      '/admin/cupos',
+      '/admin/parametros',
+      '/cupo',
+      '/riesgo/bandeja',
+      '/no-existe',
+    ],
   ),
   'administrador': _Rol(
     'admin@prueba.local',
@@ -215,7 +234,7 @@ void main() {
         await tester.tap(find.byKey(claveDeDestino(Rutas.alertas)));
         await tester.pumpAndSettle();
         expect(_ruta(_enrutador(tester)), Rutas.alertas, reason: nombre);
-        expect(find.byType(PaginaMarcador), findsOneWidget, reason: nombre);
+        expect(find.byType(PaginaAlertas), findsOneWidget, reason: nombre);
 
         // E2E-01 · CA-2: las rutas de otro rol, o que no existen, vuelven al
         // inicio.
@@ -249,7 +268,55 @@ void main() {
           await tester.pumpAndSettle();
           expect(_ruta(enrutador), Rutas.admin);
           expect(find.byType(PaginaAdministracion), findsOneWidget);
-          expect(find.byKey(claveDeEntradaAInvitaciones), findsOneWidget);
+          // HU-097 · CA-1/2/3: las cuatro secciones del MVP y la guía según
+          // los aportes reales; no asumir que otros E2E dejaron el fondo vacío.
+          final tieneCapital = await contenedor.read(
+            fondoConCapitalProvider.future,
+          );
+          await tester.pumpAndSettle();
+          final aportes = await Supabase.instance.client
+              .from('movimientos_capital')
+              .select('id')
+              .eq('tipo', 'aporte')
+              .eq('estado', 'confirmado')
+              .limit(1);
+          expect(tieneCapital, aportes.isNotEmpty);
+          expect(
+            find.byKey(claveDeGuiaDePrimerosPasos),
+            tieneCapital ? findsNothing : findsOneWidget,
+          );
+          if (!tieneCapital) {
+            for (final paso in pasosDePrimerosPasos) {
+              expect(find.text(paso.titulo), findsOneWidget);
+            }
+          }
+          for (final clave in [
+            claveDeEntradaAInvitaciones,
+            claveDeEntrada('capital'),
+            claveDeEntrada('cupos'),
+            claveDeEntrada('parametros'),
+          ]) {
+            await tester.scrollUntilVisible(
+              find.byKey(clave),
+              150,
+              scrollable: find
+                  .descendant(
+                    of: find.byType(PaginaAdministracion),
+                    matching: find.byType(Scrollable),
+                  )
+                  .first,
+            );
+            expect(find.byKey(clave), findsOneWidget);
+          }
+          for (final fuera in [
+            'Rebalanceos',
+            'Lista blanca',
+            'Salud e integraciones',
+            'Bitácora',
+            'Prompts',
+          ]) {
+            expect(find.text(fuera), findsNothing);
+          }
         }
 
         // Cerrar la sesión (desde la prueba: la interfaz es de HU-007) lleva de
