@@ -239,7 +239,7 @@ Matriz de lectura por tabla (quién ve qué filas):
 | `vista_resumen_fondo` (agregado por bolsillo) | ✅ | ✅ | ✅ |
 | `patrimonio_diario` | su cupo + agregados | todo | todo |
 | `cotizaciones`, `barras_*`, `calendario_mercado`, `lista_blanca`, `parametros` | ✅ | ✅ | ✅ |
-| `alertas` | audiencia `todos` o dirigidas a él | + audiencia `analistas` | todas |
+| `alertas` | audiencia `todos` o dirigidas a él | + audiencia `analistas` | + audiencia `administradores`; las personales (`usuario`) solo las ve su destinatario, también si es Administrador (HU-085 CA-1) |
 | `notificaciones`, `dispositivos` | las suyas | las suyas | las suyas |
 | `ciclos_agente`, `senales`, `propuestas_descartadas`, `evaluaciones_ia`, `evaluaciones_candidatos`, `contextos_ia`, `noticias`, `prompts_agente`, `configuraciones_decision` | — (ve lo suyo vía `oportunidades()`) | ✅ | ✅ |
 | `movimientos_capital` | — | ✅ | ✅ |

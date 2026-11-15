@@ -81,12 +81,13 @@ void main() {
       expect(rutas.first, Rutas.inicio);
     });
 
-    test('Mercado, Oportunidades, Mi cupo y Administración tienen pantalla propia; el resto, marcador', () {
+    test('los cinco destinos del MVP tienen su pantalla propia', () {
       const conPantalla = {
         Rutas.inicio,
         Rutas.oportunidades,
         Rutas.cupo,
         Rutas.admin,
+        Rutas.alertas,
       };
       for (final destino in destinosDelMvp) {
         expect(
