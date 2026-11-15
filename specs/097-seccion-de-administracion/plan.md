@@ -21,4 +21,8 @@ Solo app. Se extiende la pantalla de Administración de HU-006/HU-003 con las cu
 
 ## Pruebas
 
-`test/features/admin/pagina_administracion_test.dart` (entradas, guía con y sin capital, carga y error, deshabilitadas); la guarda del rol sigue en `test/app/entrada_a_invitaciones_test.dart`. El E2E-01 no se ajustó (decisión de pruebas mínimas).
+`test/features/admin/pagina_administracion_test.dart` (entradas, guía con y sin capital, carga y error, deshabilitadas); la guarda del rol sigue en `test/app/entrada_a_invitaciones_test.dart`.
+
+## Cierre del pendiente (2026-11-15, issue #123)
+
+E2E-01 se extiende en `integration_test/app_test.dart`: Usuario y Analista no pueden abrir ninguna de las cuatro subrutas de Administración; el Administrador ve las cuatro entradas y la guía según los aportes confirmados de la base local real. La comprobación no asume que otros E2E dejaron la base vacía. La guía con/sin capital sigue cubierta en las pruebas de widget. Sin cambios de diseño ni reglas nuevas. Ejecutar análisis, pruebas de widget y CI completa antes de cerrar el issue; no volver a construir la pantalla ya existente.
