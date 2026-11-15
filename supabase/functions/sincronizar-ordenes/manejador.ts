@@ -146,9 +146,9 @@ export function crearManejador(
       }[] = [];
       let brokerCaido = false;
 
-      // 1. Compras que superaron el tiempo máximo de llenado.
+      // 1. Solicitudes del Usuario y compras que superaron el tiempo máximo.
       const porCancelar = await bd.llamar<OrdenPorCancelar>(
-        "ordenes_por_cancelar_por_tiempo",
+        "ordenes_por_cancelar",
       );
       for (const orden of porCancelar) {
         try {
@@ -197,7 +197,7 @@ export function crearManejador(
       }
 
       console.log(
-        `sincronizar-ordenes: ${ordenes.length} orden(es), ${canceladas.length} cancelada(s) por tiempo`,
+        `sincronizar-ordenes: ${ordenes.length} orden(es), ${canceladas.length} solicitud(es) de cancelación`,
       );
       return responder(200, { canceladas, ordenes });
     } catch (error) {

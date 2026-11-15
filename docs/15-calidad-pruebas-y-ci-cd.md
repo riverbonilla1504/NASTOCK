@@ -64,7 +64,7 @@ actualiza.
 | E2E-05 | Aislamiento: un Usuario no ve cupos ajenos ni escribe directo; al suspenderlo pierde el acceso al instante; cambiar rol crea/cierra el cupo y los permisos se evalúan por perfil incluso con un JWT anterior (HU-011) | Backend | R2 |
 | E2E-06 | Ciclo de IA: contexto y JEV simulados → Oportunidades con explicación; contexto viejo → "sin contexto"; contradicción → alerta a analistas | App + backend | R3 |
 | E2E-07 | Calidad de datos: candidata con datos incompletos se excluye; sin QQQ el ciclo se omite | Backend | R3 |
-| E2E-08 | Sugerencia a un cupo → aprobar → orden → llenado → posición y protección → venta por objetivo → reparto visible en los tres bolsillos | App + backend | R4 |
+| E2E-08 | Sugerencia a un cupo → aprobar → orden → llenado → posición y protección → venta por objetivo → reparto visible en los tres bolsillos. HU-076 agrega cancelación por API de la orden creada antes del envío y rechazo de otro dueño; parciales/carrera se prueban en pgTAP y Deno | App + backend | R4 |
 | E2E-09 | Doble aprobación: dos analistas distintos; el mismo analista no cuenta dos veces; un rechazo basta | Backend | R4 |
 | E2E-10 | Vencimiento por tiempo (reloj adelantado) e invalidación por banda de precio | Backend | R4 |
 | E2E-11 | Orden manual con opinión de JEV; reintentar con el mismo id no duplica | App + backend | R4 |
