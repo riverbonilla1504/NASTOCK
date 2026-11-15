@@ -5,11 +5,14 @@ library;
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 
+import '../../features/auth/data/renovacion_de_sesion.dart';
 import '../../features/auth/presentation/acceso_de_sesion_provider.dart';
 import '../../features/auth/presentation/sesion_provider.dart';
 import '../perfil/perfil.dart';
 import 'canales.dart';
+import 'actualizacion_de_perfil.dart';
 import 'estado_conexion.dart';
 import 'fuente_de_tiempo_real.dart';
 import 'gestor_de_tiempo_real.dart';
@@ -58,6 +61,23 @@ final gestorDeTiempoRealProvider = Provider<GestorDeTiempoReal?>((ref) {
   );
   ref.onDispose(() => unawaited(gestor.cerrar()));
   return gestor;
+});
+
+/// Permanece estable al cambiar de rol: observa la fuente de eventos y no el
+/// gestor que se reconstruye cuando llega el token nuevo.
+final actualizacionDePerfilProvider = Provider<ActualizacionDePerfil?>((ref) {
+  final id = ref.watch(sesionProvider.select((sesion) => sesion?.user.id));
+  if (id == null) return null;
+  final actualizacion = ActualizacionDePerfil(
+    eventos: ref.watch(fuenteDeTiempoRealProvider).eventos,
+    idUsuario: id,
+    renovar: () => ref.read(renovarSesionDePerfilProvider)(id),
+    alFallar: (error, pila) => FlutterError.reportError(
+      FlutterErrorDetails(exception: error, stack: pila, library: 'Auth'),
+    ),
+  );
+  ref.onDispose(() => unawaited(actualizacion.cerrar()));
+  return actualizacion;
 });
 
 /// `conexionProvider` (docs/08 §9.1): `conectado`, `reconectando` o

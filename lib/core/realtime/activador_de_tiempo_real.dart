@@ -41,6 +41,7 @@ class _ActivadorDeTiempoRealState extends ConsumerState<ActivadorDeTiempoReal>
     // Vuelve a primer plano: pudo cerrarse el socket y perderse eventos.
     if (estado == AppLifecycleState.resumed) {
       ref.read(gestorDeTiempoRealProvider)?.alVolverAPrimerPlano();
+      ref.read(actualizacionDePerfilProvider)?.actualizar();
     }
   }
 
@@ -49,6 +50,7 @@ class _ActivadorDeTiempoRealState extends ConsumerState<ActivadorDeTiempoReal>
     // Observarlos los mantiene vivos: el gestor abre los canales y el reloj
     // se mide.
     ref.watch(gestorDeTiempoRealProvider);
+    ref.watch(actualizacionDePerfilProvider);
     ref.watch(relojProvider);
     return widget.hijo;
   }

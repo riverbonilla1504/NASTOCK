@@ -20,6 +20,21 @@ class _SesionFija extends SesionNotifier {
   void poner(Session? sesion) => state = sesion;
 }
 
+class _FuenteConCanales extends FuenteFalsa {
+  final activos = <String>{};
+  @override
+  void abrirCanal(String canal) {
+    activos.add(canal);
+    super.abrirCanal(canal);
+  }
+
+  @override
+  Future<void> cerrarCanales() {
+    activos.clear();
+    return super.cerrarCanales();
+  }
+}
+
 void main() {
   late FuenteFalsa fuente;
   late _SesionFija sesion;
@@ -91,6 +106,19 @@ void main() {
   });
 
   group('la sesión cambia', () {
+    test(
+      'el cierre del gestor anterior no cierra los canales del rol nuevo',
+      () async {
+        final conCanales = _FuenteConCanales();
+        fuente = conCanales;
+        final c = crear(activa('usuario'));
+        c.read(gestorDeTiempoRealProvider);
+        sesion.poner(activa('analista'));
+        final nuevo = c.read(gestorDeTiempoRealProvider)!;
+        await Future<void>.delayed(Duration.zero);
+        expect(conCanales.activos, nuevo.canales.toSet());
+      },
+    );
     test('renovar el token con el mismo rol no reabre los canales', () {
       final c = crear(activa('usuario'));
       final gestor = c.read(gestorDeTiempoRealProvider);
