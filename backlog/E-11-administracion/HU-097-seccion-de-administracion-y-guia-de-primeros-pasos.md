@@ -50,11 +50,11 @@ E2E-01 (actualizado)
 
 ## Tareas
 
-- [ ] App: menú y rutas `/admin/*` en `lib/features/admin/` con la guarda de rol.
-- [ ] App: guía de primeros pasos mientras no hay un aporte confirmado.
-- [ ] Pruebas de widget del menú y de la guarda.
-- [ ] E2E-01 actualizado: el Administrador ve Administración y los demás roles no.
-- [ ] Verificación: `scripts/verificar.sh` completo en verde.
+- [x] App: menú y rutas `/admin/*` en `lib/features/admin/` con la guarda de rol.
+- [x] App: guía de primeros pasos mientras no hay un aporte confirmado.
+- [x] Pruebas de widget del menú y de la guarda.
+- [x] E2E-01 actualizado: el Administrador ve Administración y los demás roles no.
+- [x] Verificación: `scripts/verificar.sh` completo en verde.
 
 ## Relaciones
 
@@ -83,11 +83,15 @@ Ninguna.
 
 Lista de `docs/14` §6, la misma del formulario de historia:
 
-- [ ] Criterios de aceptación y casos borde cumplidos
-- [ ] `scripts/verificar.sh` completo en verde (incluye E2E) y CI en verde
-- [ ] Escenario E2E agregado o actualizado
-- [ ] RLS y pruebas pgTAP si toca datos; escrituras solo por RPC
-- [ ] `docs/` actualizada (y historial 13 §4) si cambió una regla
-- [ ] `docs/17` actualizado si cambiaron rutas, tablas o funciones
-- [ ] Error no trivial registrado en `docs/errores-conocidos.md`
+- [x] Criterios de aceptación y casos borde cumplidos
+- [x] `scripts/verificar.sh` completo en verde (incluye E2E) y CI en verde
+- [x] Escenario E2E agregado o actualizado
+- [x] RLS y pruebas pgTAP si toca datos; escrituras solo por RPC
+- [x] `docs/` actualizada (y historial 13 §4) si cambió una regla
+- [x] `docs/17` actualizado si cambiaron rutas, tablas o funciones
+- [x] Error no trivial registrado en `docs/errores-conocidos.md`
 - [ ] Desplegada en el proyecto MVP con la prueba de humo en verde
+
+## Evidencia de implementación
+
+Rama `097-seccion-de-administracion` · [PR #202](https://github.com/riverbonilla1504/NASTOCK/pull/202). Verificación conjunta completa, incluidos E2E de backend y Chrome, [aprobada el 2026-11-15](https://github.com/riverbonilla1504/NASTOCK/actions/runs/43740991487). La integración y el despliegue se comprueban en el PR y sus flujos; la casilla de despliegue permanece pendiente hasta la prueba de humo.
