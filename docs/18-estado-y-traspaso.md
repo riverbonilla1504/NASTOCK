@@ -1,6 +1,6 @@
 # 18 · Estado del proyecto y traspaso
 
-Corte al **2026-11-14**. Es el punto de partida para quien continúe el
+Corte al **2026-11-15**. Es el punto de partida para quien continúe el
 proyecto: qué funciona, qué falta, cómo arrancar y a quién pedir cada acceso.
 El alcance de la entrega lo fija **D-73**
 ([13 §1](13-decisiones-pendientes-riesgos.md#1-registro-de-decisiones)). Las
@@ -57,6 +57,19 @@ de demo.
 
 ---
 
+### 2.1 Entrega de Yul Bastidas (2026-11-15)
+
+Implementadas y verificadas juntas con `scripts/verificar.sh` completo, sin omitir E2E de backend ni Chrome ([ejecución aprobada](https://github.com/riverbonilla1504/NASTOCK/actions/runs/43740991487)):
+
+| Historia | Entrega | PR |
+|---|---|---|
+| HU-011 | RPC de cambio de rol, transición del cupo, auditoría y renovación del menú/canales | [#201](https://github.com/riverbonilla1504/NASTOCK/pull/201) |
+| HU-076 | Mis órdenes y solicitud de cancelación confirmada por el broker; conserva parciales y carrera con llenado | [#204](https://github.com/riverbonilla1504/NASTOCK/pull/204) |
+| HU-085 | Alertas por audiencia/destinatario, deduplicación, rearme y símbolo no negociable | [#203](https://github.com/riverbonilla1504/NASTOCK/pull/203) |
+| HU-097 | Cierre de E2E-01: cuatro entradas de Administración, guía y guardas | [#202](https://github.com/riverbonilla1504/NASTOCK/pull/202) |
+
+Cada PR conserva su rama y sus artefactos de spec-kit. Su estado de integración y despliegue se consulta en GitHub. La pantalla de usuarios de HU-098 sigue siendo trabajo separado de la RPC de HU-011.
+
 ## 3. Lo que falta del MVP
 
 Siguen dentro de la entrega (D-73): quedan para los demás integrantes del
@@ -67,21 +80,17 @@ equipo. Cada una tiene su issue y su archivo en `backlog/`.
 | Historia | Issue | Qué le falta a la app | Depende de |
 |---|---|---|---|
 | HU-077 · Protección nativa en compras de acciones enteras | #100 | Stop-loss y objetivo en Alpaca: sin esto no hay venta automática | HU-073, HU-074 (hechas) |
-| HU-076 · Ver mis órdenes y cancelar | #99 | El Usuario no ve ni cancela sus órdenes | HU-075 (hecha) |
 | HU-032 · Aviso de dato desactualizado | #51 | Con un precio viejo no se avisa ni se bloquea la compra | HU-030 (hecha) |
-| HU-085 · Alertas del sistema por audiencia | #109 | No hay alertas: la pestaña Alertas es un marcador | HU-083, HU-084 (hechas) |
 | HU-010 · Suspender y reactivar una cuenta | #27 | El Administrador no puede suspender desde la app | HU-001 (hecha) |
-| HU-011 · Cambiar el rol de una cuenta | #28 | No se cambia el rol desde la app | HU-001 (hecha) |
 
 ### 3.2 A medias
 
 | Historia | Qué funciona | Qué falta |
 |---|---|---|
-| HU-098 · Usuarios e invitaciones | La pantalla de invitaciones | La lista de usuarios con suspender y cambiar rol (HU-010, HU-011) |
-| HU-015 · Confirmar el aporte | Conciliación y reparto | La alerta al Administrador si un aporte no se confirma (HU-085) |
-| HU-035 · Salud de las integraciones | El registro de la salud | La alerta cuando una integración cae (HU-085) |
+| HU-098 · Usuarios e invitaciones | La pantalla de invitaciones y la RPC de cambio de rol de HU-011 | La lista de usuarios que consume esa RPC y la suspensión de HU-010 |
+| HU-015 · Confirmar el aporte | Conciliación y reparto; módulo de alertas disponible | Conectar la alerta al Administrador si un aporte no se confirma mediante `private.crear_alerta` |
+| HU-035 · Salud de las integraciones | El registro de la salud; módulo de alertas disponible | Conectar la alerta cuando una integración cae mediante `private.crear_alerta` |
 | HU-091 · Mis posiciones | La pantalla con la protección | La prueba pgTAP de `protecciones` (HU-077) |
-| HU-097 · Sección de administración | La sección y la guía de primeros pasos | Ajustar el E2E-01 |
 | HU-045 · Adaptador de JEV | Consultas a JEV con reintentos y corte por tiempo | Registrar la salud de `jev` con `_shared/salud.ts` (hoy no se registra) |
 | HU-048 · Oportunidades | La pantalla con nivel, probabilidades y explicación | Actualizarse por el evento `ciclo_agente` del canal `supervision`; hoy se refresca cada minuto |
 
@@ -89,15 +98,14 @@ equipo. Cada una tiene su issue y su archivo en `backlog/`.
 
 [15 §4](15-calidad-pruebas-y-ci-cd.md#4-escenarios-e2e-obligatorios) pide E2E-01 a E2E-08
 y E2E-11. Existen E2E-01, E2E-02, E2E-03, E2E-06 (parte de backend) y E2E-07.
-Faltan **E2E-04** (aportes → cupos → Mi cupo), **E2E-05**, **E2E-08** (orden
-manual → llenado → posición → venta; lo cierra HU-077) y **E2E-11**.
+Faltan **E2E-04** (aportes → cupos → Mi cupo), la parte de suspensión de **E2E-05**, el recorrido completo de **E2E-08** (orden manual → llenado → posición → venta; lo cierra HU-077) y **E2E-11**. HU-011 y HU-085 agregaron pruebas de cambio de rol/aislamiento a E2E-05; HU-076 agregó cancelación previa al envío a E2E-08. Esas partes ya pasan, sin dar por terminados los recorridos restantes.
 
 ### 3.4 Orden sugerido
 
 1. **HU-077** y con ella **E2E-08**: completa "comprar y vender".
-2. **HU-076** y **HU-032**: cierran la pantalla de órdenes.
-3. **HU-085**: destraba las alertas de HU-015 y HU-035.
-4. **HU-010**, **HU-011** y **HU-098**: administración de cuentas.
+2. **HU-032**: aviso de precio desactualizado.
+3. Conectar los productores de alertas de **HU-015** y **HU-035** al módulo ya entregado en **HU-085**.
+4. **HU-010** y **HU-098**: administración de cuentas sobre la RPC de **HU-011** ya disponible.
 5. **E2E-04**, **E2E-05** y **E2E-11**.
 
 Las historias 1 a 4 se pueden repartir en paralelo: no tocan los mismos
