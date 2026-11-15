@@ -189,8 +189,12 @@ despliegue: `ENTORNO=mvp`, `PROVEEDOR_*` reales, `ALPACA_*`, `DEEPSEEK_*`,
 
 ### 4.3 Local
 
-Copiar `.env.example` a `.env` (ignorado por git). Con los valores por
-defecto todo es simulado y no hace falta ninguna llave.
+No hace falta crear `.env` ni ninguna llave: todo es simulado. Las funciones
+se sirven con `scripts/local/funciones.sh` (usa `supabase/functions/.env.e2e`
+más el secreto interno de prueba), los datos de prueba se cargan con
+`scripts/local/datos.sh` y la app se abre con `scripts/local/app.sh`. Pasos
+en el [README](../README.md). `.env.example` queda como referencia de las
+variables de la nube.
 
 ---
 
