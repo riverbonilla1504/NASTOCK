@@ -27,7 +27,7 @@ jobs:
       - name: ChromeDriver en PATH
         run: echo "$CHROMEWEBDRIVER" >> "$GITHUB_PATH"
       - name: Verificar sin omitir E2E
-        run: scripts/verificar.sh
+        run: bash scripts/verificar.sh
       - name: Registros de funciones si hay un fallo
         if: failure()
         run: cat /tmp/funciones-e2e.log /tmp/chromedriver.log 2>/dev/null || true
