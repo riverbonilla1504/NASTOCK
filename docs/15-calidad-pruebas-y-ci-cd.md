@@ -61,7 +61,7 @@ actualiza.
 | E2E-02 | Invitación: el Administrador invita y revoca; el invitado entra con su rol; el no invitado, el proveedor no permitido, la invitación revocada y la vencida son rechazados con su mensaje | Backend | R1 |
 | E2E-03 | Mercado en vivo: la ingesta simulada publica precios, la app los muestra y marca el dato desactualizado cuando se detiene | App + backend | R1 |
 | E2E-04 | Aporte → confirmación por conciliación → reparto 50/25/25 → asignación de cupo → "Mi cupo" | App + backend | R2 |
-| E2E-05 | Aislamiento: un Usuario no ve cupos ajenos ni escribe directo; al suspenderlo pierde el acceso al instante | Backend | R2 |
+| E2E-05 | Aislamiento: un Usuario no ve cupos ajenos ni escribe directo; al suspenderlo pierde el acceso al instante; cambiar rol crea/cierra el cupo y los permisos se evalúan por perfil incluso con un JWT anterior (HU-011) | Backend | R2 |
 | E2E-06 | Ciclo de IA: contexto y JEV simulados → Oportunidades con explicación; contexto viejo → "sin contexto"; contradicción → alerta a analistas | App + backend | R3 |
 | E2E-07 | Calidad de datos: candidata con datos incompletos se excluye; sin QQQ el ciclo se omite | Backend | R3 |
 | E2E-08 | Sugerencia a un cupo → aprobar → orden → llenado → posición y protección → venta por objetivo → reparto visible en los tres bolsillos | App + backend | R4 |

@@ -42,6 +42,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Depende de**: M-02 · **Lo usan**: todos
 
 ### M-02 · Perfiles, roles y permisos
+- **HU-011**: RPC `cambiar_rol(p_usuario_id, p_rol)` en `20261115120000_cambiar_rol.sql`; pruebas `23_cambiar_rol_test.sql` y `supabase/tests/e2e/05_cambio_de_rol_test.ts`. La app consume `perfil_actualizado` con `lib/core/realtime/actualizacion_de_perfil.dart`, `actualizacionDePerfilProvider` y `lib/features/auth/data/renovacion_de_sesion.dart`; pruebas `test/core/realtime/actualizacion_de_perfil_test.dart` y `test/app/cambio_de_rol_test.dart`. Pantalla de administración de cuentas en HU-098.
 - **Qué hace**: rol y estado de cada persona, funciones de autorización, RLS base, cambio de rol, suspensión, baja y reincorporación.
 - **Docs**: 03 completo · 08 §5 · 02 §11
 - **BD**: `perfiles` y los tipos `rol_app` y `estado_cuenta` (migraciones `supabase/migrations/*_perfiles_tipos_y_tabla.sql` y `*_perfiles_politica_de_lectura.sql`; `perfiles.invitacion_id` sin llave foránea hasta HU-002); `private.rol_actual`, `private.es_supervisor` (`*_rol_actual_y_es_supervisor.sql`); RPC `cambiar_rol`; `private.suspender_cuenta`, `reactivar_cuenta`, `dar_de_baja`, `reincorporar`
