@@ -33,7 +33,9 @@ set local request.jwt.claims='{"sub":"08500000-0000-4000-8000-000000000001","rol
 select is((select count(*)::int from public.alertas where tipo='prueba085' and activa),2,'CA-1/4: Usuario solo todos y propia, sin confiar en claims');
 select is((select count(*)::int from public.alertas where audiencia in ('analistas','administradores')),0,'sin alertas de supervisores');
 select throws_ok($$insert into public.alertas(tipo,severidad,audiencia,titulo,cuerpo,clave_dedup) values ('prueba085','info','todos','No','No','085-no')$$,'42501',null,'sin escritura directa');
+reset role;
 select ok(not has_function_privilege('authenticated','private.resolver_alerta(text)','execute'),'no resuelve alertas por API');
+set local role authenticated;
 set local request.jwt.claims='{"sub":"08500000-0000-4000-8000-000000000002","role":"authenticated"}';
 select is((select count(*)::int from public.alertas where tipo='prueba085' and activa),2,'Analista ve todos y analistas');
 set local request.jwt.claims='{"sub":"08500000-0000-4000-8000-000000000003","role":"authenticated"}';
