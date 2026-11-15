@@ -57,7 +57,7 @@ actualiza.
 
 | ID | Escenario | Capa | Entrega |
 |---|---|---|---|
-| E2E-01 | Ingreso por rol: cada rol ve su navegación; rutas prohibidas redirigen | App + backend | R1 |
+| E2E-01 | Ingreso por rol: cada rol ve su navegación; rutas prohibidas redirigen. HU-097: cuatro entradas de Administración y guía según aportes confirmados; Usuario/Analista no abren sus subrutas | App + backend | R1 |
 | E2E-02 | Invitación: el Administrador invita y revoca; el invitado entra con su rol; el no invitado, el proveedor no permitido, la invitación revocada y la vencida son rechazados con su mensaje | Backend | R1 |
 | E2E-03 | Mercado en vivo: la ingesta simulada publica precios, la app los muestra y marca el dato desactualizado cuando se detiene | App + backend | R1 |
 | E2E-04 | Aporte → confirmación por conciliación → reparto 50/25/25 → asignación de cupo → "Mi cupo" | App + backend | R2 |
