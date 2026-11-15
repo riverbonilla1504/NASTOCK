@@ -9,6 +9,8 @@
 - [x] T005 [US1] Agregar `lib/features/ordenes/domain/mi_orden.dart`, repositorio, provider y pantalla; enlazar desde Mi cupo.
 - [x] T006 [US1] Agregar widget y E2E en `test/features/ordenes/mis_ordenes_test.dart` e `integration_test/app_test.dart`.
 - [x] T007 Actualizar mapa/catálogo en `docs/17-mapa-de-modulos.md` y `docs/15-calidad-pruebas-y-ci-cd.md`.
-- [ ] T008 Ejecutar `scripts/verificar.sh` completo y CI antes del PR y cierre de #99.
+- [x] T008 Ejecutar `scripts/verificar.sh` completo y CI antes del PR y cierre de #99.
 
 T001 → T002/T003 → T004 → T005 → T006/T007 → T008. La prueba independiente demuestra cancelación confirmada y conservación del dinero/llenados, sin permitir cancelar órdenes ajenas. No se reduce la suite para aprobar.
+
+Validación: script completo (sin omitir E2E) aprobado con las cuatro historias juntas el 2026-11-15: [ejecución](https://github.com/riverbonilla1504/NASTOCK/actions/runs/43740991487). PR #204.
