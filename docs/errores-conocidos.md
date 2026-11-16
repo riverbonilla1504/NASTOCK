@@ -328,3 +328,9 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Causa: el contenedor Edge Runtime no confía en el emisor que sí acepta el almacén de certificados de Windows; el fallo ocurre antes de ejecutar el código de la función.
 - Solución local: ejecutar Deno en Windows con `DENO_TLS_CA_STORE=system` y las versiones del lockfile, obtener `npmCache` con `deno info --json` y copiar esa caché pública verificada al volumen `/root/.cache/deno/npm` del contenedor `supabase_edge_runtime_NASTOCK`. Volver a servir las funciones y comprobar respuesta antes de repetir E2E. No desactivar TLS ni cambiar los lockfiles; no versionar la caché ni certificados del equipo. La CI limpia no necesita este ajuste.
 - Para no repetirlo: distinguir un fallo de bootstrap del runtime de uno del negocio; revisar el registro de funciones antes de agregar esperas o relajar una prueba. Mantener los certificados de Deno y Docker acordes al entorno del equipo.
+
+### EC-043 · E2E-06 y E2E-07 dependen de la hora de mercado
+- Fecha: 2026-11-16 · Módulos: M-05, M-20 · Origen: CI del PR #205.
+- Síntoma: el ciclo de IA responde `omitido` donde se esperaba `completado`, aun con el histórico cargado.
+- Causa: los escenarios preparan barras diarias y usan el reloj real. Si se ejecutan en horario de mercado, el agente exige además una cotización reciente de QQQ para evaluar.
+- Solución: fijar el reloj después del cierre antes de preparar el histórico, avanzar un segundo para identificar el ciclo manual y restaurar el reloj antes de reactivar cron. Cuando una aserción falla, se imprime el motivo devuelto por el agente.

@@ -8,6 +8,8 @@ import { assert, assertEquals } from "@std/assert";
 import { despertarFuncion, esperarFunciones } from "./utilidades/funciones.ts";
 import {
   conBd,
+  fijarReloj,
+  fijarRelojTrasCierre,
   pausarTrabajos,
   restablecer,
   type Sql,
@@ -46,6 +48,7 @@ Deno.test("E2E-06: el ciclo de IA llega a Oportunidades con nivel y lo que respo
     const admin = await crearUsuarioDePrueba(sql, "administrador");
     const usuario = await crearUsuarioDePrueba(sql, "usuario");
     try {
+      const cierre = await fijarRelojTrasCierre(sql);
       // El histórico de barras del proveedor simulado (idempotente).
       assertEquals((await despertarFuncion("calendario-mercado")).estado, 200);
 
@@ -62,7 +65,7 @@ Deno.test("E2E-06: el ciclo de IA llega a Oportunidades con nivel y lo que respo
       const ciclo = await despertarFuncion("agente");
       assertEquals(ciclo.estado, 200);
       const resumen = ciclo.cuerpo as { estado: string; evaluadas: number };
-      assertEquals(resumen.estado, "completado");
+      assertEquals(resumen.estado, "completado", JSON.stringify(ciclo.cuerpo));
       assert(resumen.evaluadas > 0, "evalúa candidatas");
 
       // HU-048 CA-1: el Administrador ve todos los bolsillos, con nivel y JEV (D-72).
@@ -117,6 +120,8 @@ Deno.test("E2E-06: el ciclo de IA llega a Oportunidades con nivel y lo que respo
       assertEquals((await usuario.sesion.rpc("lanzar_ciclo")).estado, 400);
       const [{ ultimo }] = await sql`
         select coalesce(max(iniciado_en), '-infinity') as ultimo from public.ciclos_agente`;
+      // El reloj está fijo y la búsqueda exige una hora posterior al ciclo previo.
+      await fijarReloj(sql, new Date(cierre.getTime() + 1_000));
       assertEquals((await admin.sesion.rpc("lanzar_ciclo")).estado, 204);
       let manual: { estado: string } | undefined;
       for (let i = 0; i < 60 && !manual; i++) {
@@ -132,11 +137,11 @@ Deno.test("E2E-06: el ciclo de IA llega a Oportunidades con nivel y lo que respo
         "el ciclo manual corre y termina",
       );
     } finally {
-      await reanudar();
       await fijarIa(sql, antes);
+      await restablecer(sql);
+      await reanudar();
       await admin.eliminar();
       await usuario.eliminar();
-      await restablecer(sql);
     }
   });
 });

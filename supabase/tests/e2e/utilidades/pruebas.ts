@@ -39,6 +39,16 @@ export async function fijarReloj(
   return new Date(fila.hora);
 }
 
+/** Sitúa los ciclos que usan solo barras diarias fuera de la sesión regular. */
+export async function fijarRelojTrasCierre(sql: Sql): Promise<Date> {
+  // La sesión regular de NY ya cerró a las 23:00 UTC con o sin horario
+  // de verano. Usamos mañana para que el ciclo sea más reciente que los de cron.
+  const ahora = new Date();
+  ahora.setUTCDate(ahora.getUTCDate() + 1);
+  ahora.setUTCHours(23, 0, 0, 0);
+  return await fijarReloj(sql, ahora);
+}
+
 /** Elige el escenario de un proveedor simulado. Con `null` vuelve al comportamiento normal. */
 export async function elegirEscenario(
   sql: Sql,
