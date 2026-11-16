@@ -96,6 +96,19 @@ Qué esperar:
 - `supabase db reset` deja la base como recién creada: después hay que volver
   a correr `scripts/local/datos.sh`.
 
+## Consultar Mercado, Fondo y Bitácora
+
+- **Mercado** muestra **Dato desactualizado** cuando la cotización supera la
+  antigüedad configurada. La compra queda deshabilitada, incluso si ya estaba
+  abierto el diálogo de confirmación. Una cotización vigente vuelve a habilitar
+  la acción si se cumplen las demás reglas.
+- **Fondo** se abre desde el botón del mismo nombre en Mercado. Las cuentas
+  activas ven efectivo, valor de las posiciones, patrimonio y pesos por
+  bolsillo. El resumen se actualiza cuando cambia un saldo del libro.
+- **Administración → Bitácora** permite consultar acciones sensibles y exportar
+  los resultados filtrados. En web se descarga el CSV y en Android se elige
+  dónde guardarlo. [Filtros y formato del CSV](docs/11-seguridad-y-auditoria.md#44-quién-la-ve).
+
 ## Variables de entorno
 
 - En local **no hace falta crear ningún archivo**: los scripts usan

@@ -22,6 +22,25 @@ completo, que es lo mismo que corre la CI en cada PR
 La CI de GitHub corre los mismos pasos en cada PR y nada se integra a `main`
 con la CI en rojo.
 
+### Validación del PR #205
+
+La [corrida de CI de `ab6ba35`](https://github.com/riverbonilla1504/NASTOCK/actions/runs/43943173734)
+pasó Flutter, pgTAP, las pruebas de funciones y los E2E de backend y Chrome.
+Estos resultados corresponden al PR y se registran aparte del corte de `main`.
+
+- **Precios**. Las pruebas de widget hacen vencer una cotización sin eventos,
+  verifican que una cotización nueva recupere la vigencia y comprueban el
+  bloqueo de una compra si el precio vence durante la confirmación.
+- **Fondo**. pgTAP comprueba que el RPC devuelve agregados por bolsillo y
+  excluye cuentas suspendidas. La prueba de widget verifica el patrimonio y
+  la diferencia entre el peso actual y el objetivo.
+- **Bitácora**. Las pruebas de la app cubren filtros, contenido del CSV y
+  acceso a la ruta. E2E-14 comprueba la auditoría de una invitación, la cadena
+  y la lectura según rol. Aún quedan por cubrir las demás acciones sensibles
+  del escenario. Chrome comprueba que la entrada aparezca en Administración.
+- **Ciclo de IA**. E2E-06 y E2E-07 fijan el reloj después del cierre, cuando
+  basta el histórico diario. Así se pueden ejecutar en cualquier horario.
+
 ---
 
 ## 2. Casos representativos

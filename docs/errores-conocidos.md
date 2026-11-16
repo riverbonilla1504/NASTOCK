@@ -333,4 +333,4 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Fecha: 2026-11-16 · Módulos: M-05, M-20 · Origen: CI del PR #205.
 - Síntoma: el ciclo de IA responde `omitido` donde se esperaba `completado`, aun con el histórico cargado.
 - Causa: los escenarios preparan barras diarias y usan el reloj real. Si se ejecutan en horario de mercado, el agente exige además una cotización reciente de QQQ para evaluar.
-- Solución: fijar el reloj después del cierre antes de preparar el histórico, avanzar un segundo para identificar el ciclo manual y restaurar el reloj antes de reactivar cron. Cuando una aserción falla, se imprime el motivo devuelto por el agente.
+- Solución: fijar el reloj después del cierre antes de preparar el histórico y restaurarlo antes de reactivar cron. Se avanza un segundo para ordenar los ciclos, mientras que la prueba del lanzamiento manual identifica el ciclo por su ID. Si no termina, el fallo muestra el último estado observado y un resumen de las respuestas recientes de `pg_net`.

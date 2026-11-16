@@ -118,23 +118,37 @@ Deno.test("E2E-06: el ciclo de IA llega a Oportunidades con nivel y lo que respo
 
       // HU-046 CA-5: el Usuario no lanza ciclos; el Administrador sí, con disparador manual.
       assertEquals((await usuario.sesion.rpc("lanzar_ciclo")).estado, 400);
-      const [{ ultimo }] = await sql`
-        select coalesce(max(iniciado_en), '-infinity') as ultimo from public.ciclos_agente`;
-      // El reloj está fijo y la búsqueda exige una hora posterior al ciclo previo.
+      const anteriores = await sql<{ id: string }[]>`
+        select id from public.ciclos_agente where disparador = 'manual'`;
+      const idsAnteriores = anteriores.map(({ id }) => id);
+      const [{ inicioPeticion }] = await sql<{ inicioPeticion: Date }[]>`
+        select clock_timestamp() as "inicioPeticion"`;
+      // Conserva el orden cronológico de Oportunidades. La prueba identifica
+      // el nuevo ciclo por su id, independientemente de la hora simulada.
       await fijarReloj(sql, new Date(cierre.getTime() + 1_000));
       assertEquals((await admin.sesion.rpc("lanzar_ciclo")).estado, 204);
-      let manual: { estado: string } | undefined;
-      for (let i = 0; i < 60 && !manual; i++) {
+      let manual: { estado: string; motivo_omision: string | null } | undefined;
+      for (let i = 0; i < 60; i++) {
         [manual] = await sql`
-          select estado from public.ciclos_agente
-           where disparador = 'manual' and iniciado_en > ${ultimo}
-             and estado <> 'en_curso'`;
-        if (!manual) await new Promise((r) => setTimeout(r, 1_000));
+          select estado, motivo_omision from public.ciclos_agente
+           where disparador = 'manual' and not (id = any(${idsAnteriores}::uuid[]))
+           order by iniciado_en desc, id desc limit 1`;
+        if (manual && manual.estado !== "en_curso") break;
+        await new Promise((r) => setTimeout(r, 1_000));
       }
+      const respuestas = manual?.estado === "completado" ? [] : await sql`
+        select status_code, timed_out, error_msg is not null as error_de_transporte
+          from net._http_response where created >= ${inicioPeticion}
+         order by id desc limit 5`;
       assertEquals(
         manual?.estado,
         "completado",
-        "el ciclo manual corre y termina",
+        `el ciclo manual corre y termina: ${
+          JSON.stringify({
+            manual: manual ?? null,
+            respuestasPgNetRecientes: respuestas,
+          })
+        }`,
       );
     } finally {
       await fijarIa(sql, antes);
