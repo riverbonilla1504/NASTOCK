@@ -112,6 +112,18 @@ Google.
 Solo el Administrador (PM-60), con filtros por persona, acción, entidad y
 rango de fechas, y exportación CSV.
 
+En **Administración → Bitácora**, cada registro muestra el momento en hora de
+Bogotá, el actor, la acción y la entidad. Para filtrar por actor, escribe su
+ID o `Sistema` si la acción no tiene un actor asociado. Acción y entidad
+buscan coincidencias exactas. El intervalo de fechas incluye ambos días en
+hora de Bogotá. Pulsa **Aplicar filtros** para actualizar la consulta.
+
+**Exportar CSV** incluye todos los registros que coinciden con los filtros
+aplicados, también los que aún no se han cargado en pantalla. Las filas van
+de la más reciente a la más antigua. El archivo incluye el ID del registro,
+el momento en UTC, el actor, la acción, la entidad y su ID. El navegador
+descarga `bitacora.csv` y Android abre el selector de ubicación.
+
 ---
 
 ## 5. Secretos
