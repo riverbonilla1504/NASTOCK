@@ -268,7 +268,7 @@ void main() {
           await tester.pumpAndSettle();
           expect(_ruta(enrutador), Rutas.admin);
           expect(find.byType(PaginaAdministracion), findsOneWidget);
-          // HU-097 · CA-1/2/3: las cuatro secciones del MVP y la guía según
+          // HU-097 y HU-108: las secciones de Administración y la guía según
           // los aportes reales; no asumir que otros E2E dejaron el fondo vacío.
           final tieneCapital = await contenedor.read(
             fondoConCapitalProvider.future,
@@ -295,6 +295,7 @@ void main() {
             claveDeEntrada('capital'),
             claveDeEntrada('cupos'),
             claveDeEntrada('parametros'),
+            claveDeEntrada('bitacora'),
           ]) {
             await tester.scrollUntilVisible(
               find.byKey(clave),
@@ -312,7 +313,6 @@ void main() {
             'Rebalanceos',
             'Lista blanca',
             'Salud e integraciones',
-            'Bitácora',
             'Prompts',
           ]) {
             expect(find.text(fuera), findsNothing);
