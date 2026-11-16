@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/perfil/perfil.dart';
+import '../features/admin/bitacora/presentation/pagina_bitacora.dart';
 import '../features/admin/presentation/pagina_administracion.dart';
 import '../features/admin/cupos/presentation/pagina_cupos.dart';
 import '../features/admin/capital/presentation/pagina_capital.dart';
@@ -113,6 +114,10 @@ final List<Destino> destinosDelMvp = [
       GoRoute(
         path: 'parametros',
         builder: (context, state) => const PaginaParametros(),
+      ),
+      GoRoute(
+        path: 'bitacora',
+        builder: (context, state) => const PaginaBitacora(),
       ),
     ],
   ),

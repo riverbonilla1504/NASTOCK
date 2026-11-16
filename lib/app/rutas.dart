@@ -31,6 +31,7 @@ abstract final class Rutas {
 
   /// Parámetros e interruptores (HU-101).
   static const String adminParametros = '/admin/parametros';
+  static const String adminBitacora = '/admin/bitacora';
 
   /// Bandeja de riesgo: no existe en el MVP corto, pero su regla de acceso sí
   /// (Analista permitido, Administrador en solo lectura).

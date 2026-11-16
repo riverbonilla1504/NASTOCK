@@ -4,7 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/features/fondo/presentation/pagina_fondo.dart';
 
 void main() {
-  testWidgets('muestra el patrimonio y distingue los dos pesos', (tester) async {
+  testWidgets('muestra el patrimonio y distingue los dos pesos', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [

@@ -81,6 +81,18 @@ void main() {
       expect(rutas.first, Rutas.inicio);
     });
 
+    test('solo Administración puede abrir Bitácora', () {
+      expect(seccionDeAdministracionDisponible(Rutas.adminBitacora), isTrue);
+      for (final rol in RolApp.values) {
+        expect(
+          accesoDeRuta(rol, Rutas.adminBitacora),
+          rol == RolApp.administrador
+              ? AccesoDeRuta.permitido
+              : AccesoDeRuta.denegado,
+        );
+      }
+    });
+
     test('los cinco destinos del MVP tienen su pantalla propia', () {
       const conPantalla = {
         Rutas.inicio,

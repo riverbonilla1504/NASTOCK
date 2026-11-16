@@ -185,7 +185,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 03 §2–§3
 - **BD**: RPC de administración de los demás módulos
 - **Funciones**: `admin-usuarios`
-- **App**: `lib/features/admin/` (`presentation/pagina_administracion.dart`: la pantalla de `/admin`, donde cada sección agrega su entrada; cada sección tiene su carpeta, como `usuarios/`, `capital/` y `cupos/`; solo las cuatro entradas del MVP corto, deshabilitadas hasta que su historia registra la subruta en `destinos.dart` (`seccionDeAdministracionDisponible`); `presentation/guia_de_primeros_pasos.dart` y `data/fondo_repositorio.dart` con `fondoConCapitalProvider`: la guía de CB-80 mientras no hay un aporte confirmado)
+- **App**: `lib/features/admin/` (`presentation/pagina_administracion.dart`: la pantalla de `/admin`, donde cada sección agrega su entrada; cada sección tiene su carpeta, como `usuarios/`, `capital/` y `cupos/`; incluye Bitácora y las cuatro entradas del MVP corto, deshabilitadas hasta que su historia registra la subruta en `destinos.dart` (`seccionDeAdministracionDisponible`); `presentation/guia_de_primeros_pasos.dart` y `data/fondo_repositorio.dart` con `fondoConCapitalProvider`: la guía de CB-80 mientras no hay un aporte confirmado)
 - **Pruebas**: widget tests de administración, `test/app/entrada_a_invitaciones_test.dart`, `test/features/admin/pagina_administracion_test.dart`, `test/features/admin/cupos/` · E2E-01
 - **Depende de**: M-02, M-04, M-07, M-08, M-17, M-18 · **Lo usan**: —
 
@@ -194,8 +194,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 11 §4
 - **BD**: `auditoria` con su política `auditoria_lectura` (solo el Administrador; ningún rol de la API escribe, tampoco `service_role`) · `private.hash_auditoria` (fórmula compartida con `private.verificar_cadena_auditoria`, que devuelve el primer id inválido), `private.auditar` (único camino de escritura: toma el bloqueo y encadena el hash; el rol del actor lo lee de `perfiles`) · trigger `auditoria_inmutable` con `private.rechazar_cambio_auditoria` (rechaza `UPDATE`, `DELETE` y `TRUNCATE`) · migraciones `supabase/migrations/*_auditoria_tabla.sql`, `*_auditar.sql` y `*_auditoria_inmutable.sql`
 - **Funciones**: `cierre-diario` (ancla en el reporte diario)
-- **App**: `lib/features/admin/bitacora/`
-- **Pruebas**: `supabase/tests/database/05_auditoria_tabla_y_lectura_test.sql`, `06_auditoria_auditar_test.sql` (encadenado y concurrencia con una segunda conexión de `dblink`), `07_auditoria_inmutable_test.sql` · E2E-14
+- **App**: `lib/features/admin/bitacora/` (`/admin/bitacora`, consulta por filtros y exportación CSV) · `lib/core/exportacion/` (descarga web y selector de archivos en Android)
+- **Pruebas**: `supabase/tests/database/05_auditoria_tabla_y_lectura_test.sql`, `06_auditoria_auditar_test.sql` (encadenado y concurrencia con una segunda conexión de `dblink`), `07_auditoria_inmutable_test.sql` · `test/features/admin/bitacora/` · `supabase/tests/e2e/14_bitacora_test.ts` (E2E-14)
 - **Depende de**: M-02 (`private.rol_actual`, tipo `rol_app`), M-19 (`private.ahora`) · **Lo usan**: casi todos
 
 ### M-18 · Salud, alertas e integraciones
