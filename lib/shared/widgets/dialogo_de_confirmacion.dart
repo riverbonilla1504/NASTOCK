@@ -92,19 +92,24 @@ Future<ResultadoDeConfirmacion> confirmarAccion(
   required Future<void> Function() alConfirmar,
   String? detalle,
   String rotuloDelSimbolo = 'Símbolo',
+  Widget Function(Widget Function(bool) construir)? construirConVigencia,
 }) async {
   final resultado = await showDialog<ResultadoDeConfirmacion>(
     context: context,
     barrierDismissible: false,
-    builder: (_) => DialogoDeConfirmacion(
-      titulo: titulo,
-      simbolo: simbolo,
-      monto: monto,
-      textoConfirmar: textoConfirmar,
-      alConfirmar: alConfirmar,
-      detalle: detalle,
-      rotuloDelSimbolo: rotuloDelSimbolo,
-    ),
+    builder: (_) {
+      Widget construir(bool habilitada) => DialogoDeConfirmacion(
+        habilitada: habilitada,
+        titulo: titulo,
+        simbolo: simbolo,
+        monto: monto,
+        textoConfirmar: textoConfirmar,
+        alConfirmar: alConfirmar,
+        detalle: detalle,
+        rotuloDelSimbolo: rotuloDelSimbolo,
+      );
+      return construirConVigencia?.call(construir) ?? construir(true);
+    },
   );
   return resultado ?? ResultadoDeConfirmacion.cancelado;
 }
@@ -118,11 +123,13 @@ class DialogoDeConfirmacion extends StatefulWidget {
     required this.textoConfirmar,
     required this.alConfirmar,
     this.detalle,
+    this.habilitada = true,
     this.rotuloDelSimbolo = 'Símbolo',
     super.key,
   });
 
   final String titulo;
+  final bool habilitada;
 
   /// Símbolo de la operación (p. ej. `QLD`), repetido para que se lea otra vez.
   final String simbolo;
@@ -218,7 +225,9 @@ class _EstadoDelDialogo extends State<DialogoDeConfirmacion> {
           BotonPrimario(
             texto: widget.textoConfirmar,
             enviando: enviando,
-            alPresionar: () => _controlador.confirmar(widget.alConfirmar),
+            alPresionar: widget.habilitada
+                ? () => _controlador.confirmar(widget.alConfirmar)
+                : null,
           ),
         ],
       ),

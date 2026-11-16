@@ -5,9 +5,11 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../core/configuracion/entorno.dart';
 import '../features/mercado/presentation/pagina_mercado.dart';
+import 'rutas.dart';
 
 class PaginaInicio extends ConsumerWidget {
   const PaginaInicio({super.key});
@@ -22,7 +24,15 @@ class PaginaInicio extends ConsumerWidget {
     final entorno = ref.watch(entornoProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('RiTech Inversiones')),
+      appBar: AppBar(
+        title: const Text('RiTech Inversiones'),
+        actions: [
+          TextButton(
+            onPressed: () => context.push(Rutas.fondo),
+            child: const Text('Fondo'),
+          ),
+        ],
+      ),
       body: PaginaMercado(
         pie: [
           if (!entorno.supabaseConfigurado) ...[

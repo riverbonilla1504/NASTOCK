@@ -11,6 +11,7 @@ abstract final class Rutas {
 
   /// Mercado, la pantalla de inicio de los tres roles (HU-030).
   static const String inicio = '/inicio';
+  static const String fondo = '/inicio/fondo';
   static const String oportunidades = '/oportunidades';
   static const String cupo = '/cupo';
   static const String alertas = '/alertas';
@@ -30,6 +31,7 @@ abstract final class Rutas {
 
   /// Parámetros e interruptores (HU-101).
   static const String adminParametros = '/admin/parametros';
+  static const String adminBitacora = '/admin/bitacora';
 
   /// Bandeja de riesgo: no existe en el MVP corto, pero su regla de acceso sí
   /// (Analista permitido, Administrador en solo lectura).

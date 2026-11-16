@@ -5,7 +5,7 @@
 -- Todo corre dentro de una transacción que se deshace.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(56);
+select plan(57);
 
 -- Cuentas de prueba: 0001 usuario · 0004 suspendido.
 set local session_replication_role = replica;
@@ -93,6 +93,12 @@ select * from private.publicar_cotizaciones($json$[
 select is((select guardadas from lote2), 0, 'un dato más viejo no se guarda');
 select is((select precio from public.cotizaciones where simbolo = 'AAPL'), 101.5000::numeric, 'el precio guardado no retrocede');
 select is((select count(*)::int from realtime.messages where event = 'cotizaciones'), 1, 'un lote sin nada guardado no publica evento');
+
+select is((select (e ->> 'm')::timestamptz
+           from realtime.messages m, jsonb_array_elements(m.payload -> 'datos') e
+           where m.event = 'cotizaciones' and e ->> 's' = 'AAPL'),
+          '2031-03-04T14:59:50Z'::timestamptz,
+          'HU-032: el evento conserva la hora original del proveedor');
 
 -- Un dato del mismo momento (el mercado no operó) sí refresca la recepción ------------------------
 create temp table lote3 as

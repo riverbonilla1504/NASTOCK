@@ -7,6 +7,7 @@ import { assert, assertEquals } from "@std/assert";
 import { despertarFuncion, esperarFunciones } from "./utilidades/funciones.ts";
 import {
   conBd,
+  fijarRelojTrasCierre,
   pausarTrabajos,
   restablecer,
   type Sql,
@@ -51,6 +52,7 @@ Deno.test("E2E-07: datos incompletos excluyen la candidata y, sin QQQ, el ciclo 
     const [{ antes }] = await sql`select ia_activa as antes from public.fondos`;
     let quitadas: Barra[] = [];
     try {
+      await fijarRelojTrasCierre(sql);
       assertEquals((await despertarFuncion("calendario-mercado")).estado, 200);
       await sql`update public.fondos set ia_activa = true`;
 
@@ -64,7 +66,11 @@ Deno.test("E2E-07: datos incompletos excluyen la candidata y, sin QQQ, el ciclo 
 
       const ciclo = await despertarFuncion("agente");
       assertEquals(ciclo.estado, 200);
-      assertEquals((ciclo.cuerpo as { estado: string }).estado, "completado");
+      assertEquals(
+        (ciclo.cuerpo as { estado: string }).estado,
+        "completado",
+        JSON.stringify(ciclo.cuerpo),
+      );
       const [fila] = await sql`
         select e.resultado, e.calidad_datos
           from public.evaluaciones_candidatos e
@@ -86,10 +92,10 @@ Deno.test("E2E-07: datos incompletos excluyen la candidata y, sin QQQ, el ciclo 
       assertEquals(cuerpo.estado, "omitido");
       assertEquals(cuerpo.motivo, "qqq_sin_datos");
     } finally {
-      await reanudar();
       await devolverBarras(sql, quitadas);
       await sql`update public.fondos set ia_activa = ${antes}`;
       await restablecer(sql);
+      await reanudar();
     }
   });
 });

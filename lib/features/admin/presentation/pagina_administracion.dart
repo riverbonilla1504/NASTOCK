@@ -1,7 +1,7 @@
 /// Pantalla de Administración (`/admin`, docs/03 §3): la lista de secciones del
 /// Administrador y, mientras el fondo no tiene capital, la guía de primeros
-/// pasos (CB-80). Solo trae las entradas del MVP corto (docs/14 §4.1): Usuarios
-/// e invitaciones, Capital, Cupos y Parámetros e interruptores. Una entrada
+/// pasos (CB-80). Incluye Usuarios e invitaciones, Capital, Cupos,
+/// Parámetros e interruptores y Bitácora. Una entrada
 /// está deshabilitada hasta que su historia registra la subruta en
 /// `destinos.dart`.
 ///
@@ -78,6 +78,13 @@ const List<_Seccion> _secciones = [
     titulo: 'Parámetros e interruptores',
     descripcion: 'Ajusta las reglas del fondo y enciende la IA y el trading.',
     ruta: Rutas.adminParametros,
+  ),
+  (
+    clave: 'bitacora',
+    icono: Icons.history,
+    titulo: 'Bitácora',
+    descripcion: 'Consulta y exporta el registro de acciones sensibles.',
+    ruta: Rutas.adminBitacora,
   ),
 ];
 

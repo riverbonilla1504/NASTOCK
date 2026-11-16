@@ -123,12 +123,17 @@ cambian demasiado seguido para pedirlos uno por uno:
 {
   "momento": "2026-09-28T14:31:15Z",
   "datos": [
-    { "s": "QQQ",  "p": 478.62, "b": 478.60, "a": 478.65, "vd":  0.91 },
-    { "s": "QLD",  "p": 110.25, "b": 110.20, "a": 110.30, "vd":  1.83 },
-    { "s": "TQQQ", "p":  84.05, "b":  84.00, "a":  84.10, "vd":  2.71 }
+    { "s": "QQQ",  "p": 478.62, "b": 478.60, "a": 478.65, "vd":  0.91, "m": "2026-09-28T14:31:14Z" },
+    { "s": "QLD",  "p": 110.25, "b": 110.20, "a": 110.30, "vd":  1.83, "m": "2026-09-28T14:31:13Z" },
+    { "s": "TQQQ", "p":  84.05, "b":  84.00, "a":  84.10, "vd":  2.71, "m": "2026-09-28T14:31:12Z" }
   ]
 }
 ```
+
+`momento` es la hora de recepción del lote; `m` es la hora del dato del
+proveedor para ese símbolo. La vigencia (RR-11) usa `m`, igual que
+`cotizaciones.momento`, nunca la recepción. Así, recibir otra vez el mismo
+precio congelado no reinicia su antigüedad (HU-032, CB-52).
 
 Cómo los consume la app: patrón "foto + eventos" de
 [08 §9.2](08-estados-y-flujos.md#92-patrón-foto--eventos).

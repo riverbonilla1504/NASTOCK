@@ -20,6 +20,7 @@ import '../domain/mercado.dart';
 import 'encabezado_del_mercado.dart';
 import 'grafica_de_mercado.dart';
 import 'mercado_provider.dart';
+import 'frescura_provider.dart';
 
 /// Agrega el punto en vivo al final de la serie: así la línea sigue al precio
 /// que llega por el canal sin volver a pedir las barras.
@@ -307,6 +308,7 @@ class _FilaDeLista extends ConsumerWidget {
             precio: cotizacion.precio,
             variacion: _variacionDe(cotizacion),
             antiguedad: _antiguedad(ref, cotizacion),
+            desactualizado: !ref.watch(cotizacionVigenteProvider(fila.simbolo)),
             alTocar: elegir,
           )
         : _FilaSinCotizacion(fila: fila, cierre: cierre, alTocar: elegir);
@@ -327,7 +329,8 @@ class _FilaDeLista extends ConsumerWidget {
   }
 
   static Duration _antiguedad(WidgetRef ref, Cotizacion c) {
-    final d = ref.read(relojProvider).ahora().difference(c.recibidoEn);
+    ref.watch(segundoProvider);
+    final d = ref.watch(relojProvider).ahora().difference(c.momento);
     return d.isNegative ? Duration.zero : d;
   }
 }
@@ -472,9 +475,18 @@ class _TarjetaDeGrafica extends ConsumerWidget {
               alignment: Alignment.centerLeft,
               child: FittedBox(
                 fit: BoxFit.scaleDown,
-                child: CifraUsd(precio, tamano: TamanoCifra.grande),
+                child: CifraUsd(
+                  precio,
+                  tamano: TamanoCifra.grande,
+                  desactualizada:
+                      cotizacion != null &&
+                      !ref.watch(cotizacionVigenteProvider(simbolo)),
+                ),
               ),
             ),
+            if (cotizacion != null &&
+                !ref.watch(cotizacionVigenteProvider(simbolo)))
+              const Text('Dato desactualizado'),
             if (variacion != null) ...[
               const SizedBox(height: Espacio.x1),
               Align(

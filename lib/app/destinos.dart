@@ -16,12 +16,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/perfil/perfil.dart';
+import '../features/admin/bitacora/presentation/pagina_bitacora.dart';
 import '../features/admin/presentation/pagina_administracion.dart';
 import '../features/admin/cupos/presentation/pagina_cupos.dart';
 import '../features/admin/capital/presentation/pagina_capital.dart';
 import '../features/admin/parametros/presentation/pagina_parametros.dart';
 import '../features/admin/usuarios/presentation/pagina_invitaciones.dart';
 import '../features/cupo/presentation/pagina_mi_cupo.dart';
+import '../features/fondo/presentation/pagina_fondo.dart';
 import '../features/ordenes/presentation/pagina_mis_ordenes.dart';
 import '../features/oportunidades/presentation/pagina_oportunidades.dart';
 import 'pagina_inicio.dart';
@@ -67,6 +69,7 @@ final List<Destino> destinosDelMvp = [
     icono: Icons.show_chart,
     roles: _todos,
     pantalla: (_) => const PaginaInicio(),
+    subrutas: [GoRoute(path: 'fondo', builder: (_, _) => const PaginaFondo())],
   ),
   Destino(
     ruta: Rutas.oportunidades,
@@ -111,6 +114,10 @@ final List<Destino> destinosDelMvp = [
       GoRoute(
         path: 'parametros',
         builder: (context, state) => const PaginaParametros(),
+      ),
+      GoRoute(
+        path: 'bitacora',
+        builder: (context, state) => const PaginaBitacora(),
       ),
     ],
   ),
