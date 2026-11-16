@@ -22,6 +22,7 @@ import '../features/admin/capital/presentation/pagina_capital.dart';
 import '../features/admin/parametros/presentation/pagina_parametros.dart';
 import '../features/admin/usuarios/presentation/pagina_invitaciones.dart';
 import '../features/cupo/presentation/pagina_mi_cupo.dart';
+import '../features/fondo/presentation/pagina_fondo.dart';
 import '../features/ordenes/presentation/pagina_mis_ordenes.dart';
 import '../features/oportunidades/presentation/pagina_oportunidades.dart';
 import 'pagina_inicio.dart';
@@ -67,6 +68,7 @@ final List<Destino> destinosDelMvp = [
     icono: Icons.show_chart,
     roles: _todos,
     pantalla: (_) => const PaginaInicio(),
+    subrutas: [GoRoute(path: 'fondo', builder: (_, _) => const PaginaFondo())],
   ),
   Destino(
     ruta: Rutas.oportunidades,

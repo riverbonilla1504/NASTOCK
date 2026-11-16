@@ -69,10 +69,9 @@ class CotizacionesNotifier extends AsyncNotifier<Map<String, Cotizacion>> {
     if (actuales == null) return;
     final datos = evento.carga['datos'];
     if (datos is! List) return;
-    final momento =
+    final recibido =
         DateTime.tryParse(evento.carga['momento']?.toString() ?? '')?.toUtc() ??
         ref.read(relojProvider).ahora();
-    final recibido = ref.read(relojProvider).ahora();
     final nuevas = Map<String, Cotizacion>.of(actuales);
     for (final dato in datos) {
       if (dato is! Map) continue;
@@ -81,6 +80,12 @@ class CotizacionesNotifier extends AsyncNotifier<Map<String, Cotizacion>> {
       if (simbolo == null || precio is! num) continue;
       final vd = dato['vd'];
       final previa = nuevas[simbolo];
+      // Un lote reciente puede contener un precio viejo del proveedor.
+      final momento =
+          DateTime.tryParse(dato['m']?.toString() ?? '')?.toUtc() ??
+          previa?.momento ??
+          DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+      if (previa != null && momento.isBefore(previa.momento)) continue;
       nuevas[simbolo] = previa != null
           ? previa.conEvento(
               precio: precio.toDouble(),

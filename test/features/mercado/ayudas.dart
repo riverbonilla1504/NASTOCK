@@ -12,6 +12,7 @@ import 'package:inversiones/core/realtime/tiempo_real_provider.dart';
 import 'package:inversiones/features/mercado/data/mercado_repositorio.dart';
 import 'package:inversiones/features/mercado/domain/mercado.dart';
 import 'package:inversiones/features/mercado/presentation/mercado_provider.dart';
+import 'package:inversiones/features/mercado/presentation/frescura_provider.dart';
 import 'package:inversiones/features/mercado/presentation/pagina_mercado.dart';
 
 import '../../core/realtime/falsos.dart';
@@ -142,6 +143,9 @@ List<Override> overridesDeMercado(
   DateTime Function()? ahoraLocal,
 }) => [
   mercadoRepositorioProvider.overrideWithValue(repo),
+  antiguedadMaximaProvider.overrideWith(
+    (ref) async => const Duration(seconds: 60),
+  ),
   fuenteDeTiempoRealProvider.overrideWithValue(fuente),
   gestorDeTiempoRealProvider.overrideWith((ref) {
     final gestor = GestorDeTiempoReal(

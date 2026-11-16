@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/tema.dart';
+import '../../../core/errores/traduccion_de_errores.dart';
+import '../../mercado/presentation/frescura_provider.dart';
 import '../../../core/perfil/perfil.dart';
 import '../../../core/perfil/perfil_provider.dart';
 import '../../../shared/widgets/avisos.dart';
@@ -55,7 +57,9 @@ class BotonesDeOrden extends ConsumerWidget {
         Expanded(
           child: BotonPrimario(
             texto: 'Comprar',
-            alPresionar: () => abrir(LadoDeOrden.compra),
+            alPresionar: ref.watch(cotizacionVigenteProvider(simbolo))
+                ? () => abrir(LadoDeOrden.compra)
+                : null,
           ),
         ),
         const SizedBox(width: Espacio.x3),
@@ -112,6 +116,9 @@ class _EstadoDelFormulario extends ConsumerState<FormularioDeOrden> {
       v == v.roundToDouble() ? v.toInt().toString() : v.toString();
 
   Future<void> _revisar() async {
+    if (_esCompra && !ref.read(cotizacionVigenteProvider(widget.simbolo))) {
+      return;
+    }
     final cantidad = cantidadEntera(_cantidad.text);
     final stop = _esCompra ? porcentaje(_stop.text) : null;
     final objetivo = _esCompra ? porcentaje(_objetivo.text) : null;
@@ -142,16 +149,26 @@ class _EstadoDelFormulario extends ConsumerState<FormularioDeOrden> {
                 '${_texto(objetivo!)} %. El monto es aproximado: el precio '
                 'límite se fija al enviarla.'
           : 'El monto es aproximado: el precio límite se fija al enviarla.',
-      alConfirmar: () => ref
-          .read(ordenesRepositorioProvider)
-          .crearOrdenManual(
-            id: _id,
-            simbolo: widget.simbolo,
-            lado: widget.lado,
-            cantidad: cantidad,
-            stopPct: stop,
-            objetivoPct: objetivo,
-          ),
+      construirConVigencia: (construir) => Consumer(
+        builder: (context, ref, child) => construir(
+          !_esCompra || ref.watch(cotizacionVigenteProvider(widget.simbolo)),
+        ),
+      ),
+      alConfirmar: () async {
+        if (_esCompra && !ref.read(cotizacionVigenteProvider(widget.simbolo))) {
+          throw const ErrorDeNegocio('DATO_DESACTUALIZADO');
+        }
+        await ref
+            .read(ordenesRepositorioProvider)
+            .crearOrdenManual(
+              id: _id,
+              simbolo: widget.simbolo,
+              lado: widget.lado,
+              cantidad: cantidad,
+              stopPct: stop,
+              objetivoPct: objetivo,
+            );
+      },
     );
     if (resultado == ResultadoDeConfirmacion.hecho && mounted) {
       Navigator.of(context).pop(true);
@@ -228,7 +245,17 @@ class _EstadoDelFormulario extends ConsumerState<FormularioDeOrden> {
               ),
             ],
             const SizedBox(height: Espacio.x4),
-            BotonPrimario(texto: 'Revisar orden', alPresionar: _revisar),
+            if (_esCompra &&
+                !ref.watch(cotizacionVigenteProvider(widget.simbolo)))
+              const Text('Dato desactualizado'),
+            BotonPrimario(
+              texto: 'Revisar orden',
+              alPresionar:
+                  !_esCompra ||
+                      ref.watch(cotizacionVigenteProvider(widget.simbolo))
+                  ? _revisar
+                  : null,
+            ),
           ],
         ),
       ),

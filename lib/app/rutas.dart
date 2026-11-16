@@ -11,6 +11,7 @@ abstract final class Rutas {
 
   /// Mercado, la pantalla de inicio de los tres roles (HU-030).
   static const String inicio = '/inicio';
+  static const String fondo = '/inicio/fondo';
   static const String oportunidades = '/oportunidades';
   static const String cupo = '/cupo';
   static const String alertas = '/alertas';
