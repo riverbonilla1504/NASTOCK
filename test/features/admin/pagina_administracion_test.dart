@@ -44,7 +44,9 @@ Future<void> _montar(WidgetTester tester, _FondoFalso fondo) async {
 }
 
 void main() {
-  testWidgets('muestra solo las entradas del MVP corto (CA-1)', (tester) async {
+  testWidgets('muestra las secciones de Administración y Bitácora', (
+    tester,
+  ) async {
     await _montar(tester, _FondoFalso(() async => true));
 
     for (final titulo in [
@@ -52,6 +54,7 @@ void main() {
       'Capital',
       'Cupos',
       'Parámetros e interruptores',
+      'Bitácora',
     ]) {
       expect(find.text(titulo), findsOneWidget, reason: titulo);
     }
@@ -59,7 +62,6 @@ void main() {
       'Rebalanceos',
       'Lista blanca',
       'Salud e integraciones',
-      'Bitácora',
       'Prompts',
     ]) {
       expect(find.text(fueraDelMvp), findsNothing, reason: fueraDelMvp);
