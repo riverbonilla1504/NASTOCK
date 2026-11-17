@@ -92,9 +92,6 @@ void main() {
                 .decoration
             as BoxDecoration;
 
-    Color colorDelBorde(WidgetTester tester) =>
-        (decoracion(tester).border! as Border).bottom.color;
-
     testWidgets(
       'en reposo: título grande sobre papel, sin borde, y su contenido',
       (tester) async {
@@ -105,7 +102,7 @@ void main() {
         expect(tamanoDelTitulo(tester), tema.headlineLarge!.fontSize);
         expect(decoracion(tester).gradient, isNull);
         expect(decoracion(tester).color, ColoresTema.claro.papel);
-        expect(colorDelBorde(tester).a, 0);
+        expect(decoracion(tester).border, isNull);
         expect(
           const BarraSuperior(titulo: 'x', alturaInferior: 40).preferredSize,
           const Size.fromHeight(
@@ -116,7 +113,7 @@ void main() {
     );
 
     testWidgets(
-      'al desplazar se recoge en barra compacta con borde, y vuelve arriba',
+      'al desplazar se recoge en barra compacta sin borde, y vuelve arriba',
       (tester) async {
         await tester.pumpWidget(pantalla());
         final altoEnReposo = tester.getSize(find.byType(BarraSuperior)).height;
@@ -126,7 +123,9 @@ void main() {
 
         expect(find.text('Mercado'), findsOneWidget);
         expect(tamanoDelTitulo(tester), tema.headlineSmall!.fontSize);
-        expect(colorDelBorde(tester), ColoresTema.claro.regla);
+        // Compacta tampoco lleva línea entre el título y el contenido.
+        expect(decoracion(tester).border, isNull);
+        expect(decoracion(tester).color, ColoresTema.claro.papel);
         expect(
           tester.getSize(find.byType(BarraSuperior)).height,
           lessThan(altoEnReposo),
@@ -138,7 +137,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(tamanoDelTitulo(tester), tema.headlineLarge!.fontSize);
-        expect(colorDelBorde(tester).a, 0);
+        expect(decoracion(tester).border, isNull);
         expect(tester.getSize(find.byType(BarraSuperior)).height, altoEnReposo);
       },
     );

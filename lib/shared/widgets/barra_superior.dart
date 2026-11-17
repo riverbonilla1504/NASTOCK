@@ -4,7 +4,7 @@
 /// el mismo `papel` de la pantalla, sin borde, con los íconos arriba a la
 /// derecha y la flecha de volver a la izquierda. Cuando el contenido de la
 /// pantalla se desplaza hacia abajo, el título grande se recoge y la barra
-/// queda compacta, con el título en 20 px y el borde inferior de 1 px. Al
+/// queda compacta, con el título en 20 px y sin borde (pedido de Javier). Al
 /// volver arriba, el título grande regresa. Escucha el desplazamiento con el
 /// `ScrollNotificationObserver` del `Scaffold`, como `AppBar`.
 ///
@@ -120,12 +120,7 @@ class _BarraSuperiorState extends State<BarraSuperior> {
           // pruebas encuentran siempre uno.
           final compacto = t >= 0.5;
           return DecoratedBox(
-            decoration: BoxDecoration(
-              color: c.papel,
-              border: Border(
-                bottom: BorderSide(color: c.regla.withValues(alpha: t)),
-              ),
-            ),
+            decoration: BoxDecoration(color: c.papel),
             child: Padding(
               padding: EdgeInsets.only(top: MediaQuery.paddingOf(context).top),
               child: IconTheme(
