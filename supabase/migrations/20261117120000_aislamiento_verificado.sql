@@ -9,12 +9,19 @@
 revoke insert, update, delete, truncate, references, trigger on public.posiciones_valoradas
   from anon, authenticated;
 
--- Y para que cada tabla o vista nueva arranque sin escritura para authenticated (anon ya arranca sin
--- nada, migración del esquema private). Cada migración sigue dando solo el select que necesita.
+-- 2. La secuencia de ordenes_eventos (HU-073) también conservó los privilegios por defecto:
+-- authenticated podía usarla y avanzarla (nextval, setval). Solo la usan las funciones que insertan.
+revoke all on sequence public.ordenes_eventos_id_seq from anon, authenticated;
+
+-- Y para que cada tabla, vista o secuencia nueva arranque sin escritura para authenticated (anon ya
+-- arranca sin nada, migración del esquema private). Cada migración sigue dando solo el select que
+-- necesita.
 alter default privileges for role postgres in schema public
   revoke insert, update, delete, truncate, references, trigger on tables from authenticated;
+alter default privileges for role postgres in schema public
+  revoke all on sequences from authenticated;
 
--- 2. El asesor de seguridad de Supabase (supabase db advisors) marca extension_in_public: pg_net se
+-- 3. El asesor de seguridad de Supabase (supabase db advisors) marca extension_in_public: pg_net se
 -- creó sin esquema y quedó registrada en public, aunque sus objetos viven en el esquema net. No es
 -- reubicable (alter extension ... set schema falla), así que se vuelve a crear en extensions, como
 -- las demás. Nada depende de ella con una dependencia fija: private.despertar_funcion la llama desde
