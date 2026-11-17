@@ -176,8 +176,8 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 02 §13 · 03 §3
 - **BD**: `patrimonio_diario`; RPC `mi_cupo` (lista), `resumen_fondo` (agregados para cuentas activas); `private.tomar_foto_patrimonio`
 - **Funciones**: `cierre-diario`
-- **App**: `lib/features/cupo/`, `lib/features/fondo/` (resumen en `/inicio/fondo`), `lib/features/reportes/`
-- **Pruebas**: pruebas de exportación y del motor ×2 (copiadas de la v2) · E2E-04
+- **App**: `lib/features/cupo/`, `lib/features/fondo/` (resumen en `/inicio/fondo`), `lib/features/reportes/` (`data/exportador_de_reportes.dart`: `ExportadorDeReportes.csv` con columnas genéricas y formato de la app, y `guardarReporte`, que guarda con `lib/core/exportacion/`; copia adaptada del `report_exporter.dart` de la v2, HU-117)
+- **Pruebas**: `test/features/reportes/` (exportación copiada de la v2; guardado en Android con el canal simulado y en la web con `@TestOn('browser')`) · prueba del motor ×2 (copiada de la v2) · E2E-04
 - **Depende de**: M-03, M-04, M-11 · **Lo usan**: —
 
 ### M-16 · Administración
@@ -194,7 +194,7 @@ mueve o renombra algo, actualiza este mapa en el mismo PR.
 - **Docs**: 11 §4
 - **BD**: `auditoria` con su política `auditoria_lectura` (solo el Administrador; ningún rol de la API escribe, tampoco `service_role`) · `private.hash_auditoria` (fórmula compartida con `private.verificar_cadena_auditoria`, que devuelve el primer id inválido), `private.auditar` (único camino de escritura: toma el bloqueo y encadena el hash; el rol del actor lo lee de `perfiles`) · trigger `auditoria_inmutable` con `private.rechazar_cambio_auditoria` (rechaza `UPDATE`, `DELETE` y `TRUNCATE`) · migraciones `supabase/migrations/*_auditoria_tabla.sql`, `*_auditar.sql` y `*_auditoria_inmutable.sql`
 - **Funciones**: `cierre-diario` (ancla en el reporte diario)
-- **App**: `lib/features/admin/bitacora/` (`/admin/bitacora`, consulta por filtros y exportación CSV) · `lib/core/exportacion/` (descarga web y selector de archivos en Android)
+- **App**: `lib/features/admin/bitacora/` (`/admin/bitacora`, consulta por filtros y exportación CSV) · `lib/core/exportacion/` (descarga web y selector de archivos en Android; `celda_csv.dart`, la celda protegida que comparten la bitácora y los reportes)
 - **Pruebas**: `supabase/tests/database/05_auditoria_tabla_y_lectura_test.sql`, `06_auditoria_auditar_test.sql` (encadenado y concurrencia con una segunda conexión de `dblink`), `07_auditoria_inmutable_test.sql` · `test/features/admin/bitacora/` · `supabase/tests/e2e/14_bitacora_test.ts` (E2E-14)
 - **Depende de**: M-02 (`private.rol_actual`, tipo `rol_app`), M-19 (`private.ahora`) · **Lo usan**: casi todos
 

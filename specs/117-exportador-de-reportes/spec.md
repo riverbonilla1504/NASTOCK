@@ -4,11 +4,11 @@
 
 **Created**: 2026-10-12
 
-**Status**: Draft
+**Status**: En construcción
 
 **Input**: Historia de usuario: "HU-117 · Exportador de reportes de la v2 con sus pruebas", en [`backlog/E-13-transicion-desde-la-v2/HU-117-exportador-de-reportes-de-la-v2-con-sus-pruebas.md`](../../backlog/E-13-transicion-desde-la-v2/HU-117-exportador-de-reportes-de-la-v2-con-sus-pruebas.md)
 
-> **Fuera del MVP corto** (D-58, [`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)): esta historia no se construye ahora. La spec se conserva para la fase siguiente.
+> **Se adelanta a la entrega** (cambio 3.31 de [`docs/13` §4](../../docs/13-decisiones-pendientes-riesgos.md#4-historial-de-la-especificación) y D-73): D-58 la dejaba para la fase siguiente ([`docs/14` §4.1](../../docs/14-mapa-para-backlog.md#41-mvp-corto-lo-que-se-entrega-primero-d-58)); se construye ahora.
 
 ## Escenarios de usuario y pruebas (User Scenarios & Testing) *(obligatorio)*
 

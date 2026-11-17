@@ -145,6 +145,13 @@ jobs:
       - run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze
       - run: flutter test
+      # Pruebas @TestOn('browser'): la VM las salta y corren en Chrome (HU-117).
+      - name: flutter test --platform chrome
+        run: |
+          mapfile -t PRUEBAS_WEB < <(grep -rlE "^@TestOn\('browser'\)" test || true)
+          if (( ${#PRUEBAS_WEB[@]} )); then
+            flutter test --platform chrome "${PRUEBAS_WEB[@]}"
+          fi
 
   backend:
     name: Base de datos y funciones
