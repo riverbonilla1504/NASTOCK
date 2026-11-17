@@ -77,6 +77,12 @@ if [[ -f pubspec.yaml ]]; then
   dart format --output=none --set-exit-if-changed lib test
   flutter analyze
   flutter test
+  # Las pruebas marcadas @TestOn('browser') (p. ej. la descarga web de HU-117)
+  # se saltan en la VM: corren aparte en Chrome.
+  mapfile -t PRUEBAS_WEB < <(grep -rlE "^@TestOn\('browser'\)" test || true)
+  if (( ${#PRUEBAS_WEB[@]} )); then
+    flutter test --platform chrome "${PRUEBAS_WEB[@]}"
+  fi
   ok "app"
 fi
 
