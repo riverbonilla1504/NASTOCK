@@ -103,9 +103,10 @@ operación viola una regla de riesgo y ninguna sale con datos desactualizados.
 
 ## Brand Commitments
 
-- Nombre visible: **RiTech Inversiones**, de RiTech SAS. No hay logo ni
-  colores de marca previos: la identidad visual se construye en HU-116
-  (respuesta de Javier).
+- Nombre visible: **NasTock Inversiones**, de RiTech SAS (pedido de Javier
+  el 2026-11-17; antes "RiTech Inversiones"). La razón social no cambia. No
+  hay logo ni colores de marca previos: la identidad visual se construye en
+  HU-116 (respuesta de Javier).
 - Diseño visual nuevo (D-67): la interfaz de la v2 no se copia. Solo es
   referencia de contenido y antirreferencia visual; no se conservan su
   paleta, sus widgets ni la fuente Poppins (decisión de Javier).

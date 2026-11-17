@@ -53,7 +53,7 @@ class _EstadoDePaginaCuentaSuspendida
     final c = context.colores;
     final textos = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: const BarraSuperior(titulo: 'RiTech Inversiones'),
+      appBar: const BarraSuperior(titulo: 'NasTock Inversiones'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(

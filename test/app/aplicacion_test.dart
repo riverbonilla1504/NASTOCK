@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inversiones/app/aplicacion.dart';
@@ -8,6 +9,7 @@ import 'package:inversiones/core/configuracion/entorno.dart';
 import 'package:inversiones/features/auth/data/ingreso_repositorio.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
 import 'package:inversiones/features/auth/presentation/sesion_provider.dart';
+import 'package:inversiones/shared/widgets/barra_superior.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show Session;
 
 import '../core/realtime/falsos.dart';
@@ -81,8 +83,20 @@ void main() {
     );
 
     expect(find.byType(PaginaInicio), findsOneWidget);
-    expect(find.text('RiTech Inversiones'), findsOneWidget);
-    // Inicio es Mercado (HU-030).
+    // Inicio es Mercado (HU-030): su barra lleva el título de la pantalla y el
+    // acceso a Fondo.
+    expect(
+      find.descendant(
+        of: find.byType(BarraSuperior),
+        matching: find.text('Mercado'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byKey(PaginaInicio.claveDelAccesoAlFondo), findsOneWidget);
+    expect(
+      tester.widget<MaterialApp>(find.byType(MaterialApp)).title,
+      'NasTock Inversiones',
+    );
     expect(find.byType(PaginaMercado), findsOneWidget);
     expect(find.byKey(PaginaInicio.claveDeAvisoSinConfiguracion), findsNothing);
   });

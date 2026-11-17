@@ -14,7 +14,7 @@ class Aplicacion extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
-      title: 'RiTech Inversiones',
+      title: 'NasTock Inversiones',
       theme: crearTema(),
       darkTheme: crearTemaOscuro(),
       themeMode: ThemeMode.system,

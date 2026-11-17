@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/configuracion/entorno.dart';
 import '../features/mercado/presentation/pagina_mercado.dart';
+import '../shared/widgets/barra_superior.dart';
 import 'rutas.dart';
 
 class PaginaInicio extends ConsumerWidget {
@@ -18,18 +19,23 @@ class PaginaInicio extends ConsumerWidget {
     'aviso-sin-configuracion',
   );
 
+  /// El acceso a Fondo, arriba a la derecha.
+  static const Key claveDelAccesoAlFondo = Key('acceso-al-fondo');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tema = Theme.of(context);
     final entorno = ref.watch(entornoProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('RiTech Inversiones'),
-        actions: [
-          TextButton(
+      appBar: BarraSuperior(
+        titulo: 'Mercado',
+        acciones: [
+          IconButton(
+            key: claveDelAccesoAlFondo,
+            tooltip: 'Fondo',
+            icon: const Icon(Icons.account_balance_outlined),
             onPressed: () => context.push(Rutas.fondo),
-            child: const Text('Fondo'),
           ),
         ],
       ),

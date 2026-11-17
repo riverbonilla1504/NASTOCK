@@ -60,42 +60,120 @@ void main() {
   });
 
   group('barra superior', () {
+    Widget pantalla({Widget? cuerpo}) => MaterialApp(
+      theme: crearTema(),
+      home: Scaffold(
+        appBar: const BarraSuperior(
+          titulo: 'Mercado',
+          alturaInferior: 40,
+          inferior: Text('Cierra en 4 h 14 min'),
+        ),
+        body:
+            cuerpo ??
+            ListView(children: [for (var i = 0; i < 40; i++) Text('Fila $i')]),
+      ),
+    );
+
+    final tema = crearTema().textTheme;
+
+    double tamanoDelTitulo(WidgetTester tester) =>
+        tester.widget<Text>(find.text('Mercado')).style!.fontSize!;
+
+    BoxDecoration decoracion(WidgetTester tester) =>
+        tester
+                .widget<DecoratedBox>(
+                  find
+                      .descendant(
+                        of: find.byType(BarraSuperior),
+                        matching: find.byType(DecoratedBox),
+                      )
+                      .first,
+                )
+                .decoration
+            as BoxDecoration;
+
+    Color colorDelBorde(WidgetTester tester) =>
+        (decoracion(tester).border! as Border).bottom.color;
+
     testWidgets(
-      'lleva el título, su contenido y es blanca con borde inferior fino',
+      'en reposo: título grande sobre papel, sin borde, y su contenido',
       (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            theme: crearTema(),
-            home: const Scaffold(
-              appBar: BarraSuperior(
-                titulo: 'Mercado',
-                alturaInferior: 40,
-                inferior: Text('Cierra en 4 h 14 min'),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(pantalla());
 
         expect(find.text('Mercado'), findsOneWidget);
         expect(find.text('Cierra en 4 h 14 min'), findsOneWidget);
-        final caja = tester.widget<DecoratedBox>(
-          find
-              .descendant(
-                of: find.byType(BarraSuperior),
-                matching: find.byType(DecoratedBox),
-              )
-              .first,
-        );
-        final decoracion = caja.decoration as BoxDecoration;
-        expect(decoracion.gradient, isNull);
-        expect(decoracion.color, ColoresTema.claro.hoja);
-        expect(decoracion.border, isNotNull);
+        expect(tamanoDelTitulo(tester), tema.headlineLarge!.fontSize);
+        expect(decoracion(tester).gradient, isNull);
+        expect(decoracion(tester).color, ColoresTema.claro.papel);
+        expect(colorDelBorde(tester).a, 0);
         expect(
           const BarraSuperior(titulo: 'x', alturaInferior: 40).preferredSize,
-          const Size.fromHeight(kToolbarHeight + 40),
+          const Size.fromHeight(
+            kToolbarHeight + altoMaximoDelTituloGrande + 40,
+          ),
         );
       },
     );
+
+    testWidgets(
+      'al desplazar se recoge en barra compacta con borde, y vuelve arriba',
+      (tester) async {
+        await tester.pumpWidget(pantalla());
+        final altoEnReposo = tester.getSize(find.byType(BarraSuperior)).height;
+
+        await tester.drag(find.byType(ListView), const Offset(0, -200));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Mercado'), findsOneWidget);
+        expect(tamanoDelTitulo(tester), tema.headlineSmall!.fontSize);
+        expect(colorDelBorde(tester), ColoresTema.claro.regla);
+        expect(
+          tester.getSize(find.byType(BarraSuperior)).height,
+          lessThan(altoEnReposo),
+        );
+        // La franja de abajo sigue a la vista.
+        expect(find.text('Cierra en 4 h 14 min'), findsOneWidget);
+
+        await tester.drag(find.byType(ListView), const Offset(0, 2000));
+        await tester.pumpAndSettle();
+
+        expect(tamanoDelTitulo(tester), tema.headlineLarge!.fontSize);
+        expect(colorDelBorde(tester).a, 0);
+        expect(tester.getSize(find.byType(BarraSuperior)).height, altoEnReposo);
+      },
+    );
+
+    testWidgets('con el texto al 200 % el título grande cabe sin desbordar', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = 2;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await tester.pumpWidget(pantalla());
+
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('una lista horizontal no recoge el título', (tester) async {
+      await tester.pumpWidget(
+        pantalla(
+          cuerpo: SizedBox(
+            height: 80,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (var i = 0; i < 40; i++)
+                  SizedBox(width: 80, child: Text('C$i')),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await tester.drag(find.byType(ListView), const Offset(-300, 0));
+      await tester.pumpAndSettle();
+
+      expect(tamanoDelTitulo(tester), tema.headlineLarge!.fontSize);
+    });
   });
 
   group('isla de navegación', () {

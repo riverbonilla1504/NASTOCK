@@ -3,7 +3,7 @@
          solo la agrega a las versiones debug y profile. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="RiTech Inversiones"
+        android:label="NasTock Inversiones"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

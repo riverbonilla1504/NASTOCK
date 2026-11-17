@@ -15,6 +15,7 @@ import '../../../app/tema.dart';
 import '../../../core/configuracion/entorno.dart';
 import '../../../shared/widgets/avisos.dart';
 import '../../../shared/widgets/barra_superior.dart';
+import '../../../shared/widgets/boton_de_google.dart';
 import '../../../shared/widgets/botones.dart';
 import '../../../shared/widgets/campo.dart';
 import '../../../shared/widgets/tarjeta.dart';
@@ -88,7 +89,7 @@ class _EstadoDePaginaDeIngreso extends ConsumerState<PaginaDeIngreso> {
     final puedeIngresar = entorno.supabaseConfigurado && !faltaGoogle;
 
     return Scaffold(
-      appBar: const BarraSuperior(titulo: 'RiTech Inversiones'),
+      appBar: const BarraSuperior(titulo: 'NasTock Inversiones'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(
@@ -141,7 +142,7 @@ class _EstadoDePaginaDeIngreso extends ConsumerState<PaginaDeIngreso> {
                           ),
                         ],
                         const SizedBox(height: Espacio.x5),
-                        BotonPrimario(
+                        BotonDeGoogle(
                           key: PaginaDeIngreso.claveDelBotonDeGoogle,
                           texto: 'Entrar con Google',
                           enviando: estado.ingresando && !_viaCorreo,

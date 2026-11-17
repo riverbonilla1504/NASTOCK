@@ -9,6 +9,7 @@ import 'package:inversiones/core/errores/fallo_de_ingreso.dart';
 import 'package:inversiones/features/auth/data/ingreso_repositorio.dart';
 import 'package:inversiones/features/auth/domain/resultado_de_ingreso.dart';
 import 'package:inversiones/features/auth/presentation/pagina_de_ingreso.dart';
+import 'package:inversiones/shared/widgets/boton_de_google.dart';
 import 'package:inversiones/shared/widgets/botones.dart';
 
 import '../falsos.dart';
@@ -51,9 +52,12 @@ Future<void> _abrir(
 
 Finder get _botonDeGoogle => find.byKey(PaginaDeIngreso.claveDelBotonDeGoogle);
 
-FilledButton _filledDe(WidgetTester tester, Finder boton) =>
-    tester.widget<FilledButton>(
-      find.descendant(of: boton, matching: find.byType(FilledButton)),
+ButtonStyleButton _filledDe(WidgetTester tester, Finder boton) =>
+    tester.widget<ButtonStyleButton>(
+      find.descendant(
+        of: boton,
+        matching: find.byWidgetPredicate((w) => w is ButtonStyleButton),
+      ),
     );
 
 void main() {
@@ -64,7 +68,7 @@ void main() {
   testWidgets('inactivo: título, ayuda y el botón de Google', (tester) async {
     await _abrir(tester, repo);
 
-    expect(find.text('RiTech Inversiones'), findsOneWidget);
+    expect(find.text('NasTock Inversiones'), findsOneWidget);
     expect(find.text('Entra con tu cuenta de Google'), findsOneWidget);
     expect(
       find.textContaining('Solo pueden entrar las personas'),
@@ -79,6 +83,18 @@ void main() {
     expect(_filledDe(tester, _botonDeGoogle).onPressed, isNotNull);
   });
 
+  testWidgets('el botón de Google lleva la G de Google (pautas de marca)', (
+    tester,
+  ) async {
+    await _abrir(tester, repo);
+
+    expect(tester.widget(_botonDeGoogle), isA<BotonDeGoogle>());
+    expect(
+      find.descendant(of: _botonDeGoogle, matching: find.byType(LogoDeGoogle)),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('ningún texto habla de cuenta corporativa ni de RiTech', (
     tester,
   ) async {
@@ -87,7 +103,7 @@ void main() {
     final textos = tester
         .widgetList<Text>(find.byType(Text))
         .map((t) => t.data ?? '')
-        .where((t) => t != 'RiTech Inversiones')
+        .where((t) => t != 'NasTock Inversiones')
         .join(' ')
         .toLowerCase();
     expect(textos, isNot(contains('corporativ')));

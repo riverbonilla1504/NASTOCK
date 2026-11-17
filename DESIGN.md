@@ -1,5 +1,5 @@
 ---
-name: RiTech Inversiones
+name: NasTock Inversiones
 description: Panel financiero limpio en grises con un único acento morado; cifras en monoespaciada y una gráfica de línea fina como protagonista.
 colors:
   tinta: "#18181B"
@@ -183,7 +183,7 @@ components:
     rounded: "{rounded.hoja}"
 ---
 
-# Design System: RiTech Inversiones
+# Design System: NasTock Inversiones
 
 ## Overview
 
@@ -221,7 +221,7 @@ Grises fríos casi neutros con un único acento morado; cada token tiene su par 
 
 ### Neutral
 - **Tinta** (`tinta`): texto, íconos y marcas. **Tinta suave** (`tinta-suave`): texto secundario y rótulos. **Tinta tenue** (`tinta-tenue`): deshabilitado, pistas de campo, etiquetas y cuadrícula de la gráfica.
-- **Papel** (`papel`): fondo de pantalla. **Hoja** (`hoja`): tarjetas, campos, barra superior, hojas y diálogos.
+- **Papel** (`papel`): fondo de pantalla. **Hoja** (`hoja`): tarjetas, campos, hojas y diálogos. La barra superior va sobre `papel`.
 - **Relleno** (`relleno`): botón secundario, botón deshabilitado y menú elegido (gris claro).
 - **Regla** (`regla`): borde de tarjeta, separadores y superficie de presión. **Regla fuerte** (`regla-fuerte`): borde de campos y asa de la hoja inferior.
 - **Grafito** (`grafito`) y sus textos (`sobre-grafito`, `sobre-grafito-suave`): solo el aviso temporal y las descripciones emergentes.
@@ -242,7 +242,7 @@ Grises fríos casi neutros con un único acento morado; cada token tiene su par 
 
 ### Hierarchy
 - **Cifra grande** (JetBrains Mono 600, 30 px): el valor principal de una pantalla (`CifraUsd` grande). Se achica con `FittedBox` antes que cortarse.
-- **Headline small** (Inter 600, 20 px): título de pantalla y de la barra superior. **Title medium** (Inter 600, 16 px): título de tarjeta y de lista.
+- **Headline large** (Inter 700, 28 px): título grande de la barra superior en reposo. **Headline small** (Inter 600, 20 px): título de la barra compacta y de sección. **Title medium** (Inter 600, 16 px): título de tarjeta y de lista.
 - **Body** (Inter 400; 16, 14 y 12 px): cuerpo, ayuda y nombres secundarios.
 - **Label** (Inter 600, 15 px): texto de botones.
 - **Cifra** (JetBrains Mono 500, 14 px): montos, cantidades, variaciones y horas en listas y tarjetas.
@@ -257,7 +257,7 @@ Grises fríos casi neutros con un único acento morado; cada token tiene su par 
 
 **Celular primero.** Una sola columna a 360–412 dp; la misma estructura crece en web. Todo se mide en múltiplos de 4 dp (`Espacio`: 4, 8, 12, 16, 20, 24, 32). Margen lateral de pantalla y relleno de tarjeta de 16 dp. Ningún control interactivo baja de 48 dp (objetivo táctil, WCAG 2.2 AA).
 
-Una pantalla se lee de arriba abajo: barra superior blanca con su título, el contenido en tarjetas apiladas sobre papel, y la isla de navegación abajo. El contenido termina donde empieza la isla (`extendBody: false`): nada con scroll queda tapado.
+Una pantalla se lee de arriba abajo: el título grande de la pantalla sobre papel, el contenido en tarjetas apiladas sobre papel, y la isla de navegación abajo. El contenido termina donde empieza la isla (`extendBody: false`): nada con scroll queda tapado.
 
 En ventanas anchas (desde 840 dp) la isla pasa a un riel lateral con los mismos destinos; la tarjeta de gráfica lleva el selector de rango junto al título desde 520 dp de ancho.
 
@@ -324,7 +324,7 @@ Botones de texto **1D · 1M · 1Y · All** en monoespaciada. El elegido lleva un
 - **Contraseña:** con `oculto`, lo escrito se esconde y se apagan las sugerencias y la corrección.
 
 ### Navigation
-- **Barra superior** (`BarraSuperior`): blanca (`hoja`) con borde inferior de 1 px, título en Inter 20 px, íconos en tinta y barra de estado que sigue al tema. Puede llevar debajo la franja de la jornada.
+- **Barra superior** (`BarraSuperior`, título grande; elegida por Javier el 2026-11-17): en reposo no es una barra, sino el título de la pantalla en headline large (28 px, escala con el texto hasta 1,3) sobre `papel`, sin borde, con la flecha de volver a la izquierda y los íconos de acción en tinta arriba a la derecha (por ejemplo, Fondo en Mercado, con su nombre como ayuda). Al desplazar el contenido principal más de 8 dp, el título grande se recoge en 200 ms (sin animación si el sistema pide quitarlas) y queda una barra compacta de 56 dp con el título en 20 px y el borde inferior de 1 px en `regla`; al volver arriba regresa. Las listas horizontales no la recogen. La barra de estado sigue al tema. Puede llevar debajo la franja de la jornada, que no se recoge.
 - **Isla de navegación** (teléfono; `BarraDePestanas`): cápsula flotante de 56 dp de alto, centrada abajo, a 16 dp de los bordes y del área segura, sobre el velo con desenfoque y sombra flotante. La pestaña actual lleva ícono y rótulo en tinta dentro de una píldora `morado-tenue`, con foco de teclado de borde morado; las demás, solo el ícono en `tinta-suave`. Al cambiar de pestaña la píldora se mueve en 200 ms (sin animación si el sistema pide quitarlas). Cada destino mide al menos 48 dp, tiene foco de teclado y conserva su nombre completo para el lector de pantalla. El rótulo escala hasta 1,4 y se recorta con puntos suspensivos si no cabe.
 - **Menú por rol** (`CascaronDeNavegacion`): cada rol ve solo sus destinos, en este orden: **Usuario** Mercado, Oportunidades, Mi cupo, Alertas; **Analista** Mercado, Oportunidades, Alertas; **Administrador** Mercado, Oportunidades, Alertas, Administración. Los destinos de otro rol no aparecen deshabilitados: no aparecen. Nunca más de cuatro; Nueva orden manual no es pestaña.
 - **Riel de navegación** (desde 840 dp): `NavigationRail` con ícono y rótulo siempre visibles, los mismos destinos y el elegido sobre fondo `relleno` redondeado. Sin la isla.
@@ -342,7 +342,7 @@ Componente común (`DialogoDeConfirmacion` y `confirmarAccion`) de lo que toca d
 - **Nunca** actualización optimista de dinero: el diálogo solo cierra en "hecho" cuando la acción respondió.
 
 ### Pantalla de ingreso
-Barra superior blanca con "RiTech Inversiones" y una tarjeta sobre papel (máximo 420 dp, alineada arriba): título "Entra con tu cuenta de Google" (headline small), ayuda en `tinta-suave` ("Solo pueden entrar las personas que invitó el administrador. Usa la cuenta de Google con la que te invitaron."), el aviso en línea si hay fallo, un único botón primario morado de ancho completo "Entrar con Google" y, fuera de la tarjeta, "MVP en paper trading: una persona siempre aprueba." en `tinta-tenue`. Sin logotipo ni ilustración; el error va con borde doble, sin rojo.
+Título grande "NasTock Inversiones" y una tarjeta sobre papel (máximo 420 dp, alineada arriba): título "Entra con tu cuenta de Google" (headline small), ayuda en `tinta-suave` ("Solo pueden entrar las personas que invitó el administrador. Usa la cuenta de Google con la que te invitaron."), el aviso en línea si hay fallo, un único botón de Google de ancho completo "Entrar con Google" (`BotonDeGoogle`): según las pautas de marca de Google, blanco con borde gris `#747775` y texto `#1F1F1F` (en oscuro, `#131314`, `#8E918F` y `#E3E3E3`), con la "G" oficial de cuatro colores de 18 dp a la izquierda; son los únicos colores fuera del sistema y viven en `MarcaGoogle` de `lib/app/tema.dart` y, fuera de la tarjeta, "MVP en paper trading: una persona siempre aprueba." en `tinta-tenue`. Sin logotipo ni ilustración; el error va con borde doble, sin rojo.
 - **Solo con `MODO_PRUEBAS`** (CI y local): bajo una regla y el rótulo "SOLO PRUEBAS", los campos "Correo" y "Contraseña" y un botón secundario "Entrar con correo". Sin `MODO_PRUEBAS` ese bloque no existe en el árbol.
 - **Falta configuración** (solo desarrollo): aviso de advertencia y el botón deshabilitado.
 - Los textos de los fallos son los de `docs/04` §11; los de arriba (título, ayuda, pie, rótulos) son decisión de tono de esta pantalla. Ninguno habla de "cuenta corporativa" ni "de RiTech".
@@ -351,7 +351,7 @@ Barra superior blanca con "RiTech Inversiones" y una tarjeta sobre papel (máxim
 Mientras la historia de una sección del MVP corto no construye su pantalla, su destino abre un marcador: `BarraSuperior` con el nombre de la sección y una `Tarjeta` (máximo 560 dp, alineada arriba) con un `EstadoVacio`: "Aún no está disponible" y "Esta sección se habilita en una próxima entrega." Sin botón, sin ícono decorativo y sin números de historia.
 
 ### Pantalla de cuenta suspendida
-Misma estructura que la pantalla de ingreso, **sin menú**: barra superior con "RiTech Inversiones" y una tarjeta (máximo 420 dp) con el título "Cuenta suspendida", el texto de `docs/04` §11 "Tu cuenta está suspendida. Comunícate con el administrador." y un botón secundario "Cerrar sesión" de ancho completo, que dice "Procesando…" mientras cierra. Sin aviso de error ni rojo; si el cierre falla, el botón vuelve sin mensaje técnico.
+Misma estructura que la pantalla de ingreso, **sin menú**: título grande "NasTock Inversiones" y una tarjeta (máximo 420 dp) con el título "Cuenta suspendida", el texto de `docs/04` §11 "Tu cuenta está suspendida. Comunícate con el administrador." y un botón secundario "Cerrar sesión" de ancho completo, que dice "Procesando…" mientras cierra. Sin aviso de error ni rojo; si el cierre falla, el botón vuelve sin mensaje técnico.
 
 ### Cifras
 - **Dinero:** USD con dos decimales en JetBrains Mono tabular; desactualizado, subrayado punteado y `tinta-suave`.
@@ -362,7 +362,7 @@ Misma estructura que la pantalla de ingreso, **sin menú**: barra superior con "
 Mes de lunes a domingo, encabezado de días en label, hoy en un círculo morado, el periodo elegido en tinta, fines de semana en `tinta-tenue`, festivos rayados con su marca y media jornada con media luna, cada marca con su leyenda en palabras. El selector de periodo abre en la hoja inferior.
 
 ### Franja de la jornada
-Sobre la barra superior blanca: eje de 1 px con marcas por hora, horas de apertura y cierre en los extremos y horas pares intermedias, todas en monoespaciada; lo transcurrido en trazo grueso de 4 px en tinta sobre un relleno gris plano; aguja de 2,5 px y hora de "ahora" en `morado`. Horas en hora de Bogotá; apertura y cierre vienen del calendario del broker. El lector de pantalla lee "Jornada de 09:30 a 16:00, hora de Bogotá. Ahora 11:46".
+Bajo el título de la barra superior: eje de 1 px con marcas por hora, horas de apertura y cierre en los extremos y horas pares intermedias, todas en monoespaciada; lo transcurrido en trazo grueso de 4 px en tinta sobre un relleno gris plano; aguja de 2,5 px y hora de "ahora" en `morado`. Horas en hora de Bogotá; apertura y cierre vienen del calendario del broker. El lector de pantalla lee "Jornada de 09:30 a 16:00, hora de Bogotá. Ahora 11:46".
 
 ### Gráfica de línea (`GraficaDeLinea`)
 **La pieza más importante del sistema.** API simple: `GraficaDeLinea(serie: [...], descripcion: '...')`; opcionales `referencia`, `ahora`, `alto`, `rejilla`, `mostrarEjeY`, `formatoY` y `etiquetasX`.

@@ -59,6 +59,24 @@ TextStyle estiloDeCifra(TextStyle base) =>
 
 /// Colores con nombre del sistema, en claro y en oscuro.
 @immutable
+/// Colores de marca de Google para el botón de ingreso. No son del sistema de
+/// la app: los fijan las pautas de marca de Google Identity (la "G" de cuatro
+/// colores y los botones claro y oscuro), y solo los usa `BotonDeGoogle`.
+abstract final class MarcaGoogle {
+  static const Color azul = Color(0xFF4285F4);
+  static const Color verde = Color(0xFF34A853);
+  static const Color amarillo = Color(0xFFFBBC05);
+  static const Color rojo = Color(0xFFEA4335);
+
+  static const Color fondoClaro = Color(0xFFFFFFFF);
+  static const Color bordeClaro = Color(0xFF747775);
+  static const Color textoClaro = Color(0xFF1F1F1F);
+
+  static const Color fondoOscuro = Color(0xFF131314);
+  static const Color bordeOscuro = Color(0xFF8E918F);
+  static const Color textoOscuro = Color(0xFFE3E3E3);
+}
+
 class ColoresTema extends ThemeExtension<ColoresTema> {
   const ColoresTema({
     required this.grafito,
