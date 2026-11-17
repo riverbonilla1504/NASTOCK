@@ -334,3 +334,17 @@ a iterar sobre algo que una sesión anterior ya arregló**.
 - Síntoma: el ciclo de IA responde `omitido` donde se esperaba `completado`, aun con el histórico cargado.
 - Causa: los escenarios preparan barras diarias y usan el reloj real. Si se ejecutan en horario de mercado, el agente exige además una cotización reciente de QQQ para evaluar.
 - Solución: fijar el reloj después del cierre antes de preparar el histórico y restaurarlo antes de reactivar cron. Se avanza un segundo para ordenar los ciclos, mientras que la prueba del lanzamiento manual identifica el ciclo por su ID. Si no termina, el fallo muestra el último estado observado y un resumen de las respuestas recientes de `pg_net`.
+
+### EC-044 · Una vista o secuencia nueva de `public` le da escritura a `authenticated`
+- Fecha: 2026-11-17 · Módulos: M-02, M-20 · Origen: HU-109 (#136), al recorrer el catálogo.
+- Síntoma: `information_schema.role_table_grants` muestra `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE`, `REFERENCES` y `TRIGGER` de `authenticated` sobre `posiciones_valoradas`, y `USAGE`/`UPDATE` sobre `ordenes_eventos_id_seq`, aunque ninguna migración los concede.
+- Causa: Supabase da por defecto todos los privilegios a `anon` y `authenticated` sobre lo que crea `postgres` en `public`. El esquema `private` solo los quitaba a `anon`; las tablas los revocaban una por una, pero la vista y la secuencia nacieron con ellos. No se podía escribir datos (la vista tiene un `join` y la tabla no da `INSERT`), pero contradice 06 §7.
+- Solución: `20261117120000_aislamiento_verificado.sql` los revoca y cambia los privilegios por defecto de `public` para que `authenticated` no reciba escritura en tablas, vistas ni secuencias nuevas.
+- Para no repetirlo: `28_aislamiento_catalogo_test.sql` falla si `anon` o `authenticated` tienen cualquier privilegio de escritura en `public`.
+
+### EC-045 · El asesor de seguridad marca `extension_in_public` por `pg_net`
+- Fecha: 2026-11-17 · Módulos: M-20 · Origen: HU-109 (#136), primera corrida de `supabase db advisors`.
+- Síntoma: `supabase db advisors --type security` da `WARN extension_in_public: Extension pg_net is installed in the public schema`, aunque sus funciones viven en el esquema `net`.
+- Causa: `create extension if not exists pg_net` sin esquema la registra en el primero del `search_path` (`public`). `pg_net` no es reubicable: `alter extension pg_net set schema extensions` falla.
+- Solución: `drop extension pg_net` y `create extension pg_net with schema extensions` (no hay dependencias fijas: `private.despertar_funcion` la llama desde plpgsql y `pg_cron` la nombra en texto). Toda extensión nueva se crea `with schema extensions`.
+- Para no repetirlo: el paso del asesor en CI y en `scripts/verificar.sh` (`--fail-on warn`) y la prueba de `28_aislamiento_catalogo_test.sql` que exige que ninguna extensión esté en `public`. Nota: los objetos de `net` (de `supabase_admin`) se conceden a `anon` y `authenticated` por diseño de la plataforma y `postgres` no los puede revocar; `net` no está en `[api].schemas`, así que la API no lo alcanza.
