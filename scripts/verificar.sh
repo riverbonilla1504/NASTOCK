@@ -92,6 +92,9 @@ if [[ -f supabase/config.toml ]]; then
   supabase status >/dev/null 2>&1 || supabase start
   supabase db reset
   supabase db lint --level warning --fail-on warning
+  # Asesor de seguridad de Supabase (HU-109, CA-4): sin advertencias. Los avisos INFO de tablas con
+  # RLS y sin políticas (latido, pruebas.*) son intencionales (docs/03 §4.3).
+  supabase db advisors --local --type security --level warn --fail-on warn
   supabase test db
   if [[ -d supabase/functions ]]; then
     # Las dependencias de las funciones están en su deno.json, y Deno solo lo

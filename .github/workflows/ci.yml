@@ -168,6 +168,8 @@ jobs:
           deno-version: v2.x
       - run: supabase start
       - run: supabase db lint --level warning --fail-on warning
+      # Asesor de seguridad de Supabase sin advertencias (11 §9; HU-109, CA-4).
+      - run: supabase db advisors --local --type security --level warn --fail-on warn
       - run: supabase test db
       - name: Funciones (formato, lint y pruebas)
         if: hashFiles('supabase/functions/**/*.ts') != ''

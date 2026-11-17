@@ -109,7 +109,7 @@ equipo. Cada una tiene su issue y su archivo en `backlog/`.
 
 [15 §4](15-calidad-pruebas-y-ci-cd.md#4-escenarios-e2e-obligatorios) pide E2E-01 a E2E-08
 y E2E-11. Existen E2E-01, E2E-02, E2E-03, E2E-06 (parte de backend) y E2E-07.
-Faltan **E2E-04** (aportes → cupos → Mi cupo), la parte de suspensión de **E2E-05**, el recorrido completo de **E2E-08** (orden manual → llenado → posición → venta; lo cierra HU-077) y **E2E-11**. HU-011 y HU-085 agregaron pruebas de cambio de rol/aislamiento a E2E-05; HU-076 agregó cancelación previa al envío a E2E-08. Esas partes ya pasan, sin dar por terminados los recorridos restantes.
+Faltan **E2E-04** (aportes → cupos → Mi cupo), la parte de suspensión de **E2E-05**, el recorrido completo de **E2E-08** (orden manual → llenado → posición → venta; lo cierra HU-077) y **E2E-11**. HU-011 y HU-085 agregaron pruebas de cambio de rol/aislamiento a E2E-05, y HU-109 el aislamiento de cupos por la API (un Usuario no ve cupos ajenos ni escribe directo, `05_aislamiento_de_cupos_test.ts`); HU-076 agregó cancelación previa al envío a E2E-08. Esas partes ya pasan, sin dar por terminados los recorridos restantes.
 
 ### 3.4 Orden sugerido
 

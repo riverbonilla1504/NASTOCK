@@ -28,6 +28,16 @@ La [corrida de CI de `ab6ba35`](https://github.com/riverbonilla1504/NASTOCK/acti
 pasó Flutter, pgTAP, las pruebas de funciones y los E2E de backend y Chrome.
 Estos resultados corresponden al PR y se registran aparte del corte de `main`.
 
+### Validación del PR de HU-109 (2026-11-17)
+
+`scripts/verificar.sh` en local con la suite de aislamiento: pgTAP pasa de
+1.521 a 2.282 aserciones (39 archivos) y el asesor de seguridad
+(`supabase db advisors --type security`) no deja advertencias. La suite
+encontró y la migración `20261117120000_aislamiento_verificado.sql` corrigió
+tres cosas: `authenticated` conservaba privilegios de escritura sobre la vista
+`posiciones_valoradas` y el uso de la secuencia de `ordenes_eventos`, y `pg_net`
+estaba registrada en `public`. Ninguna de las tres permitía escribir datos.
+
 - **Precios**. Las pruebas de widget hacen vencer una cotización sin eventos,
   verifican que una cotización nueva recupere la vigencia y comprueban el
   bloqueo de una compra si el precio vence durante la confirmación.
@@ -57,7 +67,7 @@ Cada fila es un escenario automático: se ejecuta en cada PR.
 | Libro contable | Cada movimiento suma cero; el reparto 50/25/25 es exacto | Un `UPDATE` directo de saldos se rechaza; una pérdida la absorbe la subcuenta | pgTAP `supabase/tests/database/` |
 | Motor de políticas | Una orden que cumple las reglas pasa | Una que viola una regla de riesgo se rechaza con su código | pgTAP |
 | Orden manual | Crear, enviar al broker simulado y aplicar el llenado | Reintentar con el mismo id no duplica; una cantidad fraccional, cero o vacía se rechaza (D-63) | pgTAP y Deno |
-| Permisos y RLS | Cada rol lee lo suyo | El Usuario no ve cupos ajenos ni escribe tablas directo | pgTAP y E2E-01 |
+| Permisos y RLS | Cada rol lee lo suyo, tabla por tabla según la matriz de 03 §4.3 (HU-109) | El Usuario no ve cupos ajenos ni escribe tablas directo; cada RPC rechaza el rol, la cuenta y el dueño equivocados; una tabla sin RLS hace fallar la suite | pgTAP `28` a `30`, E2E-01 y E2E-05 (`05_aislamiento_de_cupos_test.ts`) |
 | Sesión de la app | El perfil se lee una vez por cambio de sesión | Suscribirse otra vez a Auth no repite la historia (EC-039) | `test/core/perfil/cambios_de_sesion_test.dart` |
 
 ---
@@ -74,7 +84,7 @@ Cada fila es un escenario automático: se ejecuta en cada PR.
 
 ## 4. Limitaciones de las pruebas
 
-- **Faltan E2E-04, E2E-05, E2E-08 y E2E-11** ([18 §3.3](18-estado-y-traspaso.md#33-escenarios-e2e-que-faltan)).
+- **Faltan E2E-04, la parte de suspensión de E2E-05 (HU-010), E2E-08 y E2E-11** ([18 §3.3](18-estado-y-traspaso.md#33-escenarios-e2e-que-faltan)).
 - **E2E-06** cubre solo el backend; la pantalla Oportunidades se prueba con
   pruebas de widget (D-72).
 - Las pruebas automáticas usan **proveedores simulados**: JEV, Alpaca y el
