@@ -230,9 +230,10 @@ Matriz de lectura por tabla (quién ve qué filas):
 |---|---|---|---|
 | `perfiles` | la suya | todas | todas |
 | `invitaciones` | — | — | todas |
+| `fondos` | — (ve el agregado vía `resumen_fondo()`) | todos | todos |
 | `subcuentas` | su cupo | todas | todas |
 | `movimientos`, `asientos` | los que tocan su cupo | todos | todos |
-| `posiciones`, `protecciones` | las de su cupo | todas | todas |
+| `posiciones`, `protecciones`, vista `posiciones_valoradas` (`security_invoker`: aplica la RLS de `posiciones`) | las de su cupo | todas | todas |
 | `sugerencias`, `decisiones` | las suyas | todas | todas |
 | `ordenes`, `ordenes_eventos` | las de su cupo | todas | todas |
 | `opiniones_ia` | las suyas | todas | todas |

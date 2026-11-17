@@ -125,7 +125,7 @@ commit con solo documentación.
 | `secretos` | gitleaks (imagen oficial, gratuito) sobre el historial del PR, con `.gitleaks.toml` |
 | `dependencias` | OSV-Scanner (gratuito) sobre `pubspec.lock`: falla ante vulnerabilidades conocidas |
 | `app` | `flutter pub get` · `dart format` (verificación) · `flutter analyze` · `flutter test` · `flutter test --platform chrome` (pruebas `@TestOn('browser')`) |
-| `backend` | `supabase start` · `supabase db lint` · `supabase test db` · `deno fmt --check` · `deno lint` · `deno test` de funciones |
+| `backend` | `supabase start` · `supabase db lint` · `supabase db advisors --type security` (asesor de seguridad, falla ante advertencias; HU-109) · `supabase test db` · `deno fmt --check` · `deno lint` · `deno test` de funciones |
 | `e2e` | `supabase start` · `supabase db reset` · `supabase functions serve --env-file supabase/functions/.env.e2e` · E2E de backend · `chromedriver` + `flutter drive` en Chrome sin ventana |
 
 ### `despliegue.yml` (tras CI verde en `main`, o manual)
