@@ -1,13 +1,5 @@
+import '../../../../core/exportacion/celda_csv.dart';
 import 'bitacora_repositorio.dart';
-
-/// Neutraliza texto que una hoja de cálculo podría interpretar como fórmula.
-String _celda(String? dato) {
-  final valor = dato ?? '';
-  final protegido = RegExp(r'^\s*[=+\-@]|^[\t\r\n]').hasMatch(valor)
-      ? "'$valor"
-      : valor;
-  return '"${protegido.replaceAll('"', '""')}"';
-}
 
 Future<String> csvDeBitacora(
   LeerBitacora leer,
@@ -29,7 +21,7 @@ Future<String> csvDeBitacora(
             registro.accion,
             registro.entidad,
             registro.entidadId,
-          ].map(_celda).join(','),
+          ].map(celdaCsv).join(','),
         )
         ..write('\r\n');
     }
