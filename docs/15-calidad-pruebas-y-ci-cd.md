@@ -21,7 +21,7 @@
 |---|---|---|---|---|
 | Documentación | `scripts/verificar_docs.py` | Enlaces, anclas e identificadores (`RN`, `RR`, `PM`, `CB`, `D`, `Q`, `RSG`, `E`, `M`, `EC`, `E2E`) de `docs/` | `scripts/` | < 5 s |
 | Arquitectura | `scripts/verificar.sh` (búsquedas) | `agente`, `contexto-ia` y `opinion-ia` no importan `_shared/broker/`; no hay llaves en el código ni un usuario o contraseña de administrador (HU-004, CA-4); ningún archivo de la app usa la llave secreta; ningún archivo de `supabase/functions` fuera de `_shared/bd.ts` importa el cliente de Postgres (D-66) | `scripts/` | < 5 s |
-| Unitarias Dart | `flutter test` | Modelos, formato, motor ×2, lógica de presentación, providers con repositorios falsos | `test/` | < 1 min |
+| Unitarias Dart | `flutter test`; las marcadas `@TestOn('browser')` (lo que solo existe en la web, como la descarga de un CSV) con `flutter test --platform chrome` | Modelos, formato, exportación CSV, motor ×2, lógica de presentación, providers con repositorios falsos | `test/` | < 1 min |
 | Base de datos | pgTAP (`supabase test db`) | RLS por tabla, RPC (rol, dueño, estado), invariantes del libro, máquinas de estado, motor de políticas, hooks de Auth | `supabase/tests/*.sql` | < 2 min |
 | Funciones | `deno test` | Adaptadores (con respuestas grabadas), indicadores, etiquetas, puntaje compuesto, validación de contexto, esquemas | `supabase/functions/**/*_test.ts` | < 1 min |
 | **E2E de backend** | `deno test` contra Supabase local con **funciones servidas** y **proveedores simulados** | Flujos de negocio completos a través de RPC y funciones, actuando como distintos usuarios | `supabase/tests/e2e/` | < 5 min |
@@ -124,7 +124,7 @@ commit con solo documentación.
 | `arquitectura` | Reglas de §2 |
 | `secretos` | gitleaks (imagen oficial, gratuito) sobre el historial del PR, con `.gitleaks.toml` |
 | `dependencias` | OSV-Scanner (gratuito) sobre `pubspec.lock`: falla ante vulnerabilidades conocidas |
-| `app` | `flutter pub get` · `dart format` (verificación) · `flutter analyze` · `flutter test` |
+| `app` | `flutter pub get` · `dart format` (verificación) · `flutter analyze` · `flutter test` · `flutter test --platform chrome` (pruebas `@TestOn('browser')`) |
 | `backend` | `supabase start` · `supabase db lint` · `supabase test db` · `deno fmt --check` · `deno lint` · `deno test` de funciones |
 | `e2e` | `supabase start` · `supabase db reset` · `supabase functions serve --env-file supabase/functions/.env.e2e` · E2E de backend · `chromedriver` + `flutter drive` en Chrome sin ventana |
 
