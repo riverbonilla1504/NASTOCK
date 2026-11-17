@@ -70,6 +70,17 @@ Implementadas y verificadas juntas con `scripts/verificar.sh` completo, sin omit
 
 Cada PR conserva su rama y sus artefactos de spec-kit. Su estado de integración y despliegue se consulta en GitHub. La pantalla de usuarios de HU-098 sigue siendo trabajo separado de la RPC de HU-011.
 
+### 2.2 Historias que se adelantan (2026-11-17)
+
+D-58 las dejaba para la fase siguiente; entran a la entrega por el cambio
+3.31 de [13 §4](13-decisiones-pendientes-riesgos.md#4-historial-de-la-especificación).
+Las construye River Bonilla, una por PR:
+
+| Historia | Issue | Entrega |
+|---|---|---|
+| HU-117 · Exportador de reportes de la v2 | #145 | El exportador CSV de la v2, adaptado al formato de dinero y fechas de `lib/core/formato/`, en `lib/features/reportes/` |
+| HU-109 · Aislamiento verificado por tabla y por función | #136 | Suite pgTAP por tabla de `public` y por RPC, verificación de RLS en CI |
+
 ## 3. Lo que falta del MVP
 
 Siguen dentro de la entrega (D-73): quedan para los demás integrantes del
